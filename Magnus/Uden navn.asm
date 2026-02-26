@@ -1,9 +1,15 @@
         .ORIG   x3000
+        ;Save current values of registers
         LD      R0,A
         LD      R1,B
-X           
-        AND     R3,R1,R0
-        BRp     DONE
+        ;reset values
+        AND R1,R0,R0 
+        
+        ;1) A-B = 0?
+        ;   NOT(B) + 1
+        
+X       AND     R3,R1,R0    ;Comparator. 
+        BRp     DONE        
         
         ADD     R2,R2,R1
         ADD     R0,R0,#1
@@ -15,4 +21,6 @@ DONE    ST      R1,C
 A       .BLKW   1
 B       .BLKW   1
 C       .BLKW   1
+        HALT
         .END
+        
