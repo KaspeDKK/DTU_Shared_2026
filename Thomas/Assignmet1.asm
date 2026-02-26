@@ -13,7 +13,7 @@
         LD R0, A
         LD R1, B
         
-X       
+X       AND R3, R0, R1  ;; If A = B --> 1
         ;
         
         ADD R2, R2, R1
