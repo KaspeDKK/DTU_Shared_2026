@@ -115,7 +115,7 @@ public class PersonsGUI extends GridPane {
                 System.out.println("(index button) Index and weight must be numbers. Message: " + ex.getMessage());
             } catch (IllegalArgumentException ex) {
                 System.out.println("A person must be initialized with a non-null name and a positive weight.");
-            } catch (ArrayIndexOutOfBoundsException ex) {
+            } catch (IndexOutOfBoundsException ex) {
                 System.out.println("The index is out of bounds");
             }
         });
