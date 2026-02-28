@@ -8,7 +8,7 @@ public class Person implements Comparable<Person> {
 
     final public String name;
 
-    final public double weight;
+    private double weight;
 
     private Integer age;
 
@@ -69,6 +69,18 @@ public class Person implements Comparable<Person> {
 
     public Integer getAge() {
         return this.age;
+    }
+
+    public void setAge(int newAge){
+        this.age = newAge;
+    }
+
+    public void passTime(){
+        this.age++;
+
+        if (this.age > 30){
+            this.weight = this.weight*1.08;
+        }
     }
 
     public String getName() {
