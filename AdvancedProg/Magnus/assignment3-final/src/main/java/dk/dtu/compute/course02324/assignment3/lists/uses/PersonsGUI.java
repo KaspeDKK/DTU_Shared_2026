@@ -36,15 +36,14 @@ public class PersonsGUI extends GridPane {
 
 
     //Weight
-    private double count = 0;
-    private double totalWeight;
+
     private double averageWeight;
     private Label averageWeightAmount;
     private Label mostOccuringAmount;
 
     //Age
-    private Integer maxAge;
-    private Integer minAge;
+//    private Integer maxAge;
+//    private Integer minAge;
     private Label maxAgeLabel;
     private Label minAgeLabel;
 
@@ -58,8 +57,8 @@ public class PersonsGUI extends GridPane {
     public PersonsGUI(@NotNull java.util.List<Person> persons) {
         this.persons = persons;
 
-        this.count = 0.0;
-        this.totalWeight = 0.0;
+//        this.count = 0.0;
+//        this.totalWeight = 0.0;
 
         this.setVgap(5.0);
         this.setHgap(5.0);
@@ -70,7 +69,6 @@ public class PersonsGUI extends GridPane {
         TextField field = new TextField("name");
         field.setPrefColumnCount(5);
 
-
         //Egen implement:
         TextField wField = new TextField("weight");
         wField.setPrefColumnCount(5);
@@ -79,6 +77,7 @@ public class PersonsGUI extends GridPane {
         TextField aField = new TextField("Age");
         wField.setPrefColumnCount(5);
 
+        //Egen implement af index:
         TextField indexField = new TextField("index");
         indexField.setPrefColumnCount(5);
 
@@ -142,14 +141,15 @@ public class PersonsGUI extends GridPane {
         );
 
 
-
-
         Button addButton = new Button("Add");
         addButton.setOnAction(
                 e -> {
                     try {
                         if (field.getText().isEmpty() || wField.getText().isEmpty() || aField.getText().isEmpty()) {
                             throw new IllegalArgumentException("A person must have a name, weight and age \n");
+                        }
+                        if ((Integer.parseInt(aField.getText()) > 99 || Integer.parseInt(aField.getText()) < 0)){
+                            throw new IllegalArgumentException("A person needs to have a reasonable age");
                         }
                         Double weight = Double.parseDouble(wField.getText());
                         String name = field.getText();
@@ -166,8 +166,6 @@ public class PersonsGUI extends GridPane {
                         update();
                     }
                 });
-
-
 
         Comparator<Person> comparator = new GenericComparator<>();
 
@@ -200,6 +198,17 @@ public class PersonsGUI extends GridPane {
                     update();
                 });
 
+        Button passTimeButton = new Button("Pass time");
+        passTimeButton.setOnAction(
+                e -> {
+                    persons.stream().forEach(Person::passTime);
+
+                    //update GUI
+                    refreshStats();
+                    update();
+                }
+        );
+
         // combines the above elements into vertically arranged boxes
         // which are then added to the left column of the grid pane
 
@@ -208,11 +217,11 @@ public class PersonsGUI extends GridPane {
         HBox actionBoxInput = new HBox(field, wField,aField);
         actionBoxInput.setSpacing(5.0);
 
-        HBox actionBoxButtons = new HBox(addButton, sortButton, clearButton);
+        HBox actionBoxButtons = new HBox(addButton, sortButton, clearButton, passTimeButton);
         actionBoxButtons.setSpacing(5.0);
 
         VBox actionBox = new VBox(actionBoxInput, actionBoxButtons);
-        actionBox.setSpacing(5.0);;
+        actionBox.setSpacing(5.0);
         actionBox.setMinHeight(70);
 
 
@@ -305,8 +314,8 @@ public class PersonsGUI extends GridPane {
      * @Note: MostUsedName works like Catan-rules, if more than one name satisfy "most used", then the first name added, appears as most used.
      */
     private void update() {
-        count = 0;
-        totalWeight = 0;
+//        count = 0;
+//        totalWeight = 0;
         nameMap.clear();
         averageWeight = 0.0;
 
@@ -325,10 +334,16 @@ public class PersonsGUI extends GridPane {
                         update();
                     }
             );
+
+
+
             HBox entry = new HBox(deleteButton, personLabel);
             entry.setSpacing(5.0);
             entry.setAlignment(Pos.BASELINE_LEFT);
             personsPane.add(entry, 0, i);
+
+            //removes persons
+            persons.removeIf(p -> p.getAge() > 98);
         }
     }
 
@@ -339,22 +354,11 @@ public class PersonsGUI extends GridPane {
      * only addding and deleting should call this method.
      */
     private void refreshStats() {
-        totalWeight = 0;
+//        totalWeight = 0;
         nameMap.clear();
         averageWeight = 0.0;
 
-//        for (int i=0; i < persons.size(); i++) {
-//            Person person = persons.get(i);
-//            totalWeight += person.weight;
-//            averageWeight = (totalWeight / persons.size());
-//
-//            if (this.nameMap.containsKey(person.name)) {
-//                Integer currentKeyAmount = nameMap.get(person.name);
-//                nameMap.put(person.name, currentKeyAmount + 1);
-//            } else {
-//                nameMap.put(person.name, 1);
-//            }
-//        }
+
 
         //4.A Implement Lambda function instead.
         averageWeight = persons.stream().map(Person::getWeight)
@@ -377,7 +381,6 @@ public class PersonsGUI extends GridPane {
 
         // så jeg ender med et map<String, Integer> hvor <Ekkart, 4> f.eks. betyder ekkart navnet dukker op 4 gange.
         // Nu har jeg mine værdier, så skal jeg finde "max" value.
-
         nameMap.entrySet().stream() // jeg lægger parne af <key, value> ud på et bånd.
                 .max(Comparator.comparingInt(entry -> entry.getValue())) // max sammenligning på <value>
                 .ifPresentOrElse(
@@ -403,7 +406,10 @@ public class PersonsGUI extends GridPane {
             mostOccuringAmount.setText("No info");
             maxAgeLabel.setText("No info:");
             minAgeLabel.setText("No info:");
-        } 
+        }
+
+
+
     }
 
 
