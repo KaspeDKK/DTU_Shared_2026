@@ -203,6 +203,7 @@ public class PersonsGUI extends GridPane {
                 e -> {
                     persons.stream().forEach(Person::passTime);
 
+                    persons.removeIf(p -> p.getAge() >= 99);
                     //update GUI
                     refreshStats();
                     update();
@@ -342,8 +343,7 @@ public class PersonsGUI extends GridPane {
             entry.setAlignment(Pos.BASELINE_LEFT);
             personsPane.add(entry, 0, i);
 
-            //removes persons
-            persons.removeIf(p -> p.getAge() > 98);
+
         }
     }
 
@@ -379,9 +379,23 @@ public class PersonsGUI extends GridPane {
                         person -> person.getName(), Collectors.summingInt(person -> 1)     //hvor ve side er <key> og højre side summer op <value>
                 ));
 
-        // så jeg ender med et map<String, Integer> hvor <Ekkart, 4> f.eks. betyder ekkart navnet dukker op 4 gange.
-        // Nu har jeg mine værdier, så skal jeg finde "max" value.
-        nameMap.entrySet().stream() // jeg lægger parne af <key, value> ud på et bånd.
+//        Input:  persons = [Ekke, Anna, Ekke, Ekke, Bob, Anna]
+//
+//        1. persons.stream() → Stream<Person>: [Ekke, Anna, Ekke, Ekke, Bob, Anna] på "båndet"
+//
+//        2. groupingBy(person -> person.getName()) → grupperer efter navn:
+//        "Ekke" → [Ekke, Ekke, Ekke]
+//        "Anna" → [Anna, Anna]
+//        "Bob"  → [Bob]
+//
+//        3. summingInt(person -> 1) → tæller hvor mange i hver gruppe (1 pr. person):
+//        "Ekke" → 3 stk
+//        "Anna" → 2 stk
+//        "Bob"  → 1 stk
+//
+//        Output: nameMap = {"Ekke"=3, "Anna"=2, "Bob"=1}
+
+        nameMap.entrySet().stream() // jeg lægger parene af <key, value> ud på et bånd.
                 .max(Comparator.comparingInt(entry -> entry.getValue())) // max sammenligning på <value>
                 .ifPresentOrElse(
                         entry -> mostOccuringAmount.setText(entry.getValue() + "* " + entry.getKey()),
