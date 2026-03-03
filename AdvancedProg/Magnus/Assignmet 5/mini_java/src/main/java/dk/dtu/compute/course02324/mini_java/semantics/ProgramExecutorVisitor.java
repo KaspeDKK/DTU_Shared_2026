@@ -65,6 +65,25 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
             args -> { float arg1 = args.get(0).floatValue();
                 return - (arg1); };
 
+    private Function<List<Number>,Number> div2int =
+            args -> { int arg1 = args.get(0).intValue();
+                int arg2 = args.get(1).intValue();
+                return arg1 / arg2; };
+
+    private Function<List<Number>,Number> div2float =
+            args -> { Float arg1 = args.get(0).floatValue();
+                Float arg2 = args.get(1).floatValue();
+                return arg1 / arg2; };
+
+    private Function<List<Number>,Number> mod2float =
+            args -> { Float arg1 = args.get(0).floatValue();
+                Float arg2 = args.get(1).floatValue();
+                return arg1 % arg2; };
+
+    private Function<List<Number>,Number> arg2float =
+            args -> { Float arg1 = args.get(0).floatValue();
+                Float arg2 = args.get(1).floatValue();
+                return arg1 % arg2; };
 
 
 
