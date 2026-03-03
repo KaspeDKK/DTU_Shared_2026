@@ -27,7 +27,8 @@ public class ProgramTypeVisitor extends ProgramVisitor {
 
             entry(PLUS1, List.of(INT, FLOAT)),
             entry(MINUS1, List.of(INT, FLOAT)),
-            entry(DIV, List.of(INT, FLOAT))
+            entry(DIV, List.of(INT, FLOAT)),
+            entry(MOD, List.of(INT, FLOAT))
 
             );
 
