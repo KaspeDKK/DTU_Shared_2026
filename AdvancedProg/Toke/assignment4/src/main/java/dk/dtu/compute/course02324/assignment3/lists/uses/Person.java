@@ -8,7 +8,7 @@ public class Person implements Comparable<Person> {
 
     final public String name;
 
-    final public double weight;
+    public double weight;
 
     private Integer age;
 
@@ -32,6 +32,7 @@ public class Person implements Comparable<Person> {
     public void setAge(Integer age) {
         this.age = age;
     }
+
 
     @Override
     public int compareTo(@NotNull Person o) {
@@ -64,7 +65,7 @@ public class Person implements Comparable<Person> {
         // This could be automatically generated, but this automatically
         // generated representation is a bit too verbose. Therefore, we
         // chose a simpler representation here.
-        return name + ", " + weight + "kg, " + age + " years old";
+        return name + ", " + String.format("%.2f",weight) + "kg, " + age + " years old";
     }
 
 
@@ -99,6 +100,13 @@ public class Person implements Comparable<Person> {
         return Objects.hash(name, weight);
     }
 
+    public Person passTime(){
+        this.age++;
+        if (this.age > 30){
+            this.weight *=  1.08;
+        }
+        return this;
+    }
 
 
 }
