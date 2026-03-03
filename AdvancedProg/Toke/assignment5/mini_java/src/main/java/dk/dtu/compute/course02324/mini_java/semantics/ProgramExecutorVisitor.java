@@ -29,10 +29,37 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
                       float arg2 = args.get(1).floatValue();
                       return arg1 + arg2; };
 
+    private Function<List<Number>,Number> minus2int =
+            args -> { int arg1 = args.get(0).intValue();
+                        int arg2 = args.get(1).intValue();
+                        return arg1 - arg2;
+            };
+
     private Function<List<Number>,Number> minus2float =
             args -> { float arg1 = args.get(0).floatValue();
                 float arg2 = args.get(1).floatValue();
                 return arg1 - arg2; };
+
+    private Function<List<Number>,Number> plus1float =
+            args -> { float arg1 = args.get(0).floatValue();
+                        return arg1;
+            };
+
+    private Function<List<Number>,Number> plus1int =
+            args -> { int arg1 = args.get(0).intValue();
+                        return arg1; };
+
+    private Function<List<Number>,Number> minus1int =
+            args -> { int arg1 = args.get(0).intValue();
+                        return arg1; };
+    private Function<List<Number>,Number> minus1float =
+            args -> { float arg1 = args.get(0).floatValue();
+                    return arg1; };
+
+    private Function<List<Number>,Number> multint =
+                args -> { int  arg1 = args.get(0).intValue();
+                int arg2 = args.get(1).intValue();
+                return arg1 * arg2;};
 
     private Function<List<Number>,Number> multfloat =
             args -> { float arg1 = args.get(0).floatValue();
@@ -54,10 +81,20 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
                     entry(FLOAT, plus2float) )
             ),
             entry(MINUS2, Map.ofEntries(
-                    entry(FLOAT, minus2float) )
+                    entry(FLOAT, minus2float),
+                    entry(INT, minus2int))
             ),
             entry(MULT, Map.ofEntries(
-                    entry(FLOAT, multfloat) )
+                    entry(FLOAT, multfloat),
+                    entry(INT, multint))
+            ),
+            entry(PLUS1,Map.ofEntries(
+                    entry(FLOAT,plus1float),
+                    entry(INT,plus1int))
+            ),
+            entry(MINUS1,Map.ofEntries(
+                    entry(FLOAT,minus1float),
+                    entry(INT,minus1int))
             ));
 
     public ProgramExecutorVisitor(ProgramTypeVisitor pv) {
