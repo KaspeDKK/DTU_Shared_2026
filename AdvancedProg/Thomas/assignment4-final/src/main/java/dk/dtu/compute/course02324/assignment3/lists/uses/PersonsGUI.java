@@ -11,11 +11,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import jakarta.validation.constraints.NotNull;
-
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-
-//import static jdk.internal.org.jline.utils.Colors.s;
 
 /**
  * A GUI element that is allows the user to interact and
@@ -34,20 +34,22 @@ public class PersonsGUI extends GridPane {
 
     private TextArea textAreaExceptions;
 
+
     private Map<String, Integer> nameMap;
 
 
     //Weight
-
+    private double count = 0;
+    private double totalWeight;
     private double averageWeight;
     private Label averageWeightAmount;
     private Label mostOccuringAmount;
 
-    //Age
-//    private Integer maxAge;
-//    private Integer minAge;
-    private Label maxAgeLabel;
-    private Label minAgeLabel;
+    private Integer minAge;
+    private Integer maxAge;
+    private Label labelMinAge;
+    private Label labelMaxAge;
+
 
 
     /**
@@ -59,8 +61,8 @@ public class PersonsGUI extends GridPane {
     public PersonsGUI(@NotNull java.util.List<Person> persons) {
         this.persons = persons;
 
-//        this.count = 0.0;
-//        this.totalWeight = 0.0;
+        this.count = 0.0;
+        this.totalWeight = 0.0;
 
         this.setVgap(5.0);
         this.setHgap(5.0);
@@ -71,15 +73,12 @@ public class PersonsGUI extends GridPane {
         TextField field = new TextField("name");
         field.setPrefColumnCount(5);
 
+
         //Egen implement:
         TextField wField = new TextField("weight");
         wField.setPrefColumnCount(5);
 
-        //Egen implement af age:
-        TextField aField = new TextField("Age");
-        wField.setPrefColumnCount(5);
 
-        //Egen implement af index:
         TextField indexField = new TextField("index");
         indexField.setPrefColumnCount(5);
 
@@ -91,33 +90,45 @@ public class PersonsGUI extends GridPane {
 
         this.averageWeight = 0.0;
 
-        // age implementations
 
-        Label maxAgeLabelPlaceholder = new Label("Maximum age:");
-        this.maxAgeLabel = new Label("No info");
+            //age
+        TextField ageField = new TextField("Age");
+        ageField.setPrefColumnCount(5);
 
-        Label minAgeLabelPlaceholder = new Label("Minimum age:");
-        this.minAgeLabel = new Label("No info");
+        Label textMinAge = new Label("Min. age: ");
+        this.labelMinAge = new Label("No info");
 
 
+        Label textMaxAge = new Label("\nMax. age: "); // this new-line works better for visual in GUI.
+        this.labelMaxAge = new Label("No info");
+
+
+
+        // TODO for all buttons installed below, the actions need to properly
+        //      handle (catch) exceptions, and it would be nice if the GUI
+        //      could also show the exceptions thrown by user actions on
+        //      button pressed (cf. Assignment 2).
 
         // button for adding a new person to the list (based on
         // the name in the text field (the weight is just incrementing)
+        // TODO a text field for the weight could be added to this GUI
 
 
         Button addAtIndex = new Button("Add at index");
         addAtIndex.setOnAction(
                 e -> {
                     try {
-                        if (field.getText().isEmpty() ||aField.getText().isEmpty() || wField.getText().isEmpty()) {
-                            throw new IllegalArgumentException("A person must have a name, weight and age \n");
+                        if (field.getText().isEmpty() || wField.getText().isEmpty() || ageField.getText().isEmpty()) {
+                            throw new IllegalArgumentException("A person must have a name \n");
                         }
                         int insertIndex = Integer.parseInt(indexField.getText());
                         Double weight = Double.parseDouble(wField.getText());
                         String name = field.getText();
-                        Integer age = Integer.parseInt(aField.getText());
+                        Integer age = Integer.parseInt(ageField.getText());
+
                         Person person = new Person(name, weight, age);
                         persons.add(insertIndex, person);
+
 
                     } catch (NumberFormatException ex) {
                         textAreaExceptions.appendText("(Add At Index) Input-ex:: " + ex.getMessage() + "\n");
@@ -137,24 +148,24 @@ public class PersonsGUI extends GridPane {
         );
 
 
+
+
         Button addButton = new Button("Add");
         addButton.setOnAction(
                 e -> {
                     try {
-                        if (field.getText().isEmpty() || wField.getText().isEmpty() || aField.getText().isEmpty()) {
+                        if (field.getText().isEmpty() || wField.getText().isEmpty() || ageField.getText().isEmpty()) {
                             throw new IllegalArgumentException("A person must have a name, weight and age \n");
-                        }
-                        if ((Integer.parseInt(aField.getText()) > 99 || Integer.parseInt(aField.getText()) < 0)){
-                            throw new IllegalArgumentException("A person needs to have a reasonable age");
                         }
                         Double weight = Double.parseDouble(wField.getText());
                         String name = field.getText();
-                        Integer age = Integer.parseInt(aField.getText());
+                        Integer age = Integer.parseInt(ageField.getText());
+
                         Person person = new Person(name, weight, age);
                         persons.add(person);
 
                     } catch (NumberFormatException ex) {
-                        textAreaExceptions.appendText("Wheight needs to be of type double insted of: " + ex.getMessage() + "\n");
+                        textAreaExceptions.appendText("Check values in 'fields': " + ex.getMessage() + "\n");
                     }catch (IllegalArgumentException ex) {
                         textAreaExceptions.appendText(ex.getMessage() + "\n");
                     }  finally {
@@ -162,6 +173,8 @@ public class PersonsGUI extends GridPane {
                         update();
                     }
                 });
+
+
 
         Comparator<Person> comparator = new GenericComparator<>();
 
@@ -194,37 +207,20 @@ public class PersonsGUI extends GridPane {
                     update();
                 });
 
-        Button passTimeButton = new Button("Pass time");
-        passTimeButton.setOnAction(
-                e -> {
-                   // persons.stream().forEach(Person::passTime);
-
-                    persons.stream().map(person ->
-                            person.passTime()).toList();
-
-                    persons.removeIf(p -> p.getAge() >= 99);
-                    //update GUI
-                    refreshStats();
-                    update();
-                }
-        );
-
         // combines the above elements into vertically arranged boxes
         // which are then added to the left column of the grid pane
 
 
         // input area
-        HBox actionBoxInput = new HBox(field, wField,aField);
+        HBox actionBoxInput = new HBox(field, wField, ageField);
         actionBoxInput.setSpacing(5.0);
 
-        HBox actionBoxButtons = new HBox(addButton, sortButton, clearButton, passTimeButton);
+        HBox actionBoxButtons = new HBox(addButton, sortButton, clearButton);
         actionBoxButtons.setSpacing(5.0);
 
         VBox actionBox = new VBox(actionBoxInput, actionBoxButtons);
-        actionBox.setSpacing(5.0);
+        actionBox.setSpacing(5.0);;
         actionBox.setMinHeight(70);
-
-
 
 
         // input at index area:
@@ -237,7 +233,9 @@ public class PersonsGUI extends GridPane {
         VBox indexBox = new VBox(labelIndexInput, actionIndexInput);
 
 
-        VBox combined = new VBox(actionBox, indexBox, averageWeight, averageWeightAmount, mostOccuring, mostOccuringAmount,maxAgeLabelPlaceholder, maxAgeLabel,minAgeLabelPlaceholder, minAgeLabel);
+
+
+        VBox combined = new VBox(actionBox, indexBox, averageWeight, averageWeightAmount, mostOccuring, mostOccuringAmount, textMaxAge, labelMaxAge, textMinAge, labelMinAge);
         combined.setPadding(new Insets(5));
         combined.setSpacing(5.0);
         this.add(combined, 0, 0);
@@ -314,12 +312,6 @@ public class PersonsGUI extends GridPane {
      * @Note: MostUsedName works like Catan-rules, if more than one name satisfy "most used", then the first name added, appears as most used.
      */
     private void update() {
-//        count = 0;
-//        totalWeight = 0;
-        nameMap.clear();
-        averageWeight = 0.0;
-
-
         personsPane.getChildren().clear();
         // adds all persons to the list in the personsPane (with
         // a delete button in front of it)
@@ -334,14 +326,10 @@ public class PersonsGUI extends GridPane {
                         update();
                     }
             );
-
-
-
             HBox entry = new HBox(deleteButton, personLabel);
             entry.setSpacing(5.0);
             entry.setAlignment(Pos.BASELINE_LEFT);
             personsPane.add(entry, 0, i);
-
 
         }
     }
@@ -353,77 +341,96 @@ public class PersonsGUI extends GridPane {
      * only addding and deleting should call this method.
      */
     private void refreshStats() {
-//        totalWeight = 0;
+        //totalWeight = 0;
         nameMap.clear();
-        averageWeight = 0.0;
+        //averageWeight = 0.0;
+
+//        for (int i=0; i < persons.size(); i++) {
+//            Person person = persons.get(i);
+//            //totalWeight += person.weight;
+//            // averageWeight = (totalWeight / persons.size());
+//
+//            if (this.nameMap.containsKey(person.name)) {
+//                Integer currentKeyAmount = nameMap.get(person.name);
+//                nameMap.put(person.name, currentKeyAmount + 1);
+//            } else {
+//                nameMap.put(person.name, 1);
+//            }
+//        }
 
 
+        // Avarage-weight lambda calc
+        averageWeight = persons.stream()
+                .mapToDouble(cPerson -> cPerson.getWeight())
+                .average().orElse(0.0);
 
-        //4.A Implement Lambda function instead.
-        averageWeight = persons.stream().map(Person::getWeight)
-                .reduce(0.0,(w1,w2) -> w1 + w2);
 
-
-        // average-weight calc:
-        if (persons.isEmpty() == true) {
+        if (persons.isEmpty()) {
             averageWeightAmount.setText("No info");
         } else {
-            averageWeightAmount.setText(String.format("%.2f", averageWeight/persons.size()) + " kg");
+            averageWeightAmount.setText(String.format("%.2f", averageWeight) + " kg");
         }
 
 
-        // Most used name lambda
+// Most used name lambda
         nameMap = persons.stream()      //her "lægger jeg alle objecter af person på et bånd"
-                .collect(Collectors.groupingBy(         //Collect samler det i et nyt map, hvor collectors.groupingBy er sorteringsmekanismen
-                        person -> person.getName(), Collectors.summingInt(person -> 1)     //hvor ve side er <key> og højre side summer op <value>
+                         .collect(Collectors.groupingBy(         //Collect samler det i et nyt map tror jeg, hvor collectors.groupingBy er sorteringsmekanismen
+                        person -> person.getName(), Collectors.summingInt( person -> 1)     //hvor ve side er <key> og højre side summer op <value>
                 ));
 
-//        Input:  persons = [Ekke, Anna, Ekke, Ekke, Bob, Anna]
-//
-//        1. persons.stream() → Stream<Person>: [Ekke, Anna, Ekke, Ekke, Bob, Anna] på "båndet"
-//
-//        2. groupingBy(person -> person.getName()) → grupperer efter navn:
-//        "Ekke" → [Ekke, Ekke, Ekke]
-//        "Anna" → [Anna, Anna]
-//        "Bob"  → [Bob]
-//
-//        3. summingInt(person -> 1) → tæller hvor mange i hver gruppe (1 pr. person):
-//        "Ekke" → 3 stk
-//        "Anna" → 2 stk
-//        "Bob"  → 1 stk
-//
-//        Output: nameMap = {"Ekke"=3, "Anna"=2, "Bob"=1}
+        // så jeg ender med et map<String, Integer> hvor <Ekkart, 4> f.eks. betyder ekkart navnet dukker op 4 gange.
+        // Nu har jeg mine værdier, så skal jeg finde "max" value.
 
-        nameMap.entrySet().stream() // jeg lægger parene af <key, value> ud på et bånd.
+        nameMap.entrySet()
+                .stream() // jeg lægger parne af <key, value> ud på et bånd.
                 .max(Comparator.comparingInt(entry -> entry.getValue())) // max sammenligning på <value>
                 .ifPresentOrElse(
                         entry -> mostOccuringAmount.setText(entry.getValue() + "* " + entry.getKey()),
                         () ->  mostOccuringAmount.setText("No info")
                 );
+        
+        //most used name calc:
+//        int locMaxValue = 0;
+//        String locMostUsedName = "";
+//        for (Map.Entry<String, Integer> i : nameMap.entrySet()) {
+//            if (i.getValue() > locMaxValue) {
+//                locMostUsedName = i.getKey();
+//                locMaxValue = i.getValue();
+//            }
+//        }
+//
+//        if (persons.isEmpty()) {
+//            mostOccuringAmount.setText("No info");
+//        } else {
+//            mostOccuringAmount.setText(locMaxValue + "* " + locMostUsedName);
+//        }
 
 
-        //Finder max og min af Person age.
-        int minAge = persons.stream() //Stream undgår loop
-                .map(Person::getAge) //vi mapper person og bruger vores funktion getAge (Person)
-                .reduce(999, (a1, a2) ->
-                        a1 < a2 ? a1 : a2);  // 999 som start værdi - vi reducere ned til den mindste værdi via en lambda funktion.
-        minAgeLabel.setText("Min age: " + minAge);
+        // Age lamda logic
+        maxAge = persons.stream()
+                .map(currentPerson -> currentPerson.getAge())
+                .reduce(0, (max, age) -> Math.max(max, age));
 
-        int maxAge = persons.stream().map(Person::getAge)
-                .reduce(-1, (a1, a2) ->
-                        a1 > a2 ? a1 : a2);  // -1 som start værdi istedet.
-        maxAgeLabel.setText("Max age: " + maxAge);
-
+        minAge = persons.stream()
+                .map(currentPerson -> currentPerson.getAge())
+                .reduce(maxAge, (min, age) -> Math.min(min, age));
 
         if (persons.isEmpty()) {
-            mostOccuringAmount.setText("No info");
-            maxAgeLabel.setText("No info:");
-            minAgeLabel.setText("No info:");
+            labelMinAge.setText("No info");
+            labelMaxAge.setText("No info");
+        } else {
+            labelMinAge.setText(minAge + " years");
+            labelMaxAge.setText(maxAge + " years");
         }
 
-
-
     }
+
+
+
+    // TODO this GUI could be extended by some additional widgets for issuing other
+    //      operations of lists. And the possibly thrown exceptions should be caught
+    //      in the event handler (and possibly shown in an additional text area for
+    //      exceptions; see Assignment 2).
 
 }
 

@@ -8,19 +8,18 @@ public class Person implements Comparable<Person> {
 
     final public String name;
 
-    private double weight;
+    final public double weight;
 
     private Integer age;
 
     Person(@NotNull String name, @NotNull double weight, @NotNull Integer age) {
-        if (name == null || weight <= 0) {
+        if (name == null || weight <= 0 || age < 0) {
             throw new IllegalArgumentException("A persons must be initialized with a" +
-                    "(non null) name and an weight greater than 0");
+                    "(non null) name and an weight greater than 0, and an age >= 0");
         }
-
-        this.age = age;
         this.name = name;
         this.weight = weight;
+        this.age = age;
     }
 
     @Override
@@ -43,13 +42,17 @@ public class Person implements Comparable<Person> {
             return -1;
         }
 
+        // both names and weight are equal.
+
+
         if (this.age > o.age) {
             return 1;
-        } if (this.age < o.age) {
+        }
+        if (this.age < o.age) {
             return -1;
         }
 
-        // both names and weight and age are equal.
+        // bothe names, weight, age.
         return 0;
     }
 
@@ -63,34 +66,11 @@ public class Person implements Comparable<Person> {
         // This could be automatically generated, but this automatically
         // generated representation is a bit too verbose. Therefore, we
         // chose a simpler representation here.
-        return name + ", " + weight + "kg" + ", " + age + " years";
+        return name + ", " + weight + "kg , " + age + " years";
     }
 
 
-    public Integer getAge() {
-        return this.age;
-    }
-
-    public void setAge(int newAge){
-        this.age = newAge;
-    }
-
-    public Person passTime(){
-        this.age++;
-
-        if (this.age > 30){
-            this.weight = this.weight*1.08;
-        }
-        return this;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public Double getWeight(){
-        return this.weight;
-    }
+    //
 
     @Override
     public boolean equals(Object o) {
@@ -108,5 +88,17 @@ public class Person implements Comparable<Person> {
     @Override
     public int hashCode() {
         return Objects.hash(name, weight);
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public String getName() {
+        return name;
     }
 }
