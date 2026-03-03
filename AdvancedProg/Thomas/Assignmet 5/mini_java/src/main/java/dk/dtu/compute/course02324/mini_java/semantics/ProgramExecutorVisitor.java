@@ -34,10 +34,39 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
                 float arg2 = args.get(1).floatValue();
                 return arg1 - arg2; };
 
+    private Function<List<Number>,Number> minus2int =
+            args -> { float arg1 = args.get(0).intValue();
+                float arg2 = args.get(1).intValue();
+                return arg1 - arg2; };
+
     private Function<List<Number>,Number> multfloat =
             args -> { float arg1 = args.get(0).floatValue();
                 float arg2 = args.get(1).floatValue();
                 return arg1 * arg2; };
+
+    private Function<List<Number>,Number> multint =
+            args -> { float arg1 = args.get(0).intValue();
+                float arg2 = args.get(1).intValue();
+                return arg1 * arg2; };
+
+    private Function<List<Number>,Number> plus1int =
+            args -> { int arg1 = args.get(0).intValue();
+                return arg1; };
+
+    private Function<List<Number>,Number> plus1float =
+            args -> { float arg1 = args.get(0).floatValue();
+                return arg1; };
+
+    private Function<List<Number>,Number> minus1int =
+            args -> { int arg1 = args.get(0).intValue();
+                return - (arg1); };
+
+    private Function<List<Number>,Number> minus1float =
+            args -> { float arg1 = args.get(0).floatValue();
+                return - (arg1); };
+
+
+
 
     /**
      * The map below associates each operator for each possible type with a function
@@ -54,11 +83,27 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
                     entry(FLOAT, plus2float) )
             ),
             entry(MINUS2, Map.ofEntries(
+                    entry(INT, minus2int),
                     entry(FLOAT, minus2float) )
             ),
             entry(MULT, Map.ofEntries(
+                    entry(INT, multint),
                     entry(FLOAT, multfloat) )
-            ));
+            ),
+            entry(PLUS1, Map.ofEntries(
+                    entry(INT, plus1int),
+                    entry(FLOAT, plus1float)
+            )),
+            entry(MINUS1, Map.ofEntries(
+                    entry(INT, minus1int),
+                    entry(FLOAT, minus1float)
+            )),
+            entry(DIV, Map.ofEntries(
+                    entry(INT, div2int),
+                    entry(FLOAT, div2float)
+            ))
+
+            );
 
     public ProgramExecutorVisitor(ProgramTypeVisitor pv) {
         this.pv = pv;
