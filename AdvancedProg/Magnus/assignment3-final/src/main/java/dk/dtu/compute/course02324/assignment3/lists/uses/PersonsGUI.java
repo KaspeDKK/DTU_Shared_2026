@@ -101,14 +101,8 @@ public class PersonsGUI extends GridPane {
 
 
 
-        // TODO for all buttons installed below, the actions need to properly
-        //      handle (catch) exceptions, and it would be nice if the GUI
-        //      could also show the exceptions thrown by user actions on
-        //      button pressed (cf. Assignment 2).
-
         // button for adding a new person to the list (based on
         // the name in the text field (the weight is just incrementing)
-        // TODO a text field for the weight could be added to this GUI
 
 
         Button addAtIndex = new Button("Add at index");
@@ -430,13 +424,6 @@ public class PersonsGUI extends GridPane {
 
 
     }
-
-
-
-    // TODO this GUI could be extended by some additional widgets for issuing other
-    //      operations of lists. And the possibly thrown exceptions should be caught
-    //      in the event handler (and possibly shown in an additional text area for
-    //      exceptions; see Assignment 2).
 
 }
 
