@@ -75,12 +75,13 @@ public class Person implements Comparable<Person> {
         this.age = newAge;
     }
 
-    public void passTime(){
+    public Person passTime(){
         this.age++;
 
         if (this.age > 30){
             this.weight = this.weight*1.08;
         }
+        return this;
     }
 
     public String getName() {

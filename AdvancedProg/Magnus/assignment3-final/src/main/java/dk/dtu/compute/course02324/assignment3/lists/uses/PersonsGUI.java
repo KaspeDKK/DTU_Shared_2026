@@ -15,6 +15,8 @@ import jakarta.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static jdk.internal.org.jline.utils.Colors.s;
+
 /**
  * A GUI element that is allows the user to interact and
  * change a list of persons.
@@ -201,7 +203,10 @@ public class PersonsGUI extends GridPane {
         Button passTimeButton = new Button("Pass time");
         passTimeButton.setOnAction(
                 e -> {
-                    persons.stream().forEach(Person::passTime);
+                   // persons.stream().forEach(Person::passTime);
+
+                    persons.stream().map(person ->
+                            person.passTime()).toList();
 
                     persons.removeIf(p -> p.getAge() >= 99);
                     //update GUI
