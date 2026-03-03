@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static jdk.internal.org.jline.utils.Colors.s;
+//import static jdk.internal.org.jline.utils.Colors.s;
 
 /**
  * A GUI element that is allows the user to interact and
@@ -380,7 +380,7 @@ public class PersonsGUI extends GridPane {
 
         // Most used name lambda
         nameMap = persons.stream()      //her "lægger jeg alle objecter af person på et bånd"
-                .collect(Collectors.groupingBy(         //Collect samler det i et nyt map tror jeg, hvor collectors.groupingBy er sorteringsmekanismen
+                .collect(Collectors.groupingBy(         //Collect samler det i et nyt map, hvor collectors.groupingBy er sorteringsmekanismen
                         person -> person.getName(), Collectors.summingInt(person -> 1)     //hvor ve side er <key> og højre side summer op <value>
                 ));
 
