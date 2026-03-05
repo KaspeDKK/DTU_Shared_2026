@@ -66,6 +66,30 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
                 float arg2 = args.get(1).floatValue();
                 return arg1 * arg2; };
 
+    private Function<List<Number>,Number> divint =
+            args -> { int  arg1 = args.get(0).intValue();
+            int arg2 = args.get(1).intValue();
+            return arg1 / arg2;
+            };
+
+    private Function<List<Number>,Number> divfloat =
+            args -> { float arg1 = args.get(0).floatValue();
+            float arg2 = args.get(1).floatValue();
+            return arg1 / arg2;
+            };
+
+    private Function<List<Number>,Number> modint =
+            args -> { int  arg1 = args.get(0).intValue();
+            int arg2 = args.get(1).intValue();
+            return arg1 % arg2;
+            };
+
+    private Function<List<Number>,Number> modfloat =
+            args -> { float arg1 = args.get(0).floatValue();
+            float arg2 = args.get(1).floatValue();
+            return arg1 % arg2;
+            };
+
     /**
      * The map below associates each operator for each possible type with a function
      * (lambda expression), that represents the semantics of that operation. These
@@ -95,7 +119,17 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
             entry(MINUS1,Map.ofEntries(
                     entry(FLOAT,minus1float),
                     entry(INT,minus1int))
+            ),
+            entry(DIV,Map.ofEntries(
+                    entry(FLOAT,divfloat),
+                    entry(INT,divint))
+            ),
+            entry(MOD,Map.ofEntries(
+                    entry(FLOAT,modfloat),
+                    entry(INT,modint))
             ));
+
+
 
     public ProgramExecutorVisitor(ProgramTypeVisitor pv) {
         this.pv = pv;
