@@ -159,12 +159,8 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
     public void visit(PrintStatement printStatement) {
         printStatement.expression.accept(this);
 
-        /* TODO Assignment 5a: Here some code which actually executes the
-                print operation must be added. It should actually print out the
-                prefix of the print statement and then the CURRENT value of the
-                expression.
-         */
-
+        Number result = value.get(printStatement.expression);
+        System.out.println(printStatement.prefix + result);
     }
 
     @Override
