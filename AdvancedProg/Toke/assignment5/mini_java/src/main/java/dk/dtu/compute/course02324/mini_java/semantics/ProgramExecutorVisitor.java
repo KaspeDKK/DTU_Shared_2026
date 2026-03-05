@@ -51,10 +51,10 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
 
     private Function<List<Number>,Number> minus1int =
             args -> { int arg1 = args.get(0).intValue();
-                        return arg1; };
+                        return -arg1; };
     private Function<List<Number>,Number> minus1float =
             args -> { float arg1 = args.get(0).floatValue();
-                    return arg1; };
+                    return -arg1; };
 
     private Function<List<Number>,Number> multint =
                 args -> { int  arg1 = args.get(0).intValue();
