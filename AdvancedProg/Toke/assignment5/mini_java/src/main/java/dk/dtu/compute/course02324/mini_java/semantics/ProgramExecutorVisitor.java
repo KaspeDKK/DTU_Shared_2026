@@ -159,8 +159,8 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
     public void visit(PrintStatement printStatement) {
         printStatement.expression.accept(this);
 
-        Number result = value.get(printStatement.expression);
-        System.out.println(printStatement.prefix + result);
+        Number result = values.get(printStatement.expression);
+        System.out.println(printStatement.prefix + " " + result);
     }
 
     @Override
