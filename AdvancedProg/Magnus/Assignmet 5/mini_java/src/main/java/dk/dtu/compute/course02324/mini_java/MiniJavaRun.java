@@ -48,6 +48,13 @@ public class MiniJavaRun {
 
     public static void main(String... args) {
 
+        //egen implementation
+        System.out.println("My own implementations");
+
+        Statement myStatement0 = Sequence(
+
+        );
+
         System.out.println("Result provided by Java");
         int i;
         int j = i = 2 + (i = 3);
