@@ -35,8 +35,8 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
                 return arg1 - arg2; };
 
     private Function<List<Number>,Number> minus2int =
-            args -> { float arg1 = args.get(0).intValue();
-                float arg2 = args.get(1).intValue();
+            args -> { int arg1 = args.get(0).intValue();
+                int arg2 = args.get(1).intValue();
                 return arg1 - arg2; };
 
     private Function<List<Number>,Number> multfloat =
@@ -45,8 +45,8 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
                 return arg1 * arg2; };
 
     private Function<List<Number>,Number> multint =
-            args -> { float arg1 = args.get(0).intValue();
-                float arg2 = args.get(1).intValue();
+            args -> { int arg1 = args.get(0).intValue();
+                int arg2 = args.get(1).intValue();
                 return arg1 * arg2; };
 
     private Function<List<Number>,Number> plus1int =
@@ -156,11 +156,8 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
     public void visit(PrintStatement printStatement) {
         printStatement.expression.accept(this);
 
-        /* TODO Assignment 5a: Here some code which actually executes the
-                print operation must be added. It should actually print out the
-                prefix of the print statement and then the CURRENT value of the
-                expression.
-         */
+        Number result = values.get(printStatement.expression);
+        System.out.println(printStatement.prefix + " " + result);
 
     }
 
@@ -168,21 +165,17 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
     public void visit(WhileLoop whileLoop) {
         whileLoop.expression.accept(this);
 
-        /* TODO Assignment 5b: Here some code which actually executes the
-                while loop must be added. This code should get the current value
-                of the expression, and if that expression is greater or equal
-                than 0, execute the statement of the loop (by recursively
-                executing the statement by invoking the accept method). After
-                that, it should trigger the evaluation of the expression of the
-                while loop again. If the value of this expression is still greater
-                or equal than 0, the execution of the loop should be continued ...
-                For doing this, the respective accept methods need to be
-                issued on the relevant "components" of the while statements,
-                and the values of these "components" can then be obtained by
-                looking them up in the values Map.
-         */
+        while (values.get(whileLoop.expression).intValue() >= 0) {
+            // Execute single body statement (matches your WhileLoop class)
+            whileLoop.statement.accept(this);
 
+            // Re-evaluate condition after body executes
+            whileLoop.expression.accept(this);
+        }
     }
+
+
+
 
     @Override
     public void visit(Assignment assignment) {
