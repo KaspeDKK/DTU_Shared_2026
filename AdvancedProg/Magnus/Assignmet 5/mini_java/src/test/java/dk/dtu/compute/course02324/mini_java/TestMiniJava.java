@@ -126,6 +126,22 @@ public class TestMiniJava{
 
     }
 
+    public void testSomeExceptions(){
+
+        Statement statement =
+                new Sequence(
+                        new Declaration(
+                                FLOAT
+
+                        )
+        );
+
+        ptv.visit(statement);
+        if (!ptv.problems.isEmpty()) {
+            fail("The type visitor did detect typing problems, which should not be there!");
+        }
+    }
+
     @Test
     public void testWronglyTypedProgram() {
         int i;
@@ -176,6 +192,7 @@ public class TestMiniJava{
             };
             i = i - 1;
         };
+
 
         Statement statement = Sequence(
                 Declaration(INT, Var("i"), Literal(5)),
