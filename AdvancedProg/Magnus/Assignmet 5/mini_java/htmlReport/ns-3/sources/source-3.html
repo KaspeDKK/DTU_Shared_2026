@@ -1,0 +1,271 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ProgramTypeVisitor</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">dk.dtu.compute.course02324.mini_java.semantics</a>
+</div>
+
+<h1>Coverage Summary for Class: ProgramTypeVisitor (dk.dtu.compute.course02324.mini_java.semantics)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ProgramTypeVisitor</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    72,5%
+  </span>
+  <span class="absValue">
+    (29/40)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    86,4%
+  </span>
+  <span class="absValue">
+    (57/66)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package dk.dtu.compute.course02324.mini_java.semantics;
+&nbsp;
+&nbsp;import dk.dtu.compute.course02324.mini_java.model.*;
+&nbsp;import static dk.dtu.compute.course02324.mini_java.model.Operator.*;
+&nbsp;import static dk.dtu.compute.course02324.mini_java.utils.Shortcuts.*;
+&nbsp;
+&nbsp;import java.util.*;
+&nbsp;
+&nbsp;import static java.util.Map.entry;
+&nbsp;
+<b class="fc">&nbsp;public class ProgramTypeVisitor extends ProgramVisitor {</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * This is a very simple map of operators to their possible types.
+&nbsp;     * Note the typing of an operator is very simplistic for now; the
+&nbsp;     * types of all operands and the result of the operation are the same.&lt;p&gt;
+&nbsp;     *
+&nbsp;     *
+&nbsp;     */
+<b class="fc">&nbsp;    final private Map&lt;Operator,List&lt;Type&gt;&gt; operatorTypes = Map.ofEntries(</b>
+<b class="fc">&nbsp;            entry(PLUS2, List.of(INT, FLOAT)),</b>
+<b class="fc">&nbsp;            entry(MINUS2, List.of(INT, FLOAT)),</b>
+<b class="fc">&nbsp;            entry(MULT, List.of(INT, FLOAT)),</b>
+&nbsp;
+<b class="fc">&nbsp;            entry(PLUS1, List.of(INT, FLOAT)),</b>
+<b class="fc">&nbsp;            entry(MINUS1, List.of(INT, FLOAT)),</b>
+<b class="fc">&nbsp;            entry(DIV, List.of(INT, FLOAT)),</b>
+<b class="fc">&nbsp;            entry(MOD, List.of(INT, FLOAT))</b>
+&nbsp;
+&nbsp;            );
+&nbsp;
+<b class="fc">&nbsp;    final public Map&lt;Expression, Type&gt; typeMapping = new HashMap&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;    final public Set&lt;Var&gt; variables = new HashSet&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;    final public List&lt;String&gt; problems = new ArrayList&lt;&gt;();</b>
+&nbsp;
+&nbsp;    public void visit(Statement statement) {
+<b class="fc">&nbsp;        statement.accept(this);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void visit(Sequence sequence) {
+<b class="fc">&nbsp;        for (Statement substatement: sequence.statements) {</b>
+<b class="fc">&nbsp;            substatement.accept(this);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void visit(Declaration declaration) {
+<b class="fc">&nbsp;        if (declaration.expression != null) {</b>
+<b class="fc">&nbsp;            declaration.expression.accept(this);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        Var variable = declaration.variable;</b>
+<b class="fc">&nbsp;        if (variables.contains(variable)) {</b>
+<b class="fc">&nbsp;            problems.add(&quot;Variable &quot; + variable.name + &quot; declared more than once.&quot;);</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            variables.add(variable);</b>
+<b class="fc">&nbsp;            typeMapping.put(variable, declaration.type);</b>
+<b class="fc">&nbsp;            if (declaration.expression != null) {</b>
+<b class="fc">&nbsp;                Type expressionType = typeMapping.get(declaration.expression);</b>
+<b class="pc">&nbsp;                if (!declaration.type.equals(expressionType)) {</b>
+<b class="nc">&nbsp;                    problems.add(&quot;Type mismatch for declaration of &quot; +</b>
+<b class="nc">&nbsp;                            declaration.type.getName() + &quot; &quot; + declaration.variable.name +</b>
+<b class="nc">&nbsp;                            &quot;: expression is type &quot; + expressionType.getName() + &quot;.&quot;);</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void visit(PrintStatement printStatement) {
+<b class="fc">&nbsp;        printStatement.expression.accept(this);</b>
+&nbsp;
+&nbsp;        // Here, we do not need to do anything except for recursively
+&nbsp;        // making sure that the PrintStatements expression is valid
+&nbsp;        // (which the above accept actually does).
+&nbsp;    }
+&nbsp;
+&nbsp;    public void visit(WhileLoop whileLoop) {
+<b class="fc">&nbsp;        whileLoop.expression.accept(this);</b>
+&nbsp;        // Type check condition expression (boolean expected, but your lang uses numeric &gt; 0)
+<b class="fc">&nbsp;        Type conditionType = typeMapping.get(whileLoop.expression);</b>
+<b class="pc">&nbsp;        if (conditionType != INT &amp;&amp; conditionType != FLOAT) {</b>
+<b class="nc">&nbsp;            problems.add(&quot;While loop condition must be INT or FLOAT, found &quot; + conditionType);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Type check body statement
+<b class="fc">&nbsp;        whileLoop.statement.accept(this);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void visit(Assignment assignment) {
+<b class="fc">&nbsp;        assignment.expression.accept(this);</b>
+<b class="fc">&nbsp;        if (variables.contains(assignment.variable)) {</b>
+<b class="fc">&nbsp;            Type type = typeMapping.get(assignment.variable);</b>
+<b class="fc">&nbsp;            if (!type.equals(typeMapping.get(assignment.expression))) {</b>
+<b class="fc">&nbsp;                problems.add(&quot;Type mismatch for assignment to variable &quot; +</b>
+<b class="fc">&nbsp;                        assignment.variable.name + &quot; of type &quot; + type.getName() + &quot;.&quot;);</b>
+&nbsp;            } else {
+<b class="fc">&nbsp;                typeMapping.put(assignment, type);</b>
+&nbsp;            }
+&nbsp;        } else {
+<b class="fc">&nbsp;            problems.add(&quot;Variable &quot; + assignment.variable.name + &quot; not defined.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void visit(Literal literal) {
+<b class="fc">&nbsp;        if (literal instanceof IntLiteral) {</b>
+<b class="fc">&nbsp;            typeMapping.put(literal, INT);</b>
+<b class="pc">&nbsp;        }  else if (literal instanceof FloatLiteral) {</b>
+<b class="fc">&nbsp;            typeMapping.put(literal, FLOAT);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void visit(Var var) {
+<b class="fc">&nbsp;        if (!variables.contains(var)) {</b>
+<b class="fc">&nbsp;            problems.add(&quot;Variable not defined &quot; + var);</b>
+<b class="pc">&nbsp;        } else if (typeMapping.get(var) == null) {</b>
+&nbsp;            // this should actually not happen
+<b class="nc">&nbsp;            problems.add(&quot;Variable &quot; + var.name + &quot; does not have a type.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void visit(OperatorExpression operatorExpression) {
+<b class="fc">&nbsp;        Type operandType = null;</b>
+<b class="fc">&nbsp;        for (Expression subexpression: operatorExpression.operands) {</b>
+<b class="fc">&nbsp;            subexpression.accept(this);</b>
+<b class="fc">&nbsp;            Type subexpressionType = typeMapping.get(subexpression);</b>
+<b class="pc">&nbsp;            if (subexpressionType == null) {</b>
+<b class="nc">&nbsp;                problems.add(&quot;A subexpression of &quot; + operatorExpression.operator.getName() + &quot; does not have a type.&quot;);</b>
+&nbsp;            }
+<b class="fc">&nbsp;            if (operandType == null) {</b>
+<b class="fc">&nbsp;                operandType = subexpressionType;</b>
+<b class="pc">&nbsp;            } else if (!operandType.equals(subexpressionType)) {</b>
+<b class="nc">&nbsp;                problems.add(&quot;Subexpressions of operator do mot match for &quot; + operatorExpression.operator.getName() + &quot;.&quot;);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="pc">&nbsp;        if (operandType != null) {</b>
+<b class="fc">&nbsp;            List&lt;Type&gt; opTypes = operatorTypes.get(operatorExpression.operator);</b>
+<b class="pc">&nbsp;            if (opTypes != null &amp;&amp; opTypes.contains(operandType)) {</b>
+<b class="fc">&nbsp;                typeMapping.put(operatorExpression, operandType);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                problems.add(&quot;Operator does not support the type of its operands. Operator is &quot; + operatorExpression.operator + &quot; and operand type is &quot; + operandType);</b>
+&nbsp;            }
+&nbsp;        } else {
+<b class="nc">&nbsp;            problems.add(&quot;Subexpression(s) of operand do not have a type: Operator &quot; + operatorExpression.operator);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-10 08:54</div>
+</div>
+</body>
+</html>

@@ -104,16 +104,6 @@ public class PersonsGUI extends GridPane {
 
 
 
-        // TODO for all buttons installed below, the actions need to properly
-        //      handle (catch) exceptions, and it would be nice if the GUI
-        //      could also show the exceptions thrown by user actions on
-        //      button pressed (cf. Assignment 2).
-
-        // button for adding a new person to the list (based on
-        // the name in the text field (the weight is just incrementing)
-        // TODO a text field for the weight could be added to this GUI
-
-
         Button addAtIndex = new Button("Add at index");
         addAtIndex.setOnAction(
                 e -> {
@@ -207,6 +197,37 @@ public class PersonsGUI extends GridPane {
                     update();
                 });
 
+        /*
+        age += 1
+        if age > 30 {weight = weight *1.08}
+        if age >= 99 {remove from list}
+
+        refreshStats()
+        update()
+         */
+
+        Button timeButton = new Button("Time pass");
+        timeButton.setOnAction(e -> {
+            java.util.List<Person> newPersonList = persons.stream()
+                    .map((p) -> {
+                        p.setAge(p.getAge() + 1);
+                        if (p.getAge() > 30) {
+                            p.weight = p.weight * 1.08;
+                        }
+                        return p;
+                    })
+                    .filter((p) -> p.getAge() < 99)
+                    .toList();
+
+            persons.clear();
+            persons.addAll(newPersonList);
+
+            refreshStats();
+            update();
+        });
+
+
+
         // combines the above elements into vertically arranged boxes
         // which are then added to the left column of the grid pane
 
@@ -235,7 +256,7 @@ public class PersonsGUI extends GridPane {
 
 
 
-        VBox combined = new VBox(actionBox, indexBox, averageWeight, averageWeightAmount, mostOccuring, mostOccuringAmount, textMaxAge, labelMaxAge, textMinAge, labelMinAge);
+        VBox combined = new VBox(actionBox, timeButton, indexBox, averageWeight, averageWeightAmount, mostOccuring, mostOccuringAmount, textMaxAge, labelMaxAge, textMinAge, labelMinAge);
         combined.setPadding(new Insets(5));
         combined.setSpacing(5.0);
         this.add(combined, 0, 0);
@@ -374,9 +395,11 @@ public class PersonsGUI extends GridPane {
 
 // Most used name lambda
         nameMap = persons.stream()      //her "lægger jeg alle objecter af person på et bånd"
-                         .collect(Collectors.groupingBy(         //Collect samler det i et nyt map tror jeg, hvor collectors.groupingBy er sorteringsmekanismen
-                        person -> person.getName(), Collectors.summingInt( person -> 1)     //hvor ve side er <key> og højre side summer op <value>
-                ));
+                         .collect(Collectors
+                         .groupingBy(         //Collect samler det i et nyt map tror jeg, hvor collectors.groupingBy er sorteringsmekanismen
+                             (person) -> person.getName(), Collectors.summingInt( person -> 1)     //hvor ve side er <key> og højre side summer op <value>
+                         )
+             );
 
         // så jeg ender med et map<String, Integer> hvor <Ekkart, 4> f.eks. betyder ekkart navnet dukker op 4 gange.
         // Nu har jeg mine værdier, så skal jeg finde "max" value.

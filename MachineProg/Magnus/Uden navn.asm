@@ -2,16 +2,18 @@
         ;Save current values of registers
         LD      R0,A
         LD      R1,B
-        ;reset values
-        AND R1,R0,R0 
+
+            ;1) A-B = 0?
         
-        ;1) A-B = 0?
-        ;   NOT(B) + 1
-        
-X       AND     R3,R1,R0    ;Comparator. 
-        BRp     DONE        
-        
+X           ;   NOT(B) + 1
+        AND     R2,R2,#0
+        AND     R3,R3,#0
         ADD     R2,R2,R1
+        NOT     R2,R2
+        ADD     R2,R2,#1
+        ADD     R3,R0,R2   ;Comparator.
+        BRz     DONE        
+        
         ADD     R0,R0,#1
         ADD     R1,R1,#-1
         
