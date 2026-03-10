@@ -48,68 +48,6 @@ public class MiniJavaRun {
 
     public static void main(String... args) {
 
-        System.out.println("------------------------------");
-        System.out.println("Egne implitationer:");
-
-        System.out.println("--- Test af Unære Operatorer ---");
-        System.out.println("- Unære Operatorer1 -");
-
-        int testUnary1 = -(-5) + (+3);
-        System.out.println("Java says: " + testUnary1);
-
-        Statement unaryStatement1 = Sequence(
-                Declaration(INT, Var("x"),
-                        OperatorExpression(PLUS2,
-                                OperatorExpression(MINUS1, Literal(-5)), // -(-5)
-                                OperatorExpression(PLUS1, Literal(3))    // +(3)
-                        )
-                )
-        );
-        printTypeEvaluate(unaryStatement1);
-
-        System.out.println("- Unære Operatorer2 -");
-        int testUnary2 = -5 - -(5);
-        System.out.println("Java says: " + testUnary2);
-
-        Statement uS2 = Sequence (
-                Declaration(INT, Var("x"),
-                        OperatorExpression(MINUS2,
-                                OperatorExpression(PLUS1, Literal(-5)),
-                                OperatorExpression(MINUS1, Literal(5))
-                        )
-                )
-        );
-        printTypeEvaluate(uS2);
-        System.out.println("--- Test af wild case ---");
-
-        int testWild = 5 + 3 / 10 * 20 % 3 - -10;  // læses som: 5 + ( (( (3 / 10) * 20) % 3) - (-10);
-        System.out.println("Java says: " + testWild);
-
-        Statement wildStatement = Sequence (
-                Declaration(FLOAT, Var("y"),
-                        OperatorExpression(MINUS2,
-                                OperatorExpression(PLUS2,
-                                        new FloatLiteral(5),
-                                        OperatorExpression(MOD,
-                                                OperatorExpression(MULT,
-                                                        new FloatLiteral(20),
-                                                        OperatorExpression(DIV,
-                                                                new FloatLiteral(3),
-                                                                new FloatLiteral(10)
-                                                        )
-                                                )
-                                                ,
-                                                new FloatLiteral(3)
-                                        )
-                                )
-                                ,
-                                OperatorExpression(MINUS1,new FloatLiteral(10))
-                        )
-                )
-        );
-
-        printTypeEvaluate(wildStatement);
-
         System.out.println("Result provided by Java");
         int i;
         int j = i = 2 + (i = 3);
