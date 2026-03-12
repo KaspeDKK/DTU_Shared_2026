@@ -58,35 +58,19 @@ public class MiniJavaRun {
                 WhileLoop(
                         Var("i"),
                         Sequence(
-                                Declaration(INT, Var("j"), Var("i")),
-                                WhileLoop(
-                                        Var("j"),
-                                        Sequence(
-                                                Assignment(
-                                                        Var("sum"),
-                                                        OperatorExpression(PLUS2,
-                                                                Var("sum"),
-                                                                Var("j")
-                                                        )
-                                                ),
-                                                Assignment(
-                                                        Var("j"),
-                                                        OperatorExpression(MINUS2,
-                                                                Var("j"),
-                                                                Literal(1)
-                                                        )
-                                                ),
-                                                PrintStatement(" i: ", Var("i")),
-                                                PrintStatement(" j: ", Var("j"))
-                                        )
-                                ),
                                 Assignment(
                                         Var("i"),
                                         OperatorExpression(MINUS2,
                                                 Var("i"),
                                                 Literal(1)
                                         )
-                                )
+                                ),
+                                Sequence(Assignment(
+                                        Var("sum"),
+                                        OperatorExpression(PLUS2,
+                                                Var("sum"),
+                                                Literal(2))
+                                ))
                         )
                 )
 

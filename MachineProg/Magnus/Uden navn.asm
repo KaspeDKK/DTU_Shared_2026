@@ -7,11 +7,10 @@
         
 X           ;   NOT(B) + 1
         AND     R2,R2,#0
-        AND     R3,R3,#0
         ADD     R2,R2,R1
         NOT     R2,R2
         ADD     R2,R2,#1
-        ADD     R3,R0,R2   ;Comparator.
+        ADD     R2,R0,R2   ;Comparator.
         BRz     DONE        
         
         ADD     R0,R0,#1

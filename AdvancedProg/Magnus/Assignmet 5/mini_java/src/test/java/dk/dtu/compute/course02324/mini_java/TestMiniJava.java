@@ -125,21 +125,129 @@ public class TestMiniJava{
         assertEquals(0, variables.size(), "Some variables have not been evaluated");
 
     }
-
-    public void testSomeExceptions(){
-
-        Statement statement =
-                new Sequence(
-                        new Declaration(
-                                FLOAT
-
-                        )
+    @Test
+    public void testMultOfFloat() {
+        Statement statement = Sequence(
+                Declaration(FLOAT, Var("i"), Literal(10.0f)),
+                Declaration(FLOAT, Var("j"), Literal(20.0f)),
+                Assignment(Var("i"), OperatorExpression(MULT, Var("i"), Var("j")))
         );
 
         ptv.visit(statement);
         if (!ptv.problems.isEmpty()) {
             fail("The type visitor did detect typing problems, which should not be there!");
         }
+
+    }
+
+    @Test
+    public void testMultOfInt() {
+        Statement statement = Sequence(
+                Declaration(INT, Var("i"), Literal(10)),
+                Declaration(INT, Var("j"), Literal(20)),
+                Assignment(Var("i"), OperatorExpression(MOD, Var("i"), Var("j")))
+        );
+
+        ptv.visit(statement);
+
+
+    }
+
+    @Test
+    public void testAnException1(){
+        Statement statement = Sequence(
+                Assignment(Var("i"),OperatorExpression(MOD, Var("j"), Literal(20)))
+        );
+        ptv.visit(statement);
+
+        if (ptv.problems.isEmpty()) {
+            fail("No type problems detected in a mistyped statement!");
+        }
+    }
+
+    @Test
+    public void testAnException2(){ //Tests adding different types together
+        Statement statement = Sequence(
+                Assignment(Var("i"),OperatorExpression(MOD, Literal(10.0f), Literal(20)))
+        );
+        ptv.visit(statement);
+
+        if (ptv.problems.isEmpty()) {
+            fail("No type problems detected in a mistyped statement!");
+        }
+    }
+
+    @Test
+    public void testAnException3(){ //Test declaring without a type
+        Statement statement = Sequence(
+                Assignment(Var("i"),OperatorExpression(PLUS1,Var("i")))
+        );
+        ptv.visit(statement);
+
+        if (ptv.problems.isEmpty()) {
+            fail("No type problems detected in a mistyped statement!");
+        }
+    }
+
+    @Test
+    public void testAnException4(){ //Test declaring without a type
+        Statement statement = Sequence(
+                Declaration(INT,Var("i")),
+                Assignment(Var("i"),Literal(0.0f))
+        );
+        ptv.visit(statement);
+
+        if (ptv.problems.isEmpty()) {
+            fail("No type problems detected in a mistyped statement!");
+        }
+    }
+
+    @Test
+    public void testFaultyLoop(){
+        Statement statement = Sequence(
+                Declaration(FLOAT, Var("i"), Literal(5.0f)),
+                Declaration(FLOAT, Var("sum"), Literal(0.0f)),
+                WhileLoop(
+                        Var("i"),
+                        Sequence(
+                                Declaration(INT, Var("j"), Var("i")),
+                                WhileLoop(
+                                        Var("j"),
+                                        Sequence(
+                                                Assignment(
+                                                        Var("sum"),
+                                                        OperatorExpression(PLUS2,
+                                                                Var("sum"),
+                                                                Var("j")
+                                                        )
+                                                ),
+                                                Assignment(
+                                                        Var("j"),
+                                                        OperatorExpression(MINUS2,
+                                                                Var("j"),
+                                                                Literal(1)
+                                                        )
+                                                ),
+                                                PrintStatement(" i: ", Var("i")),
+                                                PrintStatement(" j: ", Var("j"))
+                                        )
+                                ),
+                                Assignment(
+                                        Var("i"),
+                                        OperatorExpression(MINUS2,
+                                                Var("i"),
+                                                Literal(1)
+                                        )
+                                )
+                        )
+                )
+        );
+
+        ptv.visit(statement);
+        if (ptv.problems.isEmpty()) {
+            fail("The program must detect an error here:");
+        }
+        pev.visit(statement);
     }
 
     @Test

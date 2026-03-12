@@ -79,10 +79,10 @@ public class ProgramTypeVisitor extends ProgramVisitor {
 
     public void visit(WhileLoop whileLoop) {
         whileLoop.expression.accept(this);
-        // Type check condition expression (boolean expected, but your lang uses numeric > 0)
+
         Type conditionType = typeMapping.get(whileLoop.expression);
-        if (conditionType != INT && conditionType != FLOAT) {
-            problems.add("While loop condition must be INT or FLOAT, found " + conditionType);
+        if (conditionType != INT) {
+            problems.add("While loop condition must be INT" + conditionType);
         }
 
         // Type check body statement
