@@ -1,0 +1,491 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MiniJavaRun</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">dk.dtu.compute.course02324.mini_java</a>
+</div>
+
+<h1>Coverage Summary for Class: MiniJavaRun (dk.dtu.compute.course02324.mini_java)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MiniJavaRun</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/155)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package dk.dtu.compute.course02324.mini_java;
+&nbsp;
+&nbsp;import dk.dtu.compute.course02324.mini_java.model.*;
+&nbsp;import dk.dtu.compute.course02324.mini_java.semantics.*;
+&nbsp;
+&nbsp;import static dk.dtu.compute.course02324.mini_java.utils.Shortcuts.*;
+&nbsp;import static dk.dtu.compute.course02324.mini_java.model.Operator.*;
+&nbsp;
+<b class="nc">&nbsp;public class MiniJavaRun {</b>
+&nbsp;
+&nbsp;    public static void printTypeEvaluate(Statement statement) {
+<b class="nc">&nbsp;        System.out.println(&quot;Result by our program:&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        ProgramSerializerVisitor ps = new ProgramSerializerVisitor();</b>
+<b class="nc">&nbsp;        ps.visit(statement);</b>
+<b class="nc">&nbsp;        System.out.println(ps.result());</b>
+&nbsp;
+<b class="nc">&nbsp;        ProgramTypeVisitor pv = new ProgramTypeVisitor();</b>
+<b class="nc">&nbsp;        pv.visit(statement);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (!pv.problems.isEmpty()) {</b>
+<b class="nc">&nbsp;            System.out.println(&quot;There were some problems in the statement:&quot;);</b>
+<b class="nc">&nbsp;            for (String problem : pv.problems) {</b>
+<b class="nc">&nbsp;                System.out.println(problem);</b>
+&nbsp;            }
+&nbsp;        } else {
+<b class="nc">&nbsp;            System.out.println(&quot;Expression type checks correctly. Variable types:&quot;);</b>
+<b class="nc">&nbsp;            for (Var var: pv.variables) {</b>
+<b class="nc">&nbsp;                System.out.println(pv.typeMapping.get(var).getName() + &quot; &quot; + var.name + &quot;;&quot;);</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            System.out.println(&quot;Program  starting. Output:&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;            ProgramExecutorVisitor pev = new ProgramExecutorVisitor(pv);</b>
+<b class="nc">&nbsp;            pev.visit(statement);</b>
+&nbsp;
+<b class="nc">&nbsp;            System.out.println(&quot;Program finished!&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;            System.out.println(&quot;Values of variables in the end&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;            for (Var var: pv.variables) {</b>
+<b class="nc">&nbsp;                System.out.println(var.name + &quot; = &quot; + pev.values.get(var));</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        System.out.println(&quot;------------------------------&quot;);</b>
+<b class="nc">&nbsp;        System.out.println();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void main(String... args) {
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;        Statement s = new Sequence(</b>
+&nbsp;                new Declaration(INT, new Var(&quot;x&quot;)),
+&nbsp;                new Assignment(new Var(&quot;x&quot;),
+&nbsp;                        new OperatorExpression(PLUS1,
+&nbsp;                                new IntLiteral(42))));
+<b class="nc">&nbsp;        printTypeEvaluate(s);</b>
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;        System.out.println(&quot;------------------------------&quot;);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;Egne implitationer:&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        System.out.println(&quot;--- Test af Unære Operatorer ---&quot;);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;- Unære Operatorer1 -&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        int testUnary1 = -(-5) + (+3);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;Java says: &quot; + testUnary1);</b>
+&nbsp;
+<b class="nc">&nbsp;        Statement unaryStatement1 = Sequence(</b>
+<b class="nc">&nbsp;                Declaration(INT, Var(&quot;x&quot;),</b>
+<b class="nc">&nbsp;                        OperatorExpression(PLUS2,</b>
+<b class="nc">&nbsp;                                OperatorExpression(MINUS1, Literal(-5)), // -(-5)</b>
+<b class="nc">&nbsp;                                OperatorExpression(PLUS1, Literal(3))    // +(3)</b>
+&nbsp;                        )
+&nbsp;                )
+&nbsp;        );
+<b class="nc">&nbsp;        printTypeEvaluate(unaryStatement1);</b>
+&nbsp;
+<b class="nc">&nbsp;        System.out.println(&quot;- Unære Operatorer2 -&quot;);</b>
+<b class="nc">&nbsp;        int testUnary2 = -5 - -(5);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;Java says: &quot; + testUnary2);</b>
+&nbsp;
+<b class="nc">&nbsp;        Statement uS2 = Sequence (</b>
+<b class="nc">&nbsp;                Declaration(INT, Var(&quot;x&quot;),</b>
+<b class="nc">&nbsp;                        OperatorExpression(MINUS2,</b>
+<b class="nc">&nbsp;                                OperatorExpression(PLUS1, Literal(-5)),</b>
+<b class="nc">&nbsp;                                OperatorExpression(MINUS1, Literal(5))</b>
+&nbsp;                        )
+&nbsp;                )
+&nbsp;        );
+<b class="nc">&nbsp;        printTypeEvaluate(uS2);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;--- Test af wild case ---&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        int testWild = 5 + 3 / 10 * 20 % 3 - -10;  // læses som: 5 + ( (( (3 / 10) * 20) % 3) - (-10);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;Java says: &quot; + testWild);</b>
+&nbsp;
+<b class="nc">&nbsp;        Statement wildStatement = Sequence (</b>
+<b class="nc">&nbsp;                Declaration(FLOAT, Var(&quot;y&quot;),</b>
+<b class="nc">&nbsp;                        OperatorExpression(MINUS2,</b>
+<b class="nc">&nbsp;                                OperatorExpression(PLUS2,</b>
+&nbsp;                                        new FloatLiteral(5),
+<b class="nc">&nbsp;                                        OperatorExpression(MOD,</b>
+<b class="nc">&nbsp;                                                OperatorExpression(MULT,</b>
+&nbsp;                                                        new FloatLiteral(20),
+<b class="nc">&nbsp;                                                        OperatorExpression(DIV,</b>
+&nbsp;                                                                new FloatLiteral(3),
+&nbsp;                                                                new FloatLiteral(10)
+&nbsp;                                                        )
+&nbsp;                                                )
+&nbsp;                                                ,
+&nbsp;                                                new FloatLiteral(3)
+&nbsp;                                        )
+&nbsp;                                )
+&nbsp;                                ,
+<b class="nc">&nbsp;                                OperatorExpression(MINUS1,new FloatLiteral(10))</b>
+&nbsp;                        )
+&nbsp;                )
+&nbsp;        );
+&nbsp;
+<b class="nc">&nbsp;        printTypeEvaluate(wildStatement);</b>
+&nbsp;
+<b class="nc">&nbsp;        System.out.println(&quot;Result provided by Java&quot;);</b>
+&nbsp;        int i;
+<b class="nc">&nbsp;        int j = i = 2 + (i = 3);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;i = &quot; + i);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;j = &quot; + j);</b>
+<b class="nc">&nbsp;        System.out.println();</b>
+&nbsp;
+<b class="nc">&nbsp;        Statement statement0 = Sequence(</b>
+<b class="nc">&nbsp;                Declaration(INT, Var(&quot;i&quot;)),</b>
+<b class="nc">&nbsp;                Declaration(</b>
+&nbsp;                        INT,
+<b class="nc">&nbsp;                        Var(&quot;j&quot;),</b>
+<b class="nc">&nbsp;                        Assignment(</b>
+<b class="nc">&nbsp;                                Var(&quot;i&quot;),</b>
+<b class="nc">&nbsp;                                OperatorExpression(</b>
+&nbsp;                                        PLUS2,
+<b class="nc">&nbsp;                                        Literal(2),</b>
+<b class="nc">&nbsp;                                        Assignment(</b>
+<b class="nc">&nbsp;                                                Var(&quot;i&quot;),</b>
+<b class="nc">&nbsp;                                                Literal(3)</b>
+&nbsp;                                        )
+&nbsp;                                )
+&nbsp;                        )
+&nbsp;                )
+&nbsp;        );
+&nbsp;
+<b class="nc">&nbsp;        printTypeEvaluate(statement0);</b>
+&nbsp;
+<b class="nc">&nbsp;        System.out.println(&quot;Java evaluates - + -1 + 7 - 1 to &quot; + (- + -1 + 7 - 1));</b>
+&nbsp;
+<b class="nc">&nbsp;        Sequence printStatements = Sequence(</b>
+<b class="nc">&nbsp;            PrintStatement(&quot; - + -1 + 7 - 1: &quot;,</b>
+<b class="nc">&nbsp;                OperatorExpression(MINUS2,</b>
+<b class="nc">&nbsp;                    OperatorExpression(PLUS2,</b>
+<b class="nc">&nbsp;                        OperatorExpression(MINUS1,</b>
+<b class="nc">&nbsp;                            OperatorExpression(PLUS1,</b>
+<b class="nc">&nbsp;                               Literal(-1)</b>
+&nbsp;                            )
+&nbsp;                        ),
+<b class="nc">&nbsp;                        Literal(7)</b>
+&nbsp;                    ),
+<b class="nc">&nbsp;                    Literal(1)</b>
+&nbsp;                )
+&nbsp;            )
+&nbsp;        );
+&nbsp;
+<b class="nc">&nbsp;        printTypeEvaluate(printStatements);</b>
+&nbsp;
+<b class="nc">&nbsp;        Statement whileLoops =  Sequence(</b>
+<b class="nc">&nbsp;            Declaration(INT, Var(&quot;i&quot;), Literal(5)),</b>
+<b class="nc">&nbsp;            WhileLoop(</b>
+<b class="nc">&nbsp;                Var(&quot;i&quot;),</b>
+<b class="nc">&nbsp;                Sequence(</b>
+<b class="nc">&nbsp;                    Declaration(INT, Var(&quot;j&quot;), Var(&quot;i&quot;)),</b>
+<b class="nc">&nbsp;                    WhileLoop(</b>
+<b class="nc">&nbsp;                        Var(&quot;j&quot;),</b>
+<b class="nc">&nbsp;                        Sequence(</b>
+<b class="nc">&nbsp;                            Assignment(</b>
+<b class="nc">&nbsp;                                Var(&quot;j&quot;),</b>
+<b class="nc">&nbsp;                                OperatorExpression(MINUS2,</b>
+<b class="nc">&nbsp;                                    Var(&quot;j&quot;),</b>
+<b class="nc">&nbsp;                                    Literal(1)</b>
+&nbsp;                                )
+&nbsp;                            ),
+<b class="nc">&nbsp;                            PrintStatement(&quot; i: &quot;, Var(&quot;i&quot;)),</b>
+<b class="nc">&nbsp;                            PrintStatement(&quot; j: &quot;, Var(&quot;j&quot;))</b>
+&nbsp;                        )
+&nbsp;                    ),
+<b class="nc">&nbsp;                    Assignment(</b>
+<b class="nc">&nbsp;                        Var(&quot;i&quot;),</b>
+<b class="nc">&nbsp;                        OperatorExpression(MINUS2,</b>
+<b class="nc">&nbsp;                            Var(&quot;i&quot;),</b>
+<b class="nc">&nbsp;                            Literal(1)</b>
+&nbsp;                        )
+&nbsp;                    )
+&nbsp;                )
+&nbsp;            )
+&nbsp;        );
+&nbsp;
+<b class="nc">&nbsp;        printTypeEvaluate(whileLoops);</b>
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;        System.out.println(&quot;Result provided by Java&quot;);</b>
+&nbsp;        int i2;
+<b class="nc">&nbsp;        int j2 = i2 = 2 + (i2 = 3);</b>
+<b class="nc">&nbsp;        j2 = 2 * j2;</b>
+<b class="nc">&nbsp;        System.out.println(&quot;i = &quot; + i2);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;j = &quot; + j2);</b>
+<b class="nc">&nbsp;        System.out.println();</b>
+&nbsp;
+<b class="nc">&nbsp;        Statement statement = Sequence(</b>
+<b class="nc">&nbsp;                Declaration(INT, Var(&quot;i&quot;)),</b>
+<b class="nc">&nbsp;                Declaration(</b>
+&nbsp;                        INT,
+<b class="nc">&nbsp;                        Var(&quot;j&quot;),</b>
+<b class="nc">&nbsp;                        Assignment(</b>
+<b class="nc">&nbsp;                                Var(&quot;i&quot;),</b>
+<b class="nc">&nbsp;                                OperatorExpression(</b>
+&nbsp;                                        PLUS2,
+<b class="nc">&nbsp;                                        Literal(2),</b>
+<b class="nc">&nbsp;                                        Assignment(</b>
+<b class="nc">&nbsp;                                                Var(&quot;i&quot;),</b>
+<b class="nc">&nbsp;                                                Literal(3)</b>
+&nbsp;                                        )
+&nbsp;                                )
+&nbsp;                        )
+&nbsp;                ),
+<b class="nc">&nbsp;                Assignment(</b>
+<b class="nc">&nbsp;                        Var(&quot;j&quot;),</b>
+<b class="nc">&nbsp;                        OperatorExpression(</b>
+&nbsp;                                MULT,
+<b class="nc">&nbsp;                                Literal(2),</b>
+<b class="nc">&nbsp;                                Var(&quot;j&quot;)</b>
+&nbsp;                        )
+&nbsp;                ),
+<b class="nc">&nbsp;                PrintStatement(&quot;result i = &quot;, Var(&quot;i&quot;)),</b>
+<b class="nc">&nbsp;                PrintStatement(&quot;result j = &quot;, Var(&quot;j&quot;))</b>
+&nbsp;        );
+&nbsp;
+<b class="nc">&nbsp;        printTypeEvaluate(statement);</b>
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;        System.out.println(&quot;Result provided by Java&quot;);</b>
+&nbsp;        float ii;
+<b class="nc">&nbsp;        float jj = ii = 2.75f - ( ii = 3.21f );</b>
+<b class="nc">&nbsp;        System.out.println(&quot;i = &quot; + ii);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;j = &quot; + jj);</b>
+<b class="nc">&nbsp;        System.out.println();</b>
+&nbsp;
+&nbsp;        // Note that from here we do not make (much) use of the Shorthands.
+&nbsp;        // See what difference it makes.
+<b class="nc">&nbsp;        Statement statement2 =</b>
+&nbsp;                new Sequence(
+&nbsp;                        new Declaration(FLOAT, new Var(&quot;i&quot;)),
+&nbsp;                        new Declaration(
+&nbsp;                                FLOAT,
+&nbsp;                                new Var(&quot;j&quot;),
+&nbsp;                                new Assignment(
+&nbsp;                                        new Var(&quot;i&quot;),
+&nbsp;                                        new OperatorExpression(
+&nbsp;                                                Operator.MINUS2,
+&nbsp;                                                new FloatLiteral(2.75f),
+&nbsp;                                                new Assignment(
+&nbsp;                                                        new Var(&quot;i&quot;),
+<b class="nc">&nbsp;                                                        Literal(3.21f)</b>
+&nbsp;                                                )
+&nbsp;                                        )
+&nbsp;                                )
+&nbsp;                        )
+&nbsp;                );
+&nbsp;
+<b class="nc">&nbsp;        printTypeEvaluate(statement2);</b>
+&nbsp;
+<b class="nc">&nbsp;        System.out.println(&quot;Result provided by Java&quot;);</b>
+&nbsp;        float iii;
+<b class="nc">&nbsp;        float jjj = iii = 2.75f + ( iii = 3.21f ) - 2.1f * iii;</b>
+<b class="nc">&nbsp;        System.out.println(&quot;i = &quot; + iii);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;j = &quot; + jjj);</b>
+<b class="nc">&nbsp;        System.out.println();</b>
+&nbsp;
+<b class="nc">&nbsp;        Statement statement3 = new Sequence(</b>
+&nbsp;                new Declaration(FLOAT, new Var(&quot;i&quot;)),
+&nbsp;                new Declaration(
+&nbsp;                        FLOAT,
+&nbsp;                        new Var(&quot;j&quot;),
+&nbsp;                        new Assignment(
+&nbsp;                                new Var(&quot;i&quot;),
+&nbsp;                                new OperatorExpression(
+&nbsp;                                        MINUS2,
+&nbsp;                                        new OperatorExpression(Operator.PLUS2,
+&nbsp;                                                new FloatLiteral(2.75f),
+&nbsp;                                                new Assignment(
+&nbsp;                                                        new Var(&quot;i&quot;),
+&nbsp;                                                        new FloatLiteral(3.21f)
+&nbsp;                                                )
+&nbsp;                                        ),
+&nbsp;                                        new OperatorExpression(
+&nbsp;                                                MULT,
+&nbsp;                                                new FloatLiteral(2.1f),
+&nbsp;                                                new Var(&quot;i&quot;)
+&nbsp;                                        )
+&nbsp;                                )
+&nbsp;                        ))
+&nbsp;
+&nbsp;        );
+&nbsp;
+<b class="nc">&nbsp;        printTypeEvaluate(statement3);</b>
+&nbsp;
+<b class="nc">&nbsp;        System.out.println(&quot;Some incorrect programs&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        Statement statement4 =</b>
+&nbsp;                new Sequence(
+&nbsp;                        new Declaration(FLOAT, new Var(&quot;i&quot;)),
+&nbsp;                        new Declaration(INT, new Var(&quot;j&quot;)),
+&nbsp;                        new Declaration(
+&nbsp;                                FLOAT,
+&nbsp;                                new Var(&quot;j&quot;),
+&nbsp;                                new Assignment(
+&nbsp;                                        new Var(&quot;i&quot;),
+&nbsp;                                        new OperatorExpression(
+&nbsp;                                                MINUS2,
+&nbsp;                                                new FloatLiteral(2.75f),
+&nbsp;                                                new Assignment(
+&nbsp;                                                        new Var(&quot;i&quot;),
+&nbsp;                                                        new FloatLiteral(3.21f)
+&nbsp;                                                )
+&nbsp;                                        )
+&nbsp;                                )
+&nbsp;                        )
+&nbsp;                );
+&nbsp;
+<b class="nc">&nbsp;        printTypeEvaluate(statement4);</b>
+&nbsp;
+<b class="nc">&nbsp;        Statement statement5 = new Sequence(</b>
+&nbsp;                new Declaration(INT, new Var(&quot;i&quot;)),
+&nbsp;                new Declaration(
+&nbsp;                        INT,
+&nbsp;                        new Var(&quot;j&quot;),
+&nbsp;                        new Assignment(
+&nbsp;                                new Var(&quot;i&quot;),
+&nbsp;                                new OperatorExpression(
+&nbsp;                                        PLUS2,
+&nbsp;                                        new IntLiteral(2),
+&nbsp;                                        new Assignment(
+&nbsp;                                                new Var(&quot;i&quot;),
+&nbsp;                                                new FloatLiteral(3)
+&nbsp;                                        )))
+&nbsp;                )
+&nbsp;        );
+&nbsp;
+<b class="nc">&nbsp;        printTypeEvaluate(statement5);</b>
+&nbsp;
+<b class="nc">&nbsp;        System.out.println(&quot;And now some syntactially wrong examples (crashing) when building statement!&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        Statement statement6 = new Sequence(</b>
+&nbsp;                new Declaration(INT, new Var(&quot;i&quot;)),
+&nbsp;                new Declaration(
+&nbsp;                        INT,
+&nbsp;                        new Var(&quot;j&quot;),
+&nbsp;                        new Assignment(
+&nbsp;                                new Var(&quot;i&quot;),
+&nbsp;                                new OperatorExpression(
+&nbsp;                                        PLUS2,
+&nbsp;                                        new IntLiteral(2),
+&nbsp;                                        new Assignment(
+&nbsp;                                                new Var(&quot;i&quot;),
+&nbsp;                                                new FloatLiteral(3)),
+&nbsp;                                        new FloatLiteral(3.5f)
+&nbsp;                                        ))
+&nbsp;                )
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-10 09:29</div>
+</div>
+</body>
+</html>

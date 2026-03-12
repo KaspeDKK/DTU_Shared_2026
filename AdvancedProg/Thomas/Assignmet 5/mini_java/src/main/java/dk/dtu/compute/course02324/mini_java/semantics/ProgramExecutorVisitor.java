@@ -35,18 +35,20 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
                 return arg1 - arg2; };
 
     private Function<List<Number>,Number> minus2int =
-            args -> { float arg1 = args.get(0).intValue();
-                float arg2 = args.get(1).intValue();
+            args -> { int arg1 = args.get(0).intValue();
+                int arg2 = args.get(1).intValue();
                 return arg1 - arg2; };
 
     private Function<List<Number>,Number> multfloat =
-            args -> { float arg1 = args.get(0).floatValue();
+            args -> {
+                float arg1 = args.get(0).floatValue();
                 float arg2 = args.get(1).floatValue();
                 return arg1 * arg2; };
 
     private Function<List<Number>,Number> multint =
-            args -> { float arg1 = args.get(0).intValue();
-                float arg2 = args.get(1).intValue();
+            args -> {
+                int arg1 = args.get(0).intValue();
+                int arg2 = args.get(1).intValue();
                 return arg1 * arg2; };
 
     private Function<List<Number>,Number> plus1int =
@@ -99,7 +101,7 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
      * (lambda expression), that represents the semantics of that operation. These
      * define what happens when the operator needs to be executed.<p>
      *
-     * TODO Assignment 5a: This map and the functions above need to be extended in Assignment 6a
+     *  Assignment 5a: This map and the functions above need to be extended in Assignment 6a
      *      (all operations with the respective types required in assignment must be defined above
      *      and added to the mapping below).
      */
@@ -163,19 +165,21 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
     public void visit(PrintStatement printStatement) {
         printStatement.expression.accept(this);
 
-        /* TODO Assignment 5a: Here some code which actually executes the
-                print operation must be added. It should actually print out the
-                prefix of the print statement and then the CURRENT value of the
-                expression.
-         */
+        Number currentValue = values.get(printStatement.expression);
+        System.out.println(printStatement.prefix + currentValue);
 
     }
 
     @Override
     public void visit(WhileLoop whileLoop) {
-        whileLoop.expression.accept(this);
+        whileLoop.expression.accept(this); // Gå ned i træet, find ud af hvad værdien af dette udtryk er LIGE NU, og gem resultatet i hukommelsen.
 
-        /* TODO Assignment 5b: Here some code which actually executes the
+        while (values.get(whileLoop.expression).intValue() >= 0) {
+            whileLoop.statement.accept(this); //Udfør de instruktioner, der står inde i statementen
+            whileLoop.expression.accept(this); // recaller den igen.
+        }
+
+        /*  Assignment 5b: Here some code which actually executes the
                 while loop must be added. This code should get the current value
                 of the expression, and if that expression is greater or equal
                 than 0, execute the statement of the loop (by recursively

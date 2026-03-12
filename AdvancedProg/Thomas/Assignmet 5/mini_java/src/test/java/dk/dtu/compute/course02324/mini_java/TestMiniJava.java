@@ -343,4 +343,106 @@ public class TestMiniJava{
         assertEquals(0, variables.size(), "Some variables have not been evaluated");
     }
 
+    @Test
+    public void testMod2float() {
+        float i = 8.3f;
+        float j = 3.3f;
+
+        float expectedY = i % j;
+
+
+        Var varY = Var("y");
+        Sequence testMod2float = Sequence (
+                Declaration(FLOAT,
+                        Var("i"),
+                        Literal(8.3f)),
+                Declaration(FLOAT,
+                        Var("j"),
+                        Literal(3.3f)),
+                Assignment(varY,
+                        OperatorExpression(MOD,
+                                Var("i"),
+                                Var("j"))
+                )
+        );
+
+        ptv.visit(testMod2float);
+        pev.visit(testMod2float);
+
+        assertEquals(expectedY, pev.values.get(varY));
+    }
+
+
+    @Test
+    public void multFloat_and_multInt() {
+        float floatI = 8.3f;
+        float floatJ = 3.3f;
+        float expectedYfloat = floatI * floatJ;
+
+        int intI = 8;
+        int intJ = 2;
+        int expectedXint = intI * intJ;
+
+
+        Var varYfloat = Var("y");
+        Sequence testFloat = Sequence (
+                Declaration(FLOAT,
+                        Var("i"),
+                        Literal(8.3f)),
+                Declaration(FLOAT,
+                        Var("j"),
+                        Literal(3.3f)),
+                Assignment(varYfloat,
+                        OperatorExpression(MULT,
+                                Var("i"),
+                                Var("j"))
+                )
+        );
+
+        Var varXint = Var("x");
+        Sequence testInt = Sequence (
+                Declaration(INT,
+                        Var("i"),
+                        Literal(8)),
+                Declaration(INT,
+                        Var("j"),
+                        Literal(2)),
+                Assignment(varXint,
+                        OperatorExpression(MULT,
+                                Var("i"),
+                                Var("j"))
+                )
+        );
+
+
+        ptv.visit(testFloat);
+        pev.visit(testFloat);
+
+        assertEquals(expectedYfloat, pev.values.get(varYfloat).floatValue());
+
+        ptv.visit(testInt);
+        pev.visit(testInt);
+
+        assertEquals(expectedXint, pev.values.get(varXint).intValue());
+    }
+
+    @Test
+    public void testDeclarationTypeMismatch() {
+        Statement mismatchSatement = Declaration(INT, Var("x"), Literal(5.5f));
+        ptv.visit(mismatchSatement);
+
+        if (ptv.problems.isEmpty()) {
+            fail("There should be an error here");
+        }
+    }
+
+    @Test
+    public void testUndefinedVariable() {
+        Statement stmt = Assignment(Var("x"), OperatorExpression(PLUS2, Var("y"), Literal(5)));
+
+        ptv.visit(stmt);
+
+        
+    }
+
 }

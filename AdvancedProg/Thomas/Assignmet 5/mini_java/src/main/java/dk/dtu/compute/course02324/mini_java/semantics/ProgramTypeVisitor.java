@@ -15,7 +15,7 @@ public class ProgramTypeVisitor extends ProgramVisitor {
      * Note the typing of an operator is very simplistic for now; the
      * types of all operands and the result of the operation are the same.<p>
      *
-     * TODO Assignment 5a: This map does contain only some few examples of types
+     *  Assignment 5a: This map does contain only some few examples of types
      *      on which the operators should work. In Assignment 6a, this list must
      *      be complete for all (primitive) types of Mini Java on which these
      *      operators make sense.
@@ -83,11 +83,10 @@ public class ProgramTypeVisitor extends ProgramVisitor {
     public void visit(WhileLoop whileLoop) {
         whileLoop.expression.accept(this);
 
-        /* TODO Assignment 5b: Here some code most be implemented for
-                checking that the expression is of type integer. If not,
-                the code must add a problem to the problem list.
-         */
-
+        Type type = typeMapping.get(whileLoop.expression);
+        if (!INT.equals(type)) {
+            problems.add("Only accept int in whileloop, expression: " + whileLoop.expression + ", statement: " + whileLoop.statement);
+        }
         whileLoop.statement.accept(this);
     }
 
