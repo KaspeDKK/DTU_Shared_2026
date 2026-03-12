@@ -1,0 +1,189 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Shortcuts</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">dk.dtu.compute.course02324.mini_java.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: Shortcuts (dk.dtu.compute.course02324.mini_java.utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Shortcuts</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83,3%
+  </span>
+  <span class="absValue">
+    (10/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    84,6%
+  </span>
+  <span class="absValue">
+    (11/13)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package dk.dtu.compute.course02324.mini_java.utils;
+&nbsp;
+&nbsp;import dk.dtu.compute.course02324.mini_java.model.*;
+&nbsp;import org.jetbrains.annotations.NotNull;
+&nbsp;
+&nbsp;/**
+&nbsp; * This class allows writing abstract syntax trees of Mini Java in a
+&nbsp; * slightly more compact, elegant and readable way. It allows omitting a
+&nbsp; * lot of new-statements. These shortcuts can be used in other classes
+&nbsp; * by importing this class statically, which is called a &quot;static import&quot;:
+&nbsp; *
+&nbsp; * &lt;blockquote&gt;&lt;code&gt;
+&nbsp; *   import static dk.dtu.compute.course02324.mini_java.utils.Shortcuts.*;
+&nbsp; * &lt;/code&gt;&lt;/blockquote&gt;
+&nbsp; *
+&nbsp; * In this Mini Java project, these shortcuts are used extensively in the
+&nbsp; * {@link dk.dtu.compute.course02324.mini_java.MiniJavaRun#main main} method
+&nbsp; * of {@link dk.dtu.compute.course02324.mini_java.MiniJavaRun MiniJavaRun}
+&nbsp; * when defining the Mini Java programs in abstract syntax. And there, you
+&nbsp; * can also compare the difference of using the shortcuts and not using
+&nbsp; * them; some examples still use the raw notation with explicit
+&nbsp; * new-statements.&lt;p&gt;
+&nbsp; *
+&nbsp; * &lt;q&gt;&quot;Static imports can make your program &lt;i&gt;more&lt;/i&gt; readable, by
+&nbsp; * removing the boilerplate of repetition of class names&quot;&lt;/q&gt;
+&nbsp; * [&lt;a href=&quot;https://docs.oracle.com/javase/1.5.0/docs/guide/language/static-import.html&quot;&gt;Java SE Documentation&lt;/a&gt;].
+&nbsp; * But, they should be used sparingly because they can also &lt;q&gt;&quot;make your program
+&nbsp; * unreadable and unmaintainable, polluting its namespace with all the
+&nbsp; * static members you import&quot;&lt;/q&gt;
+&nbsp; * [&lt;a href=&quot;https://docs.oracle.com/javase/1.5.0/docs/guide/language/static-import.html&quot;&gt;Java SE Documentation&lt;/a&gt;],
+&nbsp; * in particular when importing all members of a class (i.e. when using .*
+&nbsp; * in the end) in a static import.
+&nbsp; *
+&nbsp; * @see &lt;a href=&quot;https://docs.oracle.com/javase/1.5.0/docs/guide/language/static-import.html&quot;
+&nbsp; *      &gt;Java SE Documentation (Java 5): Static Import&lt;/a&gt;
+&nbsp; * @see &lt;a href=&quot;https://docs.oracle.com/javase/7/docs/technotes/guides/language/static-import.html&quot;
+&nbsp; *      &gt;Java SE Documentation (Java 7): Static Import&lt;/a&gt;
+&nbsp; */
+<b class="nc">&nbsp;public class Shortcuts {</b>
+&nbsp;
+<b class="fc">&nbsp;    final public static Type INT = new PrimitiveType(TypeKeyword.INT);</b>
+&nbsp;
+<b class="fc">&nbsp;    final public static Type FLOAT = new PrimitiveType(TypeKeyword.FLOAT);</b>
+&nbsp;
+&nbsp;    final public static Declaration Declaration(@NotNull Type type, @NotNull Var variable, @NotNull Expression expression) {
+<b class="fc">&nbsp;        return new Declaration(type, variable, expression);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    final public static Declaration Declaration(@NotNull Type type, @NotNull Var variable) {
+<b class="nc">&nbsp;        return new Declaration(type, variable);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    final public static PrintStatement PrintStatement(@NotNull String prefix, @NotNull Expression expression) {
+<b class="fc">&nbsp;        return new PrintStatement(prefix, expression);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    final public static Assignment Assignment(@NotNull Var variable, @NotNull Expression expression) {
+<b class="fc">&nbsp;        return new Assignment(variable, expression);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    final public static OperatorExpression OperatorExpression(@NotNull Operator operator, Expression... expressions) {
+<b class="fc">&nbsp;        return new OperatorExpression(operator, expressions);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    final public static Var Var(@NotNull String name) {
+<b class="fc">&nbsp;        return new Var(name);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    final public static Literal Literal(int i) {
+<b class="fc">&nbsp;        return new IntLiteral(i);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    final public static Literal Literal(float x) {
+<b class="fc">&nbsp;        return new FloatLiteral(x);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    final public static Sequence Sequence(Statement... statements) {
+<b class="fc">&nbsp;        return new Sequence(statements);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    final public static WhileLoop WhileLoop(@NotNull Expression expression, @NotNull Statement statement) {
+<b class="fc">&nbsp;        return new WhileLoop(expression, statement);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-10 09:29</div>
+</div>
+</body>
+</html>
