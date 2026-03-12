@@ -144,6 +144,16 @@ public class PersonsGUI extends GridPane {
             update();
         });
 
+        Button timePass = new Button("Time Pass");
+        timePass.setOnAction(e ->{
+            persons.stream().map(person ->
+                person.passTime()).toList();
+
+            persons.removeIf(person -> person.getAge() >= 99);
+
+            refreshStatistics();
+            update();
+        });
 
         final double GAP = 8.0;
 
@@ -159,7 +169,7 @@ public class PersonsGUI extends GridPane {
 
         // combines the above elements into vertically arranged boxes
         // which are then added to the left column of the grid pane
-        VBox actionBox = new VBox(inputRow, addButton,indexRow, sortButton, clearButton, avgWeight, mostFrequentName,maxAge, minAge);
+        VBox actionBox = new VBox(inputRow, addButton,indexRow, sortButton, clearButton,timePass, avgWeight, mostFrequentName,maxAge, minAge);
         actionBox.setSpacing(10.0);
         add(actionBox, 0, 0);
 
@@ -212,6 +222,7 @@ public class PersonsGUI extends GridPane {
 
 
     private void refreshStatistics() {
+
 
         if(persons.isEmpty()){
             mostFrequentName.setText("no data available");
