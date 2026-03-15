@@ -142,6 +142,22 @@ public class TestMiniJava{
     }
 
     @Test
+    public void testMultOfInt() {
+        Statement statement = Sequence(
+                Declaration(INT, Var("i"), Literal(10)),
+                Declaration(INT, Var("j"), Literal(20)),
+                Assignment(Var("i"), OperatorExpression(MULT, Var("i"), Var("j")))
+        );
+
+        ptv.visit(statement);
+        pev.visit(statement);
+        if (!ptv.problems.isEmpty()) {
+            fail("The type visitor did detect typing problems, which should not be there!");
+        }
+
+    }
+
+    @Test
     public void testModOfInt() {
         Statement statement = Sequence(
                 Declaration(INT, Var("i"), Literal(10)),
