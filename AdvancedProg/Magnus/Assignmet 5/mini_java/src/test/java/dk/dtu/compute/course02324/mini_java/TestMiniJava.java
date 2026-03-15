@@ -394,6 +394,89 @@ public class TestMiniJava{
         assertEquals(0, variables.size(), "Some variables have not been evaluated");
     }
 
+
+    @Test
+    public void test2LoopProgram() {
+        int i = 5;
+        int j = 0;
+        int sum = 0;
+        while ( i + 0 >= 0 ) {
+            j = i;
+            while ( j >= 0 ) {
+                sum = sum + j;
+                j = j - 1;
+                // println(" i: ", i);
+                // println(" j: ", j);
+            }
+            i = i - 1;
+        }
+
+        Statement statement = Sequence(
+                Declaration(INT, Var("i"), Literal(5)),
+                Declaration(INT, Var("sum"), Literal(0)),
+                WhileLoop(
+                        OperatorExpression(PLUS2,
+                                Var("i"),
+                                Literal(0)
+                        ),
+                        Sequence(
+                                Declaration(INT, Var("j"), Var("i")),
+                                WhileLoop(
+                                        Var("j"),
+                                        Sequence(
+                                                Assignment(
+                                                        Var("sum"),
+                                                        OperatorExpression(PLUS2,
+                                                                Var("sum"),
+                                                                Var("j")
+                                                        )
+                                                ),
+                                                Assignment(
+                                                        Var("j"),
+                                                        OperatorExpression(MINUS2,
+                                                                Var("j"),
+                                                                Literal(1)
+                                                        )
+                                                ),
+                                                PrintStatement(" i: ", Var("i")),
+                                                PrintStatement(" j: ", Var("j"))
+                                        )
+                                ),
+                                Assignment(
+                                        Var("i"),
+                                        OperatorExpression(MINUS2,
+                                                Var("i"),
+                                                Literal(1)
+                                        )
+                                )
+                        )
+                )
+        );
+
+        ptv.visit(statement);
+        if (!ptv.problems.isEmpty()) {
+            fail("The type visitor did detect typing problems, which should not be there!");
+        }
+        pev.visit(statement);
+
+        Set<String> variables = new HashSet<>(List.of("i", "j", "sum"));
+        for (Var var: ptv.variables) {
+            variables.remove(var.name);
+
+            if (var.name.equals("i")) {
+                assertEquals(i, pev.values.get(var), "Value of variable i should be " + i + ".");
+            } else if (var.name.equals("j")) {
+                assertEquals(j, pev.values.get(var), "Value of variable j should be " + j + ".");
+            } else if (var.name.equals("sum")) {
+                assertEquals(sum, pev.values.get(var), "Value of variable sum should be " + sum + ".");
+            } else {
+                fail("A non-existing variable " + var.name + " occurred in evaluation of program.");
+            }
+        }
+        assertEquals(0, variables.size(), "Some variables have not been evaluated");
+    }
+
+
     @Test
     public void testPrintAndAdditionalOperators() {
         int i = - + -1 + 7 - 1;
