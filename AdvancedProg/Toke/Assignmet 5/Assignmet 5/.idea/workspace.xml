@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="a3cda159-6df4-478e-b826-51fcd43b65ea" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/MiniJavaRun.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/infrastructure/VisitAcceptor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/model/Assignment.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/model/Associativity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/model/Declaration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/model/Expression.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/model/FloatLiteral.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/model/IntLiteral.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/model/Literal.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/model/Operator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/model/OperatorExpression.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/model/PrimitiveType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/model/PrintStatement.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/model/Sequence.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/model/Statement.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/model/Type.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/model/TypeKeyword.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/model/Var.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/model/WhileLoop.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/semantics/ProgramExecutorVisitor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/semantics/ProgramSerializerVisitor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/semantics/ProgramTypeVisitor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/semantics/ProgramVisitor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/dk/dtu/compute/course02324/mini_java/utils/Shortcuts.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/main/java/module-info.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/src/test/java/dk/dtu/compute/course02324/mini_java/TestMiniJava.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/MiniJavaRun.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/infrastructure/VisitAcceptor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/model/Assignment.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/model/Associativity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/model/Declaration.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/model/Expression.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/model/FloatLiteral.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/model/IntLiteral.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/model/Literal.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/model/Operator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/model/OperatorExpression.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/model/PrimitiveType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/model/PrintStatement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/model/Sequence.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/model/Statement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/model/Type.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/model/TypeKeyword.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/model/Var.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/model/WhileLoop.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/semantics/ProgramExecutorVisitor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/semantics/ProgramSerializerVisitor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/semantics/ProgramTypeVisitor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/semantics/ProgramVisitor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/dk/dtu/compute/course02324/mini_java/utils/Shortcuts.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/classes/module-info.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assignment 5/target/test-classes/dk/dtu/compute/course02324/mini_java/TestMiniJava.class" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Tokemeister&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/KaspeDKK/DTU_Shared_2026.git&quot;,
+    &quot;accountId&quot;: &quot;e28d9f3e-8df4-49ff-bac0-6ac815be265f&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="3AkY6kIhpBX2ZoWdXwSWQ8KT4aE" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Tokes-Time-Branch&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/ttorr/Documents/GitHub/DTU_Shared_2026/DTU_Shared_2026/AdvancedProg/Toke/Assignmet 5/Assignmet 5&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a3cda159-6df4-478e-b826-51fcd43b65ea" name="Changes" comment="" />
+      <created>1773137863094</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1773137863094</updated>
+      <workItem from="1773137864520" duration="19000" />
+      <workItem from="1773137896341" duration="52000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
