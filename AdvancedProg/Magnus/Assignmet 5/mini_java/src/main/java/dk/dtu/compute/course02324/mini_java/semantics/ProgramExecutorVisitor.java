@@ -19,6 +19,10 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
 
     final public Map<Expression, Number> values = new HashMap<>();
 
+    /* Implementing the difference functions for adding, subtracting and so on,
+    *  for both type float and integer.
+    * */
+
     private Function<List<Number>,Number> plus2int =
             args -> { int arg1 = args.get(0).intValue();
                       int arg2 = args.get(1).intValue();
@@ -97,7 +101,7 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
      *      and added to the mapping below).
      */
     final private Map<Operator, Map<Type, Function<List<Number>,Number>>> operatorFunctions = Map.ofEntries(
-            entry(PLUS2, Map.ofEntries(
+            entry(PLUS2, Map.ofEntries( //Map of operators, and what function they "pocess"
                     entry(INT, plus2int),
                     entry(FLOAT, plus2float) )
             ),
@@ -153,7 +157,7 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
     }
 
     @Override
-    public void visit(PrintStatement printStatement) {
+    public void visit(PrintStatement printStatement) { //Printstatement prints the expression, as well as the result.
         printStatement.expression.accept(this);
 
         Number result = values.get(printStatement.expression);
@@ -163,13 +167,14 @@ public class ProgramExecutorVisitor extends ProgramVisitor {
 
     @Override
     public void visit(WhileLoop whileLoop) {
+        //Evaluating condition
         whileLoop.expression.accept(this);
 
         while (values.get(whileLoop.expression).intValue() >= 0) {
-            // Execute single body statement (matches your WhileLoop class)
+            // executing body.
             whileLoop.statement.accept(this);
 
-            // Re-evaluate condition after body executes
+            // Re-evaluate condition - Does the while loop still run?
             whileLoop.expression.accept(this);
         }
     }

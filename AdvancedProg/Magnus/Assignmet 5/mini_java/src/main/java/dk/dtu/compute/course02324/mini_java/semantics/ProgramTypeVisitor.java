@@ -82,7 +82,7 @@ public class ProgramTypeVisitor extends ProgramVisitor {
 
         Type conditionType = typeMapping.get(whileLoop.expression);
         if (conditionType != INT) {
-            problems.add("While loop condition must be INT" + conditionType);
+            problems.add("While loop condition must be of type INT" + conditionType);
         }
 
         // Type check body statement
