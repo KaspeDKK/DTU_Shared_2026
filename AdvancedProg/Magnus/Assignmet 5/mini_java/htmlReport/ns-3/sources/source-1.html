@@ -56,10 +56,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    87,5%
+    100%
   </span>
   <span class="absValue">
-    (21/24)
+    (24/24)
   </span>
 </td>
 <td class="coverageStat">
@@ -72,10 +72,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    90,5%
+    98,3%
   </span>
   <span class="absValue">
-    (105/116)
+    (114/116)
   </span>
 </td>
 </tr>
@@ -108,6 +108,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;
 <b class="fc">&nbsp;    final public Map&lt;Expression, Number&gt; values = new HashMap&lt;&gt;();</b>
 &nbsp;
+&nbsp;    /* Implementing the difference functions for adding, subtracting and so on,
+&nbsp;    *  for both type float and integer.
+&nbsp;    * */
+&nbsp;
 <b class="fc">&nbsp;    private Function&lt;List&lt;Number&gt;,Number&gt; plus2int =</b>
 <b class="fc">&nbsp;            args -&gt; { int arg1 = args.get(0).intValue();</b>
 <b class="fc">&nbsp;                      int arg2 = args.get(1).intValue();</b>
@@ -129,14 +133,14 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;                return arg1 - arg2; };</b>
 &nbsp;
 <b class="fc">&nbsp;    private Function&lt;List&lt;Number&gt;,Number&gt; multfloat =</b>
-<b class="nc">&nbsp;            args -&gt; { float arg1 = args.get(0).floatValue();</b>
-<b class="nc">&nbsp;                float arg2 = args.get(1).floatValue();</b>
-<b class="nc">&nbsp;                return arg1 * arg2; };</b>
+<b class="fc">&nbsp;            args -&gt; { float arg1 = args.get(0).floatValue();</b>
+<b class="fc">&nbsp;                float arg2 = args.get(1).floatValue();</b>
+<b class="fc">&nbsp;                return arg1 * arg2; };</b>
 &nbsp;
 <b class="fc">&nbsp;    private Function&lt;List&lt;Number&gt;,Number&gt; multint =</b>
-<b class="nc">&nbsp;            args -&gt; { int arg1 = args.get(0).intValue();</b>
-<b class="nc">&nbsp;                int arg2 = args.get(1).intValue();</b>
-<b class="nc">&nbsp;                return arg1 * arg2; };</b>
+<b class="fc">&nbsp;            args -&gt; { int arg1 = args.get(0).intValue();</b>
+<b class="fc">&nbsp;                int arg2 = args.get(1).intValue();</b>
+<b class="fc">&nbsp;                return arg1 * arg2; };</b>
 &nbsp;
 <b class="fc">&nbsp;    private Function&lt;List&lt;Number&gt;,Number&gt; plus1int =</b>
 <b class="fc">&nbsp;            args -&gt; { int arg1 = args.get(0).intValue();</b>
@@ -165,9 +169,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;                return arg1 / arg2; };</b>
 &nbsp;
 <b class="fc">&nbsp;    private Function&lt;List&lt;Number&gt;,Number&gt; mod2float =</b>
-<b class="nc">&nbsp;            args -&gt; { Float arg1 = args.get(0).floatValue();</b>
-<b class="nc">&nbsp;                Float arg2 = args.get(1).floatValue();</b>
-<b class="nc">&nbsp;                return arg1 % arg2; };</b>
+<b class="fc">&nbsp;            args -&gt; { Float arg1 = args.get(0).floatValue();</b>
+<b class="fc">&nbsp;                Float arg2 = args.get(1).floatValue();</b>
+<b class="fc">&nbsp;                return arg1 % arg2; };</b>
 &nbsp;
 <b class="fc">&nbsp;    private Function&lt;List&lt;Number&gt;,Number&gt; mod2int =</b>
 <b class="fc">&nbsp;            args -&gt; { int arg1 = args.get(0).intValue();</b>
@@ -181,12 +185,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;     * (lambda expression), that represents the semantics of that operation. These
 &nbsp;     * define what happens when the operator needs to be executed.&lt;p&gt;
 &nbsp;     *
-&nbsp;     * TODO Assignment 5a: This map and the functions above need to be extended in Assignment 6a
-&nbsp;     *      (all operations with the respective types required in assignment must be defined above
-&nbsp;     *      and added to the mapping below).
+&nbsp;     *
 &nbsp;     */
 <b class="fc">&nbsp;    final private Map&lt;Operator, Map&lt;Type, Function&lt;List&lt;Number&gt;,Number&gt;&gt;&gt; operatorFunctions = Map.ofEntries(</b>
-<b class="fc">&nbsp;            entry(PLUS2, Map.ofEntries(</b>
+<b class="fc">&nbsp;            entry(PLUS2, Map.ofEntries( //Map of operators, and what function they &quot;pocess&quot;</b>
 <b class="fc">&nbsp;                    entry(INT, plus2int),</b>
 <b class="fc">&nbsp;                    entry(FLOAT, plus2float) )</b>
 &nbsp;            ),
@@ -242,7 +244,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;    }
 &nbsp;
 &nbsp;    @Override
-&nbsp;    public void visit(PrintStatement printStatement) {
+&nbsp;    public void visit(PrintStatement printStatement) { //Printstatement prints the expression, as well as the result.
 <b class="fc">&nbsp;        printStatement.expression.accept(this);</b>
 &nbsp;
 <b class="fc">&nbsp;        Number result = values.get(printStatement.expression);</b>
@@ -252,13 +254,14 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;
 &nbsp;    @Override
 &nbsp;    public void visit(WhileLoop whileLoop) {
+&nbsp;        //Evaluating condition
 <b class="fc">&nbsp;        whileLoop.expression.accept(this);</b>
 &nbsp;
 <b class="fc">&nbsp;        while (values.get(whileLoop.expression).intValue() &gt;= 0) {</b>
-&nbsp;            // Execute single body statement (matches your WhileLoop class)
+&nbsp;            // executing body.
 <b class="fc">&nbsp;            whileLoop.statement.accept(this);</b>
 &nbsp;
-&nbsp;            // Re-evaluate condition after body executes
+&nbsp;            // Re-evaluate condition - Does the while loop still run?
 <b class="fc">&nbsp;            whileLoop.expression.accept(this);</b>
 &nbsp;        }
 &nbsp;    }
@@ -344,7 +347,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2026-03-10 08:54</div>
+    <div style="float:right;">generated on 2026-03-15 10:27</div>
 </div>
 </body>
 </html>
