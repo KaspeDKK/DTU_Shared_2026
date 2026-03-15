@@ -134,6 +134,7 @@ public class TestMiniJava{
         );
 
         ptv.visit(statement);
+        pev.visit(statement);
         if (!ptv.problems.isEmpty()) {
             fail("The type visitor did detect typing problems, which should not be there!");
         }
@@ -141,7 +142,7 @@ public class TestMiniJava{
     }
 
     @Test
-    public void testMultOfInt() {
+    public void testModOfInt() {
         Statement statement = Sequence(
                 Declaration(INT, Var("i"), Literal(10)),
                 Declaration(INT, Var("j"), Literal(20)),
@@ -149,7 +150,20 @@ public class TestMiniJava{
         );
 
         ptv.visit(statement);
+        pev.visit(statement);
 
+    }
+
+    @Test
+    public void testModOfFloat() {
+        Statement statement = Sequence(
+                Declaration(FLOAT, Var("i"), Literal(10.0f)),
+                Declaration(FLOAT, Var("j"), Literal(20.0f)),
+                Assignment(Var("i"), OperatorExpression(MOD, Var("i"), Var("j")))
+        );
+
+        ptv.visit(statement);
+        pev.visit(statement);
 
     }
 
@@ -190,7 +204,7 @@ public class TestMiniJava{
     }
 
     @Test
-    public void testAnException4(){ //Test declaring without a type
+    public void testAnException4(){ //Test declaring an integer as a float
         Statement statement = Sequence(
                 Declaration(INT,Var("i")),
                 Assignment(Var("i"),Literal(0.0f))
