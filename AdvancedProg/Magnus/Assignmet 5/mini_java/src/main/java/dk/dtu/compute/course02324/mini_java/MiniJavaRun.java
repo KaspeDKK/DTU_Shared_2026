@@ -48,34 +48,104 @@ public class MiniJavaRun {
 
     public static void main(String... args) {
 
-        //egen implementation
-        System.out.println("My own implementations");
-        System.out.println("implemented a test of the while loop");
 
-        Statement statement10 = new Sequence(
-                Declaration(INT, Var("i"), Literal(5)),
-                Declaration(INT, Var("sum"), Literal(0)),
-                WhileLoop(
-                        Var("i"),
-                        Sequence(
-                                Assignment(
-                                        Var("i"),
-                                        OperatorExpression(MINUS2,
-                                                Var("i"),
-                                                Literal(1)
-                                        )
-                                ),
-                                Sequence(Assignment(
-                                        Var("sum"),
-                                        OperatorExpression(PLUS2,
-                                                Var("sum"),
-                                                Literal(2))
-                                ))
+        Statement s = new Sequence(
+                new Declaration(INT, new Var("x")),
+                new Assignment(new Var("x"),
+                        new OperatorExpression(PLUS1,
+                                new IntLiteral(42))));
+        printTypeEvaluate(s);
+
+
+        System.out.println("------------------------------");
+        System.out.println("Egne implitationer:");
+
+        System.out.println("--- Test af Unære Operatorer ---");
+        System.out.println("- Unære Operatorer1 -");
+
+        int testUnary1 = -(-5) + (+3);
+        System.out.println("Java says: " + testUnary1);
+
+        Statement unaryStatement1 = Sequence(
+                Declaration(INT, Var("x"),
+                        OperatorExpression(PLUS2,
+                                OperatorExpression(MINUS1, Literal(-5)), // -(-5)
+                                OperatorExpression(PLUS1, Literal(3))    // +(3)
                         )
                 )
-
         );
-        printTypeEvaluate(statement10);
+        printTypeEvaluate(unaryStatement1);
+
+        System.out.println("- Unære Operatorer2 -");
+        int testUnary2 = -5 - -(5);
+        System.out.println("Java says: " + testUnary2);
+
+        Statement uS2 = Sequence (
+                Declaration(INT, Var("x"),
+                        OperatorExpression(MINUS2,
+                                OperatorExpression(PLUS1, Literal(-5)),
+                                OperatorExpression(MINUS1, Literal(5))
+                        )
+                )
+        );
+        printTypeEvaluate(uS2);
+        System.out.println("--- Test af wild case ---");
+
+        int testWild = 5 + 3 / 10 * 20 % 3 - -10;  // læses som: 5 + ( (( (3 / 10) * 20) % 3) - (-10);
+        System.out.println("Java says: " + testWild);
+
+        Statement wildStatement = Sequence (
+                Declaration(FLOAT, Var("y"),
+                        OperatorExpression(MINUS2,
+                                OperatorExpression(PLUS2,
+                                        new FloatLiteral(5),
+                                        OperatorExpression(MOD,
+                                                OperatorExpression(MULT,
+                                                        new FloatLiteral(20),
+                                                        OperatorExpression(DIV,
+                                                                new FloatLiteral(3),
+                                                                new FloatLiteral(10)
+                                                        )
+                                                )
+                                                ,
+                                                new FloatLiteral(3)
+                                        )
+                                )
+                                ,
+                                OperatorExpression(MINUS1,new FloatLiteral(10))
+                        )
+                )
+        );
+
+        printTypeEvaluate(wildStatement);
+
+        // WhileLoop test:
+        System.out.println("-- WhileI --");
+        System.out.println("Result provided  by java:");
+        var whileI = 5;
+        while (whileI >= 0) {
+            System.out.println("whileI equal: " + whileI);
+            whileI--;
+        }
+        Statement whileloop0 = Sequence(
+                Declaration(INT, Var("whileI"), Literal(5)),
+                WhileLoop(
+                        Var("whileI"),
+                        Sequence(
+                                PrintStatement("## whileI : ", Var("whileI")),
+                                Assignment(
+                                        Var("whileI"),
+                                        OperatorExpression(MINUS2,
+                                                Var("whileI"),
+                                                Literal(1)
+                                        )
+                                )
+                        )
+                )
+        );
+
+        printTypeEvaluate(whileloop0);
+
 
         Statement myStatement0 = Sequence(
 
