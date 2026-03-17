@@ -89,6 +89,8 @@ public class Board extends Subject {
 
     public void setGameCounter(int newCount){
         this.moveCounter = newCount;
+
+        notifyChange();
     }
 
     public int getGameCounter(){return this.moveCounter;}

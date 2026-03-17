@@ -49,22 +49,20 @@ public class GameController {
      */
     public void moveCurrentPlayerToSpace(@NotNull Space space)  {
 
-        if (space.getPlayer() != null){
-            throw new IllegalStateException("Space is already occupied. MISTER ");
-        }
+        if (space.getPlayer() != null) throw new IllegalStateException("Space is already occupied. MISTER!"); // defensive programming
+        if (board.getCurrentPlayer() == null) throw new IllegalStateException("current player is null?!"); // very defensive programming
 
-        Player curr = board.getCurrentPlayer();
-        int count = board.getGameCounter();
+        Player curr = board.getCurrentPlayer(); // get player
+
+
+        int count = board.getGameCounter(); // get count locally
         
-        curr.setSpace(space);
-        count++;
-        int next = (board.getPlayerNumber(curr) + 1) % board.getPlayersNumber();
-        board.setCurrentPlayer(board.getPlayer(next));
+        curr.setSpace(space); // set current player to assigned space
+        count++; // increment local
+        int next = (board.getPlayerNumber(curr) + 1) % board.getPlayersNumber(); // get next player with wraparound using %
+        board.setCurrentPlayer(board.getPlayer(next)); // set next player
 
-        board.setGameCounter(count);
-
-
-
+        board.setGameCounter(count); // increment the actual count.
 
     }
 
