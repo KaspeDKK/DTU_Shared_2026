@@ -39,20 +39,32 @@ public class GameController {
     }
 
     /**
-     * This is just some dummy controller operation to make a simple move to see something
-     * happening on the board. This method should eventually be deleted!
+     * This method moves the current player to a non-occupied space, and is triggered by a user
+     * clicking on set space.
+     *
+     * @author Tokemeister, Pomfriis, KaspeDKK, Simon, Thomas, Rasbas
      *
      * @param space the space to which the current player should move
+     *
      */
     public void moveCurrentPlayerToSpace(@NotNull Space space)  {
-        // TODO A6a: this method should be implemented for Assignment 6a:
-        //   - the current player should be moved to the given space
-        //     (if it is free())
-        //   - and the current player should be set to the player
-        //     following the current player
-        //   - the counter of moves in the game should be increased by one
-        //     if and when the player is moved (the counter and the status line
-        //     message needs to be implemented at another place)
+
+        if (space.getPlayer() != null){
+            throw new IllegalStateException("Space is already occupied. MISTER ");
+        }
+
+        Player curr = board.getCurrentPlayer();
+        int count = board.getGameCounter();
+        
+        curr.setSpace(space);
+        count++;
+        int next = (board.getPlayerNumber(curr) + 1) % board.getPlayersNumber();
+        board.setCurrentPlayer(board.getPlayer(next));
+
+        board.setGameCounter(count);
+
+
+
 
     }
 
