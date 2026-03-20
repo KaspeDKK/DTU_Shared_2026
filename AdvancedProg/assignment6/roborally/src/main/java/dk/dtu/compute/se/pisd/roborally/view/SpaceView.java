@@ -22,10 +22,12 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import org.jetbrains.annotations.NotNull;
 
@@ -85,6 +87,44 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
     }
 
+    //TODO A6b REMEMBER JAVADOC
+
+    private void updateWalls(){
+        for(Heading wall : space.getWalls()){
+            Line line = new Line();
+            line.setStroke(Color.RED);
+            line.setStrokeWidth(2.0);
+
+            switch (wall) {
+                case NORTH:
+                    line.setStartX(-SPACE_WIDTH / 2.0);
+                    line.setStartY(-SPACE_HEIGHT / 2.0);
+                    line.setEndX(SPACE_WIDTH / 2.0);
+                    line.setEndY(-SPACE_HEIGHT / 2.0);
+                    break;
+                case SOUTH:
+                    line.setStartX(-SPACE_WIDTH / 2.0);
+                    line.setStartY(SPACE_HEIGHT / 2.0);
+                    line.setEndX(SPACE_WIDTH / 2.0);
+                    line.setEndY(SPACE_HEIGHT / 2.0);
+                    break;
+                case WEST:
+                    line.setStartX(-SPACE_WIDTH / 2.0);
+                    line.setStartY(-SPACE_HEIGHT / 2.0);
+                    line.setEndX(-SPACE_WIDTH / 2.0);
+                    line.setEndY(SPACE_HEIGHT / 2.0);
+                    break;
+                case EAST:
+                    line.setStartX(SPACE_WIDTH / 2.0);
+                    line.setStartY(-SPACE_HEIGHT / 2.0);
+                    line.setEndX(SPACE_WIDTH / 2.0);
+                    line.setEndY(SPACE_HEIGHT / 2.0);
+                    break;
+            }
+
+        }
+    }
+
     @Override
     public void updateView(Subject subject) {
         if (subject == this.space) {
@@ -92,6 +132,8 @@ public class SpaceView extends StackPane implements ViewObserver {
 
             // TODO A6b: drawing the walls and the field action(s) on
             //     this space could be implemented here.
+
+
 
             updatePlayer();
         }

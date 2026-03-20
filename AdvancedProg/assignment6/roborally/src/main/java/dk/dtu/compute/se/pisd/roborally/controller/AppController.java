@@ -37,6 +37,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.skin.ChoiceBoxSkin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -63,13 +64,19 @@ public class AppController implements Observer {
         this.roboRally = roboRally;
     }
 
+    // TODO A6b comments on added code
     public void newGame() {
-        ChoiceDialog<Integer> dialog = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
-        dialog.setTitle("Player number");
-        dialog.setHeaderText("Select number of players");
-        Optional<Integer> result = dialog.showAndWait();
+        ChoiceDialog<Integer> dialog1 = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
+        dialog1.setTitle("Player number");
+        dialog1.setHeaderText("Select number of players");
 
-        if (result.isPresent()) {
+        ChoiceDialog<String> dialog2 = new ChoiceDialog<>(BoardFactory.availableBoards().get(0), BoardFactory.availableBoards());
+        dialog2.setTitle("Game type");
+        dialog2.setHeaderText("Select game type");
+        Optional<Integer> result1 = dialog1.showAndWait();
+        Optional<String> result2 = dialog2.showAndWait();
+
+        if (result1.isPresent() && result2.isPresent()) {
             if (gameController != null) {
                 // The UI should not allow this, but in case this happens anyway.
                 // give the user the option to save the game or abort this operation!
@@ -87,7 +94,7 @@ public class AppController implements Observer {
             // number of players on it.
             Board board = new Board(8,8);
             gameController = new GameController(board);
-            int no = result.get();
+            int no = result1.get();
             for (int i = 0; i < no; i++) {
                 Player player = new Player(board, PLAYER_COLORS.get(i), "Player " + (i + 1));
                 board.addPlayer(player);

@@ -3,6 +3,7 @@ package dk.dtu.compute.se.pisd.roborally.controller;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
+import java.util.*;
 
 /**
  * A factory for creating boards. The factory itself is implemented as a singleton.
@@ -44,10 +45,7 @@ public class BoardFactory {
      * @return the new board corresponding to that name
      */
     public Board createBoard(String name) {
-        // TODO A6b: Implement this method properly as described in Assignment 6b.
-        //     Dependent on the provided name, create a board accordingly and
-        //     return it. In case the name is null, some default board should
-        //     be returned (defensive programming).
+
 
         Board board;
         if (name == null) {
@@ -55,7 +53,6 @@ public class BoardFactory {
         } else {
             board = new Board(8,8, name);
         }
-
         // add some walls, actions and checkpoints to some spaces
         Space space = board.getSpace(0,0);
         space.getWalls().add(Heading.SOUTH);
@@ -95,5 +92,13 @@ public class BoardFactory {
     //     names in this list. Make sure that the new method that you create
     //     here has a proper JavaDoc documentation.
     //
+
+    public static List<String> availableBoards(){
+        List<String> names = new ArrayList<>();
+        names.add("Generic game");
+        names.add("Special game");
+
+        return names;
+    }
 
 }
