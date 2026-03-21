@@ -22,7 +22,7 @@ READS   ;Gemmer det som er i registrene.
         ADD R2, R2, #-9
         LD R3 Asci          ;Fjerner ascii 
         
-        ;Output af besked:
+        ;Output af besked:2
         LEA R0, String 
         PUTS
         
