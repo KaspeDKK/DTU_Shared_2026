@@ -23,6 +23,7 @@ noPrime LEA R0, stringNotPrime
         BRnzp end
 
 end     PUTS
+        RET     ;return 
 
 stringPrime     .STRINGZ "The number is prime"
 stringNotPrime  .STRINGZ "The number is not prime"
