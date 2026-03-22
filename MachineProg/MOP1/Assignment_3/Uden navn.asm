@@ -48,17 +48,13 @@ subtractionLoop
     isPrime
         AND R0,R0,#0
         ADD R0,R0,#1
-    JSR endReadS
-    
+        HALT
+
     isNotPrime
         AND R0,R0,#0
-    JSR endReadS
-    
-    
-    endReadS
-    HALT
-    .end ; Skiftes ud med return
-  
+        HALT
+
+    .END
     
 
     
