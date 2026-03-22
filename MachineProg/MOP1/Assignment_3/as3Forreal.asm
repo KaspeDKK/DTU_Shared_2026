@@ -38,17 +38,17 @@ divisorLoop
     
 subtractionLoop
     
-    ADD R1,R1,R2
+    ADD R1,R1,R2    ;træk divisor fra indtil R1 <= 0 
     BRp subtractionLoop
     BRz isNotPrime
     BRn divisorLoop
     
     
     
-    isPrimeTrue
+    isPrimeTrue 
         AND R0,R0,#0
         ADD R0,R0,#1
-        HALT
+        HALT    
 
     isNotPrime
         AND R0,R0,#0
