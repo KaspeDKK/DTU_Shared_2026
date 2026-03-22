@@ -13,7 +13,9 @@ readS
     AND R2,R2,#0 
     AND R3,R3,#0
     
-    ADD R2,R2,#1    ;divisor 
+    ADD R2,R2,#-1    ;divisor 
+    
+    
     ADD R1,R0,R1    ;tilføjer input - R0 til R1 
     
     ADD R1,R1,#-1   ;R0 = 1?
@@ -27,9 +29,7 @@ divisorLoop
     AND R1,R1,#0 ;R1 = R0 (input)
     ADD R1,R0,R1
     
-    ADD R2,R2,#1    ;Increment divisor 
-    NOT R2,R2       ;-divisor
-    ADD R2,R2,#1
+    ADD R2,R2,#-1    ;Increment divisor 
     
     ADD R1,R1,R2
     BRz     isPrime
