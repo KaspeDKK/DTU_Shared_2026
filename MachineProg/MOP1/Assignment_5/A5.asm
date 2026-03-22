@@ -52,72 +52,51 @@ ASCII_ZERO  .FILL   x0030   ; '0'
 ;Hvis tallet er et primtal, skal tallet returneres, ellers skal nul returneres. 
 ;---
 
-isPrime     
 
-            
-            AND R2, R2, #0
-            
-            LEA R1, primeStart  ;R1 -> Adressen for "arrayet" 
-            LDR R2, R1, #0      ;R2 -> Load tal, fra pointeren, med ofset på 0 (første værdi)
-            
-            ;BRn Return0 ;tror jeg er unødvendig
-            BRnzp Sammenlign
+isPrime
 
+    AND R1,R1,#0    ;nulstiller registre
+    AND R2,R2,#0 
+    AND R3,R3,#0
+    
+    ADD R2,R2,#-1    ;divisor 
+    
+    
+    ADD R1,R0,R1    ;tilføjer input - R0 til R1 
+    
+    ADD R1,R1,#-1   ;R0 = 1?
+    BRz     isNotPrime
+    
+    ADD R1,R1,#-1   ;R0 = 2? 
+    BRz     isPrimeTrue
+    BRp     divisorLoop
 
-Sammenlign  LDR R2, R1, #0      ;R2 -> Load tal, fra pointeren, med ofset på R1+0 (0=første værdi)
-            BRn Return0         ;Stopper ved -1
-            ADD R1, R1, #1      ;pointeren++
-            
-            NOT R2, R2          ;2' complement
-            ADD R2, R2, #1      ;--||--
-            
-            ADD R2, R0, R2      ;Sammenligner
-            BRn Return0         ;false
-            BRz Return1         ;true
-            BRp Sammenlign      ;loop again
-            
-            
-            
-            
-Return1     AND R0, R1, #0
-            ADD R0, R0, #1
-            BRnzp end
+divisorLoop 
+    AND R1,R1,#0 ;R1 = R0 (input)
+    ADD R1,R0,R1
+    
+    ADD R2,R2,#-1    ;Increment divisor 
+    
+    ADD R1,R1,R2    ;Divisor >= n? 
+    BRz     isPrimeTrue
+    BRp     subtractionLoop
 
+    
+subtractionLoop
+    
+    ADD R1,R1,R2 ;Input - divisor
+    BRp subtractionLoop
+    BRz isNotPrime
+    BRn divisorLoop
+    
+    isPrimeTrue
+        AND R0,R0,#0
+        ADD R0,R0,#1
+        RET
 
-Return0     AND R0, R1, #0
-            BRnzp end
-
-
-
-Test    .Fill #11       
-            
-primeStart      .FILL #2
-                .FILL #3
-                .FILL #5
-                .FILL #7
-                .FILL #11
-                .FILL #13
-                .FILL #17
-                .FILL #19
-                .FILL #23
-                .FILL #29
-                .FILL #31
-                .FILL #37
-                .FILL #41
-                .FILL #43
-                .FILL #47
-                .FILL #53
-                .FILL #59
-                .FILL #61
-                .FILL #67
-                .FILL #71
-                .FILL #73
-                .FILL #79
-                .FILL #83
-                .FILL #89
-                .FILL #97
-primeEnd        .FILL #-1
-
+    isNotPrime
+        AND R0,R0,#0
+        RET
 
 ;----
 ;Funktion: resultS
@@ -125,7 +104,7 @@ primeEnd        .FILL #-1
 ;---
 
 resultS ADD R0, R0, #0
-        BRnp prime
+        BRp prime
         BRz noPrime
 
 
