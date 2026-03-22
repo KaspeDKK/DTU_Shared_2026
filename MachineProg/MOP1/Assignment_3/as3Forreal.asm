@@ -7,7 +7,7 @@
 ;
 ;---------
 
-readS
+isPrime
 
     AND R1,R1,#0    ;nulstiller registre
     AND R2,R2,#0 
@@ -22,7 +22,7 @@ readS
     BRz     isNotPrime
     
     ADD R1,R1,#-1   ;R0 = 2? 
-    BRz     isPrime
+    BRz     isPrimeTrue
     BRp     divisorLoop
 
 divisorLoop 
@@ -32,7 +32,7 @@ divisorLoop
     ADD R2,R2,#-1    ;Increment divisor 
     
     ADD R1,R1,R2
-    BRz     isPrime
+    BRz     isPrimeTrue
     BRp     subtractionLoop
 
     
@@ -45,7 +45,7 @@ subtractionLoop
     
     
     
-    isPrime
+    isPrimeTrue
         AND R0,R0,#0
         ADD R0,R0,#1
         HALT
