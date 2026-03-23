@@ -1,8 +1,10 @@
 .ORIG   x3000
+
+MAIN
     JSR     readS          ; R0 = typed decimal number
     JSR     isPrime        ; R0 = 1 if prime, 0 if not
     JSR     resultS        ; print result
-    HALT
+    BRnzp   MAIN
 
 ;---------------------------------------
 ; readS
@@ -71,12 +73,12 @@ checkDone
 tooManyDigits
     LEA     R0, errTooLong
     PUTS
-    HALT
+    BRnzp   MAIN ; restart
 
 invalidInput
     LEA     R0, errFormat
     PUTS
-    HALT
+    BRnzp   MAIN ; restart
 
 ;---------------------------------------
 ; isPrime
@@ -84,32 +86,36 @@ invalidInput
 ; outputs -> R0 = 1 if prime, 0 if not
 ;---------------------------------------
 isPrime
-    ADD     R1, R0, #-1
-    BRnz    isNotPrime
-
-    ADD     R1, R0, #-2
-    BRz     isPrimeTrue
-
+    AND     R1, R1, #0
     AND     R2, R2, #0
-    ADD     R2, R2, #2     ; divisor = 2
+    AND     R3, R3, #0
+
+    ADD     R2, R2, #-1    ; divisor
+
+    ADD     R1, R0, R1
+
+    ADD     R1, R1, #-1    ; R0 = 1?
+    BRz     isNotPrime
+
+    ADD     R1, R1, #-1    ; R0 = 2?
+    BRz     isPrimeTrue
+    BRp     divisorLoop
 
 divisorLoop
-    NOT     R3, R2
-    ADD     R3, R3, #1
-    ADD     R3, R0, R3     ; n - divisor
+    AND     R1, R1, #0
+    ADD     R1, R0, R1
+
+    ADD     R2, R2, #-1    ; increment divisor
+
+    ADD     R1, R1, R2     ; divisor >= n?
     BRz     isPrimeTrue
-
-    ADD     R4, R0, #0     ; working copy of n
-
-subtractionLoop
-    NOT     R5, R2
-    ADD     R5, R5, #1
-    ADD     R4, R4, R5     ; R4 = R4 - divisor
-    BRz     isNotPrime
     BRp     subtractionLoop
 
-    ADD     R2, R2, #1
-    BRnzp   divisorLoop
+subtractionLoop
+    ADD     R1, R1, R2     ; input - divisor
+    BRp     subtractionLoop
+    BRz     isNotPrime
+    BRn     divisorLoop
 
 isPrimeTrue
     AND     R0, R0, #0
@@ -142,11 +148,11 @@ notPrimeMsg
 ;---------------------------------------
 ; prints and data
 ;---------------------------------------
-MSG             .STRINGZ "Input a decimal number (1 to 5 digits): "
-stringPrime     .STRINGZ "\nThe number is prime"
-stringNotPrime  .STRINGZ "\nThe number is not prime"
-errFormat       .STRINGZ "\nError: input must contain digits only (0-9)"
-errTooLong      .STRINGZ "\nError: input can contain at most 5 digits"
+MSG             .STRINGZ "Input a decimal number (1 to 5 digits): \n"
+stringPrime     .STRINGZ "\nThe number is prime \n"
+stringNotPrime  .STRINGZ "\nThe number is not prime \n"
+errFormat       .STRINGZ "\nError: input must contain digits only (0-9) \n"
+errTooLong      .STRINGZ "\nError: input can contain at most 5 digits \n"
 ASCII_ZERO      .FILL   x0030
 NEWLINE         .FILL   x000A
 

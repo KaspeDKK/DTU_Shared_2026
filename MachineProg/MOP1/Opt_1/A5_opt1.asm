@@ -1,9 +1,10 @@
 .ORIG   x3000
+MAIN
     JSR     readS          ; R0 = typed decimal number
     JSR     isPrime        ; R0 = 1 if prime, 0 if not
     JSR     resultS        ; print result
-    HALT
-
+    BRnzp   MAIN
+    
 ;---------------------------------------
 ; readS
 ; reads a decimal number with up to 5 digits
@@ -60,38 +61,36 @@ readDone
 ; outputs -> R0 = 1 if prime, 0 if not
 ;---------------------------------------
 isPrime
-    ; n <= 1 is not prime
-    ADD     R1, R0, #-1
-    BRnz    isNotPrime
-
-    ; n == 2 is prime
-    ADD     R1, R0, #-2
-    BRz     isPrimeTrue
-
-    ; divisor = 2
+    AND     R1, R1, #0
     AND     R2, R2, #0
-    ADD     R2, R2, #2
+    AND     R3, R3, #0
+
+    ADD     R2, R2, #-1    ; divisor
+
+    ADD     R1, R0, R1
+
+    ADD     R1, R1, #-1    ; R0 = 1?
+    BRz     isNotPrime
+
+    ADD     R1, R1, #-1    ; R0 = 2?
+    BRz     isPrimeTrue
+    BRp     divisorLoop
 
 divisorLoop
-    ; if divisor == n, no divisor found
-    NOT     R3, R2
-    ADD     R3, R3, #1
-    ADD     R3, R0, R3
+    AND     R1, R1, #0
+    ADD     R1, R0, R1
+
+    ADD     R2, R2, #-1    ; increment divisor
+
+    ADD     R1, R1, R2     ; divisor >= n?
     BRz     isPrimeTrue
-
-    ; test divisibility by repeated subtraction
-    ADD     R4, R0, #0
-
-subtractionLoop
-    NOT     R5, R2
-    ADD     R5, R5, #1
-    ADD     R4, R4, R5
-    BRz     isNotPrime
     BRp     subtractionLoop
 
-    ; try next divisor
-    ADD     R2, R2, #1
-    BRnzp   divisorLoop
+subtractionLoop
+    ADD     R1, R1, R2     ; input - divisor
+    BRp     subtractionLoop
+    BRz     isNotPrime
+    BRn     divisorLoop
 
 isPrimeTrue
     AND     R0, R0, #0
