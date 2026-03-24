@@ -22,6 +22,8 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBelt;
+import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
@@ -90,11 +92,16 @@ public class SpaceView extends StackPane implements ViewObserver {
 
     //TODO A6b REMEMBER JAVADOC
 
+    /**
+     * updateWalls goes through all the spaces, and draws existing walls.
+     *
+     * @author Tokemeister, Friisma, KaspeDKK, SimoXSwagger, UngeRas, Thomas
+     */
     private void updateWalls(){
         for(Heading wall : space.getWalls()){
             Line line = new Line();
             line.setStroke(Color.RED);
-            line.setStrokeWidth(5);
+            line.setStrokeWidth(3);
             Pane pane = new Pane();
 
             switch (wall) {
@@ -128,12 +135,33 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
     }
 
+    private void updateActions(){
+        for (FieldAction action : space.getActions()){
+            if (action instanceof ConveyorBelt){
+                ConveyorBelt belt = (ConveyorBelt) action;
+
+                Heading heading;
+                heading = belt.getHeading(); //gets heading from ConveyorBelt
+
+                Polygon arrow = new Polygon(2.0, 2.0,
+                        (SPACE_WIDTH-6.0)/2.0, SPACE_HEIGHT-6.0,
+                        SPACE_WIDTH-6.0, 2.0 );
+                arrow.setFill(Color.LIGHTGRAY);
+                arrow.setStroke(Color.GREY);
+                arrow.setRotate((90*heading.ordinal()) % 360); //turns depending on the heading
+                this.getChildren().add(arrow);
+            }
+        }
+
+    }
+
     @Override
     public void updateView(Subject subject) {
         if (subject == this.space) {
             this.getChildren().clear();
             updateWalls();
             // TODO A6b: drawing the walls and the field action(s) on
+            updateActions();
 
 
 

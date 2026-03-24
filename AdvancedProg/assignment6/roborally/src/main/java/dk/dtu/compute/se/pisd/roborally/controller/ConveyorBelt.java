@@ -31,8 +31,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Ekkart Kindler, ekki@dtu.dk
  *
  */
-// XXX A6b this class might give you some inspiration for
-//         implementing the class CheckPoint
+
 // XXX A6d remember to also implement the doAction method for the
 //         class CheckPoint you added in Assignment 6b
 public class ConveyorBelt extends FieldAction {
