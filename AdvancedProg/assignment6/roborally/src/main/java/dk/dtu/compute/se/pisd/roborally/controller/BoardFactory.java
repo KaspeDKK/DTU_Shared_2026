@@ -46,6 +46,7 @@ public class BoardFactory {
      */
     public Board createBoard(String name) {
 
+
         Board board;
         if (name == null) {
             board = new Board(8,8, "<none>");
