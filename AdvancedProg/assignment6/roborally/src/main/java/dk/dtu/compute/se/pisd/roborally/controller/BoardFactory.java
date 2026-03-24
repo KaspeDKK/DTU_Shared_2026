@@ -87,12 +87,6 @@ public class BoardFactory {
         return board;
     }
 
-    // TODO A6b: add a method that returns a list (of type List<String>)
-    //     of all available board names. The corresponding method
-    //     createBoard(String name) must return a board for any of the
-    //     names in this list. Make sure that the new method that you create
-    //     here has a proper JavaDoc documentation.
-    //
 
     /**
      * Method that returns a list of available games. The methods
