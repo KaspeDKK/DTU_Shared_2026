@@ -82,6 +82,13 @@ public class BoardFactory {
             action = new ConveyorBelt();
             action.setHeading(Heading.WEST);
             space.getActions().add(action);
+
+            space = board.getSpace(2, 3);
+            Checkpoint check = new Checkpoint();
+            check.setNumber(2);
+            space.getActions().add(check);
+
+
         }
         return board;
     }
