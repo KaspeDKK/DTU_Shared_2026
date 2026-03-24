@@ -22,6 +22,8 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBelt;
+import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
@@ -94,7 +96,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         for(Heading wall : space.getWalls()){
             Line line = new Line();
             line.setStroke(Color.RED);
-            line.setStrokeWidth(5);
+            line.setStrokeWidth(2);
             Pane pane = new Pane();
 
             switch (wall) {
@@ -128,11 +130,47 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
     }
 
+    // TODO A6b Add javadoc
+
+    private void updateActions(){
+        for (FieldAction actions : space.getActions()){
+            if (actions instanceof ConveyorBelt){
+                ConveyorBelt belt = (ConveyorBelt) actions;
+
+                Polygon arrow = new Polygon(2.0, 2.0,
+                        (SPACE_WIDTH-6.0)/2.0, SPACE_HEIGHT-6.0,
+                        SPACE_WIDTH-6.0, 2.0 );
+                arrow.setFill(Color.LIGHTGRAY);
+                arrow.setStroke(Color.GREY);
+
+                Heading heading = belt.getHeading();
+                switch (heading){
+                    case NORTH:
+                        arrow.setRotate(180);
+                        break;
+                    case SOUTH:
+                        arrow.setRotate(0);
+                        break;
+                    case WEST:
+                        arrow.setRotate(90);
+                        break;
+                    case EAST:
+                        arrow.setRotate(270);
+                        break;
+                }
+                this.getChildren().add(arrow);
+
+            }
+
+        }
+    }
+
     @Override
     public void updateView(Subject subject) {
         if (subject == this.space) {
             this.getChildren().clear();
             updateWalls();
+            updateActions();
             // TODO A6b: drawing the walls and the field action(s) on
 
 
