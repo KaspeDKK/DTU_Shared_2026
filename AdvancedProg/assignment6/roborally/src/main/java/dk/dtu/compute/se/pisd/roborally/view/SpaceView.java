@@ -25,6 +25,7 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -93,35 +94,37 @@ public class SpaceView extends StackPane implements ViewObserver {
         for(Heading wall : space.getWalls()){
             Line line = new Line();
             line.setStroke(Color.RED);
-            line.setStrokeWidth(2.0);
+            line.setStrokeWidth(5);
+            Pane pane = new Pane();
 
             switch (wall) {
                 case NORTH:
-                    line.setStartX(-SPACE_WIDTH / 2.0);
-                    line.setStartY(-SPACE_HEIGHT / 2.0);
-                    line.setEndX(SPACE_WIDTH / 2.0);
-                    line.setEndY(-SPACE_HEIGHT / 2.0);
+                    line.setStartX(0);
+                    line.setStartY(0);
+                    line.setEndX(SPACE_WIDTH);
+                    line.setEndY(0);
                     break;
                 case SOUTH:
-                    line.setStartX(-SPACE_WIDTH / 2.0);
-                    line.setStartY(SPACE_HEIGHT / 2.0);
-                    line.setEndX(SPACE_WIDTH / 2.0);
-                    line.setEndY(SPACE_HEIGHT / 2.0);
+                    line.setStartX(0);
+                    line.setStartY(SPACE_HEIGHT);
+                    line.setEndX(SPACE_WIDTH);
+                    line.setEndY(SPACE_HEIGHT);
                     break;
                 case WEST:
-                    line.setStartX(-SPACE_WIDTH / 2.0);
-                    line.setStartY(-SPACE_HEIGHT / 2.0);
-                    line.setEndX(-SPACE_WIDTH / 2.0);
-                    line.setEndY(SPACE_HEIGHT / 2.0);
+                    line.setStartX(0);
+                    line.setStartY(0);
+                    line.setEndX(0);
+                    line.setEndY(SPACE_HEIGHT);
                     break;
                 case EAST:
-                    line.setStartX(SPACE_WIDTH / 2.0);
-                    line.setStartY(-SPACE_HEIGHT / 2.0);
-                    line.setEndX(SPACE_WIDTH / 2.0);
-                    line.setEndY(SPACE_HEIGHT / 2.0);
+                    line.setStartX(SPACE_WIDTH);
+                    line.setStartY(0);
+                    line.setEndX(SPACE_WIDTH);
+                    line.setEndY(SPACE_HEIGHT);
                     break;
             }
-            this.getChildren().add(line);
+            pane.getChildren().add(line);
+            this.getChildren().add(pane);
         }
     }
 
