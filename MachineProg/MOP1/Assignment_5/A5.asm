@@ -1,10 +1,11 @@
 
-.ORIG   x3000
-    JSR     readS      ; R0 now contains the number
+.ORIG x3000
 
-    JSR     isPrime    ; Returns R0=1 if prime, 0 if not
-    JSR     resultS    ; Uses R0 from isPrime
-    HALT
+MAIN
+    JSR readS
+    JSR isPrime
+    JSR resultS
+    BRnzp MAIN
 
 ;---------------------------------------
 
@@ -117,7 +118,7 @@ noPrime LEA R0, stringNotPrime
 end     PUTS
         RET     ;return 
 
-stringPrime     .STRINGZ "The number is prime"
-stringNotPrime  .STRINGZ "The number is not prime"
+stringPrime     .STRINGZ "\nThe number is prime\n"
+stringNotPrime  .STRINGZ "\nThe number is not prime\n"
 
 .END

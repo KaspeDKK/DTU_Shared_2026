@@ -30,7 +30,7 @@
         ADD R4, R5, R6       ; R4 = second digit
 
         ; result = 10*first + second
-        ADD R0, R2, R4       ; final answer must be in R0
+        ADD R0, R2, R4       ; final answer set in R0 (in the viewer i cannot see R0 after execution ofc because its overidden)
         TRAP x25
 
 MSG     .STRINGZ "Input a 2 digit decimal number:"
