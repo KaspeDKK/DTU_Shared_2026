@@ -39,7 +39,7 @@ public class BoardFactory {
 
     /**
      * Creates a new board of given name of a board, which indicates
-     * which type of board should be created. For now the name is ignored.
+     * which type of board should be created.
      *
      * @param name the given name board
      * @return the new board corresponding to that name
@@ -93,6 +93,11 @@ public class BoardFactory {
     //     names in this list. Make sure that the new method that you create
     //     here has a proper JavaDoc documentation.
     //
+
+    /**
+     * Method that returns a list of available games. The methods
+     * @return list of available boards
+     */
 
     public static List<String> availableBoards(){
         List<String> names = new ArrayList<>();

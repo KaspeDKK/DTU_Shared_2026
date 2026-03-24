@@ -73,8 +73,10 @@ public class AppController implements Observer {
         ChoiceDialog<String> dialog2 = new ChoiceDialog<>(BoardFactory.availableBoards().get(0), BoardFactory.availableBoards());
         dialog2.setTitle("Game type");
         dialog2.setHeaderText("Select game type");
+
         Optional<Integer> result1 = dialog1.showAndWait();
         Optional<String> result2 = dialog2.showAndWait();
+
 
         if (result1.isPresent() && result2.isPresent()) {
             if (gameController != null) {
@@ -85,6 +87,9 @@ public class AppController implements Observer {
                 }
             }
 
+            String boardName = result2.get();
+            Board board = BoardFactory.getInstance().createBoard(boardName);
+
             // TODO A6b: Use a user dialog here (similar to the one above
             //     for player number) which lets the user select one of the
             //     available boards, and then create the chosen board using
@@ -92,7 +97,7 @@ public class AppController implements Observer {
 
             // The code below just creates an empty board with the chosen
             // number of players on it.
-            Board board = new Board(8,8);
+            //Board board = new Board(8,8); commented out
             gameController = new GameController(board);
             int no = result1.get();
             for (int i = 0; i < no; i++) {

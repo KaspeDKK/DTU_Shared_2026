@@ -121,7 +121,7 @@ public class SpaceView extends StackPane implements ViewObserver {
                     line.setEndY(SPACE_HEIGHT / 2.0);
                     break;
             }
-
+            this.getChildren().add(line);
         }
     }
 
@@ -132,6 +132,7 @@ public class SpaceView extends StackPane implements ViewObserver {
             updateWalls();
             // TODO A6b: drawing the walls and the field action(s) on
             //     this space could be implemented here.
+
 
 
 
