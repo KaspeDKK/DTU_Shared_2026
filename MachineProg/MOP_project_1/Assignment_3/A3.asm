@@ -4,7 +4,7 @@
 
 ;---------
 ;funktion der tjekker om et tal er et primtal 
-;
+;Returnere 1 - true || 0 - false
 ;---------
 
 isPrime
