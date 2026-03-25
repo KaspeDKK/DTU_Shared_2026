@@ -76,6 +76,9 @@ public class SpaceView extends StackPane implements ViewObserver {
         update(space);
     }
 
+    /**
+     * Draws the player as a polygon on the board.
+     */
     private void updatePlayer() {
         Player player = space.getPlayer();
         if (player != null) {
@@ -93,7 +96,6 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
     }
 
-    //TODO A6b REMEMBER JAVADOC
 
     /**
      * updateWalls goes through all the spaces, and draws existing walls.
@@ -137,6 +139,11 @@ public class SpaceView extends StackPane implements ViewObserver {
             this.getChildren().add(pane);
         }
     }
+    /**
+     * updateActions goes through all the spaces, and draws the respective actions of the board.
+     *
+     * @author Tokemeister, Friisma, KaspeDKK, SimoXSwagger, UngeRas, Thomas
+     */
 
     private void updateActions(){
         for (FieldAction action : space.getActions()){

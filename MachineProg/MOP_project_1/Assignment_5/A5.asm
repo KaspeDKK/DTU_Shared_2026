@@ -86,34 +86,37 @@ divisorLoop
 subtractionLoop
     
     ADD R1,R1,R2 ;Input - divisor
-    BRp subtractionLoop
+    BRp subtractionLoop 
     BRz isNotPrime
     BRn divisorLoop
     
-    isPrimeTrue
-        AND R0,R0,#0
-        ADD R0,R0,#1
-        RET
+    isPrimeTrue ; 
+    AND     R0,R0,#0
+    ADD     R0,R0,#1
+    RET
 
     isNotPrime
-        AND R0,R0,#0
-        RET
+    AND     R0,R0,#0
+    RET
 
 ;----
 ;Funktion: resultS
 ;Hvis tallet i R0 ≠ 0 : Output prime besked, hvis det er 0: Output ikke prime besked.
 ;---
 
-resultS ADD R0, R0, #0
-        BRp prime
-        BRz noPrime
+resultS 
+    ADD R0, R0, #0
+    BRp prime
+    BRz noPrime
 
 
-prime   LEA R0, stringPrime
-        BRnzp end
+prime   
+    LEA R0, stringPrime
+    BRnzp end
 
-noPrime LEA R0, stringNotPrime
-        BRnzp end
+noPrime 
+    LEA R0, stringNotPrime
+    BRnzp end
 
 end     PUTS
         RET     ;return 
