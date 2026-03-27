@@ -34,6 +34,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Text;
 import org.jetbrains.annotations.NotNull;
 
@@ -107,6 +108,7 @@ public class SpaceView extends StackPane implements ViewObserver {
             Line line = new Line();
             line.setStroke(Color.RED);
             line.setStrokeWidth(3);
+            line.setStrokeLineCap(StrokeLineCap.ROUND);
             Pane pane = new Pane();
 
             switch (wall) {
