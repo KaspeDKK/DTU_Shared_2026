@@ -198,22 +198,27 @@ public class Board extends Subject {
         //          (see above JavaDoc comment for this method).
         int x = space.x;
         int y = space.y;
-        switch (heading) {
-            case SOUTH:
-                y = (y + 1) % height;
-                break;
-            case WEST:
-                x = (x + width - 1) % width;
-                break;
-            case NORTH:
-                y = (y + height - 1) % height;
-                break;
-            case EAST:
-                x = (x + 1) % width;
-                break;
+        if(!space.getWalls().contains(heading)) {
+            switch (heading) {
+                case SOUTH:
+                    y = (y + 1) % height;
+                    break;
+                case WEST:
+                    x = (x + width - 1) % width;
+                    break;
+                case NORTH:
+                    y = (y + height - 1) % height;
+                    break;
+                case EAST:
+                    x = (x + 1) % width;
+                    break;
+            }
         }
-
-        return getSpace(x, y);
+        Space neighbor = getSpace(x,y);
+        if (neighbor != null && !neighbor.getWalls().contains(heading.next().next())){
+            return neighbor;
+        }
+        return  null;
     }
 
     public String getStatusMessage() {

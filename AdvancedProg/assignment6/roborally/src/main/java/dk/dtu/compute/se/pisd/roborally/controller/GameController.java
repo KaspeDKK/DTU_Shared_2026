@@ -205,6 +205,12 @@ public class GameController {
                 case FAST_FORWARD:
                     this.fastForward(player);
                     break;
+                case BACK:
+                    this.back(player);
+                    break;
+                case UTURN:
+                    this.uTurn(player);
+                    break;
                 // TODO A6c: add the cases for the new commands BACK and UTURN to
                 //     this case statement.
                 default:
@@ -215,26 +221,43 @@ public class GameController {
 
     // TODO A6c: implement this method
     public void moveForward(@NotNull Player player) {
-
+        Space currentSpace = player.getSpace(); // current position
+        Heading heading = player.getHeading(); // player heading
+        Space nextSpace = board.getNeighbour(currentSpace,heading); // the space the player wants to move into
+        if (nextSpace != null){
+            player.setSpace(nextSpace); // sets the new position
+        }
     }
 
     // TODO A6c: implement this method
     public void fastForward(@NotNull Player player) {
-
+        moveForward(player);
+        moveForward(player);
     }
 
     // TODO A6c: implement this method
     public void turnRight(@NotNull Player player) {
-
+        Heading heading = player.getHeading();
+        player.setHeading(heading.next());
     }
 
     // TODO A6c: implement this method
     public void turnLeft(@NotNull Player player) {
-
+        Heading heading = player.getHeading();
+        player.setHeading(heading.prev());
     }
 
     // TODO A6c: Add two methods for the new commands BACK and UTURN here.
 
+    public void uTurn(@NotNull Player player){
+        turnLeft(player);
+        turnLeft(player);
+    }
+    public void back(@NotNull Player player){
+        uTurn(player);
+        moveForward(player);
+        uTurn(player);
+    }
     /**
      * A method called when no corresponding controller operation is implemented yet.
      * This should eventually be removed.
