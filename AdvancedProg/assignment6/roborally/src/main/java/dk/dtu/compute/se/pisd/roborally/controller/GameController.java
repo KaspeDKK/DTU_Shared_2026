@@ -185,7 +185,11 @@ public class GameController {
         }
     }
 
-    // XXX A6c
+    /** For the current player to execute a command. Commands are RoboRally programming cards.
+     *
+     * @param player current player that is executing a command
+     * @param command command to be executed by the current player
+     */
     private void executeCommand(@NotNull Player player, Command command) {
         if (player != null && player.board == board && command != null) {
             // XXX This is a very simplistic way of dealing with some basic cards and
@@ -211,7 +215,7 @@ public class GameController {
                 case UTURN:
                     this.uTurn(player);
                     break;
-                // TODO A6c: add the cases for the new commands BACK and UTURN to
+                // DONE A6c: add the cases for the new commands BACK and UTURN to
                 //     this case statement.
                 default:
                     // DO NOTHING (for now)//
@@ -219,7 +223,13 @@ public class GameController {
         }
     }
 
-    // TODO A6c: implement this method
+    // DONE A6c: implement this method
+
+    /** Moves the player one space forward in the heading direction
+     * when executing a FORWARD command in {@code executeCommand}
+     *
+     * @param player this player that is moving forward
+     */
     public void moveForward(@NotNull Player player) {
         Space currentSpace = player.getSpace(); // current position
         Heading heading = player.getHeading(); // player heading
@@ -229,30 +239,61 @@ public class GameController {
         }
     }
 
-    // TODO A6c: implement this method
+    /** Moves the player executing a FAST_FORWARD command
+     * two spaces forward in the heading direction in {@code executeCommand}
+     *
+     * @param player this player that is moving forward twice
+     */
+
+    // DONE A6c: implement this method
     public void fastForward(@NotNull Player player) {
         moveForward(player);
         moveForward(player);
     }
 
-    // TODO A6c: implement this method
+    /** Turns the player's heading direction 90 degrees to the right
+     * when executing a RIGHT command in {@code executeCommand}
+     *
+     * @param player this player that is changing heading direction
+     */
+
+    // DONE A6c: implement this method
     public void turnRight(@NotNull Player player) {
         Heading heading = player.getHeading();
         player.setHeading(heading.next());
     }
 
-    // TODO A6c: implement this method
+    /** Turns the player's heading direction 90 degrees to the left
+     * when executing a LEFT command in {@code executeCommand}
+     *
+     * @param player this player that changes heading direction
+     */
+
+    // DONE A6c: implement this method
     public void turnLeft(@NotNull Player player) {
         Heading heading = player.getHeading();
         player.setHeading(heading.prev());
     }
 
-    // TODO A6c: Add two methods for the new commands BACK and UTURN here.
+    /** Turns the player's heading 180 degrees, when
+     * executing a UTURN command in {@code executeCommand}
+     *
+     * @param player this player that is changing heading direction
+     */
+
+    // DONE A6c: Add two methods for the new commands BACK and UTURN here.
 
     public void uTurn(@NotNull Player player){
         turnLeft(player);
         turnLeft(player);
     }
+
+    /** Moves the player backwards from the heading direction, when
+     * executing a BACK command in {@code executeCommand}
+     *
+     * @param player this player that turning right
+     */
+
     public void back(@NotNull Player player){
         uTurn(player);
         moveForward(player);
