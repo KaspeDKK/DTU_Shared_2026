@@ -89,7 +89,7 @@ public class GameController {
         }
     }
 
-    // XXX A6c
+    // self explanatory
     private CommandCard generateRandomCommandCard() {
         Command[] commands = Command.values();
         int random = (int) (Math.random() * commands.length);
@@ -146,12 +146,13 @@ public class GameController {
         } while (board.getPhase() == Phase.ACTIVATION && !board.isStepMode());
     }
 
-    // XXX A6c
-    // TODO A6d: add the execution of the field actions at the right
-    //      place in this method
-    // TODO A6e: implement the execution af an interactive card to
-    //     this method (e.g. by switching to the PLAYER_INTERACTION phase
-    //     at the right point)
+    /**
+     * This methods executes the next step in the correct order from the cards played by the players -
+     * switching between them. It is the method that simulates the "moving phase"
+     *
+     * @author Tokemeister, Pomfriis, KaspeDKK, Simon, Thomas, Rasbas
+     *
+     */
     private void executeNextStep() {
         Player currentPlayer = board.getCurrentPlayer();
         if (board.getPhase() == Phase.ACTIVATION && currentPlayer != null) {
@@ -185,7 +186,14 @@ public class GameController {
         }
     }
 
-    // XXX A6c
+    /**
+     * This methods executes the commands from the cards played by the player.
+     *
+     * @param player is the current player
+     * @param command is the commmand from the card played by the player.
+     *
+     * @author Tokemeister, Pomfriis, KaspeDKK, Simon, Thomas, Rasbas
+     */
     private void executeCommand(@NotNull Player player, Command command) {
         if (player != null && player.board == board && command != null) {
             // XXX This is a very simplistic way of dealing with some basic cards and

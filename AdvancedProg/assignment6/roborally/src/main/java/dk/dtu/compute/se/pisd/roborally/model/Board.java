@@ -186,7 +186,7 @@ public class Board extends Subject {
      * Returns the neighbour of the given space of the board in the given heading.
      * The neighbour is returned only, if it can be reached from the given space
      * (no walls or obstacles in either of the involved spaces); otherwise,
-     * null will be returned (this needs to be implemented for Assignment 6c).
+     * null will be returned.
      *
      * @param space the space for which the neighbour should be computed
      * @param heading the heading of the neighbour
@@ -221,13 +221,16 @@ public class Board extends Subject {
         return  null;
     }
 
+    /**
+     * @return a message displaying current player and number of moves
+     */
     public String getStatusMessage() {
         // this is actually a view aspect, but for making assignment V1 easy for
         // the students, this method gives a string representation of the current
         // status of the game
 
 
-        // TODO A6c: changed the status so that it shows the phase, the current player, and the current register
+        // DONE A6c: changed the status so that it shows the phase, the current player, and the current register
         //     and you can remove the move count status message message and the corresponding counter again
         // TODO A6e: add something to the status message, when a player has won the game
         return "Player = " + getCurrentPlayer().getName() + "- Number of moves: " + getGameCounter();
