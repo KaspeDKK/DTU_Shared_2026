@@ -111,11 +111,6 @@ public class Board extends Subject {
         }
     }
 
-    /**
-     *
-     * @return the number of players in current game
-     */
-
     public int getPlayersNumber() {
         return players.size();
     }
@@ -126,11 +121,6 @@ public class Board extends Subject {
             notifyChange();
         }
     }
-    /**
-     *
-     * @param i - index of the player to return
-     * @return the player of the specified index
-     */
 
     public Player getPlayer(int i) {
         if (i >= 0 && i < players.size()) {
@@ -140,18 +130,9 @@ public class Board extends Subject {
         }
     }
 
-    /**
-     *
-     * @return the current player
-     */
     public Player getCurrentPlayer() {
         return current;
     }
-
-    /** Replaces the current player with the specified player
-     *
-     * @param player - player to set to the current player
-     */
 
     public void setCurrentPlayer(Player player) {
         if (player != this.current && players.contains(player)) {
@@ -212,38 +193,28 @@ public class Board extends Subject {
      * @return the space in the given direction; null if there is no (reachable) neighbour
      */
     public Space getNeighbour(@NotNull Space space, @NotNull Heading heading) {
-        // DONE A6c: This implementation needs to be adjusted so that walls on
+        // TODO A6c: This implementation needs to be adjusted so that walls on
         //          spaces (and maybe other obstacles) are taken into account
         //          (see above JavaDoc comment for this method).
         int x = space.x;
         int y = space.y;
-        if(!space.getWalls().contains(heading)) {
-            switch (heading) {
-                case SOUTH:
-                    y = (y + 1) % height;
-                    break;
-                case WEST:
-                    x = (x + width - 1) % width;
-                    break;
-                case NORTH:
-                    y = (y + height - 1) % height;
-                    break;
-                case EAST:
-                    x = (x + 1) % width;
-                    break;
-            }
+        switch (heading) {
+            case SOUTH:
+                y = (y + 1) % height;
+                break;
+            case WEST:
+                x = (x + width - 1) % width;
+                break;
+            case NORTH:
+                y = (y + height - 1) % height;
+                break;
+            case EAST:
+                x = (x + 1) % width;
+                break;
         }
-        Space neighbor = getSpace(x,y);
-        if (neighbor != null && !neighbor.getWalls().contains(heading.next().next())){
-            return neighbor;
-        }
-        return  null;
-    }
 
-    /**
-     *
-     * @return the status message which will be displayed at the bottom of the GUI
-     */
+        return getSpace(x, y);
+    }
 
     public String getStatusMessage() {
         // this is actually a view aspect, but for making assignment V1 easy for

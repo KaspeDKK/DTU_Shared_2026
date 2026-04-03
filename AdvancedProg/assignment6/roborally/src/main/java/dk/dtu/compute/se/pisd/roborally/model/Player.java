@@ -92,20 +92,9 @@ public class Player extends Subject {
         }
     }
 
-    /** returns the space where player is at
-     *
-     * @return the space where player is at
-     */
-
     public Space getSpace() {
         return space;
     }
-
-    /** Updates the space occupied by this player.
-     * Removes this player from the previous space occupied
-     *
-     * @param space - player's new space or {@code null} if the player leaves the board
-     */
 
     public void setSpace(Space space) {
         Space oldSpace = this.space;
@@ -122,20 +111,9 @@ public class Player extends Subject {
         }
     }
 
-    /**
-     *
-     * @return return the heading of this player
-     */
-
     public Heading getHeading() {
         return heading;
     }
-
-    /**
-     * Updates the heading of this player.
-     * <p>Trigger change notification to observer if player gets different heading</p>
-     * @param heading new heading for this player
-     */
 
     public void setHeading(@NotNull Heading heading) {
         if (heading != this.heading) {

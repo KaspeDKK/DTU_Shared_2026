@@ -56,21 +56,10 @@ public class Space extends Subject {
         player = null;
     }
 
-    /** returns the player on the space
-     *
-     * @return the player on the space
-     */
     public Player getPlayer() {
         return player;
     }
 
-    /** Assign a player to this space.
-     * <p> If another player was previously assigned, that player is removed.
-     * The given player will be updated to reference this space</p>
-     * <p> Triggers change notification to observers
-     *
-     * @param player player to occupy this space, or {@code null} to clear it
-     */
     public void setPlayer(Player player) {
         Player oldPlayer = this.player;
         if (player != oldPlayer &&
