@@ -205,11 +205,6 @@ public class GameController {
                 case FAST_FORWARD:
                     this.fastForward(player);
                     break;
-                case BACK:
-                    this.moveBack(player);
-                    break;
-                case UTURN:
-                    this.uTurn(player);
                 // TODO A6c: add the cases for the new commands BACK and UTURN to
                 //     this case statement.
                 default:
@@ -238,13 +233,6 @@ public class GameController {
 
     }
 
-    public void moveBack(@NotNull Player player){
-
-    }
-
-    public void uTurn(@NotNull Player player){
-
-    }
     // TODO A6c: Add two methods for the new commands BACK and UTURN here.
 
     /**
