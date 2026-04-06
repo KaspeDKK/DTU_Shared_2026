@@ -89,6 +89,11 @@ public class BoardFactory {
             check.setNumber(2);
             space.getActions().add(check);
 
+            space = board.getSpace(7, 7);
+            check = new Checkpoint();
+            check.setNumber(1);
+            space.getActions().add(check);
+
 
         }
         return board;

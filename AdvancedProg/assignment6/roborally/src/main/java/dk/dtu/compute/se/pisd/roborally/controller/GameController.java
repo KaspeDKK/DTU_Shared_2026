@@ -54,7 +54,6 @@ public class GameController {
 
         Player curr = board.getCurrentPlayer(); // get player
 
-
         int count = board.getGameCounter(); // get count locally
         
         curr.setSpace(space); // set current player to assigned space
@@ -148,7 +147,8 @@ public class GameController {
 
     /**
      * This methods executes the next step in the correct order from the cards played by the players -
-     * switching between them. It is the method that simulates the "moving phase"
+     * switching between them. It is the method that simulates the "moving phase". The method also checks if there are
+     * any FieldActions in the current space.
      *
      * @author Tokemeister, Pomfriis, KaspeDKK, Simon, Thomas, Rasbas
      *
@@ -163,6 +163,7 @@ public class GameController {
                     Command command = card.command;
                     executeCommand(currentPlayer, command);
                 }
+
                 int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
                 if (nextPlayerNumber < board.getPlayersNumber()) {
                     board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
@@ -173,6 +174,11 @@ public class GameController {
                         board.setStep(step);
                         board.setCurrentPlayer(board.getPlayer(0));
                     } else {
+
+                        if (currentPlayer.getSpace().getActions() != null){ //if there are any actions.
+                            currentPlayer.getSpace().getActions().forEach(fieldAction ->
+                                    fieldAction.doAction(this, currentPlayer.getSpace())); //lambda function which calls each action of a space.
+                        }
                         startProgrammingPhase();
                     }
                 }
@@ -195,6 +201,7 @@ public class GameController {
      * @author Tokemeister, Pomfriis, KaspeDKK, Simon, Thomas, Rasbas
      */
     private void executeCommand(@NotNull Player player, Command command) {
+        board.setGameCounter(board.getGameCounter()+1);
         if (player != null && player.board == board && command != null) {
             // XXX This is a very simplistic way of dealing with some basic cards and
             //     their execution. This should eventually be done in a more elegant way
@@ -219,15 +226,13 @@ public class GameController {
                 case UTURN:
                     this.uTurn(player);
                     break;
-                // TODO A6c: add the cases for the new commands BACK and UTURN to
-                //     this case statement.
                 default:
                     // DO NOTHING (for now)//
             }
         }
     }
 
-    // TODO A6c: implement this method
+    // DONE A6c: implement this method
     public void moveForward(@NotNull Player player) {
         Space currentSpace = player.getSpace(); // current position
         Heading heading = player.getHeading(); // player heading
@@ -237,25 +242,25 @@ public class GameController {
         }
     }
 
-    // TODO A6c: implement this method
+    // DONE A6c: implement this method
     public void fastForward(@NotNull Player player) {
         moveForward(player);
         moveForward(player);
     }
 
-    // TODO A6c: implement this method
+    // DONE A6c: implement this method
     public void turnRight(@NotNull Player player) {
         Heading heading = player.getHeading();
         player.setHeading(heading.next());
     }
 
-    // TODO A6c: implement this method
+    // DONE A6c: implement this method
     public void turnLeft(@NotNull Player player) {
         Heading heading = player.getHeading();
         player.setHeading(heading.prev());
     }
 
-    // TODO A6c: Add two methods for the new commands BACK and UTURN here.
+    // DONE A6c: Add two methods for the new commands BACK and UTURN here.
 
     public void uTurn(@NotNull Player player){
         turnLeft(player);

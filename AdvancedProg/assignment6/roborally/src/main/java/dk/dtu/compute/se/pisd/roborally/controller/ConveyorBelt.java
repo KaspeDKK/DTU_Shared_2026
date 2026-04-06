@@ -47,13 +47,19 @@ public class ConveyorBelt extends FieldAction {
     }
 
     /**
-     * Implementation of the action of a conveyor belt. Needs to be implemented for A3.
+     * Green conveyor belts move any
+     * robot resting on them one space
+     * in the direction of the arrows.
      */
     @Override
     public boolean doAction(@NotNull GameController gameController, @NotNull Space space) {
         // TODO A6d: needs to be implemented
         // ...
-
+        Space next = gameController.board.getNeighbour(space, this.heading);
+        if (next != null) {
+            gameController.moveCurrentPlayerToSpace(next);
+            return true;
+        }
         return false;
     }
 
