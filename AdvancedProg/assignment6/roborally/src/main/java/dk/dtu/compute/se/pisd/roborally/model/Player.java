@@ -24,6 +24,8 @@ package dk.dtu.compute.se.pisd.roborally.model;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 import static dk.dtu.compute.se.pisd.roborally.model.Heading.SOUTH;
 
 /**
@@ -45,6 +47,9 @@ public class Player extends Subject {
     private Space space;
     private Heading heading = SOUTH;
 
+    private int checkpoint;
+    public List<Integer> visited;
+
     private CommandCardField[] program;
     private CommandCardField[] cards;
 
@@ -52,7 +57,7 @@ public class Player extends Subject {
         this.board = board;
         this.name = name;
         this.color = color;
-
+        this.checkpoint = 0;
         this.space = null;
 
         program = new CommandCardField[NO_REGISTERS];
@@ -63,6 +68,14 @@ public class Player extends Subject {
         cards = new CommandCardField[NO_CARDS];
         for (int i = 0; i < cards.length; i++) {
             cards[i] = new CommandCardField(this);
+        }
+    }
+    public int getCheckpoint(){return checkpoint;}
+
+    public void setCheckpoint(int newCheck){
+        if (newCheck != this.checkpoint) {
+            this.checkpoint = newCheck;
+            notifyChange();
         }
     }
 
