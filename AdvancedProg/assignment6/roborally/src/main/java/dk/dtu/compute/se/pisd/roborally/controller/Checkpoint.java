@@ -22,7 +22,6 @@ public class Checkpoint extends FieldAction {
              //if player did not reach the specific checkpoint yet.
                 if (currP.getCheckpoint() == this.number-1){
                 currP.setCheckpoint(this.number); //increment num of checkpoints visited
-                    gameController.board.notify();
                 return true;
             }
         }

@@ -148,6 +148,7 @@ public class PlayerView extends Tab implements ViewObserver {
             // TODO A6d: update the status label for this player (showing the number
             //     of achieved checkpoints)
             checkpointLabel.setText("Number of reached checkpoints: " + player.getCheckpoint());
+            player.attach(this);
             for (int i = 0; i < Player.NO_REGISTERS; i++) {
                 CardFieldView cardFieldView = programCardViews[i];
                 if (cardFieldView != null) {

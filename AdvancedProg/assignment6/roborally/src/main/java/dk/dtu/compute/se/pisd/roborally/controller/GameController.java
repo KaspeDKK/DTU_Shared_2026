@@ -164,6 +164,9 @@ public class GameController {
                     //board.setPhase(Phase.PLAYER_INTERACTION);
                     //return;
                     //else
+                    //board set selected option (null)
+                    //excecute command
+                    //else:
                     Command command = card.command; //needs to be replaced
                     executeCommand(currentPlayer, command); //needs to be replaced
                 }

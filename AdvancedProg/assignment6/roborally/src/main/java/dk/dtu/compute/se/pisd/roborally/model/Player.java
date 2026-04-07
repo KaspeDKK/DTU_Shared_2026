@@ -73,8 +73,10 @@ public class Player extends Subject {
     public int getCheckpoint(){return checkpoint;}
 
     public void setCheckpoint(int newCheck){
-        this.checkpoint = newCheck;
-        notifyChange();
+        if (newCheck != this.checkpoint) {
+            this.checkpoint = newCheck;
+            notifyChange();
+        }
     }
 
     public String getName() {
