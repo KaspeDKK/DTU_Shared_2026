@@ -222,7 +222,7 @@ public class Board extends Subject {
     }
 
     /**
-     * @return a message displaying current player and number of moves
+     * @return a message displaying current player and current phase
      */
     public String getStatusMessage() {
         // this is actually a view aspect, but for making assignment V1 easy for
@@ -233,7 +233,7 @@ public class Board extends Subject {
         // DONE A6c: changed the status so that it shows the phase, the current player, and the current register
         //     and you can remove the move count status message message and the corresponding counter again
         // TODO A6e: add something to the status message, when a player has won the game
-        return "Player = " + getCurrentPlayer().getName() + "- Number of moves: " + getGameCounter();
+        return "Player = " + getCurrentPlayer().getName() + "  |  Phase: " + getPhase();
     }
 
 }
