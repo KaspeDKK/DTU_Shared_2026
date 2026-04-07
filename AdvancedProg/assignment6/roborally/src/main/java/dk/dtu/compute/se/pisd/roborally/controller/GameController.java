@@ -181,10 +181,14 @@ public class GameController {
                         board.setStep(step);
                         board.setCurrentPlayer(board.getPlayer(0));
                     } else {
+                        for (int i = 0; i < board.getPlayersNumber(); i++) {
+                            Player player = board.getPlayer(i);
+                            Space playerSpace = player.getSpace();
 
-                        if (currentPlayer.getSpace().getActions() != null){ //if there are any actions.
-                            currentPlayer.getSpace().getActions().forEach(fieldAction ->
-                                    fieldAction.doAction(this, currentPlayer.getSpace())); //lambda function which calls each action of a space.
+                            if (playerSpace != null && playerSpace.getActions() != null) {
+                                playerSpace.getActions().forEach(fieldAction ->
+                                        fieldAction.doAction(this, playerSpace));
+                            }
                         }
                         startProgrammingPhase();
                     }
