@@ -17,8 +17,8 @@ public class Checkpoint extends FieldAction {
     public boolean doAction(@NotNull GameController gameController, @NotNull Space space) {
         // TODO A6d: needs to be implemented
         // ...
-        if (gameController.board.getCurrentPlayer() != null){
-            Player currP = gameController.board.getCurrentPlayer();
+        if (space.getPlayer() != null){
+            Player currP = space.getPlayer();
              //if player did not reach the specific checkpoint yet.
                 if (currP.getCheckpoint() == this.number-1){
                 currP.setCheckpoint(this.number); //increment num of checkpoints visited
