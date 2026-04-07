@@ -43,10 +43,7 @@ public enum Command {
     FORWARD("Fwd"),
     RIGHT("Turn Right"),
     LEFT("Turn Left"),
-    FAST_FORWARD("Fast Fwd");
-    BACK("bck");
-    UTURN("U turn");
-
+    FAST_FORWARD("Fast Fwd"),
 
     // DONE A6c: add new literals to this enumeration for the two commands
     //     BACK and UTURN, and implement the corresponding command in the
@@ -55,7 +52,8 @@ public enum Command {
     // TODO A6e: add two new commands  here, which are interactive,
     //     which means that the player can chose between two options when
     //     the command is executed.
-
+    UTURN("U-Turn"),
+    BACK("Move Back");
     /**
      * The name shown for this command on the GUI.
      */

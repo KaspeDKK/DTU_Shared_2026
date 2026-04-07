@@ -54,7 +54,6 @@ public class GameController {
 
         Player curr = board.getCurrentPlayer(); // get player
 
-
         int count = board.getGameCounter(); // get count locally
         
         curr.setSpace(space); // set current player to assigned space
