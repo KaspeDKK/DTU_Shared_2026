@@ -8,7 +8,7 @@ typedef struct Card
 {
     char rank;
     char suit;
-    int visible;
+    int visible; // (0,1)
     struct Card* next;
 } Card;
 
