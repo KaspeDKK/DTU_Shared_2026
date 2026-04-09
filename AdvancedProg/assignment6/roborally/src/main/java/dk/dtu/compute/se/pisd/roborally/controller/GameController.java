@@ -21,6 +21,7 @@
  */
 package dk.dtu.compute.se.pisd.roborally.controller;
 
+import dk.dtu.compute.se.pisd.roborally.exceptions.ImpossibleMoveException;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,6 +64,21 @@ public class GameController {
 
         board.setGameCounter(count); // increment the actual count.
 
+    }
+
+
+    // TODO recursive method exceptions needs rules or something
+    public void moveToSpace(@NotNull Space nextSpace,@NotNull Player player,@NotNull Heading heading)  {
+        try{
+        if (nextSpace.getPlayer() != null){
+            Space nextNextSpace = board.getNeighbour(nextSpace,heading);
+            Player neighborPlayer = nextSpace.getPlayer();
+            moveToSpace(nextNextSpace,neighborPlayer,heading);
+        }
+        player.setSpace(nextSpace);
+    } catch (ImpossibleMoveException e){
+            e.getMessage();
+        }
     }
 
     // XXX A6c
@@ -139,7 +155,7 @@ public class GameController {
     }
 
     // XXX A6c
-    private void continuePrograms() {
+    private void continuePrograms(){
         do {
             executeNextStep();
         } while (board.getPhase() == Phase.ACTIVATION && !board.isStepMode());
@@ -244,12 +260,12 @@ public class GameController {
     }
 
     // DONE A6c: implement this method
-    public void moveForward(@NotNull Player player) {
+    public void moveForward(@NotNull Player player)  {
         Space currentSpace = player.getSpace(); // current position
         Heading heading = player.getHeading(); // player heading
         Space nextSpace = board.getNeighbour(currentSpace,heading); // the space the player wants to move into
-        if (nextSpace != null){
-            player.setSpace(nextSpace); // sets the new position
+        if (nextSpace != null) {
+            moveToSpace(nextSpace,player, heading);// sets the new position
         }
     }
 
@@ -277,7 +293,7 @@ public class GameController {
         turnLeft(player);
         turnLeft(player);
     }
-    public void back(@NotNull Player player){
+    public void back(@NotNull Player player) {
         uTurn(player);
         moveForward(player);
         uTurn(player);
