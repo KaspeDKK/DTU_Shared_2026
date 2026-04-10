@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class Checkpoint extends FieldAction {
 
     public Integer number;
+    private Boolean isFinal;
 
     /**
      * doAction excecutes the action of the space accordingly.
