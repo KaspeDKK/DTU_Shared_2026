@@ -25,6 +25,9 @@ import dk.dtu.compute.se.pisd.roborally.exceptions.ImpossibleMoveException;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * ...
  *
@@ -90,6 +93,7 @@ public class GameController {
                     moveToSpace(nextNextSpace, neighborPlayer, heading);
                 }
                 player.setSpace(nextSpace);
+
             }
     } catch (ImpossibleMoveException e){
             e.getMessage();
@@ -210,8 +214,13 @@ public class GameController {
                             Space playerSpace = player.getSpace();
 
                             if (playerSpace != null && playerSpace.getActions() != null) {
-                                playerSpace.getActions().forEach(fieldAction ->
-                                        fieldAction.doAction(this, playerSpace));
+                                List<FieldAction> actions = playerSpace.getActions();
+
+                                for (FieldAction action : actions) {
+                                    if (action.doAction(this, playerSpace)) {
+                                        executeNextStep(); // keeps repeating until its false and no more valid field actions exist
+                                    }
+                                }
                             }
                         }
                         startProgrammingPhase();
