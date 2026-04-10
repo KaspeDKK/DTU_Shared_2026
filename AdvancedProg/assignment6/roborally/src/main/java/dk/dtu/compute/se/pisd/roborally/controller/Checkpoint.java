@@ -14,9 +14,17 @@ public class Checkpoint extends FieldAction {
 
     public Integer number;
 
+    /**
+     * doAction excecutes the action of the space accordingly.
+     *
+     * This doAction method gives the player a checkpoint.
+     *
+     * @param gameController the gameController of the respective game
+     * @param space the space this action should be executed for
+     * @return boolean if the conditions of the checkpoint is met.
+     */
     public boolean doAction(@NotNull GameController gameController, @NotNull Space space) {
-        // TODO A6d: needs to be implemented
-        // ...
+        // DONE A6d: needs to be implemented
         if (space.getPlayer() != null){
             Player currP = space.getPlayer();
              //if player did not reach the specific checkpoint yet.

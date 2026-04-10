@@ -67,7 +67,18 @@ public class GameController {
     }
 
 
-    // TODO recursive method exceptions needs rules or something
+    /**
+     * Moves a player recursively according to the rules of Roborally.
+     *
+     * moveToSpace uses our implementation of the getNeighbour to throw an error if the move is not legal.
+     * I.E the destination is either behind a wall or out of bounds.
+     * if the move is legal, we throw ImpossibleMoveException.
+     *
+     * @param nextSpace the wanted space.
+     * @param player initial move.
+     * @param heading initial moving direction - doesnt change.
+     *
+     */
     public void moveToSpace(@NotNull Space nextSpace,@NotNull Player player,@NotNull Heading heading)  {
         try{
             if(board.getNeighbour(player.getSpace(), heading) == null){
@@ -180,13 +191,6 @@ public class GameController {
             if (step >= 0 && step < Player.NO_REGISTERS) {
                 CommandCard card = currentPlayer.getProgramField(step).getCard();
                 if (card != null) {
-                    //if(command is interactive)
-                    //board.setPhase(Phase.PLAYER_INTERACTION);
-                    //return;
-                    //else
-                    //board set selected option (null)
-                    //excecute command
-                    //else:
                     Command command = card.command; //needs to be replaced
                     executeCommand(currentPlayer, command); //needs to be replaced
                 }
@@ -263,7 +267,11 @@ public class GameController {
         }
     }
 
-    // DONE A6c: implement this method
+    /**
+     * Moves a player forward according to the MoveToSpace implementation.
+     *
+     * @param player - current player.
+     */
     public void moveForward(@NotNull Player player)  {
         Space currentSpace = player.getSpace(); // current position
         Heading heading = player.getHeading(); // player heading

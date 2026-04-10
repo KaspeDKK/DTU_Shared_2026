@@ -32,9 +32,6 @@ import org.jetbrains.annotations.NotNull;
  * @author Ekkart Kindler, ekki@dtu.dk
  *
  */
-
-// XXX A6d remember to also implement the doAction method for the
-//         class CheckPoint you added in Assignment 6b
 public class ConveyorBelt extends FieldAction {
 
     private Heading heading;
@@ -51,6 +48,11 @@ public class ConveyorBelt extends FieldAction {
      * Green conveyor belts move any
      * robot resting on them one space
      * in the direction of the arrows.
+     *
+     * @param space the space this action should be executed for.
+     * @param gameController the gameController of the respective game.
+     *
+     * @return boolean dependent on legal og illegal move.
      */
     @Override
     public boolean doAction(@NotNull GameController gameController, @NotNull Space space) {
@@ -59,14 +61,6 @@ public class ConveyorBelt extends FieldAction {
             return false;
         }
 
-//        Space next = gameController.board.getNeighbour(space, this.heading);
-//        if (next == null) {
-//            return false;
-//        }
-//
-//        space.setPlayer(null);
-//        player.setSpace(next);
-//        next.setPlayer(player);
         gameController.moveToSpace(gameController.board.getNeighbour(space, this.heading), player, this.heading);
         return true;
     }
