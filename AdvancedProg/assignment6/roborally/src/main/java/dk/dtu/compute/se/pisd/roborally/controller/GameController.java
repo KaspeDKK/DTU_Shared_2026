@@ -70,12 +70,16 @@ public class GameController {
     // TODO recursive method exceptions needs rules or something
     public void moveToSpace(@NotNull Space nextSpace,@NotNull Player player,@NotNull Heading heading)  {
         try{
-        if (nextSpace.getPlayer() != null){
-            Space nextNextSpace = board.getNeighbour(nextSpace,heading);
-            Player neighborPlayer = nextSpace.getPlayer();
-            moveToSpace(nextNextSpace,neighborPlayer,heading);
-        }
-        player.setSpace(nextSpace);
+            if(board.getNeighbour(player.getSpace(), heading) == null){
+                throw new ImpossibleMoveException("illegal move");
+            } else {
+                if (nextSpace.getPlayer() != null) {
+                    Space nextNextSpace = board.getNeighbour(nextSpace, heading);
+                    Player neighborPlayer = nextSpace.getPlayer();
+                    moveToSpace(nextNextSpace, neighborPlayer, heading);
+                }
+                player.setSpace(nextSpace);
+            }
     } catch (ImpossibleMoveException e){
             e.getMessage();
         }
