@@ -41,7 +41,7 @@ public class GameController {
 
     /**
      * This method moves the current player to a non-occupied space, and is triggered by a user
-     * clicking on set space.
+     * clicking on set space. This method is not a part of the game, and should be removed.
      *
      * @author Tokemeister, Pomfriis, KaspeDKK, Simon, Thomas, Rasbas
      *
@@ -72,10 +72,10 @@ public class GameController {
      *
      * moveToSpace uses our implementation of the getNeighbour to throw an error if the move is not legal.
      * I.E the destination is either behind a wall or out of bounds.
-     * if the move is legal, we throw ImpossibleMoveException.
+     * if the move is illegal, we throw ImpossibleMoveException.
      *
      * @param nextSpace the wanted space.
-     * @param player initial move.
+     * @param player initial mover (can also be a pusher).
      * @param heading initial moving direction - doesnt change.
      *
      */
