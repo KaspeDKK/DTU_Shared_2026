@@ -82,22 +82,26 @@ public class GameController {
      * @param heading initial moving direction - doesnt change.
      *
      */
-    public void moveToSpace(@NotNull Space nextSpace,@NotNull Player player,@NotNull Heading heading)  {
-        try{
-            if(board.getNeighbour(player.getSpace(), heading) == null){
+    public void moveToSpace(@NotNull Space nextSpace,@NotNull Player player,@NotNull Heading heading) throws ImpossibleMoveException  {
+        try {
+            if (board.getNeighbour(player.getSpace(), heading) == null) {
                 throw new ImpossibleMoveException("illegal move");
             } else {
                 if (nextSpace.getPlayer() != null) {
                     Space nextNextSpace = board.getNeighbour(nextSpace, heading);
+                    if (nextNextSpace == null){
+                        throw new ImpossibleMoveException("Illegal move!");
+                    }
                     Player neighborPlayer = nextSpace.getPlayer();
                     moveToSpace(nextNextSpace, neighborPlayer, heading);
                 }
                 player.setSpace(nextSpace);
 
             }
-    } catch (ImpossibleMoveException e){
-            e.getMessage();
-        }
+        } catch (ImpossibleMoveException e) {
+            System.err.println(e); //print custom message
+            e.printStackTrace(); //print stacktrace
+            }
     }
 
     // XXX A6c
@@ -281,12 +285,17 @@ public class GameController {
      *
      * @param player - current player.
      */
-    public void moveForward(@NotNull Player player)  {
+    public void moveForward(@NotNull Player player) {
         Space currentSpace = player.getSpace(); // current position
         Heading heading = player.getHeading(); // player heading
+
         Space nextSpace = board.getNeighbour(currentSpace,heading); // the space the player wants to move into
         if (nextSpace != null) {
-            moveToSpace(nextSpace,player, heading);// sets the new position
+            try {
+                moveToSpace(nextSpace, player, heading);// sets the new position
+            } catch (ImpossibleMoveException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
