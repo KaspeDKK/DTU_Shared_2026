@@ -198,16 +198,16 @@ public class Board extends Subject {
         if(!space.getWalls().contains(heading)) {
             switch (heading) {
                 case SOUTH:
-                    y = (y + 1) % height;
+                    y = y + 1;
                     break;
                 case WEST:
-                    x = (x + width - 1) % width;
+                    x = x - 1;
                     break;
                 case NORTH:
-                    y = (y + height - 1) % height;
+                    y = y  - 1;
                     break;
                 case EAST:
-                    x = (x + 1) % width;
+                    x = x + 1;
                     break;
             }
         }
