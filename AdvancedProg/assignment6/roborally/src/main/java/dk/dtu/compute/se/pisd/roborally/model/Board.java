@@ -22,6 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.model;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import dk.dtu.compute.se.pisd.roborally.exceptions.ImpossibleMoveException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class Board extends Subject {
         this.height = height;
         spaces = new Space[width][height];
         for (int x = 0; x < width; x++) {
-            for(int y = 0; y < height; y++) {
+            for (int y = 0; y < height; y++) {
                 Space space = new Space(this, x, y);
                 spaces[x][y] = space;
             }
@@ -84,13 +85,15 @@ public class Board extends Subject {
         return gameId;
     }
 
-    public void setGameCounter(int newCount){
+    public void setGameCounter(int newCount) {
         this.moveCounter = newCount;
 
         notifyChange();
     }
 
-    public int getGameCounter(){return this.moveCounter;}
+    public int getGameCounter() {
+        return this.moveCounter;
+    }
 
     public void setGameId(int gameId) {
         if (this.gameId == null) {
@@ -188,34 +191,34 @@ public class Board extends Subject {
      * (no walls or obstacles in either of the involved spaces); otherwise,
      * null will be returned.
      *
-     * @param space the space for which the neighbour should be computed
+     * @param space   the space for which the neighbour should be computed
      * @param heading the heading of the neighbour
      * @return the space in the given direction; null if there is no (reachable) neighbour
      */
     public Space getNeighbour(@NotNull Space space, @NotNull Heading heading) {
         int x = space.x;
         int y = space.y;
-        if(!space.getWalls().contains(heading)) {
+        if (!space.getWalls().contains(heading)) {
             switch (heading) {
                 case SOUTH:
-                    y = y + 1;
+                    y = (y + 1) % height;
                     break;
                 case WEST:
-                    x = x - 1;
+                    x = (x + width - 1) % width;
                     break;
                 case NORTH:
-                    y = y  - 1;
+                    y = (y + height - 1) % height;
                     break;
                 case EAST:
-                    x = x + 1;
+                    x = (x + 1) % width;
                     break;
             }
         }
-        Space neighbor = getSpace(x,y);
-        if (neighbor != null && !neighbor.getWalls().contains(heading.next().next())){
+        Space neighbor = getSpace(x, y);
+        if (neighbor != null && !neighbor.getWalls().contains(heading.next().next())) {
             return neighbor;
         }
-        return  null;
+        return null;
     }
 
     /**
