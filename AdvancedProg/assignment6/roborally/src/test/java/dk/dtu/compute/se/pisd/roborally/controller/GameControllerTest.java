@@ -101,6 +101,8 @@ class GameControllerTest {
         gameController.moveForward(player1); //[0,1]
         gameController.fastForward(player1); //[0,3]
         gameController.turnLeft(player1);    //[0,3]
+        gameController.turnRight(player1);
+        gameController.turnLeft(player1);
         gameController.fastForward(player1); //[2,3]
         gameController.uTurn(player1);       //[2,3]
         gameController.moveForward(player1); //[1,3]
@@ -119,11 +121,11 @@ class GameControllerTest {
 
     @Test
     void testConveyorbelt() {
-        Board board = gameController.board;
-        Player player1 = board.getCurrentPlayer();
-        player1.setSpace(board.getSpace(0, 0));
+        Board board = gameController.board; //initiate board
+        Player player1 = board.getCurrentPlayer(); //get player
+        player1.setSpace(board.getSpace(0, 0)); //set starting place
 
-        Space space = board.getSpace(0, 0);
+        Space space = board.getSpace(0, 0); //Implement a chain of conveyorbelts
         ConveyorBelt action = new ConveyorBelt();
         action.setHeading(Heading.SOUTH);
         space.getActions().add(action);
@@ -152,11 +154,22 @@ class GameControllerTest {
         action = new ConveyorBelt();
         action.setHeading(Heading.EAST);
         space.getActions().add(action);
+        //expected outcome: playerpos: [x:1][y:5]
 
         activateConveyors(player1.getSpace());
 
-        Assertions.assertEquals(1, player1.getSpace().x, "");
-        Assertions.assertEquals(5, player1.getSpace().y, "beo");
+        Assertions.assertEquals(1, player1.getSpace().x, "player x.position is expected at 1. is currently: " + player1.getSpace().x);
+        Assertions.assertEquals(5, player1.getSpace().y, "player y.position is expected at 5. is currently: " + player1.getSpace().y);
+    }
+
+    @Test
+    void testRecursiveMovement(){
+        //TODO implement
+    }
+
+    @Test
+    void testPhaseShifting(){
+        //TODO implement
     }
 
     /**
@@ -177,6 +190,8 @@ class GameControllerTest {
             }
         }
     }
+
+
     /*
     @Test
     void moveForward() {
