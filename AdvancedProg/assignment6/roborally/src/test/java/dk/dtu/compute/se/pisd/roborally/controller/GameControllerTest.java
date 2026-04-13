@@ -115,7 +115,67 @@ class GameControllerTest {
                 " should be at: [" + end.y + "," + end.x + "]");
 
 
+    }
 
+    @Test
+    void testConveyorbelt() {
+        Board board = gameController.board;
+        Player player1 = board.getCurrentPlayer();
+        player1.setSpace(board.getSpace(0, 0));
+
+        Space space = board.getSpace(0, 0);
+        ConveyorBelt action = new ConveyorBelt();
+        action.setHeading(Heading.SOUTH);
+        space.getActions().add(action);
+
+        space = board.getSpace(0, 1);
+        action = new ConveyorBelt();
+        action.setHeading(Heading.SOUTH);
+        space.getActions().add(action);
+
+        space = board.getSpace(0, 2);
+        action = new ConveyorBelt();
+        action.setHeading(Heading.SOUTH);
+        space.getActions().add(action);
+
+        space = board.getSpace(0, 3);
+        action = new ConveyorBelt();
+        action.setHeading(Heading.SOUTH);
+        space.getActions().add(action);
+
+        space = board.getSpace(0, 4);
+        action = new ConveyorBelt();
+        action.setHeading(Heading.SOUTH);
+        space.getActions().add(action);
+
+        space = board.getSpace(0, 5);
+        action = new ConveyorBelt();
+        action.setHeading(Heading.EAST);
+        space.getActions().add(action);
+
+        activateConveyors(player1.getSpace());
+
+        Assertions.assertEquals(1, player1.getSpace().x, "");
+        Assertions.assertEquals(5, player1.getSpace().y, "beo");
+    }
+
+    /**
+     * Helper function to activate conveyors on a given space.
+     * @param space
+     */
+    private void activateConveyors(Space space) {
+        if (space == null || space.getPlayer() == null) { //check if space or player is null at given space
+            return; //return
+        }
+
+        Player player = space.getPlayer(); //determine space
+
+        for (FieldAction fieldAction : space.getActions()) { //call action on given space
+            if (fieldAction.doAction(gameController, space)) { //if field action returns true
+                activateConveyors(player.getSpace()); //recursive statement.
+                return;
+            }
+        }
     }
     /*
     @Test
