@@ -46,7 +46,7 @@ public class GameController {
      * This method moves the current player to a non-occupied space, and is triggered by a user
      * clicking on set space. This method is not a part of the game, and should be removed.
      *
-     * @author Tokemeister, Pomfriis, KaspeDKK, Simon, Thomas, Rasbas
+     * @author Tokemeister, Friisma, KaspeDKK, Simon, Thomas, Rasbas
      *
      * @param space the space to which the current player should move
      *
@@ -189,7 +189,7 @@ public class GameController {
      * switching between them. It is the method that simulates the "moving phase". The method also checks if there are
      * any FieldActions in the current space.
      *
-     * @author Tokemeister, Pomfriis, KaspeDKK, Simon, Thomas, Rasbas
+     * @author Tokemeister, Friisma, KaspeDKK, Simon, Thomas, Rasbas
      *
      */
     private void executeNextStep() {
@@ -246,7 +246,7 @@ public class GameController {
      * @param player is the current player
      * @param command is the commmand from the card played by the player.
      *
-     * @author Tokemeister, Pomfriis, KaspeDKK, Simon, Thomas, Rasbas
+     * @author Tokemeister, Friisma, KaspeDKK, Simon, Thomas, Rasbas
      */
     private void executeCommand(@NotNull Player player, Command command) {
         board.setGameCounter(board.getGameCounter()+1);

@@ -1,8 +1,7 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
-import dk.dtu.compute.se.pisd.roborally.model.Board;
-import dk.dtu.compute.se.pisd.roborally.model.Heading;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
+import dk.dtu.compute.se.pisd.roborally.exceptions.ImpossibleMoveException;
+import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,6 +48,75 @@ class GameControllerTest {
         Assertions.assertEquals(player2, board.getCurrentPlayer(), "Current player should be " + player2.getName() +"!");
     }
 
+    @Test
+    void testCheckpoint() throws ImpossibleMoveException {
+        Board board = gameController.board;
+        Space spaceCheck1 = board.getSpace(0,1);
+        Space spaceCheck2 = board.getSpace(0,2);
+
+        Checkpoint check = new Checkpoint();
+        check.setNumber(1);
+        spaceCheck1.getActions().add(check);
+
+        Checkpoint check2 = new Checkpoint();
+        check2.setNumber(2);
+        spaceCheck2.getActions().add(check2);
+
+        Player player1 = board.getCurrentPlayer();
+
+        //første test - Bør ikke tælle
+        gameController.moveToSpace(spaceCheck2,player1,Heading.WEST);
+        for (FieldAction action : spaceCheck2.getActions()) {
+            action.doAction(gameController, spaceCheck2);
+        }
+        Assertions.assertEquals(0, player1.getCheckpoint(), "Player checkpoint attribute is: " + player1.getCheckpoint() +
+                " should be 0");
+
+        //anden test - Bør tælle
+        gameController.moveToSpace(spaceCheck1,player1,Heading.WEST);
+        for (FieldAction action : spaceCheck1.getActions()) {
+            action.doAction(gameController, spaceCheck1);
+        }
+        Assertions.assertEquals(1, player1.getCheckpoint(), "Player checkpoint attribute is: " + player1.getCheckpoint() +
+                " should be 1");
+
+        //tredje test - Bør tælle
+        gameController.moveToSpace(spaceCheck2,player1,Heading.WEST);
+        for (FieldAction action : spaceCheck2.getActions()) {
+            action.doAction(gameController, spaceCheck2);
+        }
+        Assertions.assertEquals(2, player1.getCheckpoint(), "Player checkpoint attribute is: " + player1.getCheckpoint() +
+                " should be 2");
+    }
+    @Test
+    void testMovement(){
+        Board board = gameController.board;
+        Player player1 = board.getCurrentPlayer();
+        player1.setHeading(Heading.SOUTH);
+        Space start = new Space(board, 0,0);
+        player1.setSpace(start);
+        Assertions.assertEquals(player1.getSpace(), start, "player is at: [" + player1.getSpace().y + "," + player1.getSpace().y + "]" +
+                " should be at: [" + start.y + "," + start.x + "]");
+
+        gameController.moveForward(player1); //[0,1]
+        gameController.fastForward(player1); //[0,3]
+        gameController.turnLeft(player1);    //[0,3]
+        gameController.fastForward(player1); //[2,3]
+        gameController.uTurn(player1);       //[2,3]
+        gameController.moveForward(player1); //[1,3]
+        gameController.back(player1);        //[2,3]
+
+
+        Space end = new Space(board,    2,3);
+
+        Assertions.assertEquals(player1.getSpace().y, end.y, "player is at: [" + player1.getSpace().y + "," + player1.getSpace().y + "]" +
+                " should be at: [" + end.y + "," + end.x + "]");
+        Assertions.assertEquals(player1.getSpace().x, end.x, "player is at: [" + player1.getSpace().y + "," + player1.getSpace().y + "]" +
+                " should be at: [" + end.y + "," + end.x + "]");
+
+
+
+    }
     /*
     @Test
     void moveForward() {
