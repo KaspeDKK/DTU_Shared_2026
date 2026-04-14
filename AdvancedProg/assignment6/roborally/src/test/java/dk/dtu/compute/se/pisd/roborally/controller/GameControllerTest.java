@@ -46,7 +46,8 @@ class GameControllerTest {
         Assertions.assertNull(board.getSpace(0, 0).getPlayer(), "Space (0,0) should be empty!");
         Assertions.assertEquals(player2, board.getCurrentPlayer(), "Current player should be " + player2.getName() +"!");
     }
-    */
+     */
+
     @Test
     void testCheckpoint() throws ImpossibleMoveException {
         Board board = gameController.board;
@@ -460,5 +461,7 @@ class GameControllerTest {
         }
     }
 
+
+    // TODO and there should be more tests added for the different assignments eventually
 
 }

@@ -102,7 +102,7 @@ public class GameController {
 
             }
         } catch (ImpossibleMoveException e) {
-            System.err.println(e.getMessage()); //print custom message
+
         }
     }
 
@@ -341,7 +341,7 @@ public class GameController {
             try {
                 moveToSpace(nextSpace, player, heading);// sets the new position
             } catch (ImpossibleMoveException e) {
-                throw new RuntimeException(e);
+                //throw new RuntimeException(e);
             }
         }
     }

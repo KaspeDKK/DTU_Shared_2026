@@ -142,6 +142,14 @@ public class PlayerView extends Tab implements ViewObserver {
         }
     }
 
+    /**
+     * Updates the view according to the current game state.
+     *
+     * This method will be called when the observer notices changes - it will handle the game over behavior,
+     * refresh the checkpoint status, and shows the buttons when player interaction is required.
+     */
+
+
     @Override
     public void updateView(Subject subject) {
         if (player.board.getPhase() == Phase.FINISHED){
@@ -153,18 +161,18 @@ public class PlayerView extends Tab implements ViewObserver {
                 alert.setTitle("Game Over");
                 alert.setHeaderText("Winner");
                 alert.setContentText(player.board.getWinner().getName() + " won the game!");
-                alert.showAndWait();
+                alert.showAndWait(); //waits for user response
 
                 player.board.setGameOverMessageIsShown(true); // sets message shown to true
             }
 
             player.board.setWinner(null);
-            return;
+            return; //extra measurement to make sure its not called again.
         }
         if (subject == player.board) {
             checkpointLabel.setText("Number of reached checkpoints: " + player.getCheckpoint()); // number of checkpoints reached for each player.
             player.attach(this);
-            for (int i = 0; i < Player.NO_REGISTERS; i++) {
+            for (int i = 0; i < Player.NO_REGISTERS; i++) { //cards
                 CardFieldView cardFieldView = programCardViews[i];
                 if (cardFieldView != null) {
                     if (player.board.getPhase() == Phase.PROGRAMMING ) {
