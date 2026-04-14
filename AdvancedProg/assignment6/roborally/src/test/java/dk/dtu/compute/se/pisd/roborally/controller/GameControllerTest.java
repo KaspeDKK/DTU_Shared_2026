@@ -243,7 +243,53 @@ class GameControllerTest {
 
     @Test
     void testPhaseShifting(){
-        //TODO implement
+        // setup a dummy board that is ready to test for phaseShifting
+        Board board = gameController.board;
+        Player player = board.getCurrentPlayer();
+
+            //clear current cards from setup to round 1
+        for (int p = 0; p < board.getPlayersNumber(); p++) {
+            Player current = board.getPlayer(p);
+            for (int i = 0; i < Player.NO_REGISTERS; i++) {
+                current.getProgramField(i).setCard(null);
+            }
+        }
+
+            // sets player 1 to a known position with a known heading
+        player.setSpace(board.getSpace(3, 3));
+        player.setHeading(Heading.NORTH);
+
+        // dummy board is set up ; now we test!
+        // Firstly, testing if board starts in INITIALISATION phase
+        Assertions.assertEquals(Phase.INITIALISATION, gameController.board.getPhase()); //board always starts in INITIALISATION phase
+
+        // Secondly, testing shift from INITIALISATION phase to PROGRAMMING phase
+        gameController.startProgrammingPhase(); //initiate programming phase
+        Assertions.assertEquals(Phase.PROGRAMMING, gameController.board.getPhase()); //check if it is programming phase
+
+
+        // Thirdly, testing shift from PROGRAMMING phase to ACTIVATION phase
+        player.getProgramField(0).setCard(new CommandCard(Command.FORWARD)); // player1 plays a command card into program
+        gameController.finishProgrammingPhase();
+        Assertions.assertEquals(Phase.ACTIVATION, gameController.board.getPhase());
+
+        // Fourthly, testing from ACTIVATION phase to PROGRAMMING phase
+        gameController.executePrograms();
+        Assertions.assertEquals(Phase.PROGRAMMING, gameController.board.getPhase());
+
+        // Fifthly, testing shift from ACTIVATION phase to FINISHED phase
+
+            // setting up checkpoint
+        Space spaceCheck1 = board.getSpace(3,1);
+        Checkpoint check = new Checkpoint();
+        check.setNumber(1);
+        check.setIsFinal(true);
+        spaceCheck1.getActions().add(check);
+
+        player.getProgramField(0).setCard(new CommandCard(Command.FORWARD)); // player1 plays a command card into program
+        gameController.finishProgrammingPhase();
+        gameController.executePrograms();
+        Assertions.assertEquals(Phase.FINISHED, gameController.board.getPhase());
     }
 
 
