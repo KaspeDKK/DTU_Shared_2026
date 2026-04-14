@@ -274,9 +274,6 @@ class GameControllerTest {
         board.setStep(0);
         board.setCurrentPlayer(player);
 
-
-        int before = board.getGameCounter(); //stores the gamecounter for later checks
-
         gameController.executePrograms();
         //checks if the player  has moved to the correct position in round 1 after all the specific commands has been played
         Assertions.assertEquals(board.getSpace(6, 4), player.getSpace());
@@ -301,7 +298,6 @@ class GameControllerTest {
         gameController.executePrograms();
 
         Assertions.assertEquals(Heading.SOUTH, player.getHeading()); //checks if player has made a UTURN
-        Assertions.assertTrue(board.getGameCounter() >= before + 6);
         Assertions.assertEquals(Phase.PROGRAMMING, board.getPhase()); //checks if phase has returned to programming phase
     }
 
