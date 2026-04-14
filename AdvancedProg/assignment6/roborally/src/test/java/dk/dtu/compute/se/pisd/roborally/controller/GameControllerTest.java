@@ -324,7 +324,35 @@ class GameControllerTest {
         Assertions.assertEquals(Heading.NORTH, player.getHeading());
 
     }
+    @Test
+    void executeStepTest() {
+        //clear current cards from setup to round 1
+        Board board = gameController.board;
+        for (int p = 0; p < board.getPlayersNumber(); p++) {
+            Player current = board.getPlayer(p);
+            for (int i = 0; i < Player.NO_REGISTERS; i++) {
+                current.getProgramField(i).setCard(null);
+            }
+        }
+        // sets player 1 to a known position with a known heading
+        Player player = board.getPlayer(0);
+        player.setSpace(board.getSpace(3, 3));
+        player.setHeading(Heading.NORTH);
 
+        //Set commandCards
+        player.getProgramField(0).setCard(new CommandCard(Command.FORWARD));
+        player.getProgramField(0).setCard(new CommandCard(Command.FORWARD));
+
+        //prepare the board and execute the registers with specific command and executes
+        board.setPhase(Phase.ACTIVATION);
+        board.setStep(0);
+        board.setCurrentPlayer(player);
+        
+        //execute only one card
+        gameController.executeStep();
+        Assertions.assertEquals(Heading.NORTH, player.getHeading());
+        Assertions.assertEquals(board.getSpace(3, 2), player.getSpace());
+    }
     /**
      * Helper function to activate conveyors on a given space.
      * @param space
