@@ -370,7 +370,7 @@ class GameControllerTest {
 
         //Set commandCards
         player.getProgramField(0).setCard(new CommandCard(Command.FORWARD));
-        player.getProgramField(0).setCard(new CommandCard(Command.FORWARD));
+        player.getProgramField(1).setCard(new CommandCard(Command.FORWARD));
 
         //prepare the board and execute the registers with specific command and executes
         board.setPhase(Phase.ACTIVATION);
@@ -379,6 +379,8 @@ class GameControllerTest {
         
         //execute only one card
         gameController.executeStep();
+
+        //Assertion
         Assertions.assertEquals(Heading.NORTH, player.getHeading());
         Assertions.assertEquals(board.getSpace(3, 2), player.getSpace());
     }
