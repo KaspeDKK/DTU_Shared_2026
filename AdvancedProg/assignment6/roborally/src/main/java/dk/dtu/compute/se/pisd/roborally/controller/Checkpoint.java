@@ -1,5 +1,6 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
+import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +32,9 @@ public class Checkpoint extends FieldAction {
              //if player did not reach the specific checkpoint yet.
                 if (currP.getCheckpoint() == this.number-1){
                 currP.setCheckpoint(this.number); //increment num of checkpoints visited
+                    if (this.isFinal){
+
+                    }
                 return true;
             }
         }
@@ -38,6 +42,10 @@ public class Checkpoint extends FieldAction {
     }
 
     public void setNumber(Integer number){this.number = number;};
+
+    public void setIsFinal(boolean isFinal){this.isFinal = isFinal;}
+
+    public boolean getIsFinal(){return this.isFinal;}
 
 }
 
