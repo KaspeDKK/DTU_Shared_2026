@@ -254,7 +254,7 @@ public class GameController {
 
 
     public void executeOptionAndContinue(Command option) {
-        board.setSelectedOption(option);
+        board.setSelectedOption(option); // sets the given commands "option" to the given option that the player chose
         board.setPhase(Phase.ACTIVATION);
         continuePrograms();
 
