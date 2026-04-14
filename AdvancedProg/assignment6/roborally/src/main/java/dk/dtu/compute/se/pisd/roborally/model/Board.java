@@ -60,8 +60,6 @@ public class Board extends Subject {
 
     private boolean stepMode;
 
-    private int moveCounter;
-
     private Command selectedOption;
 
     private Player winner;
@@ -93,15 +91,6 @@ public class Board extends Subject {
         return gameId;
     }
 
-    public void setGameCounter(int newCount) {
-        this.moveCounter = newCount;
-        notifyChange();
-    }
-
-    public int getGameCounter() {
-        return this.moveCounter;
-    }
-
     /** sets the gameID for this board. If this board already has a gameID then throw an IllegalStateException
      *
      * @param gameId
@@ -130,6 +119,11 @@ public class Board extends Subject {
             return null;
         }
     }
+
+    /**
+     *
+     * @return the number of the player
+     */
 
     public int getPlayersNumber() {
         return players.size();
@@ -308,10 +302,10 @@ public class Board extends Subject {
         // status of the game
 
         if (this.winner != null){
-            return "Player: " + this.winner.getName() + " has won the game!! |  Moves: " + getGameCounter() + " |  Phase: " + getPhase();
+            return "Player: " + this.winner.getName() + " has won the game!! |  Phase: " + getPhase();
         }
 
-        return "Player = " + getCurrentPlayer().getName() + "  |  Phase: " + getPhase() + "  |  Register: " + getStep() + "  |  Moves: " + getGameCounter();
+        return "Player = " + getCurrentPlayer().getName() + "  |  Phase: " + getPhase() + "  |  Register: " + getStep();
     }
 
 }

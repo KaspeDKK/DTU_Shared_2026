@@ -300,7 +300,6 @@ public class GameController {
      * @param command is the command from the card played by the player.
      */
     private void executeCommand(@NotNull Player player, Command command) {
-        board.setGameCounter(board.getGameCounter() + 1);
         if (player.board == board && command != null) {
             switch (command) { //goes through each command and calls the movement respectively.
                 case FORWARD:
