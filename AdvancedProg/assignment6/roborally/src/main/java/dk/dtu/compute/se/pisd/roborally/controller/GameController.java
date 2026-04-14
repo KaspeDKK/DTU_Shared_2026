@@ -240,6 +240,17 @@ public class GameController {
         }
     }
 
+
+    public void executeOptionAndContinue(Command option) {
+
+        // call execute command with direction
+        executeCommand(board.getCurrentPlayer(), option);
+
+        // set phase back
+        board.setPhase(Phase.ACTIVATION);
+
+    }
+
     /**
      * This methods executes the commands from the cards played by the player.
      *
@@ -255,14 +266,9 @@ public class GameController {
             //     their execution. This should eventually be done in a more elegant way
             //     (this concerns the way cards are modelled as well as the way they are executed).
             if (command.isInteractive()){
-                Command selectedOption = board.getSelectedOption;
-                if (selectedOption == null){
-                    board.setPhase(Phase.PLAYER_INTERACTION);
-                    return;
-                } else {
-                    board.setSelectedOption(null);
-                    executeCommand(player,selectedOption);
-                }
+
+                board.setPhase(Phase.PLAYER_INTERACTION);
+
             } else {
                 switch (command) {
                     case FORWARD:
@@ -284,7 +290,7 @@ public class GameController {
                         this.uTurn(player);
                         break;
                     case LEFT_OR_RIGHT:
-                        this.leftOrRight(player);
+                        //this.leftOrRight(player);
                         break;
                     default:
                         // DO NOTHING (for now)//
