@@ -262,7 +262,11 @@ public class GameController {
 
                                 for (FieldAction action : actions) { //execute implementation of fieldAction
                                     if (action.doAction(this, playerSpace)) {
-                                        executeNextStep(); // keeps repeating until its false and no more valid field actions exist
+                                        //only recurse if in activation phase
+                                        if (board.getPhase() == Phase.ACTIVATION) {
+                                            executeNextStep();
+                                        }
+                                        break;
                                     }
                                 }
                             }
