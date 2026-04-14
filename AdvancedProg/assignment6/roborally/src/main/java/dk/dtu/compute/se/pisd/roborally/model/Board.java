@@ -241,7 +241,14 @@ public class Board extends Subject {
             this.winner = player;
             this.gameOver = true;
         }
+    }
 
+    public Player getWinner(){
+        return this.winner;
+    }
+
+    public Boolean getIsGameOver(){
+        return this.gameOver;
     }
     /**
      * @return a message displaying current player and current phase

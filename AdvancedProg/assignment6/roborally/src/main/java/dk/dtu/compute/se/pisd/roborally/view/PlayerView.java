@@ -28,6 +28,7 @@ import dk.dtu.compute.se.pisd.roborally.model.CommandCardField;
 import dk.dtu.compute.se.pisd.roborally.model.Phase;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -145,10 +146,26 @@ public class PlayerView extends Tab implements ViewObserver {
 
     @Override
     public void updateView(Subject subject) {
+        if (player.board.getIsGameOver()){
+
+            //Disable the following when the game is over:
+            finishButton.setDisable(true);
+            executeButton.setDisable(true);
+            stepButton.setDisable(true);
+            cardsPane.setDisable(true);
+            programPane.setDisable(true);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Game Over");
+            alert.setHeaderText("Winner");
+            alert.setContentText(player.board.getWinner().getName() + " won the game!");
+            alert.showAndWait();
+
+            player.board.setWinner(null);
+            return;
+        }
         if (subject == player.board) {
-            // TODO A6d: update the status label for this player (showing the number
-            //     of achieved checkpoints)
-            checkpointLabel.setText("Number of reached checkpoints: " + player.getCheckpoint());
+            checkpointLabel.setText("Number of reached checkpoints: " + player.getCheckpoint()); // number of checkpoints reached for each player.
             player.attach(this);
             for (int i = 0; i < Player.NO_REGISTERS; i++) {
                 CardFieldView cardFieldView = programCardViews[i];
