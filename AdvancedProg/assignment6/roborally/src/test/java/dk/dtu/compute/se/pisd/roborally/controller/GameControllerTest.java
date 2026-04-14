@@ -213,9 +213,39 @@ class GameControllerTest {
     }
 
     @Test
+    void testFinishProgrammingPhase() {
+
+
+        Board board = gameController.board; // get board
+
+        for (int i = 0; i < board.getPlayersNumber(); i++) {
+
+            Player player = board.getPlayer(i); // get player i
+            for (int j = 0; j < Player.NO_REGISTERS; j++) {
+                player.getProgramField(j).setVisible(true); // all registers visible for all players
+            }
+
+        }
+
+        gameController.finishProgrammingPhase(); // end programming phase
+
+        for (int i = 0; i < board.getPlayersNumber(); i++) {
+
+            Player player = board.getPlayer(i); // get player i
+            Assertions.assertTrue(player.getProgramField(0).isVisible()); // register 0 is visible
+
+            for (int j = 1; j < Player.NO_REGISTERS; j++) {
+                Assertions.assertFalse(player.getProgramField(j).isVisible()); // registers 1 to end are hidden
+            }
+
+        }
+    }
+
+    @Test
     void testPhaseShifting(){
         //TODO implement
     }
+
 
     @Test
     void test_executePrograms_nonInteractiveCommands(){
@@ -324,7 +354,37 @@ class GameControllerTest {
         Assertions.assertEquals(Heading.NORTH, player.getHeading());
 
     }
+    @Test
+    void executeStepTest() {
+        //clear current cards from setup to round 1
+        Board board = gameController.board;
+        for (int p = 0; p < board.getPlayersNumber(); p++) {
+            Player current = board.getPlayer(p);
+            for (int i = 0; i < Player.NO_REGISTERS; i++) {
+                current.getProgramField(i).setCard(null);
+            }
+        }
+        // sets player 1 to a known position with a known heading
+        Player player = board.getPlayer(0);
+        player.setSpace(board.getSpace(3, 3));
+        player.setHeading(Heading.NORTH);
 
+        //Set commandCards
+        player.getProgramField(0).setCard(new CommandCard(Command.FORWARD));
+        player.getProgramField(1).setCard(new CommandCard(Command.FORWARD));
+
+        //prepare the board and execute the registers with specific command and executes
+        board.setPhase(Phase.ACTIVATION);
+        board.setStep(0);
+        board.setCurrentPlayer(player);
+        
+        //execute only one card
+        gameController.executeStep();
+
+        //Assertion
+        Assertions.assertEquals(Heading.NORTH, player.getHeading());
+        Assertions.assertEquals(board.getSpace(3, 2), player.getSpace());
+    }
     /**
      * Helper function to activate conveyors on a given space.
      * @param space
