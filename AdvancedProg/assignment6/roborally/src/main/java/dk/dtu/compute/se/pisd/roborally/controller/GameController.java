@@ -265,7 +265,12 @@ public class GameController {
         }
     }
 
-
+    /**
+     * This method will set the given command "option" to the option that the player chose. In this case it can be (LEFT / RIGHT)
+     * It will then set phase back to activation and continue the execution of the command cards.
+     *
+     * @param option
+     */
     public void executeOptionAndContinue(Command option) {
         board.setSelectedOption(option); // sets the given commands "option" to the option that the player chose
         board.setPhase(Phase.ACTIVATION);
