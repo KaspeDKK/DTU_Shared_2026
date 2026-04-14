@@ -72,6 +72,7 @@ class GameControllerTest {
         Assertions.assertEquals(0, player1.getCheckpoint(), "Player checkpoint attribute is: " + player1.getCheckpoint() +
                 " should be 0");
 
+        Assertions.
         //anden test - Bør tælle
         gameController.moveToSpace(spaceCheck1,player1,Heading.WEST);
         for (FieldAction action : spaceCheck1.getActions()) {
