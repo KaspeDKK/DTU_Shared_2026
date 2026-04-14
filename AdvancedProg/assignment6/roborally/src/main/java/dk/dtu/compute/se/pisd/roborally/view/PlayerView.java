@@ -135,6 +135,7 @@ public class PlayerView extends Tab implements ViewObserver {
 
     public void setDefaultSidePanelContent(@NotNull VBox content) {
         this.defaultSidePanelContent = content;
+        // show the default panel unless we are currently asking this player for an interactive choice
         if (player.board.getPhase() != Phase.PLAYER_INTERACTION) {
             sidePanel.getChildren().clear();
             sidePanel.getChildren().add(defaultSidePanelContent);
@@ -154,7 +155,7 @@ public class PlayerView extends Tab implements ViewObserver {
                 alert.setContentText(player.board.getWinner().getName() + " won the game!");
                 alert.showAndWait();
 
-                player.board.setGameOverMessageIsShown(true); //Sets message shown to true.
+                player.board.setGameOverMessageIsShown(true); // sets message shown to true
             }
 
             player.board.setWinner(null);
@@ -197,18 +198,20 @@ public class PlayerView extends Tab implements ViewObserver {
 
                 playerInteractionPanel.getChildren().clear();
 
+                // only the current player can choose an option during interaction
                 if (player.board.getCurrentPlayer() == player) {
                     Button optionButton = new Button("Turn Right");
-                    optionButton.setOnAction(e -> gameController.executeOptionAndContinue(Command.RIGHT));
+                    optionButton.setOnAction(e -> gameController.executeOptionAndContinue(Command.RIGHT)); // lambda func to gamecontroller. It will pass through the chosen option RIGHT
                     playerInteractionPanel.getChildren().add(optionButton);
 
                     optionButton = new Button("Turn Left");
-                    optionButton.setOnAction(e -> gameController.executeOptionAndContinue(Command.LEFT));
+                    optionButton.setOnAction(e -> gameController.executeOptionAndContinue(Command.LEFT)); // lambda func to gamecontroller. It will pass through the chosen option LEFT
                     playerInteractionPanel.getChildren().add(optionButton);
                 }
             } else {
                 playerInteractionPanel.getChildren().clear();
 
+                // restores the default panel when leaving interaction
                 if (defaultSidePanelContent != null) {
                     sidePanel.getChildren().clear();
                     sidePanel.getChildren().add(defaultSidePanelContent);

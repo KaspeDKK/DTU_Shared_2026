@@ -60,9 +60,11 @@ public class PlayersView extends VBox implements ViewObserver {
                 playerViews[i] = new PlayerView(gameController, board.getPlayer(i));
                 tabPane.getTabs().add(playerViews[i]);
 
-                PlayerButtonPanel panel = new PlayerButtonPanel(gameController);
+
+                PlayerButtonPanel panel = new PlayerButtonPanel(gameController); // each tab needs its own panel because a javafx node can only be attached to one parent
                 buttonPanels[i] = panel;
-                playerViews[i].setDefaultSidePanelContent(panel);
+
+                playerViews[i].setDefaultSidePanelContent(panel);  // put the panel inside the playerview side panel so it shows next to the register slots
             }
 
             this.getChildren().add(tabPane);
@@ -94,13 +96,13 @@ public class PlayersView extends VBox implements ViewObserver {
 
         private PlayerButtonPanel(@NotNull GameController gameController) {
             finishButton = new Button("Finish Programming");
-            finishButton.setOnAction(e -> gameController.finishProgrammingPhase());
+            finishButton.setOnAction(e -> gameController.finishProgrammingPhase()); // lambda func to gamecontroller
 
             executeButton = new Button("Execute Program");
-            executeButton.setOnAction(e -> gameController.executePrograms());
+            executeButton.setOnAction(e -> gameController.executePrograms()); // lambda func to gamecontroller
 
             stepButton = new Button("Execute Current Register");
-            stepButton.setOnAction(e -> gameController.executeStep());
+            stepButton.setOnAction(e -> gameController.executeStep()); // lambda func to gamecontroller
 
             this.getChildren().addAll(finishButton, executeButton, stepButton);
             this.setAlignment(Pos.CENTER_LEFT);
