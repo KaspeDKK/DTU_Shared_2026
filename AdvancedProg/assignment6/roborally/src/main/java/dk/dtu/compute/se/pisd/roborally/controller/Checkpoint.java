@@ -32,8 +32,8 @@ public class Checkpoint extends FieldAction {
              //if player did not reach the specific checkpoint yet.
                 if (currP.getCheckpoint() == this.number-1){
                 currP.setCheckpoint(this.number); //increment num of checkpoints visited
-                    if (this.isFinal){
-
+                    if (this.isFinal){  //win condition
+                    gameController.setWinner(currP);
                     }
                 return true;
             }

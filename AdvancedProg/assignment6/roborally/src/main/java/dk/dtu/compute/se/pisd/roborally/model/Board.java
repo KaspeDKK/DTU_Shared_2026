@@ -64,6 +64,10 @@ public class Board extends Subject {
 
     private Command selectedOption;
 
+    private Player winner;
+
+    private Boolean gameOver = false;
+
 
     public Board(int width, int height, @NotNull String boardName) {
         this.boardName = boardName;
@@ -232,6 +236,13 @@ public class Board extends Subject {
         return null;
     }
 
+    public void setWinner(Player player){
+        if (player != null){
+            this.winner = player;
+            this.gameOver = true;
+        }
+
+    }
     /**
      * @return a message displaying current player and current phase
      */
@@ -240,6 +251,9 @@ public class Board extends Subject {
         // the students, this method gives a string representation of the current
         // status of the game
 
+        if (this.gameOver && this.winner != null){
+            return "Player: " + this.winner.getName() + " has won the game!! ";
+        }
 
         // DONE A6c: changed the status so that it shows the phase, the current player, and the current register
         //     and you can remove the move count status message message and the corresponding counter again
