@@ -56,10 +56,12 @@ class GameControllerTest {
 
         Checkpoint check = new Checkpoint();
         check.setNumber(1);
+        check.setIsFinal(false);
         spaceCheck1.getActions().add(check);
 
         Checkpoint check2 = new Checkpoint();
         check2.setNumber(2);
+        check.setIsFinal(false);
         spaceCheck2.getActions().add(check2);
 
         Player player1 = board.getCurrentPlayer();
@@ -185,9 +187,6 @@ class GameControllerTest {
         } catch (ImpossibleMoveException e) {
 
         }
-
-
-
 
     }
 
