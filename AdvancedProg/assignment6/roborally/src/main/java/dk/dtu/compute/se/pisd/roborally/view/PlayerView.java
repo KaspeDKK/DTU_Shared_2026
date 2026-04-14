@@ -146,7 +146,7 @@ public class PlayerView extends Tab implements ViewObserver {
 
     @Override
     public void updateView(Subject subject) {
-        if (player.board.getIsGameOver()){
+        if (player.board.getPhase() == Phase.FINISHED){
 
 
             //Show the modal, but only once - hence the boolean

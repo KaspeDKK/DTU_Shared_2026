@@ -66,8 +66,6 @@ public class Board extends Subject {
 
     private Player winner;
 
-    private Boolean gameOver = false;
-
     //needs to be here, since player view shows something for each player.
     private Boolean gameOverMessageIsShown = false;
 
@@ -242,8 +240,7 @@ public class Board extends Subject {
 
     public void setWinner(Player player){
         if (player != null){
-            this.winner = player;
-            this.gameOver = true;
+            this.winner = player; //is null until game is won
         }
     }
 
@@ -259,9 +256,6 @@ public class Board extends Subject {
         return gameOverMessageIsShown;
     }
 
-    public Boolean getIsGameOver(){
-        return this.gameOver;
-    }
     /**
      * @return a message displaying current player and current phase
      */
@@ -270,7 +264,7 @@ public class Board extends Subject {
         // the students, this method gives a string representation of the current
         // status of the game
 
-        if (this.gameOver && this.winner != null){
+        if (this.winner != null){
             return "Player: " + this.winner.getName() + " has won the game!! |  Phase: " + getPhase();
         }
 
