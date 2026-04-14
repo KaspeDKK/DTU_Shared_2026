@@ -192,6 +192,28 @@ class GameControllerTest {
     }
 
     @Test
+    void testExecuteOptionAndContinue() {
+        Board board = gameController.board;
+        Player current = board.getCurrentPlayer();
+
+        current.setHeading(Heading.SOUTH);
+        current.getProgramField(0).setCard(new CommandCard(Command.LEFT_OR_RIGHT));
+
+        board.setStepMode(true); // ensure continuePrograms() runs exactly one step
+        board.setStep(0);
+        board.setPhase(Phase.PLAYER_INTERACTION);
+        board.setSelectedOption(null);
+
+        gameController.executeOptionAndContinue(Command.LEFT);
+
+        Assertions.assertEquals(Heading.EAST, current.getHeading(), "LEFT option should turn player left (SOUTH -> EAST)");
+        Assertions.assertNull(board.getSelectedOption(), "Selected option should be consumed by executeNextStep()");
+        Assertions.assertEquals(Phase.ACTIVATION, board.getPhase(), "Game should be back in activation phase after choosing an option");
+        Assertions.assertEquals(board.getPlayer(1), board.getCurrentPlayer(), "Game should have advanced to next player after executing option");
+
+    }
+
+    @Test
     void testPhaseShifting(){
         //TODO implement
     }
