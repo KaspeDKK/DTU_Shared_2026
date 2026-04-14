@@ -91,11 +91,6 @@ public class PlayerView extends Tab implements ViewObserver {
             }
         }
 
-        // FIXME the following buttons should actually not be on the tabs of the individual
-        //       players, but on the PlayersView (view for all players). This should be
-        //       refactored.
-
-
         finishButton = new Button("Finish Programming");
         finishButton.setOnAction( e -> gameController.finishProgrammingPhase());
 
@@ -133,10 +128,6 @@ public class PlayerView extends Tab implements ViewObserver {
         top.getChildren().add(cardsLabel);
         top.getChildren().add(cardsPane);
         top.getChildren().add(checkpointLabel);
-
-
-        // TODO A6d: a label for the status of this player could be added here
-        //     for showing the number of achieved checkpoints (etc).
 
         if (player.board != null) {
             player.board.attach(this);
