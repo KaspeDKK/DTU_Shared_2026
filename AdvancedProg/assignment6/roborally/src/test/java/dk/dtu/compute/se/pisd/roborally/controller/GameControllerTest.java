@@ -248,7 +248,7 @@ class GameControllerTest {
         int before = board.getGameCounter(); //stores the gamecounter for later checks
 
         gameController.executePrograms();
-//checks if the player  has moved to the correct position in round 1 after all the specific commands has been played
+        //checks if the player  has moved to the correct position in round 1 after all the specific commands has been played
         Assertions.assertEquals(board.getSpace(6, 4), player.getSpace());
         Assertions.assertEquals(Heading.NORTH, player.getHeading());
         Assertions.assertEquals(Phase.PROGRAMMING, board.getPhase()); //checks if phase has returned to programming phase
@@ -273,6 +273,56 @@ class GameControllerTest {
         Assertions.assertEquals(Heading.SOUTH, player.getHeading()); //checks if player has made a UTURN
         Assertions.assertTrue(board.getGameCounter() >= before + 6);
         Assertions.assertEquals(Phase.PROGRAMMING, board.getPhase()); //checks if phase has returned to programming phase
+    }
+
+    @Test
+    void test_executePrograms_interactiveCommands(){
+        //clear current cards from setup to round 1
+        Board board = gameController.board;
+        for (int p = 0; p < board.getPlayersNumber(); p++) {
+            Player current = board.getPlayer(p);
+            for (int i = 0; i < Player.NO_REGISTERS; i++) {
+                current.getProgramField(i).setCard(null);
+            }
+        }
+        // sets player 1 to a known position with a known heading
+        Player player = board.getPlayer(0);
+        player.setSpace(board.getSpace(3, 3));
+        player.setHeading(Heading.NORTH);
+
+        //Get interactive card
+        player.getProgramField(0).setCard(new CommandCard(Command.LEFT_OR_RIGHT));
+
+
+        //prepare the board and execute the registers with interactive command
+        board.setPhase(Phase.ACTIVATION);
+        board.setStep(0);
+        board.setCurrentPlayer(player);
+
+        gameController.executePrograms();
+        gameController.executeOptionAndContinue(Command.RIGHT);
+        Assertions.assertEquals(Heading.EAST, player.getHeading());
+
+        //Round 2 test for choosing left instead of right
+        for (int p = 0; p < board.getPlayersNumber(); p++) {
+            Player current = board.getPlayer(p);
+            for (int i = 0; i < Player.NO_REGISTERS; i++) {
+                current.getProgramField(i).setCard(null);
+            }
+        }
+
+        //Get interactive card
+        player.getProgramField(0).setCard(new CommandCard(Command.LEFT_OR_RIGHT));
+
+        //prepare the board and execute the registers with interactive command
+        board.setPhase(Phase.ACTIVATION);
+        board.setStep(0);
+        board.setCurrentPlayer(player);
+
+        gameController.executePrograms();
+        gameController.executeOptionAndContinue(Command.LEFT);
+        Assertions.assertEquals(Heading.NORTH, player.getHeading());
+
     }
 
     /**
