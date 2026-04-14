@@ -261,21 +261,21 @@ class GameControllerTest {
 
         // dummy board is set up ; now we test!
         // Firstly, testing if board starts in INITIALISATION phase
-        Assertions.assertEquals(Phase.INITIALISATION, gameController.board.getPhase()); //board always starts in INITIALISATION phase
+        Assertions.assertEquals(Phase.INITIALISATION, board.getPhase()); //board always starts in INITIALISATION phase
 
         // Secondly, testing shift from INITIALISATION phase to PROGRAMMING phase
         gameController.startProgrammingPhase(); //initiate programming phase
-        Assertions.assertEquals(Phase.PROGRAMMING, gameController.board.getPhase()); //check if it is programming phase
+        Assertions.assertEquals(Phase.PROGRAMMING, board.getPhase()); //check if it is programming phase
 
 
         // Thirdly, testing shift from PROGRAMMING phase to ACTIVATION phase
         player.getProgramField(0).setCard(new CommandCard(Command.FORWARD)); // player1 plays a command card into program
         gameController.finishProgrammingPhase();
-        Assertions.assertEquals(Phase.ACTIVATION, gameController.board.getPhase());
+        Assertions.assertEquals(Phase.ACTIVATION, board.getPhase());
 
         // Fourthly, testing from ACTIVATION phase to PROGRAMMING phase
         gameController.executePrograms();
-        Assertions.assertEquals(Phase.PROGRAMMING, gameController.board.getPhase());
+        Assertions.assertEquals(Phase.PROGRAMMING, board.getPhase());
 
         // Fifthly, testing shift from ACTIVATION phase to FINISHED phase
 
@@ -289,7 +289,7 @@ class GameControllerTest {
         player.getProgramField(0).setCard(new CommandCard(Command.FORWARD)); // player1 plays a command card into program
         gameController.finishProgrammingPhase();
         gameController.executePrograms();
-        Assertions.assertEquals(Phase.FINISHED, gameController.board.getPhase());
+        Assertions.assertEquals(Phase.FINISHED, board.getPhase());
     }
 
 
