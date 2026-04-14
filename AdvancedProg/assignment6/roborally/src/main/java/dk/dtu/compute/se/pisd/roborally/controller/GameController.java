@@ -200,7 +200,7 @@ public class GameController {
             if (step >= 0 && step < Player.NO_REGISTERS) {
                 CommandCard card = currentPlayer.getProgramField(step).getCard();
                 if (card != null) {
-                    Command command = card.command; //needs to be replaced
+                    Command command = card.command;
                     if (command.isInteractive()) {
                         Command selectedOption = board.getSelectedOption();
                         if (selectedOption == null) {
@@ -211,7 +211,7 @@ public class GameController {
                             executeCommand(currentPlayer, selectedOption);
                         }
                     } else {
-                        executeCommand(currentPlayer, command); //needs to be replaced
+                        executeCommand(currentPlayer, command);
                     }
                 }
 
@@ -346,19 +346,6 @@ public class GameController {
         uTurn(player);
         moveForward(player);
         uTurn(player);
-    }
-
-    public void leftOrRight(@NotNull Player player) {
-
-    }
-
-    /**
-     * A method called when no corresponding controller operation is implemented yet.
-     * This should eventually be removed.
-     */
-    public void notImplemented() {
-        // XXX just for now to indicate that the actual method is not yet implemented
-        assert false;
     }
 
     public void setWinner(Player player){

@@ -89,7 +89,7 @@ class GameControllerTest {
         Assertions.assertEquals(2, player1.getCheckpoint(), "Player checkpoint attribute is: " + player1.getCheckpoint() +
                 " should be 2");
     }
-    
+
     @Test
     void testMovement(){
         Board board = gameController.board;
@@ -216,6 +216,64 @@ class GameControllerTest {
     @Test
     void testPhaseShifting(){
         //TODO implement
+    }
+
+    @Test
+    void test_executePrograms_nonInteractiveCommands(){
+        //clear current cards from setup to round 1
+        Board board = gameController.board;
+        for (int p = 0; p < board.getPlayersNumber(); p++) {
+            Player current = board.getPlayer(p);
+            for (int i = 0; i < Player.NO_REGISTERS; i++) {
+                current.getProgramField(i).setCard(null);
+            }
+        }
+        // sets player 1 to a known position with a known heading
+        Player player = board.getPlayer(0);
+        player.setSpace(board.getSpace(3, 3));
+        player.setHeading(Heading.NORTH);
+
+        //create specific commandCards
+        player.getProgramField(0).setCard(new CommandCard(Command.RIGHT));
+        player.getProgramField(1).setCard(new CommandCard(Command.FORWARD));
+        player.getProgramField(2).setCard(new CommandCard(Command.FAST_FORWARD));
+        player.getProgramField(3).setCard(new CommandCard(Command.LEFT));
+        player.getProgramField(4).setCard(new CommandCard(Command.BACK));
+
+        //prepare the board and execute the registers with specific commands
+        board.setPhase(Phase.ACTIVATION);
+        board.setStep(0);
+        board.setCurrentPlayer(player);
+
+
+        int before = board.getGameCounter(); //stores the gamecounter for later checks
+
+        gameController.executePrograms();
+//checks if the player  has moved to the correct position in round 1 after all the specific commands has been played
+        Assertions.assertEquals(board.getSpace(6, 4), player.getSpace());
+        Assertions.assertEquals(Heading.NORTH, player.getHeading());
+        Assertions.assertEquals(Phase.PROGRAMMING, board.getPhase()); //checks if phase has returned to programming phase
+
+        //Resets card registers for round 2 of testing
+        for (int p = 0; p < board.getPlayersNumber(); p++) {
+            Player current = board.getPlayer(p);
+            for (int i = 0; i < Player.NO_REGISTERS; i++) {
+                current.getProgramField(i).setCard(null);
+            }
+        }
+        // add UTURN commandcard
+        player.getProgramField(0).setCard(new CommandCard(Command.UTURN));
+
+        //prepare the board and execute the registers with specific command and executes
+        board.setPhase(Phase.ACTIVATION);
+        board.setStep(0);
+        board.setCurrentPlayer(player);
+
+        gameController.executePrograms();
+
+        Assertions.assertEquals(Heading.SOUTH, player.getHeading()); //checks if player has made a UTURN
+        Assertions.assertTrue(board.getGameCounter() >= before + 6);
+        Assertions.assertEquals(Phase.PROGRAMMING, board.getPhase()); //checks if phase has returned to programming phase
     }
 
     /**
