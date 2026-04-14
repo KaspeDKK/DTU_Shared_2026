@@ -361,4 +361,10 @@ public class GameController {
         assert false;
     }
 
+    public void setWinner(Player player){
+        if (player != null) {
+            board.setWinner(player);
+        }
+    }
+
 }
