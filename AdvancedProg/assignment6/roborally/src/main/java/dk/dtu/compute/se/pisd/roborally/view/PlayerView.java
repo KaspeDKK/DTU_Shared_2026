@@ -57,12 +57,7 @@ public class PlayerView extends Tab implements ViewObserver {
     private CardFieldView[] programCardViews;
     private CardFieldView[] cardViews;
 
-    private VBox buttonPanel;
-
-    private Button finishButton;
-    private Button executeButton;
-    private Button stepButton;
-
+    private VBox sidePanel;
     private VBox playerInteractionPanel;
 
     private GameController gameController;
@@ -91,27 +86,15 @@ public class PlayerView extends Tab implements ViewObserver {
             }
         }
 
-        // FIXME the following buttons should actually not be on the tabs of the individual
-        //       players, but on the PlayersView (view for all players). This should be
-        //       refactored.
-
-
-        finishButton = new Button("Finish Programming");
-        finishButton.setOnAction( e -> gameController.finishProgrammingPhase());
-
-        executeButton = new Button("Execute Program");
-        executeButton.setOnAction( e-> gameController.executePrograms());
-
-        stepButton = new Button("Execute Current Register");
-        stepButton.setOnAction( e-> gameController.executeStep());
-
-        buttonPanel = new VBox(finishButton, executeButton, stepButton);
-        buttonPanel.setAlignment(Pos.CENTER_LEFT);
-        buttonPanel.setSpacing(3.0);
+        sidePanel = new VBox();
+        sidePanel.setAlignment(Pos.CENTER_LEFT);
+        sidePanel.setSpacing(3.0);
 
         playerInteractionPanel = new VBox();
         playerInteractionPanel.setAlignment(Pos.CENTER_LEFT);
         playerInteractionPanel.setSpacing(3.0);
+
+        programPane.add(sidePanel, Player.NO_REGISTERS, 0);
 
         cardsLabel = new Label("Command Cards");
         cardsPane = new GridPane();
@@ -135,13 +118,17 @@ public class PlayerView extends Tab implements ViewObserver {
         top.getChildren().add(checkpointLabel);
 
 
-        // TODO A6d: a label for the status of this player could be added here
+        // DONE A6d: a label for the status of this player could be added here
         //     for showing the number of achieved checkpoints (etc).
 
         if (player.board != null) {
             player.board.attach(this);
             update(player.board);
         }
+    }
+
+    public VBox getSidePanel() {
+        return sidePanel;
     }
 
     @Override
@@ -189,67 +176,38 @@ public class PlayerView extends Tab implements ViewObserver {
                 }
             }
 
-            if (player.board.getPhase() != Phase.PLAYER_INTERACTION) {
-                if (!programPane.getChildren().contains(buttonPanel)) {
-                    programPane.getChildren().remove(playerInteractionPanel);
-                    programPane.add(buttonPanel, Player.NO_REGISTERS, 0);
-                }
-                switch (player.board.getPhase()) {
-                    case INITIALISATION:
-                        finishButton.setDisable(true);
-                        // XXX just to make sure that there is a way for the player to get
-                        //     from the initialization phase to the programming phase somehow!
-                        executeButton.setDisable(false);
-                        stepButton.setDisable(true);
-                        break;
+            // DONE A6e: these buttons should be shown only when there is
+            // an interactive command card, and the buttons should represent
+            // the player's choices of the interactive command card. The
+            // following is just a mockup showing two options
 
-                    case PROGRAMMING:
-                        finishButton.setDisable(false);
-                        executeButton.setDisable(true);
-                        stepButton.setDisable(true);
-                        break;
+            if (player.board.getPhase() == Phase.PLAYER_INTERACTION) {
+                sidePanel.getChildren().clear();
+                sidePanel.getChildren().add(playerInteractionPanel);
 
-                    case ACTIVATION:
-                        finishButton.setDisable(true);
-                        executeButton.setDisable(false);
-                        stepButton.setDisable(false);
-                        break;
-
-                    case FINISHED:
-                        finishButton.setDisable(true);
-                        executeButton.setDisable(true);
-                        stepButton.setDisable(true);
-                        cardsPane.setDisable(true);
-                        programPane.setDisable(true);
-
-                    default:
-                        finishButton.setDisable(true);
-                        executeButton.setDisable(true);
-                        stepButton.setDisable(true);
-                }
-            } else {
-                if (!programPane.getChildren().contains(playerInteractionPanel)) {
-                    programPane.getChildren().remove(buttonPanel);
-                    programPane.add(playerInteractionPanel, Player.NO_REGISTERS, 0);
-                }
                 playerInteractionPanel.getChildren().clear();
 
                 if (player.board.getCurrentPlayer() == player) {
-                    // TODO A6e: these buttons should be shown only when there is
-                    //      an interactive command card, and the buttons should represent
-                    //      the player's choices of the interactive command card. The
-                    //      following is just a mockup showing two options
                     Button optionButton = new Button("Turn Right");
-                    optionButton.setOnAction( e -> gameController.executeOptionAndContinue(Command.RIGHT));
-                    optionButton.setDisable(false);
+                    optionButton.setOnAction(e -> gameController.executeOptionAndContinue(Command.RIGHT));
                     playerInteractionPanel.getChildren().add(optionButton);
 
                     optionButton = new Button("Turn Left");
-                    optionButton.setOnAction( e -> gameController.executeOptionAndContinue(Command.LEFT));
-                    optionButton.setDisable(false);
+                    optionButton.setOnAction(e -> gameController.executeOptionAndContinue(Command.LEFT));
                     playerInteractionPanel.getChildren().add(optionButton);
                 }
+            } else {
+                playerInteractionPanel.getChildren().clear();
+
+                if (player.board.getPhase() == Phase.FINISHED) {
+                    cardsPane.setDisable(true);
+                    programPane.setDisable(true);
+                } else {
+                    cardsPane.setDisable(false);
+                    programPane.setDisable(false);
+                }
             }
+
         }
     }
 

@@ -27,6 +27,13 @@ import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import javafx.scene.control.TabPane;
 
+import dk.dtu.compute.se.pisd.roborally.model.Phase;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.TabPane;
+import javafx.scene.layout.VBox;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * ...
  *
@@ -39,26 +46,91 @@ public class PlayersView extends TabPane implements ViewObserver {
 
     private PlayerView[] playerViews;
 
+    private TabPane tabPane;
+
+    private VBox buttonPanel;
+
+    private Button finishButton;
+    private Button executeButton;
+    private Button stepButton;
+
+    private GameController gameController;
+
     public PlayersView(GameController gameController) {
-        board = gameController.board;
+            board = gameController.board;
 
-        this.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
+            this.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 
-        playerViews = new PlayerView[board.getPlayersNumber()];
-        for (int i = 0; i < board.getPlayersNumber();  i++) {
-            playerViews[i] = new PlayerView(gameController, board.getPlayer(i));
-            this.getTabs().add(playerViews[i]);
-        }
-        board.attach(this);
-        update(board);
+            finishButton = new Button("Finish Programming");
+            finishButton.setOnAction(e -> gameController.finishProgrammingPhase());
+
+            executeButton = new Button("Execute Program");
+            executeButton.setOnAction(e -> gameController.executePrograms());
+
+            stepButton = new Button("Execute Current Register");
+            stepButton.setOnAction(e -> gameController.executeStep());
+
+            buttonPanel = new VBox(finishButton, executeButton, stepButton);
+            buttonPanel.setAlignment(Pos.CENTER_LEFT);
+            buttonPanel.setSpacing(3.0);
+
+            playerViews = new PlayerView[board.getPlayersNumber()];
+            for (int i = 0; i < board.getPlayersNumber(); i++) {
+                playerViews[i] = new PlayerView(gameController, board.getPlayer(i));
+                this.getTabs().add(playerViews[i]);
+            }
+
+            board.attach(this);
+            update(board);
     }
 
     @Override
     public void updateView(Subject subject) {
         if (subject == board) {
             Player current = board.getCurrentPlayer();
-            this.getSelectionModel().select(board.getPlayerNumber(current));
+            int currentIndex = board.getPlayerNumber(current);
+            this.getSelectionModel().select(currentIndex);
+
+            for (PlayerView playerView : playerViews) {
+                playerView.getSidePanel().getChildren().remove(buttonPanel);
+            }
+
+            if (board.getPhase() != Phase.PLAYER_INTERACTION) {
+                playerViews[currentIndex].getSidePanel().getChildren().clear();
+                playerViews[currentIndex].getSidePanel().getChildren().add(buttonPanel);
+
+                switch (board.getPhase()) {
+                    case INITIALISATION:
+                        finishButton.setDisable(true);
+                        executeButton.setDisable(false);
+                        stepButton.setDisable(true);
+                        break;
+
+                    case PROGRAMMING:
+                        finishButton.setDisable(false);
+                        executeButton.setDisable(true);
+                        stepButton.setDisable(true);
+                        break;
+
+                    case ACTIVATION:
+                        finishButton.setDisable(true);
+                        executeButton.setDisable(false);
+                        stepButton.setDisable(false);
+                        break;
+
+                    case FINISHED:
+                        finishButton.setDisable(true);
+                        executeButton.setDisable(true);
+                        stepButton.setDisable(true);
+                        break;
+
+                    default:
+                        finishButton.setDisable(true);
+                        executeButton.setDisable(true);
+                        stepButton.setDisable(true);
+                        break;
+                }
+            }
         }
     }
-
 }
