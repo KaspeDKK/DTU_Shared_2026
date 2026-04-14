@@ -274,6 +274,9 @@ public class GameController {
                 case UTURN:
                     this.uTurn(player);
                     break;
+                case LEFT_OR_RIGHT:
+                    this.leftOrRight(player);
+                    break;
                 default:
                     // DO NOTHING (for now)//
             }
@@ -327,6 +330,10 @@ public class GameController {
         uTurn(player);
         moveForward(player);
         uTurn(player);
+    }
+
+    public void leftOrRight(@NotNull Player player){
+        notImplemented();
     }
     /**
      * A method called when no corresponding controller operation is implemented yet.
