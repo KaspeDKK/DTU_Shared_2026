@@ -60,6 +60,8 @@ public class PlayerView extends Tab implements ViewObserver {
     private VBox sidePanel;
     private VBox playerInteractionPanel;
 
+    private VBox defaultSidePanelContent;
+
     private GameController gameController;
 
     public PlayerView(@NotNull GameController gameController, @NotNull Player player) {
@@ -131,6 +133,14 @@ public class PlayerView extends Tab implements ViewObserver {
         return sidePanel;
     }
 
+    public void setDefaultSidePanelContent(@NotNull VBox content) {
+        this.defaultSidePanelContent = content;
+        if (player.board.getPhase() != Phase.PLAYER_INTERACTION) {
+            sidePanel.getChildren().clear();
+            sidePanel.getChildren().add(defaultSidePanelContent);
+        }
+    }
+
     @Override
     public void updateView(Subject subject) {
         if (player.board.getPhase() == Phase.FINISHED){
@@ -198,6 +208,11 @@ public class PlayerView extends Tab implements ViewObserver {
                 }
             } else {
                 playerInteractionPanel.getChildren().clear();
+
+                if (defaultSidePanelContent != null) {
+                    sidePanel.getChildren().clear();
+                    sidePanel.getChildren().add(defaultSidePanelContent);
+                }
 
                 if (player.board.getPhase() == Phase.FINISHED) {
                     cardsPane.setDisable(true);

@@ -24,10 +24,8 @@ package dk.dtu.compute.se.pisd.roborally.view;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
-import javafx.scene.control.TabPane;
-
 import dk.dtu.compute.se.pisd.roborally.model.Phase;
+import dk.dtu.compute.se.pisd.roborally.model.Player;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TabPane;
@@ -40,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Ekkart Kindler, ekki@dtu.dk
  *
  */
-public class PlayersView extends TabPane implements ViewObserver {
+public class PlayersView extends VBox implements ViewObserver {
 
     private Board board;
 
@@ -48,37 +46,26 @@ public class PlayersView extends TabPane implements ViewObserver {
 
     private TabPane tabPane;
 
-    private VBox buttonPanel;
-
-    private Button finishButton;
-    private Button executeButton;
-    private Button stepButton;
-
-    private GameController gameController;
+    private PlayerButtonPanel[] buttonPanels;
 
     public PlayersView(GameController gameController) {
             board = gameController.board;
 
-            this.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
-
-            finishButton = new Button("Finish Programming");
-            finishButton.setOnAction(e -> gameController.finishProgrammingPhase());
-
-            executeButton = new Button("Execute Program");
-            executeButton.setOnAction(e -> gameController.executePrograms());
-
-            stepButton = new Button("Execute Current Register");
-            stepButton.setOnAction(e -> gameController.executeStep());
-
-            buttonPanel = new VBox(finishButton, executeButton, stepButton);
-            buttonPanel.setAlignment(Pos.CENTER_LEFT);
-            buttonPanel.setSpacing(3.0);
+            tabPane = new TabPane();
+            tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
             playerViews = new PlayerView[board.getPlayersNumber()];
+            buttonPanels = new PlayerButtonPanel[board.getPlayersNumber()];
             for (int i = 0; i < board.getPlayersNumber(); i++) {
                 playerViews[i] = new PlayerView(gameController, board.getPlayer(i));
-                this.getTabs().add(playerViews[i]);
+                tabPane.getTabs().add(playerViews[i]);
+
+                PlayerButtonPanel panel = new PlayerButtonPanel(gameController);
+                buttonPanels[i] = panel;
+                playerViews[i].setDefaultSidePanelContent(panel);
             }
+
+            this.getChildren().add(tabPane);
 
             board.attach(this);
             update(board);
@@ -89,47 +76,61 @@ public class PlayersView extends TabPane implements ViewObserver {
         if (subject == board) {
             Player current = board.getCurrentPlayer();
             int currentIndex = board.getPlayerNumber(current);
-            this.getSelectionModel().select(currentIndex);
+            tabPane.getSelectionModel().select(currentIndex);
 
-            for (PlayerView playerView : playerViews) {
-                playerView.getSidePanel().getChildren().remove(buttonPanel);
+            Phase phase = board.getPhase();
+
+            for (PlayerButtonPanel panel : buttonPanels) {
+                panel.updateForPhase(phase);
             }
+        }
+    }
 
-            if (board.getPhase() != Phase.PLAYER_INTERACTION) {
-                playerViews[currentIndex].getSidePanel().getChildren().clear();
-                playerViews[currentIndex].getSidePanel().getChildren().add(buttonPanel);
+    private static class PlayerButtonPanel extends VBox {
 
-                switch (board.getPhase()) {
-                    case INITIALISATION:
-                        finishButton.setDisable(true);
-                        executeButton.setDisable(false);
-                        stepButton.setDisable(true);
-                        break;
+        private final Button finishButton;
+        private final Button executeButton;
+        private final Button stepButton;
 
-                    case PROGRAMMING:
-                        finishButton.setDisable(false);
-                        executeButton.setDisable(true);
-                        stepButton.setDisable(true);
-                        break;
+        private PlayerButtonPanel(@NotNull GameController gameController) {
+            finishButton = new Button("Finish Programming");
+            finishButton.setOnAction(e -> gameController.finishProgrammingPhase());
 
-                    case ACTIVATION:
-                        finishButton.setDisable(true);
-                        executeButton.setDisable(false);
-                        stepButton.setDisable(false);
-                        break;
+            executeButton = new Button("Execute Program");
+            executeButton.setOnAction(e -> gameController.executePrograms());
 
-                    case FINISHED:
-                        finishButton.setDisable(true);
-                        executeButton.setDisable(true);
-                        stepButton.setDisable(true);
-                        break;
+            stepButton = new Button("Execute Current Register");
+            stepButton.setOnAction(e -> gameController.executeStep());
 
-                    default:
-                        finishButton.setDisable(true);
-                        executeButton.setDisable(true);
-                        stepButton.setDisable(true);
-                        break;
-                }
+            this.getChildren().addAll(finishButton, executeButton, stepButton);
+            this.setAlignment(Pos.CENTER_LEFT);
+            this.setSpacing(3.0);
+        }
+
+        private void updateForPhase(@NotNull Phase phase) {
+            switch (phase) {
+                case INITIALISATION:
+                    finishButton.setDisable(true);
+                    executeButton.setDisable(false);
+                    stepButton.setDisable(true);
+                    break;
+                case PROGRAMMING:
+                    finishButton.setDisable(false);
+                    executeButton.setDisable(true);
+                    stepButton.setDisable(true);
+                    break;
+                case ACTIVATION:
+                    finishButton.setDisable(true);
+                    executeButton.setDisable(false);
+                    stepButton.setDisable(false);
+                    break;
+                case PLAYER_INTERACTION:
+                case FINISHED:
+                default:
+                    finishButton.setDisable(true);
+                    executeButton.setDisable(true);
+                    stepButton.setDisable(true);
+                    break;
             }
         }
     }
