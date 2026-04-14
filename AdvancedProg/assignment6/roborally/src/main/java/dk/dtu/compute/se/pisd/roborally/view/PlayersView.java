@@ -73,6 +73,7 @@ public class PlayersView extends VBox implements ViewObserver {
             update(board);
     }
 
+
     @Override
     public void updateView(Subject subject) {
         if (subject == board) {
