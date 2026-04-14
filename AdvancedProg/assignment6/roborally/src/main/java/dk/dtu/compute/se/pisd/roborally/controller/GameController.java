@@ -199,11 +199,18 @@ public class GameController {
             if (step >= 0 && step < Player.NO_REGISTERS) {
                 CommandCard card = currentPlayer.getProgramField(step).getCard();
                 if (card != null) {
-                    Command command = card.command;
+                    Command command = card.command; //needs to be replaced
                     if (command.isInteractive()){
-                        board.setPhase(Phase.PLAYER_INTERACTION);
+                        Command selectedOption = board.getSelectedOption();
+                        if (selectedOption == null) {
+                            board.setPhase(Phase.PLAYER_INTERACTION);
+                            return;
+                        } else {
+                            board.setSelectedOption(null);
+                            executeCommand(currentPlayer, selectedOption);
+                        }
                     } else {
-                        executeCommand(currentPlayer, command);
+                        executeCommand(currentPlayer, command); //needs to be replaced
                     }
                 }
 
@@ -246,12 +253,9 @@ public class GameController {
 
 
     public void executeOptionAndContinue(Command option) {
-
-        // call execute command with direction
-        executeCommand(board.getCurrentPlayer(), option);
-
-        // set phase back
-        board.setPhase(Phase.ACTIVATION);
+       board.setSelectedOption(option);
+       board.setPhase(Phase.ACTIVATION);
+       continuePrograms();
 
     }
 

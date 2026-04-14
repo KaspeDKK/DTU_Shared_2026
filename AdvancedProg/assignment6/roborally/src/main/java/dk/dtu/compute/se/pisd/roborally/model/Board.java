@@ -62,6 +62,8 @@ public class Board extends Subject {
 
     private int moveCounter;
 
+    private Command selectedOption;
+
 
     public Board(int width, int height, @NotNull String boardName) {
         this.boardName = boardName;
@@ -183,6 +185,15 @@ public class Board extends Subject {
         } else {
             return -1;
         }
+    }
+
+    public void setSelectedOption(Command selectedOption) {
+        this.selectedOption = selectedOption;
+        notifyChange();
+    }
+
+    public Command getSelectedOption() {
+        return selectedOption;
     }
 
     /**
