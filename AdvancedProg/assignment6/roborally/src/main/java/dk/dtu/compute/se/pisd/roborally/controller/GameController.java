@@ -128,23 +128,25 @@ public class GameController {
         }
     }
 
-    // self explanatory
+    //self explanatory
     private CommandCard generateRandomCommandCard() {
         Command[] commands = Command.values();
         int random = (int) (Math.random() * commands.length);
         return new CommandCard(commands[random]);
     }
 
-    // XXX A6c
+    /**
+     * This method initiates the ACTIVATION PHASE and is called through the GUI.
+     */
     public void finishProgrammingPhase() {
         makeProgramFieldsInvisible();
         makeProgramFieldsVisible(0);
-        board.setPhase(Phase.ACTIVATION);
+        board.setPhase(Phase.ACTIVATION); //initiates activation phase.
         board.setCurrentPlayer(board.getPlayer(0));
-        board.setStep(0);
+        board.setStep(0); //reset steps
     }
 
-    // XXX A6c
+    // Enables programming fields - self-explanatory.
     private void makeProgramFieldsVisible(int register) {
         if (register >= 0 && register < Player.NO_REGISTERS) {
             for (int i = 0; i < board.getPlayersNumber(); i++) {
@@ -155,7 +157,7 @@ public class GameController {
         }
     }
 
-    // XXX A6c
+    //Disables programming fields - self-explanatory.
     private void makeProgramFieldsInvisible() {
         for (int i = 0; i < board.getPlayersNumber(); i++) {
             Player player = board.getPlayer(i);
@@ -166,19 +168,25 @@ public class GameController {
         }
     }
 
-    // XXX A6c
+    /**
+     * disables step-mode, and then executes all the commands in the given order.
+     */
     public void executePrograms() {
         board.setStepMode(false);
         continuePrograms();
     }
 
-    // XXX A6c
+    /**
+     * enables step-mode, and then executes the command step-wise.
+     */
     public void executeStep() {
         board.setStepMode(true);
         continuePrograms();
     }
 
-    // XXX A6c
+    /**
+     * This method is what seperates the step-modes,
+     */
     private void continuePrograms() {
         do {
             executeNextStep();
@@ -187,7 +195,7 @@ public class GameController {
 
     /**
      * This methods executes the next step in the correct order from the cards played by the players -
-     * switching between them. It is the method that simulates the "moving phase". The method also checks if there are
+     * switching between them. It is the method that simulates the "ACTUVATION phase". The method also checks if there are
      * any FieldActions in the current space.
      *
      * The method also instantiates the PLAYER_INTERACTION phase, based on whether or not the
@@ -274,7 +282,7 @@ public class GameController {
     private void executeCommand(@NotNull Player player, Command command) {
         board.setGameCounter(board.getGameCounter() + 1);
         if (player.board == board && command != null) {
-            switch (command) { //goes through each command and calls the movement respectively. 
+            switch (command) { //goes through each command and calls the movement respectively.
                 case FORWARD:
                     this.moveForward(player);
                     break;
