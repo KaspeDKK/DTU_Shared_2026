@@ -155,11 +155,16 @@ public class PlayerView extends Tab implements ViewObserver {
             cardsPane.setDisable(true);
             programPane.setDisable(true);
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Game Over");
-            alert.setHeaderText("Winner");
-            alert.setContentText(player.board.getWinner().getName() + " won the game!");
-            alert.showAndWait();
+            //Show the modal, but only once - hence the boolean
+            if(!player.board.getGameOverMessageIsShown()) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Game Over");
+                alert.setHeaderText("Winner");
+                alert.setContentText(player.board.getWinner().getName() + " won the game!");
+                alert.showAndWait();
+
+                player.board.setGameOverMessageIsShown(true); //Sets message shown to true. 
+            }
 
             player.board.setWinner(null);
             return;

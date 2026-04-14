@@ -68,6 +68,10 @@ public class Board extends Subject {
 
     private Boolean gameOver = false;
 
+    //needs to be here, since player view shows something for each player.
+    private Boolean gameOverMessageIsShown = false;
+
+
 
     public Board(int width, int height, @NotNull String boardName) {
         this.boardName = boardName;
@@ -245,6 +249,14 @@ public class Board extends Subject {
 
     public Player getWinner(){
         return this.winner;
+    }
+
+    public void setGameOverMessageIsShown(Boolean bool){
+        this.gameOverMessageIsShown = bool;
+    }
+
+    public Boolean getGameOverMessageIsShown(){
+        return gameOverMessageIsShown;
     }
 
     public Boolean getIsGameOver(){
