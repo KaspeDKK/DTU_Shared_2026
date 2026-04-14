@@ -88,6 +88,7 @@ class GameControllerTest {
         Assertions.assertEquals(2, player1.getCheckpoint(), "Player checkpoint attribute is: " + player1.getCheckpoint() +
                 " should be 2");
     }
+    
     @Test
     void testMovement(){
         Board board = gameController.board;

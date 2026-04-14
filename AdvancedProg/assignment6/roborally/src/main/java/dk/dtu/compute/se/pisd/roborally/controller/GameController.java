@@ -46,20 +46,21 @@ public class GameController {
      * This method moves the current player to a non-occupied space, and is triggered by a user
      * clicking on set space. This method is not a part of the game, and should be removed.
      *
+     * @param space the space to which the current player should move
      * @author Tokemeister, Friisma, KaspeDKK, Simon, Thomas, Rasbas
      *
-     * @param space the space to which the current player should move
-     *
      */
-    public void moveCurrentPlayerToSpace(@NotNull Space space)  {
+    public void moveCurrentPlayerToSpace(@NotNull Space space) {
 
-        if (space.getPlayer() != null) throw new IllegalStateException("Space is already occupied. MISTER!"); // defensive programming
-        if (board.getCurrentPlayer() == null) throw new IllegalStateException("current player is null?!"); // very defensive programming
+        if (space.getPlayer() != null)
+            throw new IllegalStateException("Space is already occupied. MISTER!"); // defensive programming
+        if (board.getCurrentPlayer() == null)
+            throw new IllegalStateException("current player is null?!"); // very defensive programming
 
         Player curr = board.getCurrentPlayer(); // get player
 
         int count = board.getGameCounter(); // get count locally
-        
+
         curr.setSpace(space); // set current player to assigned space
         count++; // increment local
         int next = (board.getPlayerNumber(curr) + 1) % board.getPlayersNumber(); // get next player with wraparound using %
@@ -72,24 +73,24 @@ public class GameController {
 
     /**
      * Moves a player recursively according to the rules of Roborally.
-     *
+     * <p>
      * moveToSpace uses our implementation of the getNeighbour to throw an error if the move is not legal.
      * I.E the destination is either behind a wall or out of bounds.
      * if the move is illegal, we throw ImpossibleMoveException.
      *
      * @param nextSpace the wanted space.
-     * @param player initial mover (can also be a pusher).
-     * @param heading initial moving direction - doesnt change.
+     * @param player    initial mover (can also be a pusher).
+     * @param heading   initial moving direction - doesnt change.
      *
      */
-    public void moveToSpace(@NotNull Space nextSpace,@NotNull Player player,@NotNull Heading heading) throws ImpossibleMoveException  {
+    public void moveToSpace(@NotNull Space nextSpace, @NotNull Player player, @NotNull Heading heading) throws ImpossibleMoveException {
         try {
             if (board.getNeighbour(player.getSpace(), heading) == null) {
                 throw new ImpossibleMoveException("illegal move");
             } else {
                 if (nextSpace.getPlayer() != null) {
                     Space nextNextSpace = board.getNeighbour(nextSpace, heading);
-                    if (nextNextSpace == null){
+                    if (nextNextSpace == null) {
                         throw new ImpossibleMoveException("Illegal move!");
                     }
                     Player neighborPlayer = nextSpace.getPlayer();
@@ -101,7 +102,7 @@ public class GameController {
         } catch (ImpossibleMoveException e) {
             System.err.println(e); //print custom message
             e.printStackTrace(); //print stacktrace
-            }
+        }
     }
 
     // XXX A6c
@@ -178,7 +179,7 @@ public class GameController {
     }
 
     // XXX A6c
-    private void continuePrograms(){
+    private void continuePrograms() {
         do {
             executeNextStep();
         } while (board.getPhase() == Phase.ACTIVATION && !board.isStepMode());
@@ -200,7 +201,7 @@ public class GameController {
                 CommandCard card = currentPlayer.getProgramField(step).getCard();
                 if (card != null) {
                     Command command = card.command; //needs to be replaced
-                    if (command.isInteractive()){
+                    if (command.isInteractive()) {
                         Command selectedOption = board.getSelectedOption();
                         if (selectedOption == null) {
                             board.setPhase(Phase.PLAYER_INTERACTION);
@@ -253,56 +254,46 @@ public class GameController {
 
 
     public void executeOptionAndContinue(Command option) {
-       board.setSelectedOption(option);
-       board.setPhase(Phase.ACTIVATION);
-       continuePrograms();
+        board.setSelectedOption(option);
+        board.setPhase(Phase.ACTIVATION);
+        continuePrograms();
 
     }
 
     /**
      * This methods executes the commands from the cards played by the player.
      *
-     * @param player is the current player
+     * @param player  is the current player
      * @param command is the commmand from the card played by the player.
-     *
      * @author Tokemeister, Friisma, KaspeDKK, Simon, Thomas, Rasbas
      */
     private void executeCommand(@NotNull Player player, Command command) {
-        board.setGameCounter(board.getGameCounter()+1);
+        board.setGameCounter(board.getGameCounter() + 1);
         if (player != null && player.board == board && command != null) {
             // XXX This is a very simplistic way of dealing with some basic cards and
             //     their execution. This should eventually be done in a more elegant way
             //     (this concerns the way cards are modelled as well as the way they are executed).
-            if (command.isInteractive()){
-
-                board.setPhase(Phase.PLAYER_INTERACTION);
-
-            } else {
-                switch (command) {
-                    case FORWARD:
-                        this.moveForward(player);
-                        break;
-                    case RIGHT:
-                        this.turnRight(player);
-                        break;
-                    case LEFT:
-                        this.turnLeft(player);
-                        break;
-                    case FAST_FORWARD:
-                        this.fastForward(player);
-                        break;
-                    case BACK:
-                        this.back(player);
-                        break;
-                    case UTURN:
-                        this.uTurn(player);
-                        break;
-                    case LEFT_OR_RIGHT:
-                        //this.leftOrRight(player);
-                        break;
-                    default:
-                        // DO NOTHING (for now)//
-                }
+            switch (command) {
+                case FORWARD:
+                    this.moveForward(player);
+                    break;
+                case RIGHT:
+                    this.turnRight(player);
+                    break;
+                case LEFT:
+                    this.turnLeft(player);
+                    break;
+                case FAST_FORWARD:
+                    this.fastForward(player);
+                    break;
+                case BACK:
+                    this.back(player);
+                    break;
+                case UTURN:
+                    this.uTurn(player);
+                    break;
+                default:
+                    // DO NOTHING (for now)//
             }
         }
     }
@@ -316,7 +307,7 @@ public class GameController {
         Space currentSpace = player.getSpace(); // current position
         Heading heading = player.getHeading(); // player heading
 
-        Space nextSpace = board.getNeighbour(currentSpace,heading); // the space the player wants to move into
+        Space nextSpace = board.getNeighbour(currentSpace, heading); // the space the player wants to move into
         if (nextSpace != null) {
             try {
                 moveToSpace(nextSpace, player, heading);// sets the new position
@@ -346,19 +337,21 @@ public class GameController {
 
     // DONE A6c: Add two methods for the new commands BACK and UTURN here.
 
-    public void uTurn(@NotNull Player player){
+    public void uTurn(@NotNull Player player) {
         turnLeft(player);
         turnLeft(player);
     }
+
     public void back(@NotNull Player player) {
         uTurn(player);
         moveForward(player);
         uTurn(player);
     }
 
-    public void leftOrRight(@NotNull Player player){
+    public void leftOrRight(@NotNull Player player) {
 
     }
+
     /**
      * A method called when no corresponding controller operation is implemented yet.
      * This should eventually be removed.
