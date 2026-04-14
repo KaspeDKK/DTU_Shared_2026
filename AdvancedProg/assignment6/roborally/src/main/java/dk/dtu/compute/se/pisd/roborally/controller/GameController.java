@@ -105,7 +105,12 @@ public class GameController {
         }
     }
 
-    // XXX A6c
+    /**
+     * this method enables the PROGRAMMING phase, "resetting" the games activation phase until it
+     * has been called again.
+     *
+     * It also enables movement of the cards - "or programming"
+     */
     public void startProgrammingPhase() {
         board.setPhase(Phase.PROGRAMMING);
         board.setCurrentPlayer(board.getPlayer(0));
@@ -128,7 +133,11 @@ public class GameController {
         }
     }
 
-    //self explanatory
+    /**
+     * Makes a random card distributor - simulates the shuffled playing cards
+     *
+     * @return CommandCard with random commands
+     */
     private CommandCard generateRandomCommandCard() {
         Command[] commands = Command.values();
         int random = (int) (Math.random() * commands.length);
@@ -146,7 +155,12 @@ public class GameController {
         board.setStep(0); //reset steps
     }
 
-    // Enables programming fields - self-explanatory.
+    /**
+     * Makes the programming fields visible to the player.
+     * Notifies the observer through the setVisible command.
+     *
+     * @param register place for inserting commands
+     */
     private void makeProgramFieldsVisible(int register) {
         if (register >= 0 && register < Player.NO_REGISTERS) {
             for (int i = 0; i < board.getPlayersNumber(); i++) {
@@ -157,7 +171,10 @@ public class GameController {
         }
     }
 
-    //Disables programming fields - self-explanatory.
+    /**
+     * Makes the programming fields invisible to the player.
+     * Notifies the observer through the setVisible command.
+     */
     private void makeProgramFieldsInvisible() {
         for (int i = 0; i < board.getPlayersNumber(); i++) {
             Player player = board.getPlayer(i);
@@ -265,7 +282,11 @@ public class GameController {
         }
     }
 
-
+    /**
+     * sets the option from the GUI to the logic, and re-enters the activation phase.
+     *
+     * @param option the interactive commands holds options
+     */
     public void executeOptionAndContinue(Command option) {
         board.setSelectedOption(option); // sets the given commands "option" to the option that the player chose
         board.setPhase(Phase.ACTIVATION);
@@ -276,7 +297,7 @@ public class GameController {
      * This methods executes the commands from the cards played by the player.
      *
      * @param player  is the current player
-     * @param command is the commmand from the card played by the player.
+     * @param command is the command from the card played by the player.
      * @author Tokemeister, Friisma, KaspeDKK, Simon, Thomas, Rasbas
      */
     private void executeCommand(@NotNull Player player, Command command) {
@@ -326,27 +347,42 @@ public class GameController {
         }
     }
 
-
+    /**
+     * moves forward twice using the moveForward method
+     */
     public void fastForward(@NotNull Player player) {
         moveForward(player);
         moveForward(player);
     }
 
+    /**
+     * turns the given player right
+     */
     public void turnRight(@NotNull Player player) {
         Heading heading = player.getHeading();
         player.setHeading(heading.next()); //next = +90 deg.
     }
 
+    /**
+     * turns the given player left
+     */
     public void turnLeft(@NotNull Player player) {
         Heading heading = player.getHeading();
         player.setHeading(heading.prev()); //prev = -90 deg.
     }
 
+    /**
+     * turns the given player around (u-turn)
+     */
     public void uTurn(@NotNull Player player) {
         turnLeft(player);
         turnLeft(player); // 90+90 = 180 degrees
     }
 
+    /**
+     * turns the given player around (u-turn)
+     * moves "forward", and then moves again - giving the illusion of moving backwards.
+     */
     public void back(@NotNull Player player) {
         uTurn(player);
         moveForward(player);
@@ -354,7 +390,8 @@ public class GameController {
     }
 
     /**
-     * Sets game winner in the model, and changes phase to finished
+     * Sets game winner in the model, and changes phase to finished.
+     * winner is null until the game is finished. 
      *
      * @param player
      */
