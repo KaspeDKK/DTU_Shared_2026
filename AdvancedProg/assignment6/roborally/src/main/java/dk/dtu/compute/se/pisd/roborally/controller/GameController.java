@@ -239,7 +239,9 @@ public class GameController {
                                 }
                             }
                         }
-                        startProgrammingPhase();
+                        if (board.getPhase() != Phase.FINISHED) { //ENDS GAME
+                            startProgrammingPhase();
+                        }
                     }
                 }
             } else {
@@ -348,22 +350,10 @@ public class GameController {
         uTurn(player);
     }
 
-    public void leftOrRight(@NotNull Player player) {
-
-    }
-
-    /**
-     * A method called when no corresponding controller operation is implemented yet.
-     * This should eventually be removed.
-     */
-    public void notImplemented() {
-        // XXX just for now to indicate that the actual method is not yet implemented
-        assert false;
-    }
-
     public void setWinner(Player player){
         if (player != null) {
             board.setWinner(player);
+            board.setPhase(Phase.FINISHED);
         }
     }
 

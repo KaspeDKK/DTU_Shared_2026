@@ -148,12 +148,6 @@ public class PlayerView extends Tab implements ViewObserver {
     public void updateView(Subject subject) {
         if (player.board.getIsGameOver()){
 
-            //Disable the following when the game is over:
-            finishButton.setDisable(true);
-            executeButton.setDisable(true);
-            stepButton.setDisable(true);
-            cardsPane.setDisable(true);
-            programPane.setDisable(true);
 
             //Show the modal, but only once - hence the boolean
             if(!player.board.getGameOverMessageIsShown()) {
@@ -163,7 +157,7 @@ public class PlayerView extends Tab implements ViewObserver {
                 alert.setContentText(player.board.getWinner().getName() + " won the game!");
                 alert.showAndWait();
 
-                player.board.setGameOverMessageIsShown(true); //Sets message shown to true. 
+                player.board.setGameOverMessageIsShown(true); //Sets message shown to true.
             }
 
             player.board.setWinner(null);
@@ -220,6 +214,13 @@ public class PlayerView extends Tab implements ViewObserver {
                         executeButton.setDisable(false);
                         stepButton.setDisable(false);
                         break;
+
+                    case FINISHED:
+                        finishButton.setDisable(true);
+                        executeButton.setDisable(true);
+                        stepButton.setDisable(true);
+                        cardsPane.setDisable(true);
+                        programPane.setDisable(true);
 
                     default:
                         finishButton.setDisable(true);

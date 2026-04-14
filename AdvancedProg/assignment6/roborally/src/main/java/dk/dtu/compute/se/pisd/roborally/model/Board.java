@@ -271,12 +271,12 @@ public class Board extends Subject {
         // status of the game
 
         if (this.gameOver && this.winner != null){
-            return "Player: " + this.winner.getName() + " has won the game!! ";
+            return "Player: " + this.winner.getName() + " has won the game!! |  Phase: " + getPhase();
         }
 
         // DONE A6c: changed the status so that it shows the phase, the current player, and the current register
         //     and you can remove the move count status message message and the corresponding counter again
-        // TODO A6e: add something to the status message, when a player has won the game
+
         return "Player = " + getCurrentPlayer().getName() + "  |  Phase: " + getPhase();
     }
 
