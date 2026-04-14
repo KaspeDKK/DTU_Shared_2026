@@ -60,7 +60,6 @@ public class AppController implements Observer {
         this.roboRally = roboRally;
     }
 
-    // TODO A6b comments on added code
     public void newGame() {
         //creates javaFX choice dialog for number of players
         ChoiceDialog<Integer> dialog1 = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
@@ -90,7 +89,7 @@ public class AppController implements Observer {
             Board board = BoardFactory.getInstance().createBoard(boardName);
 
             gameController = new GameController(board);
-            //gets number of players and adds them to the game 
+            //gets number of players and adds them to the game
             int no = result1.get();
             for (int i = 0; i < no; i++) {
                 Player player = new Player(board, PLAYER_COLORS.get(i), "Player " + (i + 1));

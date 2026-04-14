@@ -44,7 +44,6 @@ public class Checkpoint extends FieldAction {
 
     public void setIsFinal(boolean isFinal){this.isFinal = isFinal;}
 
-    public boolean getIsFinal(){return this.isFinal;}
 
 }
 
