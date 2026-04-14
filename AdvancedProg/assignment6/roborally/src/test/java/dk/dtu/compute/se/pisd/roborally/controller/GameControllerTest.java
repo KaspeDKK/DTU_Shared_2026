@@ -399,21 +399,7 @@ class GameControllerTest {
             }
         }
     }
-
-
-    /*
-    @Test
-    void moveForward() {
-        Board board = gameController.board;
-        Player current = board.getCurrentPlayer();
-
-        gameController.moveForward(current);
-
-        Assertions.assertEquals(current, board.getSpace(0, 1).getPlayer(), "Player " + current.getName() + " should beSpace (0,1)!");
-        Assertions.assertEquals(Heading.SOUTH, current.getHeading(), "Player 0 should be heading SOUTH!");
-        Assertions.assertNull(board.getSpace(0, 0).getPlayer(), "Space (0,0) should be empty!");
-    }
-    */
+    
 
     // TODO and there should be more tests added for the different assignments eventually
 
