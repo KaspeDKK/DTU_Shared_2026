@@ -75,7 +75,7 @@ public class GameController {
      * Moves a player recursively according to the rules of Roborally.
      * <p>
      * moveToSpace uses our implementation of the getNeighbour to throw an error if the move is not legal.
-     * I.E the destination is either behind a wall or out of bounds.
+     * I.E the destination is behind a wall.
      * if the move is illegal, we throw ImpossibleMoveException.
      *
      * @param nextSpace the wanted space.
@@ -85,18 +85,18 @@ public class GameController {
      */
     public void moveToSpace(@NotNull Space nextSpace, @NotNull Player player, @NotNull Heading heading) throws ImpossibleMoveException {
         try {
-            if (board.getNeighbour(player.getSpace(), heading) == null) {
+            if (board.getNeighbour(player.getSpace(), heading) == null) { //getNeighbour checks for walls - returns null if no neighbour
                 throw new ImpossibleMoveException("illegal move");
             } else {
                 if (nextSpace.getPlayer() != null) {
-                    Space nextNextSpace = board.getNeighbour(nextSpace, heading);
+                    Space nextNextSpace = board.getNeighbour(nextSpace, heading); //the space after the next space
                     if (nextNextSpace == null) {
                         throw new ImpossibleMoveException("Illegal move!");
                     }
                     Player neighborPlayer = nextSpace.getPlayer();
-                    moveToSpace(nextNextSpace, neighborPlayer, heading);
+                    moveToSpace(nextNextSpace, neighborPlayer, heading); //recursive case - the moveToSpace is called again
                 }
-                player.setSpace(nextSpace);
+                player.setSpace(nextSpace); //standard case - nextSpace is just free.
 
             }
         } catch (ImpossibleMoveException e) {
@@ -190,27 +190,30 @@ public class GameController {
      * switching between them. It is the method that simulates the "moving phase". The method also checks if there are
      * any FieldActions in the current space.
      *
+     * The method also instantiates the PLAYER_INTERACTION phase, based on whether or not the
+     * obtained card is interactive.
+     *
      * @author Tokemeister, Friisma, KaspeDKK, Simon, Thomas, Rasbas
      *
      */
     private void executeNextStep() {
         Player currentPlayer = board.getCurrentPlayer();
-        if (board.getPhase() == Phase.ACTIVATION && currentPlayer != null) {
-            int step = board.getStep();
-            if (step >= 0 && step < Player.NO_REGISTERS) {
-                CommandCard card = currentPlayer.getProgramField(step).getCard();
+        if (board.getPhase() == Phase.ACTIVATION && currentPlayer != null) { //Guard for activation phase - should not happen
+            int step = board.getStep(); //represents registers.
+            if (step >= 0 && step < Player.NO_REGISTERS) { // Guard for OB
+                CommandCard card = currentPlayer.getProgramField(step).getCard(); //obtain card
                 if (card != null) {
                     Command command = card.command;
-                    if (command.isInteractive()) {
+                    if (command.isInteractive()) { //case of interactive card
                         Command selectedOption = board.getSelectedOption();
                         if (selectedOption == null) {
-                            board.setPhase(Phase.PLAYER_INTERACTION);
+                            board.setPhase(Phase.PLAYER_INTERACTION); //shifts to player interactive phase.
                             return;
                         } else {
                             board.setSelectedOption(null);
                             executeCommand(currentPlayer, selectedOption);
                         }
-                    } else {
+                    } else { //case of a non-interactive card
                         executeCommand(currentPlayer, command);
                     }
                 }
@@ -219,8 +222,8 @@ public class GameController {
                 if (nextPlayerNumber < board.getPlayersNumber()) {
                     board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
                 } else {
-                    step++;
-                    if (step < Player.NO_REGISTERS) {
+                    step++; //increment step.
+                    if (step < Player.NO_REGISTERS) { //case of more steps.
                         makeProgramFieldsVisible(step);
                         board.setStep(step);
                         board.setCurrentPlayer(board.getPlayer(0));
@@ -229,17 +232,17 @@ public class GameController {
                             Player player = board.getPlayer(i);
                             Space playerSpace = player.getSpace();
 
-                            if (playerSpace != null && playerSpace.getActions() != null) {
+                            if (playerSpace != null && playerSpace.getActions() != null) { //if there are any fieldActions on the given space.
                                 List<FieldAction> actions = playerSpace.getActions();
 
-                                for (FieldAction action : actions) {
+                                for (FieldAction action : actions) { //execute implementation of fieldAction
                                     if (action.doAction(this, playerSpace)) {
                                         executeNextStep(); // keeps repeating until its false and no more valid field actions exist
                                     }
                                 }
                             }
                         }
-                        if (board.getPhase() != Phase.FINISHED) { //ENDS GAME
+                        if (board.getPhase() != Phase.FINISHED) { //This guard ensures the game cant continue when we change the phase to finished.
                             startProgrammingPhase();
                         }
                     }
@@ -259,7 +262,6 @@ public class GameController {
         board.setSelectedOption(option); // sets the given commands "option" to the option that the player chose
         board.setPhase(Phase.ACTIVATION);
         continuePrograms();
-
     }
 
     /**
@@ -272,10 +274,7 @@ public class GameController {
     private void executeCommand(@NotNull Player player, Command command) {
         board.setGameCounter(board.getGameCounter() + 1);
         if (player.board == board && command != null) {
-            // XXX This is a very simplistic way of dealing with some basic cards and
-            //     their execution. This should eventually be done in a more elegant way
-            //     (this concerns the way cards are modeled as well as the way they are executed).
-            switch (command) {
+            switch (command) { //goes through each command and calls the movement respectively. 
                 case FORWARD:
                     this.moveForward(player);
                     break;
@@ -295,13 +294,13 @@ public class GameController {
                     this.uTurn(player);
                     break;
                 default:
-                    // DO NOTHING (for now)//
             }
         }
     }
 
     /**
      * Moves a player forward according to the MoveToSpace implementation.
+     * The other movement commands are built on the moveForward
      *
      * @param player - current player.
      */
@@ -319,25 +318,21 @@ public class GameController {
         }
     }
 
-    // DONE A6c: implement this method
+
     public void fastForward(@NotNull Player player) {
         moveForward(player);
         moveForward(player);
     }
 
-    // DONE A6c: implement this method
     public void turnRight(@NotNull Player player) {
         Heading heading = player.getHeading();
-        player.setHeading(heading.next());
+        player.setHeading(heading.next()); //next = +90 deg.
     }
 
-    // DONE A6c: implement this method
     public void turnLeft(@NotNull Player player) {
         Heading heading = player.getHeading();
-        player.setHeading(heading.prev());
+        player.setHeading(heading.prev()); //prev = -90 deg.
     }
-
-    // DONE A6c: Add two methods for the new commands BACK and UTURN here.
 
     public void uTurn(@NotNull Player player) {
         turnLeft(player);
@@ -350,10 +345,15 @@ public class GameController {
         uTurn(player);
     }
 
+    /**
+     * Sets game winner in the model, and changes phase to finished
+     *
+     * @param player
+     */
     public void setWinner(Player player){
         if (player != null) {
-            board.setWinner(player);
-            board.setPhase(Phase.FINISHED);
+            board.setWinner(player); // points to logic / board
+            board.setPhase(Phase.FINISHED); //changes phase
         }
     }
 

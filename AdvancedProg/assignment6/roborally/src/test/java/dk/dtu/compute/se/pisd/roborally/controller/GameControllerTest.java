@@ -213,9 +213,39 @@ class GameControllerTest {
     }
 
     @Test
+    void testFinishProgrammingPhase() {
+
+
+        Board board = gameController.board; // get board
+
+        for (int i = 0; i < board.getPlayersNumber(); i++) {
+
+            Player player = board.getPlayer(i); // get player i
+            for (int j = 0; j < Player.NO_REGISTERS; j++) {
+                player.getProgramField(j).setVisible(true); // all registers visible for all players
+            }
+
+        }
+
+        gameController.finishProgrammingPhase(); // end programming phase
+
+        for (int i = 0; i < board.getPlayersNumber(); i++) {
+
+            Player player = board.getPlayer(i); // get player i
+            Assertions.assertTrue(player.getProgramField(0).isVisible()); // register 0 is visible
+
+            for (int j = 1; j < Player.NO_REGISTERS; j++) {
+                Assertions.assertFalse(player.getProgramField(j).isVisible()); // registers 1 to end are hidden
+            }
+
+        }
+    }
+
+    @Test
     void testPhaseShifting(){
         //TODO implement
     }
+
 
     @Test
     void test_executePrograms_nonInteractiveCommands(){
