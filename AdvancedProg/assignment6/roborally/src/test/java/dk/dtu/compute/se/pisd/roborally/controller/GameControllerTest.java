@@ -1,5 +1,6 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
+import com.mysql.cj.exceptions.AssertionFailedException;
 import dk.dtu.compute.se.pisd.roborally.exceptions.ImpossibleMoveException;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.junit.jupiter.api.*;
@@ -32,6 +33,7 @@ class GameControllerTest {
     /**
      * Test for Assignment 6a (can be deleted later once Assignment 6a was shown to the teacher)
      */
+    /*
     @Test
     void testV1() {
         Board board = gameController.board;
@@ -44,7 +46,7 @@ class GameControllerTest {
         Assertions.assertNull(board.getSpace(0, 0).getPlayer(), "Space (0,0) should be empty!");
         Assertions.assertEquals(player2, board.getCurrentPlayer(), "Current player should be " + player2.getName() +"!");
     }
-
+    */
     @Test
     void testCheckpoint() throws ImpossibleMoveException {
         Board board = gameController.board;
@@ -116,7 +118,6 @@ class GameControllerTest {
                 " should be at: [" + end.y + "," + end.x + "]");
         Assertions.assertEquals(player1.getSpace().x, end.x, "player is at: [" + player1.getSpace().y + "," + player1.getSpace().y + "]" +
                 " should be at: [" + end.y + "," + end.x + "]");
-
 
     }
 

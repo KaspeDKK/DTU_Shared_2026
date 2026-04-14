@@ -49,6 +49,7 @@ public class GameController {
      * @author Tokemeister, Friisma, KaspeDKK, Simon, Thomas, Rasbas
      *
      */
+    /*
     public void moveCurrentPlayerToSpace(@NotNull Space space) {
 
         if (space.getPlayer() != null)
@@ -68,6 +69,8 @@ public class GameController {
         board.setGameCounter(count); // increment the actual count.
 
     }
+
+     */
 
 
     /**
