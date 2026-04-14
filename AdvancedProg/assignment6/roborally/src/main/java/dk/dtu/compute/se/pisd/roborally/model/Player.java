@@ -48,7 +48,6 @@ public class Player extends Subject {
     private Heading heading = SOUTH;
 
     private int checkpoint;
-    public List<Integer> visited;
 
     private CommandCardField[] program;
     private CommandCardField[] cards;
