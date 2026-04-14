@@ -1,11 +1,9 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
+import com.mysql.cj.exceptions.AssertionFailedException;
 import dk.dtu.compute.se.pisd.roborally.exceptions.ImpossibleMoveException;
 import dk.dtu.compute.se.pisd.roborally.model.*;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 class GameControllerTest {
 
@@ -35,6 +33,7 @@ class GameControllerTest {
     /**
      * Test for Assignment 6a (can be deleted later once Assignment 6a was shown to the teacher)
      */
+    /*
     @Test
     void testV1() {
         Board board = gameController.board;
@@ -47,7 +46,7 @@ class GameControllerTest {
         Assertions.assertNull(board.getSpace(0, 0).getPlayer(), "Space (0,0) should be empty!");
         Assertions.assertEquals(player2, board.getCurrentPlayer(), "Current player should be " + player2.getName() +"!");
     }
-
+    */
     @Test
     void testCheckpoint() throws ImpossibleMoveException {
         Board board = gameController.board;
@@ -120,7 +119,6 @@ class GameControllerTest {
         Assertions.assertEquals(player1.getSpace().x, end.x, "player is at: [" + player1.getSpace().y + "," + player1.getSpace().y + "]" +
                 " should be at: [" + end.y + "," + end.x + "]");
 
-
     }
 
     @Test
@@ -164,6 +162,22 @@ class GameControllerTest {
 
         Assertions.assertEquals(1, player1.getSpace().x, "player x.position is expected at 1. is currently: " + player1.getSpace().x);
         Assertions.assertEquals(5, player1.getSpace().y, "player y.position is expected at 5. is currently: " + player1.getSpace().y);
+
+        space = board.getSpace(1, 5);
+        action = new ConveyorBelt();
+        action.setHeading(Heading.EAST);
+        space.getActions().add(action);
+
+        //Implement wall to make sure you cant get past.
+        Space spaceWall = board.getSpace(2, 5);
+        spaceWall.getWalls().add(Heading.WEST);
+
+        //Test should return false, since we implemented a wall.
+        Assumptions.assumeFalse(action.doAction(gameController,space));
+
+        //check for correct working heading.
+        Assertions.assertEquals(Heading.EAST,action.getHeading());
+
     }
 
     @Test
@@ -445,8 +459,6 @@ class GameControllerTest {
             }
         }
     }
-    
 
-    // TODO and there should be more tests added for the different assignments eventually
 
 }

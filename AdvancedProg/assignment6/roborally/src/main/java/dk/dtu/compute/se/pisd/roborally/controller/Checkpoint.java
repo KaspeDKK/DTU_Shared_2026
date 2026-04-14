@@ -26,7 +26,6 @@ public class Checkpoint extends FieldAction {
      * @return boolean if the conditions of the checkpoint is met.
      */
     public boolean doAction(@NotNull GameController gameController, @NotNull Space space) {
-        // DONE A6d: needs to be implemented
         if (space.getPlayer() != null){
             Player currP = space.getPlayer();
              //if player did not reach the specific checkpoint yet.
@@ -45,7 +44,6 @@ public class Checkpoint extends FieldAction {
 
     public void setIsFinal(boolean isFinal){this.isFinal = isFinal;}
 
-    public boolean getIsFinal(){return this.isFinal;}
 
 }
 

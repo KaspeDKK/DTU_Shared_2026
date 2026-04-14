@@ -70,7 +70,6 @@ public class Board extends Subject {
     private Boolean gameOverMessageIsShown = false;
 
 
-
     public Board(int width, int height, @NotNull String boardName) {
         this.boardName = boardName;
         this.width = width;
@@ -85,6 +84,7 @@ public class Board extends Subject {
         this.stepMode = false;
     }
 
+    // create a default board if boardName is excluded from parameters
     public Board(int width, int height) {
         this(width, height, "defaultboard");
     }
@@ -95,7 +95,6 @@ public class Board extends Subject {
 
     public void setGameCounter(int newCount) {
         this.moveCounter = newCount;
-
         notifyChange();
     }
 
@@ -103,6 +102,10 @@ public class Board extends Subject {
         return this.moveCounter;
     }
 
+    /** sets the gameID for this board. If this board already has a gameID then throw an IllegalStateException
+     *
+     * @param gameId
+     */
     public void setGameId(int gameId) {
         if (this.gameId == null) {
             this.gameId = gameId;
@@ -112,6 +115,12 @@ public class Board extends Subject {
             }
         }
     }
+
+    /**
+     * @param x width
+     * @param y height
+     * @return space. If either width or height is 0, then return null
+     */
 
     public Space getSpace(int x, int y) {
         if (x >= 0 && x < width &&
@@ -126,13 +135,23 @@ public class Board extends Subject {
         return players.size();
     }
 
+    /** adds a player to the list of players for this board if player is not already listed
+     *
+     * @param player
+     */
     public void addPlayer(@NotNull Player player) {
+        //safeguard to prevent a duplicate player, and to prevent unnecessary computations (from notify change)
         if (player.board == this && !players.contains(player)) {
             players.add(player);
             notifyChange();
         }
     }
 
+    /** return the player of index i, ranging from 0 to size of list of players. If outside this range, then return null
+     *
+     * @param i - index - of a list of players
+     * @return player if within legal index, otherwise return null
+     */
     public Player getPlayer(int i) {
         if (i >= 0 && i < players.size()) {
             return players.get(i);
@@ -145,7 +164,12 @@ public class Board extends Subject {
         return current;
     }
 
+    /** set current player to the given player, if this player is a listed player of this game
+     *
+     * @param player to set to current player
+     */
     public void setCurrentPlayer(Player player) {
+        // safeguard to prevent setting current player when given player is already the current player. Also to prevent unneseccary computation
         if (player != this.current && players.contains(player)) {
             this.current = player;
             notifyChange();
@@ -156,7 +180,9 @@ public class Board extends Subject {
         return phase;
     }
 
+
     public void setPhase(Phase phase) {
+        // safeguard to avoid unnecessary computations and to prevent any phasing issues, perhaps resulting in skipping players
         if (phase != this.phase) {
             this.phase = phase;
             notifyChange();
@@ -168,6 +194,8 @@ public class Board extends Subject {
     }
 
     public void setStep(int step) {
+        // safeguard to prevent stepping into the same step (breaking sequence and potentially making an infinite loop)
+        // also to spare computation
         if (step != this.step) {
             this.step = step;
             notifyChange();
@@ -179,12 +207,18 @@ public class Board extends Subject {
     }
 
     public void setStepMode(boolean stepMode) {
+        //safeguard to prevent unnecessary computation
         if (stepMode != this.stepMode) {
             this.stepMode = stepMode;
             notifyChange();
         }
     }
 
+    /** return the index number of the given player if this player exists on the board
+     *
+     * @param player
+     * @return the number of the player
+     */
     public int getPlayerNumber(@NotNull Player player) {
         if (player.board == this) {
             return players.indexOf(player);
@@ -193,9 +227,17 @@ public class Board extends Subject {
         }
     }
 
+    /** sets the selected option, when player is choosing LEFT or RIGHT from commandcard LEFT_OR_RIGHT
+     *
+     * @param selectedOption to u
+     */
+
     public void setSelectedOption(Command selectedOption) {
-        this.selectedOption = selectedOption;
-        notifyChange();
+        // safeguard to prevent unnecessary computation (of notifyChange)
+        if (selectedOption != getSelectedOption()) {
+            this.selectedOption = selectedOption;
+            notifyChange();
+        }
     }
 
     public Command getSelectedOption() {
@@ -216,6 +258,7 @@ public class Board extends Subject {
         int x = space.x;
         int y = space.y;
         if (!space.getWalls().contains(heading)) {
+            //added wrapping as a feature
             switch (heading) {
                 case SOUTH:
                     y = (y + 1) % height;
@@ -267,9 +310,6 @@ public class Board extends Subject {
         if (this.winner != null){
             return "Player: " + this.winner.getName() + " has won the game!! |  Moves: " + getGameCounter() + " |  Phase: " + getPhase();
         }
-
-        // DONE A6c: changed the status so that it shows the phase, the current player, and the current register
-        //     and you can remove the move count status message message and the corresponding counter again
 
         return "Player = " + getCurrentPlayer().getName() + "  |  Phase: " + getPhase() + "  |  Register: " + getStep() + "  |  Moves: " + getGameCounter();
     }
