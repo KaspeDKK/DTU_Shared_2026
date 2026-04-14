@@ -72,7 +72,7 @@ public class GameController {
 
 
     /**
-     * Moves a player recursively according to the rules of Roborally.
+     * Moves a player recursively according to the rules of Robo rally.
      * <p>
      * moveToSpace uses our implementation of the getNeighbour to throw an error if the move is not legal.
      * I.E the destination is behind a wall.
@@ -85,7 +85,7 @@ public class GameController {
      */
     public void moveToSpace(@NotNull Space nextSpace, @NotNull Player player, @NotNull Heading heading) throws ImpossibleMoveException {
         try {
-            if (board.getNeighbour(player.getSpace(), heading) == null) { //getNeighbour checks for walls - returns null if no neighbour
+            if (board.getNeighbour(player.getSpace(), heading) == null) { //getNeighbour checks for walls - returns null if no neighbor
                 throw new ImpossibleMoveException("illegal move");
             } else {
                 if (nextSpace.getPlayer() != null) {
@@ -128,7 +128,7 @@ public class GameController {
         }
     }
 
-    //self explanatory
+    //self-explanatory
     private CommandCard generateRandomCommandCard() {
         Command[] commands = Command.values();
         int random = (int) (Math.random() * commands.length);
@@ -185,7 +185,7 @@ public class GameController {
     }
 
     /**
-     * This method is what seperates the step-modes,
+     * This method is what separates the step-modes,
      */
     private void continuePrograms() {
         do {
@@ -194,11 +194,11 @@ public class GameController {
     }
 
     /**
-     * This methods executes the next step in the correct order from the cards played by the players -
-     * switching between them. It is the method that simulates the "ACTUVATION phase". The method also checks if there are
+     * The method will execute the next step in the correct order from the cards played by the players -
+     * switching between them. It is the method that simulates the "ACTIVATION phase". The method also checks if there are
      * any FieldActions in the current space.
      *
-     * The method also instantiates the PLAYER_INTERACTION phase, based on whether or not the
+     * The method also instantiates the PLAYER_INTERACTION phase, based on whether the
      * obtained card is interactive.
      *
      * @author Tokemeister, Friisma, KaspeDKK, Simon, Thomas, Rasbas
@@ -273,10 +273,10 @@ public class GameController {
     }
 
     /**
-     * This methods executes the commands from the cards played by the player.
+     * The method will execute the commands from the cards played by the player.
      *
      * @param player  is the current player
-     * @param command is the commmand from the card played by the player.
+     * @param command is the command from the card played by the player.
      * @author Tokemeister, Friisma, KaspeDKK, Simon, Thomas, Rasbas
      */
     private void executeCommand(@NotNull Player player, Command command) {
