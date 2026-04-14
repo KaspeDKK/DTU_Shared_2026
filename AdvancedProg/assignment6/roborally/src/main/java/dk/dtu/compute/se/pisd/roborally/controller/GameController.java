@@ -200,7 +200,7 @@ public class GameController {
             if (step >= 0 && step < Player.NO_REGISTERS) {
                 CommandCard card = currentPlayer.getProgramField(step).getCard();
                 if (card != null) {
-                    Command command = card.command; //needs to be replaced
+                    Command command = card.command;
                     if (command.isInteractive()) {
                         Command selectedOption = board.getSelectedOption();
                         if (selectedOption == null) {
@@ -211,7 +211,7 @@ public class GameController {
                             executeCommand(currentPlayer, selectedOption);
                         }
                     } else {
-                        executeCommand(currentPlayer, command); //needs to be replaced
+                        executeCommand(currentPlayer, command);
                     }
                 }
 
@@ -256,7 +256,7 @@ public class GameController {
 
 
     public void executeOptionAndContinue(Command option) {
-        board.setSelectedOption(option);
+        board.setSelectedOption(option); // sets the given commands "option" to the option that the player chose
         board.setPhase(Phase.ACTIVATION);
         continuePrograms();
 
@@ -271,10 +271,10 @@ public class GameController {
      */
     private void executeCommand(@NotNull Player player, Command command) {
         board.setGameCounter(board.getGameCounter() + 1);
-        if (player != null && player.board == board && command != null) {
+        if (player.board == board && command != null) {
             // XXX This is a very simplistic way of dealing with some basic cards and
             //     their execution. This should eventually be done in a more elegant way
-            //     (this concerns the way cards are modelled as well as the way they are executed).
+            //     (this concerns the way cards are modeled as well as the way they are executed).
             switch (command) {
                 case FORWARD:
                     this.moveForward(player);
@@ -341,7 +341,7 @@ public class GameController {
 
     public void uTurn(@NotNull Player player) {
         turnLeft(player);
-        turnLeft(player);
+        turnLeft(player); // 90+90 = 180 degrees
     }
 
     public void back(@NotNull Player player) {
