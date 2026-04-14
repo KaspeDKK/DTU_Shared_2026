@@ -25,7 +25,6 @@ import dk.dtu.compute.se.pisd.roborally.exceptions.ImpossibleMoveException;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -100,15 +99,13 @@ public class GameController {
 
             }
         } catch (ImpossibleMoveException e) {
-            System.err.println(e); //print custom message
-            e.printStackTrace(); //print stacktrace
+            System.err.println(e.getMessage()); //print custom message
         }
     }
 
     /**
      * this method enables the PROGRAMMING phase, "resetting" the games activation phase until it
      * has been called again.
-     *
      * It also enables movement of the cards - "or programming"
      */
     public void startProgrammingPhase() {
@@ -214,10 +211,8 @@ public class GameController {
      * The method will execute the next step in the correct order from the cards played by the players -
      * switching between them. It is the method that simulates the "ACTIVATION phase". The method also checks if there are
      * any FieldActions in the current space.
-     *
      * The method also instantiates the PLAYER_INTERACTION phase, based on whether the
      * obtained card is interactive.
-     *
      */
     private void executeNextStep() {
         Player currentPlayer = board.getCurrentPlayer();

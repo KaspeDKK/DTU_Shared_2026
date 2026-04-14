@@ -44,16 +44,9 @@ public enum Command {
     RIGHT("Turn Right"),
     LEFT("Turn Left"),
     FAST_FORWARD("Fast Fwd"),
-
-    // DONE A6c: add new literals to this enumeration for the two commands
-    //     BACK and UTURN, and implement the corresponding command in the
-    //     Class GameController)
-    UTURN("U-Turn"),
-    BACK("Move Back"),
-    // TODO A6e: add two new commands  here, which are interactive,
-    //     which means that the player can chose between two options when
-    //     the command is executed.
-    LEFT_OR_RIGHT("Left OR Right", LEFT, RIGHT);
+    UTURN("U-Turn"), //added UTURN
+    BACK("Move Back"), //added BACK
+    LEFT_OR_RIGHT("Left OR Right", LEFT, RIGHT); //added LEFT_OR_RIGHT
     /**
      * The name shown for this command on the GUI.
      */

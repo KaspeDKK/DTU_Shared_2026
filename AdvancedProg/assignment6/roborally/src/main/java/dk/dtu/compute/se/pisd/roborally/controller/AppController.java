@@ -26,9 +26,6 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
 import dk.dtu.compute.se.pisd.roborally.RoboRally;
 
-import dk.dtu.compute.se.pisd.roborally.dal.GameInDB;
-import dk.dtu.compute.se.pisd.roborally.dal.RepositoryAccess;
-import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoard;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 
@@ -37,7 +34,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.skin.ChoiceBoxSkin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -66,18 +62,21 @@ public class AppController implements Observer {
 
     // TODO A6b comments on added code
     public void newGame() {
+        //creates javaFX choice dialog for number of players
         ChoiceDialog<Integer> dialog1 = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
         dialog1.setTitle("Player number");
         dialog1.setHeaderText("Select number of players");
 
+        //Creates javaFX choice dialog for game type from available boards
         ChoiceDialog<String> dialog2 = new ChoiceDialog<>(BoardFactory.availableBoards().get(0), BoardFactory.availableBoards());
         dialog2.setTitle("Game type");
         dialog2.setHeaderText("Select game type");
 
+        //stores the chosen options
         Optional<Integer> result1 = dialog1.showAndWait();
         Optional<String> result2 = dialog2.showAndWait();
 
-
+        //checks if both choice dialogs have a chosen value
         if (result1.isPresent() && result2.isPresent()) {
             if (gameController != null) {
                 // The UI should not allow this, but in case this happens anyway.
@@ -86,19 +85,12 @@ public class AppController implements Observer {
                     return;
                 }
             }
-
+            //Creates the chosen board
             String boardName = result2.get();
             Board board = BoardFactory.getInstance().createBoard(boardName);
 
-            // DONE A6b: Use a user dialog here (similar to the one above
-            //     for player number) which lets the user select one of the
-            //     available boards, and then create the chosen board using
-            //     the BoardFactory (instead of creating an empty board).
-
-            // The code below just creates an empty board with the chosen
-            // number of players on it.
-            //Board board = new Board(8,8); commented out
             gameController = new GameController(board);
+            //gets number of players and adds them to the game 
             int no = result1.get();
             for (int i = 0; i < no; i++) {
                 Player player = new Player(board, PLAYER_COLORS.get(i), "Player " + (i + 1));

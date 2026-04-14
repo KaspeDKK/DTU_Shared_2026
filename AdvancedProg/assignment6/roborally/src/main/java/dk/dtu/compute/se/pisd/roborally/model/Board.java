@@ -216,6 +216,7 @@ public class Board extends Subject {
         int x = space.x;
         int y = space.y;
         if (!space.getWalls().contains(heading)) {
+            //added wrapping as a feature
             switch (heading) {
                 case SOUTH:
                     y = (y + 1) % height;
@@ -267,9 +268,6 @@ public class Board extends Subject {
         if (this.winner != null){
             return "Player: " + this.winner.getName() + " has won the game!! |  Moves: " + getGameCounter() + " |  Phase: " + getPhase();
         }
-
-        // DONE A6c: changed the status so that it shows the phase, the current player, and the current register
-        //     and you can remove the move count status message message and the corresponding counter again
 
         return "Player = " + getCurrentPlayer().getName() + "  |  Phase: " + getPhase() + "  |  Register: " + getStep() + "  |  Moves: " + getGameCounter();
     }

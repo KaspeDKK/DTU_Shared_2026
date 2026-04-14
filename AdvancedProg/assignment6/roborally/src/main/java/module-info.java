@@ -32,4 +32,6 @@ module roborally {
 
     exports dk.dtu.compute.se.pisd.designpatterns.observer;
 
+    exports dk.dtu.compute.se.pisd.roborally.exceptions;
+
 }
