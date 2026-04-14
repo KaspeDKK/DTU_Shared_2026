@@ -218,8 +218,6 @@ public class GameController {
      * The method also instantiates the PLAYER_INTERACTION phase, based on whether the
      * obtained card is interactive.
      *
-     * @author Tokemeister, Friisma, KaspeDKK, Simon, Thomas, Rasbas
-     *
      */
     private void executeNextStep() {
         Player currentPlayer = board.getCurrentPlayer();
@@ -302,7 +300,6 @@ public class GameController {
      *
      * @param player  is the current player
      * @param command is the command from the card played by the player.
-     * @author Tokemeister, Friisma, KaspeDKK, Simon, Thomas, Rasbas
      */
     private void executeCommand(@NotNull Player player, Command command) {
         board.setGameCounter(board.getGameCounter() + 1);
@@ -335,7 +332,7 @@ public class GameController {
      * Moves a player forward according to the MoveToSpace implementation.
      * The other movement commands are built on the moveForward
      *
-     * @param player - current player.
+     * @param player - the player that shall move forward
      */
     public void moveForward(@NotNull Player player) {
         Space currentSpace = player.getSpace(); // current position
@@ -352,7 +349,9 @@ public class GameController {
     }
 
     /**
-     * moves forward twice using the moveForward method
+     * moves a player forward twice using the moveForward method
+     *
+     * @param player is the player that shall move forward twice
      */
     public void fastForward(@NotNull Player player) {
         moveForward(player);
@@ -360,7 +359,9 @@ public class GameController {
     }
 
     /**
-     * turns the given player right
+     * turns the given player right or 90 degrees clockwise
+     *
+     * @param player is the player who shall turn right
      */
     public void turnRight(@NotNull Player player) {
         Heading heading = player.getHeading();
@@ -368,7 +369,9 @@ public class GameController {
     }
 
     /**
-     * turns the given player left
+     * turns the given player left or 90 degrees counter-clockwise
+     *
+     * @param player is the player who should turn left
      */
     public void turnLeft(@NotNull Player player) {
         Heading heading = player.getHeading();
@@ -376,7 +379,9 @@ public class GameController {
     }
 
     /**
-     * turns the given player around (u-turn)
+     * turns the given player in the opposite direction
+     *
+     * @param player is the player who shall turn the opposite direction
      */
     public void uTurn(@NotNull Player player) {
         turnLeft(player);
@@ -386,6 +391,8 @@ public class GameController {
     /**
      * turns the given player around (u-turn)
      * moves "forward", and then moves again - giving the illusion of moving backwards.
+     *
+     * @param player is the player who shall take on step back
      */
     public void back(@NotNull Player player) {
         uTurn(player);
@@ -397,7 +404,7 @@ public class GameController {
      * Sets game winner in the model, and changes phase to finished.
      * winner is null until the game is finished.
      *
-     * @param player
+     * @param player The player who won
      */
     public void setWinner(Player player){
         if (player != null) {
