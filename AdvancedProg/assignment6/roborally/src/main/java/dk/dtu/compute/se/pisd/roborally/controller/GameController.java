@@ -254,31 +254,41 @@ public class GameController {
             // XXX This is a very simplistic way of dealing with some basic cards and
             //     their execution. This should eventually be done in a more elegant way
             //     (this concerns the way cards are modelled as well as the way they are executed).
-
-            switch (command) {
-                case FORWARD:
-                    this.moveForward(player);
-                    break;
-                case RIGHT:
-                    this.turnRight(player);
-                    break;
-                case LEFT:
-                    this.turnLeft(player);
-                    break;
-                case FAST_FORWARD:
-                    this.fastForward(player);
-                    break;
-                case BACK:
-                    this.back(player);
-                    break;
-                case UTURN:
-                    this.uTurn(player);
-                    break;
-                case LEFT_OR_RIGHT:
-                    this.leftOrRight(player);
-                    break;
-                default:
-                    // DO NOTHING (for now)//
+            if (command.isInteractive()){
+                Command selectedOption = board.getSelectedOption;
+                if (selectedOption == null){
+                    board.setPhase(Phase.PLAYER_INTERACTION);
+                    return;
+                } else {
+                    board.setSelectedOption(null);
+                    executeCommand(player,selectedOption);
+                }
+            } else {
+                switch (command) {
+                    case FORWARD:
+                        this.moveForward(player);
+                        break;
+                    case RIGHT:
+                        this.turnRight(player);
+                        break;
+                    case LEFT:
+                        this.turnLeft(player);
+                        break;
+                    case FAST_FORWARD:
+                        this.fastForward(player);
+                        break;
+                    case BACK:
+                        this.back(player);
+                        break;
+                    case UTURN:
+                        this.uTurn(player);
+                        break;
+                    case LEFT_OR_RIGHT:
+                        this.leftOrRight(player);
+                        break;
+                    default:
+                        // DO NOTHING (for now)//
+                }
             }
         }
     }
@@ -333,7 +343,7 @@ public class GameController {
     }
 
     public void leftOrRight(@NotNull Player player){
-        notImplemented();
+
     }
     /**
      * A method called when no corresponding controller operation is implemented yet.
