@@ -164,7 +164,29 @@ class GameControllerTest {
 
     @Test
     void testRecursiveMovement(){
-        //TODO implement
+        Board board = gameController.board; //initiate board
+        Player player1 = board.getCurrentPlayer(); //get player
+        player1.setSpace(board.getSpace(0, 0));
+        Player player2 = board.getPlayer(1);
+        Player player3 = board.getPlayer(2);
+        Player player4 = board.getPlayer(3);
+
+        player1.setSpace(board.getSpace(0, 0));
+        player2.setSpace(board.getSpace(1, 0));
+        player3.setSpace(board.getSpace(2, 0));
+        player4.setSpace(board.getSpace(3, 0));
+
+        try {
+            gameController.moveToSpace(player2.getSpace(),player1,Heading.EAST);
+            Assertions.assertEquals(4,player4.getSpace().x);
+            Assertions.assertEquals(0,player4.getSpace().y);
+        } catch (ImpossibleMoveException e) {
+
+        }
+
+
+
+
     }
 
     @Test
