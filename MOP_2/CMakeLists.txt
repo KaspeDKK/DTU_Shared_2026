@@ -3,4 +3,11 @@ project(MOP_2 C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(MOP_2 main.c)
+add_executable(MOP_2 main.c
+        model.c
+        model.h
+        view.c
+        view.h
+        main.c
+        controller.h
+        controller.c)

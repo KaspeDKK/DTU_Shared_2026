@@ -3,4 +3,6 @@
 
 void run_game();
 
+void readDeck();
+
 #endif
