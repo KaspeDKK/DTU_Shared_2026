@@ -9,9 +9,11 @@
 
 void run_game()
 {
-    Card deck = {};
+    Card deck[52] = {};
     // TODO LOTS OF STUFF
-    readDeck("C:\\Users\\kaspe\\Documents\\GitHub\\DTU_Shared_2026\\MOP_2\\deckOne.txt", deck);
+    readDeck(".\\deckOne.txt", deck);
+
+    print_deck(deck, 52);
 }
 
 int readDeck (const char *filename,Card *deck) {
@@ -33,7 +35,7 @@ int readDeck (const char *filename,Card *deck) {
     }
 
     fclose(file);
-    return 0;
+    return i;
 }
 
 Card shuffleDeck (Card *deck) {}
