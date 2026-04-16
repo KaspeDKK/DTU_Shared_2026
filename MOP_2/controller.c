@@ -43,7 +43,7 @@ Card shuffleDeck (Card *deck) {}
 Card* convertTolinkedList (char *str) {}
 
 char *convertToArray(Card *deck) {
-    char *arrDeck = malloc(105); // assuming 52 cards
+    char *arrDeck = malloc(sizeof(Card)*105); // assuming 52 cards
 
     int j = 0;
     Card *current = deck;
