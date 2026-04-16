@@ -10,7 +10,7 @@
 
 void run_game()
 {
-    Card deck[52] = {};
+    Card deck[52] = {}; // deck size 52
     // TODO LOTS OF STUFF
     readDeck(".\\deckOne.txt", deck);
 
