@@ -2,6 +2,7 @@
 #include <string.h>
 #include "controller.h"
 
+#include <ctype.h>
 #include <stdlib.h>
 
 #include "model.h"
@@ -38,12 +39,39 @@ int readDeck (const char *filename,Card *deck) {
     return i;
 }
 
-Card shuffleDeck (Card *deck) {}
+Card shuffleDeck (char arrDeck[]) {}
 
-Card* convertTolinkedList (char *str) {}
+Card* convertTolinkedList (char *str) {
+
+    Card *head = NULL;
+    Card *current = NULL;
+
+    for (int i = 0; str[i] != '\0'; i++) { // '\0' repræsentere slutningen af arrayet
+
+        Card *newCard = malloc(sizeof(Card)); //reserver plads til kortet
+
+        newCard->rank = str[i];
+        i++;
+        newCard->suit = str[i];
+        newCard->next = NULL;
+
+        if (head == NULL) //hvis det er første kort
+        {
+            head = newCard;
+            current = newCard;
+        }
+        else //hvis det ikke er første kort
+        {
+            current->next = newCard;
+            current = newCard;
+        }
+    }
+
+    return head;
+}
 
 char *convertToArray(Card *deck) {
-    char *arrDeck = malloc(sizeof(Card)*105); // assuming 52 cards
+    char *arrDeck = malloc(105); // assuming 52
 
     int j = 0;
     Card *current = deck;
