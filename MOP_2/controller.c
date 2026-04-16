@@ -15,6 +15,13 @@ void run_game()
     readDeck(".\\deckOne.txt", deck);
 
     print_deck(deck, 52);
+
+
+    //test conversion
+    char *deckArr = convertToArray(deck);
+
+    print_deck(deckArr, 52);
+
 }
 
 int readDeck (const char *filename,Card *deck) {
@@ -39,7 +46,7 @@ int readDeck (const char *filename,Card *deck) {
     return i;
 }
 
-Card shuffleDeck (char arrDeck[]) {}
+Card* shuffleDeck (char arrDeck[]) {}
 
 Card* convertTolinkedList (char *str) {
 
