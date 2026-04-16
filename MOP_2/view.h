@@ -9,5 +9,6 @@
 
 typedef struct Card Card;
 void print_deck(const Card *deck, int size);
+void view_not_started();
 
 #endif
