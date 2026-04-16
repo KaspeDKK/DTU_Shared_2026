@@ -6,11 +6,11 @@
 
 void run_game()
 {
-    Card deck = {};
+    Card deck[52] = {};
     // TODO LOTS OF STUFF
-    int size = readDeck(".\\deckOne.txt", deck);
+    readDeck(".\\deckOne.txt", deck);
 
-    print_deck(deck, size);
+    print_deck(deck, 52);
 }
 
 int readDeck (const char *filename,Card *deck) {
