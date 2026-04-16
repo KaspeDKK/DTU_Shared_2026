@@ -21,17 +21,22 @@ void print_deck(const Card *deck, const int size)
 
 void view_not_started() {
     int f = 1;
-    int k = 0;
-    printf("C1   C2   C3   C4   C5   C6   C7 \n\n");
-    for (int i = 0; i < 7; i++) {
-        printf("[]   []   []   []   []   []   []");
-        if (k % 2 == 0) {
-            printf("     []   F%d",f);
-            f++;
+    int row = 0;
+
+    printf("C1   C2   C3   C4   C5   C6   C7\n\n");
+
+    for (int i = 0; i < 52; i++) {
+        printf("[]   ");
+
+        if ((i + 1) % 7 == 0) {
+            if (row % 2 == 0 && f <= 4) {
+                printf("     []   F%d", f);
+                f++;
+            }
+            printf("\n");
+            row++;
         }
-        k++;
-        printf("\n");
     }
-    printf("LAST Command: None \n");
-    printf("Message: Enter Command");
+    printf("\nLAST Command: None\n");
+    printf("Message: Enter Command\n");
 }
