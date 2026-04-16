@@ -3,6 +3,7 @@
 
 void run_game();
 
-int readDeck();
+typedef struct Card Card;
+int readDeck(const char *filename, Card *deck);
 
 #endif
