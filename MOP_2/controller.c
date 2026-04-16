@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include "controller.h"
+
+#include <stdlib.h>
+
 #include "model.h"
 #include "view.h"
 
@@ -31,4 +34,25 @@ int readDeck (const char *filename,Card *deck) {
 
     fclose(file);
     return 0;
+}
+
+Card shuffleDeck (Card *deck) {}
+
+Card* convertTolinkedList (char *str) {}
+
+char *convertToArray(Card *deck) {
+    char *arrDeck = malloc(105); // assuming 52 cards
+
+    int j = 0;
+    Card *current = deck;
+
+    while (current != NULL) {
+        arrDeck[j++] = current->rank;
+        arrDeck[j++] = current->suit;
+
+        current = current->next;
+    }
+
+    arrDeck[j] = '\0';
+    return arrDeck;
 }
