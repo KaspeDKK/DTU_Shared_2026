@@ -14,7 +14,7 @@ static void print_card(const Card* card)
 void print_deck(const Card *deck, const int size)
 {
     for (int i = 0; i < size; i++) {
-        printf("[%c%c] ", deck[i].rank, deck[i].suit);
+        printf("[%c%c] ", deck[i].rank, deck[i].suit); // print format, c and c
     }
     printf("\n");
 }
