@@ -1,0 +1,38 @@
+Index: controller.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#ifndef CONTROLLER_H\r\n#define CONTROLLER_H\r\n\r\nvoid run_game();\r\n\r\nvoid readDeck();\r\n\r\n#endif
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/controller.h b/controller.h
+--- a/controller.h	(revision 4b94cda546f26416e9a12ce7f9e82fef75572b56)
++++ b/controller.h	(date 1776339525147)
+@@ -3,6 +3,6 @@
+ 
+ void run_game();
+ 
+-void readDeck();
++int readDeck();
+ 
+ #endif
+\ No newline at end of file
+Index: controller.c
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#include <stdio.h>\r\n#include <string.h>\r\n#include \"controller.h\"\r\n#include \"model.h\"\r\n#include \"view.h\"\r\n\r\nvoid run_game()\r\n{\r\n    // TODO LOTS OF STUFF\r\n}\r\n\r\nint readDeck (const char *filename,Card *deck) {\r\n    FILE *file = fopen(filename, \"r\");\r\n    if (file == NULL) {\r\n        perror(\"Error opening file\");\r\n        return 1;\r\n    }\r\n\r\n    int i = 0;\r\n  \r\n    char buffer[10];\r\n\r\n    while (fgets(buffer, 10, file) != NULL) {\r\n        deck[i].rank = buffer[0];\r\n        deck[i].suit = buffer[1];\r\n        deck[i].visible = 0;\r\n        i++;\r\n    }\r\n\r\n    fclose(file);\r\n    return 0;\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/controller.c b/controller.c
+--- a/controller.c	(revision 4b94cda546f26416e9a12ce7f9e82fef75572b56)
++++ b/controller.c	(date 1776336410560)
+@@ -17,7 +17,7 @@
+     }
+ 
+     int i = 0;
+-  
++
+     char buffer[10];
+ 
+     while (fgets(buffer, 10, file) != NULL) {
