@@ -1,11 +1,12 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+#include "model.h"
+
 void run_game();
 
-typedef struct Card Card;
 int readDeck(const char *filename, Card *deck);
-char *convertToArray(Card *deck);
-Card* convertTolinkedList (char *str);
+void listToArray(Card *head, Card deck[], int size);
+Card *arrayToList(Card deck[], int size);
 
 #endif

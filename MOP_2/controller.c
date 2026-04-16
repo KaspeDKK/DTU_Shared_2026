@@ -16,11 +16,9 @@ void run_game()
 
     print_deck(deck, 52);
 
+    arrayToList(deck, 52);
 
-    //test conversion
-    char *deckArr = convertToArray(deck);
 
-    print_deck(deckArr, 52);
 
 }
 
@@ -48,48 +46,45 @@ int readDeck (const char *filename,Card *deck) {
 
 Card* shuffleDeck (char arrDeck[]) {}
 
-Card* convertTolinkedList (char *str) {
-
+Card *arrayToList(Card deck[], int size)
+{
     Card *head = NULL;
     Card *current = NULL;
 
-    for (int i = 0; str[i] != '\0'; i++) { // '\0' repræsentere slutningen af arrayet
+    for (int i = 0; i < size; i++)
+    {
+        Card *newNode = malloc(sizeof(Card));
 
-        Card *newCard = malloc(sizeof(Card)); //reserver plads til kortet
+        newNode->rank = deck[i].rank;
+        newNode->suit = deck[i].suit;
+        newNode->visible = deck[i].visible;
+        newNode->next = NULL;
 
-        newCard->rank = str[i];
-        i++;
-        newCard->suit = str[i];
-        newCard->next = NULL;
-
-        if (head == NULL) //hvis det er første kort
+        if (head == NULL)
         {
-            head = newCard;
-            current = newCard;
+            head = newNode;
+            current = newNode;
         }
-        else //hvis det ikke er første kort
+        else
         {
-            current->next = newCard;
-            current = newCard;
+            current->next = newNode;
+            current = newNode;
         }
     }
 
     return head;
 }
 
-char *convertToArray(Card *deck) {
-    char *arrDeck = malloc(105); // assuming 52
+void listToArray(Card *head, Card deck[], int size)
+{
+    Card *current = head;
 
-    int j = 0;
-    Card *current = deck;
-
-    while (current != NULL) {
-        arrDeck[j++] = current->rank;
-        arrDeck[j++] = current->suit;
+    for (int i = 0; i < size && current != NULL; i++)
+    {
+        deck[i].rank = current->rank;
+        deck[i].suit = current->suit;
+        deck[i].visible = current->visible;
 
         current = current->next;
     }
-
-    arrDeck[j] = '\0';
-    return arrDeck;
 }
