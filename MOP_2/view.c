@@ -19,7 +19,19 @@ void print_deck(const Card *deck, const int size)
     printf("\n");
 }
 
-void view_print_game(const Game* game, const char* last_command, const char* message)
-{
-    // TODO
+void view_not_started() {
+    int f = 1;
+    int k = 0;
+    printf("C1   C2   C3   C4   C5   C6   C7 \n\n");
+    for (int i = 0; i < 7; i++) {
+        printf("[]   []   []   []   []   []   []");
+        if (k % 2 == 0) {
+            printf("     []   F%d",f);
+            f++;
+        }
+        k++;
+        printf("\n");
+    }
+    printf("LAST Command: None \n");
+    printf("Message: Enter Command");
 }
