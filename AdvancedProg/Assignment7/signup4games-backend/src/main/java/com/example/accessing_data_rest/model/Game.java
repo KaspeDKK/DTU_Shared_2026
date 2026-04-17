@@ -24,6 +24,7 @@ public class Game {
     //      you might not want new players coming in etc.)
     //      See analogous classes in client.
 
+    //One to many relationship
     @OneToMany(mappedBy="game")
     private List<Player> players;
 

@@ -23,6 +23,9 @@ public class User {
     @OneToMany
     private List<Game> games;
 
+    @OneToMany(mappedBy = "user")
+    private List<Player> players;
+
     public long getUid() {
         return uid;
     }
@@ -38,5 +41,13 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
+
+    public List<Game> getGames() {return games;}
+
+    public void setGames(List<Game> games) {this.games = games;}
+
+    public List<Player> getPlayers() {return players;}
+
+    public void setPlayers(List<Player> players) {this.players = players;}
 
 }

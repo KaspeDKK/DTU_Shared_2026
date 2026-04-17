@@ -20,9 +20,9 @@ public class Player {
     @JoinColumn
     private Game game;
 
-
-    @ManyToOne
-    @JoinColumn
+    //Many to one relationship: more players can have one user
+    @ManyToOne()
+    @JoinColumn(name = "user_id")
     private User user;
 
     public long getUid() {
