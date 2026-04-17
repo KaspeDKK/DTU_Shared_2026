@@ -28,6 +28,8 @@ public class Game {
     @OneToMany(mappedBy="game")
     private List<Player> players;
 
+    @OneToMany()
+
     public long getUid() {
         return uid;
     }
