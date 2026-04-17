@@ -19,9 +19,7 @@ public class User {
     //      the other way round (similar to the reference from Game to Player
     //      and the other way round.
 
-    public long getUid() {
-        return uid;
-    }
+    public long getUid() { return uid; }
 
     public void setUid(long uid) {
         this.uid = uid;
