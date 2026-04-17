@@ -16,29 +16,18 @@ void run_game()
 
     print_deck(deck, 52);
 
-<<<<<<< Updated upstream
     arrayToList(deck, 52);
-
-=======
-<<<<<<< HEAD
 
     //test conversion
-    char *deckArr = convertToArray(deck);
+    // char *deckArr = convertToArray(deck);
 
-    print_deck(deckArr, 52);
+    // print_deck(deckArr, 52);
 
     view_not_started();
->>>>>>> Stashed changes
 
-=======
     arrayToList(deck, 52);
 
-<<<<<<< Updated upstream
-=======
 
-
->>>>>>> 5e598ffbbc750fde74735300f981aa2f9e8b6ab1
->>>>>>> Stashed changes
 }
 
 int readDeck (const char *filename,Card *deck) {
