@@ -19,6 +19,10 @@ public class User {
     //      the other way round (similar to the reference from Game to Player
     //      and the other way round.
 
+
+    @OneToMany
+    private List<Game> games;
+
     public long getUid() {
         return uid;
     }
