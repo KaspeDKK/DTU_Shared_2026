@@ -17,6 +17,10 @@ void run_game()
 
     showDeck(deckHead);
 
+    deckHead = splitDeck(deckHead,0);
+
+    showDeck(deckHead);
+
 }
 
 Card* readDeck (const char *filename,Card *deck) { //function that takes a file, and
@@ -47,24 +51,58 @@ Card* readDeck (const char *filename,Card *deck) { //function that takes a file,
     return arrayToList(deck, i);
 }
 
-void splitDeck (Card *head, int split) {
+Card *splitDeck (Card *head, int split) {
     if (head == NULL) {
         printf("LAST Command SI");
         printf("Message: no deck loaded\n");
-        return;
+        return NULL;
     }
-    if (split < 1 || split > 52) {
+    if (split == 0) {
+        split = rand() % 51 + 1;
+    }
+    if (split < 1 || split > 51) {
         printf("LAST Command SI");
         printf("Message: Wrong split Size\n");
-        return;
+        return NULL;
     }
 
+    Card *oldPile = head;
     Card *current = head;
-    for (int i = 0; i < split; i++) {
-    current = current->next;
+
+    for (int i = 1; i < split; i++) {
+        if (current == NULL) {
+            return head;
+        }
+        current = current->next;
     }
+
+    if (current == NULL || current->next == NULL) {
+        return head;
+    }
+
     Card *newPile = current->next;
     current->next = NULL;
+
+    Card *nextOldCard = NULL;
+    Card *nextNewCard = NULL;
+
+    while (oldPile != NULL && newPile != NULL) {
+        nextOldCard = oldPile->next;
+        nextNewCard = newPile->next;
+
+        oldPile->next = newPile;
+
+        if (nextOldCard == NULL) {
+            break;
+        }
+
+        newPile->next = nextOldCard;
+
+        oldPile = nextOldCard;
+        newPile = nextNewCard;
+    }
+
+    return head;
 }
 
 
