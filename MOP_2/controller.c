@@ -51,13 +51,13 @@ Card* readDeck (const char *filename,Card *deck) { //function that takes a file,
     return arrayToList(deck, i);
 }
 
-Card *splitDeck (Card *head, int split) {
-    if (head == NULL) {
+Card *splitDeck (Card *head, int split) { //splits deck
+    if (head == NULL) { //guard
         printf("LAST Command SI");
         printf("Message: no deck loaded\n");
         return NULL;
     }
-    if (split == 0) {
+    if (split == 0) { //Generate random split, 0 < split > 51
         split = rand() % 51 + 1;
     }
     if (split < 1 || split > 51) {
@@ -66,26 +66,42 @@ Card *splitDeck (Card *head, int split) {
         return NULL;
     }
 
-    Card *oldPile = head;
+
+
+    Card *oldPile = head; //initiate oldPile
     Card *current = head;
 
+    //guard if the pile is big enough
     for (int i = 1; i < split; i++) {
-        if (current == NULL) {
+        if (current == NULL) { //if current is null:
             return head;
         }
-        current = current->next;
+        current = current->next; //else "increment"
     }
+
 
     if (current == NULL || current->next == NULL) {
         return head;
     }
 
-    Card *newPile = current->next;
+    Card *newPile = current->next; //Start newPile from current
     current->next = NULL;
 
+    // Save the next cards before changing pointers:
+    //
+    // oldPile     -> A -> B -> ...
+    // newPile     -> D -> E -> ...
+    // nextOldCard -> B
+    // nextNewCard -> E
+    //
+    // Reconnect:
+    // A -> D -> B -> ...
+
+    //initiate placeholders for the next cards
     Card *nextOldCard = NULL;
     Card *nextNewCard = NULL;
 
+    //while neither is null, continue to mix cards between each other
     while (oldPile != NULL && newPile != NULL) {
         nextOldCard = oldPile->next;
         nextNewCard = newPile->next;
@@ -96,13 +112,14 @@ Card *splitDeck (Card *head, int split) {
             break;
         }
 
-        newPile->next = nextOldCard;
+        newPile->next = nextOldCard; //set the cards back together
 
+        //increment
         oldPile = nextOldCard;
         newPile = nextNewCard;
     }
 
-    return head;
+    return head; //return new pile
 }
 
 
