@@ -83,5 +83,4 @@ void showDeck(Card *head)
 
         printf("\nLAST Command: SW\n");
         printf("Message: OK\n");
-        printf("INPUT > ");
 }

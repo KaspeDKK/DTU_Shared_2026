@@ -14,16 +14,8 @@ void run_game()
     // TODO LOTS OF STUFF
     Card *deckHead = readDeck("../deckOne.txt", deck);
 
-    //print_deck(deck, 52);
 
     showDeck(deckHead);
-
-
-    //test conversion
-    // char *deckArr = convertToArray(deck);
-
-    // print_deck(deckArr, 52);
-
 
 }
 
@@ -55,7 +47,27 @@ Card* readDeck (const char *filename,Card *deck) { //function that takes a file,
     return arrayToList(deck, i);
 }
 
-Card* shuffleDeck (char arrDeck[]) {}
+void splitDeck (Card *head, int split) {
+    if (head == NULL) {
+        printf("LAST Command SI");
+        printf("Message: no deck loaded\n");
+        return;
+    }
+    if (split < 1 || split > 52) {
+        printf("LAST Command SI");
+        printf("Message: Wrong split Size\n");
+        return;
+    }
+
+    Card *current = head;
+    for (int i = 0; i < split; i++) {
+    current = current->next;
+    }
+    Card *newPile = current->next;
+    current->next = NULL;
+}
+
+
 
 Card *arrayToList(Card deck[], int size)
 {
