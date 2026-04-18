@@ -5,7 +5,7 @@
 
 void run_game();
 
-int readDeck(const char *filename, Card *deck);
+Card* readDeck(const char *filename, Card *deck);
 void listToArray(Card *head, Card deck[], int size);
 Card *arrayToList(Card deck[], int size);
 
