@@ -12,9 +12,11 @@ void run_game()
 {
     Card deck[52] = {}; // deck size 52
     // TODO LOTS OF STUFF
-    Card *deckHead = readDeck(".\\deckOne.txt", deck);
+    Card *deckHead = readDeck("../deckOne.txt", deck);
 
-    print_deck(deck, 52);
+    //print_deck(deck, 52);
+
+    showDeck(deckHead);
 
 
     //test conversion
@@ -22,35 +24,35 @@ void run_game()
 
     // print_deck(deckArr, 52);
 
-    view_not_started();
-
-
-
 
 }
 
 Card* readDeck (const char *filename,Card *deck) { //function that takes a file, and
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
-        perror("Error opening file");
-        return NULL;
+        file = fopen("../deckOne.txt", "r");
+        if (file == NULL) {
+            perror("Error opening file");
+            return NULL;
+        }
     }
 
     int i = 0;
-  
     char buffer[10];
 
-    while (fgets(buffer, 10, file) != NULL) {
+    while (i < 52 && fgets(buffer, sizeof(buffer), file) != NULL) {
+        if (buffer[0] == '\n' || buffer[0] == '\0') {
+            continue;
+        }
+
         deck[i].rank = buffer[0];
         deck[i].suit = buffer[1];
         deck[i].visible = 0;
         i++;
     }
 
-    Card *head = arrayToList(deck,52);
-
     fclose(file);
-    return head;
+    return arrayToList(deck, i);
 }
 
 Card* shuffleDeck (char arrDeck[]) {}
