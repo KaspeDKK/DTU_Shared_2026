@@ -1,11 +1,17 @@
 package com.example.accessing_data_rest.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
 @Table(name="user_table") // this is important! "user" is a keyword in H2 and not an identifier
+@JsonIdentityInfo(
+        scope=User.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "uid")
 public class User {
 
     @Id
@@ -15,15 +21,10 @@ public class User {
 
     private String name;
 
-    // TODO this class needs to be extended with references to Player and
+    // DONE Assignment 7a: this class needs to be extended with references to Player and
     //      the other way round (similar to the reference from Game to Player
     //      and the other way round.
-
-
-    @OneToMany
-    private List<Game> games;
-
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy="user")
     private List<Player> players;
 
     public long getUid() {
@@ -42,12 +43,15 @@ public class User {
         this.name = name;
     }
 
-    public List<Game> getGames() {return games;}
+    // DONE Assignment 7a: this class needs to be extended with references to Player and
+    //      the other way round (similar to the reference from Game to Player
+    //      and the other way round (corresponding getter and setter).
+    public List<Player> getPlayers() {
+        return players;
+    }
 
-    public void setGames(List<Game> games) {this.games = games;}
-
-    public List<Player> getPlayers() {return players;}
-
-    public void setPlayers(List<Player> players) {this.players = players;}
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
 
 }

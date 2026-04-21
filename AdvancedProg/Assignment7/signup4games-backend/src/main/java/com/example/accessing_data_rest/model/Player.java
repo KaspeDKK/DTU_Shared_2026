@@ -1,9 +1,15 @@
 package com.example.accessing_data_rest.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 
 @Entity
+@JsonIdentityInfo(
+        scope=Player.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "uid")
 public class Player {
 
     // FIXME the ID of this could actually be the two foreign keys game_id and
@@ -20,9 +26,9 @@ public class Player {
     @JoinColumn
     private Game game;
 
-    //Many to one relationship: more players can have one user
-    @ManyToOne()
-    @JoinColumn(name = "user_id")
+    // DONE Assignment 7a: Add the reference to the user
+    @ManyToOne
+    @JoinColumn
     private User user;
 
     public long getUid() {
@@ -49,7 +55,14 @@ public class Player {
         this.game = game;
     }
 
-    public User getUser() {return user;}
+    // DONE Assignment 7a: added the reference to the user
+    //      (corresponding getter and setter).
+    public User getUser() {
+        return user;
+    }
 
-    public void setUser(User user) {this.user = user;}
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 }
