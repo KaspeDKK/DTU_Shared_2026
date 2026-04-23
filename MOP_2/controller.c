@@ -68,7 +68,7 @@ void run_game()
 
         if (strcmp(cmd, "P") == 0) {
             // enter play phase
-            start_game();
+            start_game(*deckHead);
         }
 
         // this needs to be the last command
