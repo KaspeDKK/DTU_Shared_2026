@@ -8,6 +8,16 @@
 #include "model.h"
 #include "view.h"
 
+void start_game(void) {
+    // new stucture
+    create_game(); // model.c
+
+    // game loop
+    while (1) {
+
+    }
+}
+
 void run_game()
 {
     Card deck[52] = {}; // deck size 52
@@ -21,34 +31,52 @@ void run_game()
 
     showDeck(deckHead);
 
-    // main game loop
-    const char * input = "LD null";
-    char cmd;
-    char param;
+    // startup loop
     while (1) {
 
-        if (deckHead == NULL) {
-            return;
-        }
-
-
+        char input[] = "LD filename";
+        char cmd[2], param[20];
 
         // scan for input
-        scanf("%c", &choice);
+        printf("Please enter your command: ");
 
-        switch (choice) {
-            case 't':
-                // make change
-                showDeck(deckHead);
-                break;
+        gets(input); // read user input
 
-            default:
+        sscanf(input, "%s %s ", cmd, param);
 
-                break;
+        printf("Command: %s\n, Param: %s\n", cmd, param);
+
+        if (strcmp(cmd, "LD") == 0) {
+            // load the file using param
         }
 
-        choice = '\0'; // set to null
+        if (strcmp(cmd, "SW") == 0) {
+            showDeck(deckHead);
+        }
 
+        if (strcmp(cmd, "SI") == 0) {
+            // split shuffle using param as the split parameter
+        }
+
+        if (strcmp(cmd, "SR") == 0) {
+            // random shuffle
+        }
+
+        if (strcmp(cmd, "SD") == 0) {
+            // save current deck to file. filename is param
+        }
+
+        if (strcmp(cmd, "P") == 0) {
+            // enter play phase
+            start_game();
+        }
+
+        // this needs to be the last command
+        if (strcmp(cmd, "QQ") == 0) {
+            exit(0);
+        } else {
+            printf("No such command exists!\n");
+        }
     }
 
 }

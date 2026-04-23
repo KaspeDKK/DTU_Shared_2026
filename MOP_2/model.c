@@ -4,3 +4,7 @@
 
 // TODO LOTS OF STUFF
 
+// create game
+void create_game(void) {
+    Game game;
+}
