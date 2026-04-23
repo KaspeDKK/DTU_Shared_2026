@@ -63,12 +63,16 @@ void showDeck(Card *head)
 
     Card *current = head;
     int count = 0;
+    int row = 0;
 
     while (current != NULL) {
         print_card_face_up(current);
         count++;
+        row++;
 
         if (count % 7 == 0) {
+            if (row % 2 == 0 && count <= 4) {
+                printf("     []   F%d", f);
             printf("\n");
         } else {
             printf("  ");
