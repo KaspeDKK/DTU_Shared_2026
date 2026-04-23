@@ -12,11 +12,11 @@ typedef struct Card
     struct Card* next;
 } Card;
 
-typedef struct
+typedef struct Column
 {
-    Card* columns[NUM_COLUMNS];
-    Card* foundations[NUM_FOUNDATIONS];
-} Game;
+    struct Card* ref;
+};
+
 
 // TODO LOTS OF STUFF
 
