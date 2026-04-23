@@ -66,8 +66,6 @@ Card *splitDeck (Card *head, int split) { //splits deck
         return NULL;
     }
 
-
-
     Card *oldPile = head; //initiate oldPile
     Card *current = head;
 
@@ -78,7 +76,6 @@ Card *splitDeck (Card *head, int split) { //splits deck
         }
         current = current->next; //else "increment"
     }
-
 
     if (current == NULL || current->next == NULL) {
         return head;
