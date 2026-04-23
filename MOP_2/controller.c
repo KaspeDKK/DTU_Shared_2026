@@ -21,6 +21,36 @@ void run_game()
 
     showDeck(deckHead);
 
+    // main game loop
+    const char * input = "LD null";
+    char cmd;
+    char param;
+    while (1) {
+
+        if (deckHead == NULL) {
+            return;
+        }
+
+
+
+        // scan for input
+        scanf("%c", &choice);
+
+        switch (choice) {
+            case 't':
+                // make change
+                showDeck(deckHead);
+                break;
+
+            default:
+
+                break;
+        }
+
+        choice = '\0'; // set to null
+
+    }
+
 }
 
 Card* readDeck (const char *filename,Card *deck) { //function that takes a file, and
