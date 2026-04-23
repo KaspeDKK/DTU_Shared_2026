@@ -3,10 +3,7 @@
 
 int main()
 {
-    // TODO
     run_game();
-
-
     return 0;
 }
 
