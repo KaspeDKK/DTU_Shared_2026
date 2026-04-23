@@ -9,5 +9,6 @@ Card* readDeck(const char *filename, Card *deck);
 Card *splitDeck (Card *head, int split);
 void listToArray(Card *head, Card deck[], int size);
 Card *arrayToList(Card deck[], int size);
+Card *randomShuffle(Card *head);
 
 #endif
