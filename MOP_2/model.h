@@ -4,10 +4,6 @@
 #define NUM_COLUMNS 7
 #define NUM_FOUNDATIONS 4
 
-void create_game(Card *deckHead);
-
-Card getNth(Card *deckHead, int n);
-
 typedef struct Card
 {
     char rank;
@@ -20,6 +16,12 @@ typedef struct Column
 {
     struct Card* ref;
 } Column;
+
+void create_game(Card *deckHead);
+
+struct Card *getNth(Card *deckHead, int n);
+
+
 
 
 // TODO LOTS OF STUFF

@@ -4,7 +4,7 @@
 
 // TODO LOTS OF STUFF
 
-Card getNth(Card *deckHead, int n) {
+struct Card *getNth(Card *deckHead, int n) {
     Card *current = deckHead;
     int count = 0;
 
@@ -33,8 +33,9 @@ void create_game(Card *deckHead) {
     // a col is just a name and a ref to the first card
     Column cols[7] = {};
     for (int i = 0; i < 7; i++) {
-        cols[i].ref = getNth();
+        cols[i].ref = getNth(deckHead, i);
     }
+
     /* cards are placed in rows using the linked lists for cols. so c1, c2, c3...
     * each card places increments a counter
     * when the counter reaches these checkpoints, it will stop using cols like c1 and upwards for each checkpoint
