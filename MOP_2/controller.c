@@ -22,9 +22,10 @@ void run_game()
     Card *deckHead = readDeck("../deckOne.txt", deck);
 
 
+
     showDeck(deckHead);
 
-    deckHead = splitDeck(deckHead,0);
+    deckHead = randomShuffle(deckHead);
 
     showDeck(deckHead);
 
@@ -174,7 +175,57 @@ Card *splitDeck (Card *head, int split) { //splits deck
     return head; //return new pile
 }
 
+Card *randomShuffle(Card *head) {
 
+    int sizeNewDeck = 1;
+    Card *current = NULL;
+    Card *shuffledDeck = head;
+
+    if (head == NULL) return NULL;
+
+    head = head->next;
+    shuffledDeck->next = NULL;
+
+    while (head != NULL) {
+        Card *insertCard = head;
+        head = head->next;
+        insertCard->next = NULL;
+
+        Card *placeholder = shuffledDeck;
+
+        int randomIndex = rand() % sizeNewDeck +1;
+
+        //current = placeholder;
+        //for (int i = 0; i <= randomIndex; i++) {
+        //    current = current->next;
+        //}
+        //if (current->next == NULL) {
+        //    current->next = insertCard;
+        //    sizeNewDeck = sizeNewDeck + 1;
+        //} else {
+        //    insertCard->next = current->next;
+        //    current->next = insertCard;
+        //    sizeNewDeck = sizeNewDeck + 1;
+        //}
+
+        if (randomIndex == 0) {
+            insertCard->next = shuffledDeck;
+            shuffledDeck = insertCard;
+        } else {
+            current = placeholder;
+            for (int i = 1; i < randomIndex; i++) {
+                current = current->next;
+            }
+
+            insertCard->next = current->next;
+            current->next = insertCard;
+        }
+
+        sizeNewDeck = sizeNewDeck + 1;
+    }
+
+    return shuffledDeck;
+}
 
 Card *arrayToList(Card deck[], int size)
 {

@@ -128,17 +128,27 @@ public class OnlineController {
 
     public void refreshGames() {
         try {
-            // TODO Assignment 7b: Obtain the list of all games from the backend!
+            // DONE Assignment 7b: Obtain the list of all games from the backend!
             // TODO Assignment 7c/7e: And at some later point, this should only
             //      return the games open for registration (not started yet).
-            List<Game> games = new ArrayList<Game>(); // For now this list is empty
-            onlineState.setOpenGames(games);
+
+            List<Game> games = restClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/Game/search")
+                            .queryParam("Game", "")
+                            .build())
+                    .retrieve()
+                    .body(new ParameterizedTypeReference<>() {
+                    }); //typecasts the JSON response to User
+            if (!games.isEmpty()) {
+                onlineState.setOpenGames(games);
+            }
         } catch (Exception e) {
-            onlineState.setOpenGames(null);
+
         }
     }
 
-    private boolean gameSelectionOn = false;
+        private boolean gameSelectionOn = false;
 
     public void selectGame() {
         if (appController.isGameRunning()) {
