@@ -126,25 +126,19 @@ public class OnlineController {
         }
     }
 
+    // TODO Assignment 7b: Obtain the list of all games from the backend!
+    // TODO Assignment 7c/7e: And at some later point, this should only
+    //      return the games open for registration (not started yet).
     public void refreshGames() {
         try {
-            // DONE Assignment 7b: Obtain the list of all games from the backend!
-            // TODO Assignment 7c/7e: And at some later point, this should only
-            //      return the games open for registration (not started yet).
-
             List<Game> games = restClient.get()
-                    .uri(uriBuilder -> uriBuilder
-                            .path("/Game/search")
-                            .queryParam("Game", "")
-                            .build())
+                    .uri("/game/getGames")
                     .retrieve()
-                    .body(new ParameterizedTypeReference<>() {
-                    }); //typecasts the JSON response to User
-            if (!games.isEmpty()) {
-                onlineState.setOpenGames(games);
-            }
-        } catch (Exception e) {
+                    .body(new ParameterizedTypeReference<List<Game>>() {});
 
+            onlineState.setOpenGames(games != null ? games : new ArrayList<>());
+        } catch (Exception e) {
+            onlineState.setOpenGames(new ArrayList<>());
         }
     }
 
