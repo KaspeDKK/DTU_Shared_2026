@@ -25,7 +25,7 @@ public class User {
     //      the other way round (similar to the reference from Game to Player
     //      and the other way round.
     @OneToMany(mappedBy="user")
-    private List<Player> players;
+    private List<Player> players; // -> connection player
 
     public long getUid() {
         return uid;
