@@ -4,6 +4,7 @@ import com.example.accessing_data_rest.model.Game;
 import com.example.accessing_data_rest.repositories.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,12 @@ public class GameService {
         return games;
     }
 
-    // DONE Assignment 7b: create a game in the repository and return the result
+    // TODO Assignment 7b: create a game in the repository and return the result
+
+    public Game createGame(@RequestBody Game game){
+        return gameRepository.save(game);
+    }
+
     // TODO Assignment 7c: make sure that the game is created with the owner
     //      who must be in the repository already, and also with the owner as first player
 

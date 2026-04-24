@@ -28,7 +28,14 @@ public class GameController {
 
     // TODO Assignment 7b: Create a post method in this controller for creating a new game
     //      this method should call the corresponding service for creating a game
-
+    @PostMapping(
+            value = "",
+            consumes = "application/json",
+            produces = "application/json"
+    )
+    public Game postGame(@RequestBody Game game){
+        return gameService.createGame(game);
+    }
     // TODO Assignment 7d: Create a method and @RequestMpping for deleting a game
 
     // TODO Assignment 7c-7e: At some point you might want to implement an

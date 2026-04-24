@@ -45,7 +45,7 @@ public class GameController {
      * @param space the space to which the current player should move
      */
     public void moveCurrentPlayerToSpace(@NotNull Space space)  {
-        // TODO A6a: this method should be implemented for Assignment 6a:
+        // DONE A6a: this method should be implemented for Assignment 6a:
         //   - the current player should be moved to the given space
         //     (if it is free())
         //   - and the current player should be set to the player
@@ -137,9 +137,9 @@ public class GameController {
     }
 
     // XXX A6c
-    // TODO A6d: add the execution of the field actions at the right
+    // DONE A6d: add the execution of the field actions at the right
     //      place in this method
-    // TODO A6e: implement the execution af an interactive card to
+    // DONE A6e: implement the execution af an interactive card to
     //     this method (e.g. by switching to the PLAYER_INTERACTION phase
     //     at the right point)
     private void executeNextStep() {
