@@ -8,14 +8,11 @@
 #include "model.h"
 #include "view.h"
 
-void start_game(void) {
+void start_game(Card *deckHead) {
     // new stucture
-    create_game(); // model.c
+    create_game(deckHead); // model.c
 
     // game loop
-    while (1) {
-
-    }
 }
 
 void run_game()
@@ -68,7 +65,7 @@ void run_game()
 
         if (strcmp(cmd, "P") == 0) {
             // enter play phase
-            start_game(*deckHead);
+            start_game(deckHead);
         }
 
         // this needs to be the last command

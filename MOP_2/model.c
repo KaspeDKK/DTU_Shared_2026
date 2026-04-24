@@ -4,15 +4,15 @@
 
 // TODO LOTS OF STUFF
 
-Card getNth(Card *deckHead, int n) {
-    Card *current = deckHead;
+Card *getNth(Card *deckHead, int n) {
+    Card current = deckHead;
     int count = 0;
 
     // Traverse the list until we reach the nth node or the end
     while (current != NULL) {
         if (count == n) {
             // Found the nth card, return its value
-            return *current;
+            return current;
         }
         count++;
         current = current->next;
@@ -33,7 +33,7 @@ void create_game(Card *deckHead) {
     // a col is just a name and a ref to the first card
     Column cols[7] = {};
     for (int i = 0; i < 7; i++) {
-        cols[i].ref = getNth();
+        cols[i].ref = getNth(deckHead, i);
     }
     /* cards are placed in rows using the linked lists for cols. so c1, c2, c3...
     * each card places increments a counter

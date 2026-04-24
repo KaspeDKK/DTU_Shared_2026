@@ -4,7 +4,7 @@
 #include "model.h"
 
 void run_game();
-
+void start_game(Card *deckHead);
 Card* readDeck(const char *filename, Card *deck);
 Card *splitDeck (Card *head, int split);
 void listToArray(Card *head, Card deck[], int size);
