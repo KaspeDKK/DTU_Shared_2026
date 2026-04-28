@@ -12,6 +12,8 @@ import java.util.List;
 @RequestMapping("roborally/game")
 public class GameController {
 
+    // field injection to hide dependencies. Constructor injection could be prefered and since we have no constructor
+    // Spring could actually inject the constructor automatically into
     @Autowired
     private GameService gameService;
 
