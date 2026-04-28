@@ -50,7 +50,7 @@ public class GamesView extends GridPane {
                 //      with game owner and  all players who joined.
                 for (Player player: game.getPlayers()) {
                     Text playerInfo = new Text("\n  Player " + player.getName()
-                            /* + " (" + player.getUser().getName() + ")" */ );
+                             + " (" + player.getUser().getName() + ")" );
                     gameInfo.getChildren().add(playerInfo);
                 }
                 gameInfo.setTextAlignment(TextAlignment.LEFT);

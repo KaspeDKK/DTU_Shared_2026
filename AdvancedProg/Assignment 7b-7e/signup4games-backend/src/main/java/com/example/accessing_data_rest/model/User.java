@@ -27,6 +27,9 @@ public class User {
     @OneToMany(mappedBy="user")
     private List<Player> players; // -> connection player
 
+   // @OneToMany(mappedBy ="owner")
+   // private List<Game> games;
+
     public long getUid() {
         return uid;
     }
@@ -34,6 +37,14 @@ public class User {
     public void setUid(long uid) {
         this.uid = uid;
     }
+
+//    public List<Game> getGames() {return this.games;}
+//
+//    public void setGames(List<Game> games1) {this.games = games1;}
+//
+//    public void addGame(Game game){
+//        this.games.add(game);
+//    }
 
     public String getName() {
         return name;

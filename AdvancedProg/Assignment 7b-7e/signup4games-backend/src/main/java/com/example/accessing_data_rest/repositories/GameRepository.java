@@ -16,4 +16,5 @@ public interface GameRepository extends PagingAndSortingRepository<Game, Long>, 
 
     List<Game> findAll();
 
+    List<Game> findByUid(long uid);
 }

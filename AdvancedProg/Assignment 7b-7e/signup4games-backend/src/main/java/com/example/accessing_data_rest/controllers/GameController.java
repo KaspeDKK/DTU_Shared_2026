@@ -15,7 +15,7 @@ public class GameController {
     @Autowired
     private GameService gameService;
 
-    // TODO Assignment 7b: add a method with @GetMapping, which obtains
+    // DONE Assignment 7b: add a method with @GetMapping, which obtains
     //      a list of all games from the games repository  (via the service
     //      getGames) and returns this list (in JSON representation).
     //      See class UserController for inspiration and class GameService

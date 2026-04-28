@@ -183,7 +183,7 @@ public class OnlineController {
 
     public void createGame(Game game) {
         if (!appController.isGameRunning() && onlineState.getSignedInUser() != null && gameSelectionOn) {
-
+            game.setOwner(onlineState.getSignedInUser());
 
             try {
 
@@ -198,6 +198,7 @@ public class OnlineController {
                 // TODO Assignment 7c: Extend the game creation so that the currently signed in user
                 //      is the owener of the game, which should also be registered as the first
                 //      player of the game
+                
             } catch (Exception e) {
                 e.printStackTrace();
             }
