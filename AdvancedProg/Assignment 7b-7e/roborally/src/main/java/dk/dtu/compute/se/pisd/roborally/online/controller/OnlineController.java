@@ -271,16 +271,23 @@ public class OnlineController {
             //      and check whether this was successfull
         User currUser = onlineState.getSignedInUser();
         Player player = new Player();
-        player.setGame(game);
-        player.setUser(currUser);
+
+// Shallow game reference - just the ID
+        Game gameRef = new Game();
+        gameRef.setUid(game.getUid());
+        player.setGame(gameRef);
+
+// Shallow user reference - just the ID
+        User userRef = new User();
+        userRef.setName(currUser.getName());
+        player.setUser(userRef);
+
         player.setName(currUser.getName());
 
 
-        for (int i = 0; i < currUser.getPlayers().size(); i++){
-            for (int j = 0; i < game.getPlayers().size(); j++){
-            if (currUser.getPlayers().get(i) == game.getPlayers().get(j)){
+        for (Player p : game.getPlayers()) {
+            if (p.getUser().getUid() == currUser.getUid()) {
                 throw new IllegalArgumentException("player already in game");
-            }
             }
         }
 
@@ -292,6 +299,7 @@ public class OnlineController {
                         .retrieve()
                         .body(Player.class);
             } else {
+                System.out.println(player.getName() + " cant join "+ game.getName());
                 throw new IllegalArgumentException("cant join game. Game is full");
             }
         } catch (Exception e) {
