@@ -8,6 +8,13 @@ import java.util.List;
 @RequestMapping("roborally/player")
 public class PlayerController {
 
+    @PostMapping(
+            produces = "application/json"
+    )
+    public void gameSignUp(){
+
+    }
+
     // @Autowired
     // PlayerService playerService;
 

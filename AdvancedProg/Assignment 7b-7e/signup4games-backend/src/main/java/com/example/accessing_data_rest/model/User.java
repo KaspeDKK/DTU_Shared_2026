@@ -19,6 +19,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long uid;
 
+    @Column(unique=true) //constraint -> only unique names.
     private String name;
 
     // DONE Assignment 7a: this class needs to be extended with references to Player and
