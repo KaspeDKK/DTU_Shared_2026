@@ -195,10 +195,10 @@ public class OnlineController {
                             .retrieve()
                             .body(Game.class);
                 
-                // TODO Assignment 7c: Extend the game creation so that the currently signed in user
+                // DONE Assignment 7c: Extend the game creation so that the currently signed in user
                 //      is the owener of the game, which should also be registered as the first
                 //      player of the game
-                
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -213,13 +213,36 @@ public class OnlineController {
     }
 
     public void joinGame(Game game) {
-        try {
 
             // TODO Assignment 7c: add the currently active user as a Player for
             //      the given game if this user is not a player yet and if there
             //      is still room for a player. If so post his to the backend,
             //      and check whether this was successfull
+        User currUser = onlineState.getSignedInUser();
+        Player player = new Player();
+        player.setGame(game);
+        player.setUser(currUser);
+        player.setName(currUser.getName());
 
+
+        for (int i = 0; i < currUser.getPlayers().size(); i++){
+            for (int j = 0; i < game.getPlayers().size(); j++){
+            if (currUser.getPlayers().get(i) == game.getPlayers().get(j)){
+                throw new IllegalArgumentException("player already in game");
+            }
+            }
+        }
+
+        try {
+            if (game.getMaxPlayers() > game.getPlayers().size()){
+                Player created = restClient.post()
+                        .uri("/player")
+                        .body(player)
+                        .retrieve()
+                        .body(Player.class);
+            } else {
+                throw new IllegalArgumentException("cant join game. Game is full");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

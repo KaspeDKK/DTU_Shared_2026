@@ -39,6 +39,10 @@ public class PlayerService {
         Game game = games.get(0);
         User owner = users.get(0);
 
+        if (game.getPlayers().size() >= game.getMaxPlayers()){
+            throw new CouldNotCreatePlayerException("No more space in game. could not create user");
+        }
+
         player.setGame(game);
         player.setUser(owner);
 
