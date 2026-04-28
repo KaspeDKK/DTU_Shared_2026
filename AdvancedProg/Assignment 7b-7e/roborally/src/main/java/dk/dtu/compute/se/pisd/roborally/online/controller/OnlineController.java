@@ -49,7 +49,7 @@ public class OnlineController {
         // FIXME the 4 below is a bit arbitray and should be a constant defines
         //       somewhere in the code or a configuration file!
         if (name.length() >= 4) {
-            // TODO Assignment 7b: make sure that the user with the given name
+            // DONE Assignment 7b: make sure that the user with the given name
             //      exist in the backend; and make sure that you set the user
             //      returened by the backend (with the correct uid) is added
             //      as onLineUser in this controller! (NOT the once created
@@ -64,14 +64,16 @@ public class OnlineController {
                         .body(new ParameterizedTypeReference<>(){}); //typecasts the JSON response to User
                 if (!users.isEmpty()){
                     setOnlineUser(users.get(0));
-                    return;
+                } else {
+                    Alert alert  = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("User not found");
+                    alert.showAndWait();
+                    throw new RuntimeException(); //erstattes med vores egen
                 }
-            } catch (Exception e) {
-
+            } catch (RuntimeException e) { //erstattes med vores egen
+                e.printStackTrace();
             }
-            User user = new User();
-            user.setName(name);
-            setOnlineUser(user);
         }
     }
 
@@ -105,6 +107,55 @@ public class OnlineController {
                 // If the user confirms, sign the user out
                 setOnlineUser(null);
             }
+        }
+    }
+
+
+    public void signUp(String name) {
+        if (name.length() >= 4) {
+            try {
+                List<User> users = restClient.get()
+                        .uri(uriBuilder -> uriBuilder
+                                .path("/user/search")
+                                .queryParam("name",name)
+                                .build())
+                        .retrieve()
+                        .body(new ParameterizedTypeReference<>(){}); //typecasts the JSON response to User
+                if (!users.isEmpty()){
+                    throw new RuntimeException();
+                }
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+                Alert alert  = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error");
+                alert.setHeaderText("User Already Exists");
+                alert.showAndWait();
+                return;
+            }
+            User user = new User();
+            user.setName(name);
+            restClient.post()
+                    .uri("/user")
+                    .body(user)
+                    .retrieve()
+                    .body(User.class);
+            setOnlineUser(user);
+        }
+    }
+
+    public void signUp() {
+        if (appController.isGameRunning()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Game running");
+            alert.setHeaderText("You cannot sign in while a game is running!");
+            alert.showAndWait();
+        } else if (gameSelectionOn) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Game selection is active");
+            alert.setHeaderText("You cannot sign up while a game is running!");
+            alert.showAndWait();
+        } else {
+            appDialogs.signUp();
         }
     }
 

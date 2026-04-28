@@ -3,8 +3,11 @@ package com.example.accessing_data_rest.services;
 import com.example.accessing_data_rest.model.User;
 
 import com.example.accessing_data_rest.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import java.util.List;
 
 @Service
@@ -22,4 +25,13 @@ public class UserService {
         return users;
     }
 
+    @Transactional
+    public User createUser(@RequestBody User user) {
+        try {
+            return userRepository.save(user);
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+        }
+        throw new RuntimeException();
+    }
 }

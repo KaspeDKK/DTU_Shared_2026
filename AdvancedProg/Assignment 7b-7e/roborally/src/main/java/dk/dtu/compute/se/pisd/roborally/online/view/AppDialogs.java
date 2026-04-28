@@ -24,7 +24,7 @@ public class AppDialogs {
     public void signIn() {
         Stage stage = new Stage();
 
-        Text text = new Text("Register as user for Online RoboRally with a (new) user name.");
+        Text text = new Text("Sign in as user for Online RoboRally with a user name.");
         TextField userName = new TextField();
 
         Button cancel = new Button("Cancel");
@@ -44,12 +44,45 @@ public class AppDialogs {
         VBox vbox = new VBox(text, userName, buttons);
 
         Scene scene = new Scene(vbox);
-        stage.setTitle("Register for Online RoboRally");
+        stage.setTitle("Sign in for Online RoboRally");
         stage.setScene(scene);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(false);
         stage.sizeToScene();
         stage.show();
+    }
+
+    public void signUp() {
+        Stage stage = new Stage();
+
+        Text text = new Text("Sign up for Online RoboRally");
+        TextField userName = new TextField();
+
+        Button cancel = new Button("Cancel");
+        cancel.setOnAction( e -> stage.close() );
+
+        Button register= new Button("Sign up");
+        register.setOnAction(
+                e -> {
+                    String name = userName.getText();
+                    if (name.length() >= 4) {
+                        stage.close();
+                        onlineController.signUp(name);
+                    }
+                }
+        );
+
+        HBox buttons = new HBox(cancel, register);
+
+        VBox vbox = new VBox(text, userName, buttons);
+        Scene scene = new Scene(vbox);
+        stage.setTitle("Sign up for Online RoboRally");
+        stage.setScene(scene);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
+        stage.sizeToScene();
+        stage.show();
+
     }
 
     // TODO Assignment 7c you might want to implement a dialog for a SingUp or
