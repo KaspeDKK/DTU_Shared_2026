@@ -49,7 +49,7 @@ void create_game(struct Card *deckHead, struct  Column cols[]) {
         // when row counter is 6 i needs to start at 1 instead of 0.
 
         // insert card at the bottom of the current column
-        insertCard(cols[columnCount], *current); // insert current card at given column list
+        placeCard(cols[columnCount], *current); // insert current card at given column list
 
         columnCount++;
 
