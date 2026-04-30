@@ -4,6 +4,7 @@
 
 #include <ctype.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "../Model/model.h"
 #include "../View/view.h"
@@ -25,6 +26,7 @@ void run_game()
 
     showDeck(deckHead);
 
+    deckHead = randomShuffle(deckHead);
     deckHead = randomShuffle(deckHead);
 
     showDeck(deckHead);
@@ -176,7 +178,7 @@ Card *splitDeck (Card *head, int split) { //splits deck
 }
 
 Card *randomShuffle(Card *head) {
-
+    srand(time(NULL)); //generates a seed from the current time, for generating a random number.
     int sizeNewDeck = 1;
     Card *current = NULL;
     Card *shuffledDeck = head;
@@ -194,19 +196,6 @@ Card *randomShuffle(Card *head) {
         Card *placeholder = shuffledDeck;
 
         int randomIndex = rand() % sizeNewDeck +1;
-
-        //current = placeholder;
-        //for (int i = 0; i <= randomIndex; i++) {
-        //    current = current->next;
-        //}
-        //if (current->next == NULL) {
-        //    current->next = insertCard;
-        //    sizeNewDeck = sizeNewDeck + 1;
-        //} else {
-        //    insertCard->next = current->next;
-        //    current->next = insertCard;
-        //    sizeNewDeck = sizeNewDeck + 1;
-        //}
 
         if (randomIndex == 0) {
             insertCard->next = shuffledDeck;
