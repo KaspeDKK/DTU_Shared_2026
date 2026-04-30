@@ -10,7 +10,8 @@
 
 void start_game(Card *deckHead) {
     // new stucture
-    create_game(deckHead); // model.c
+    Column cols[7] = {};
+    create_game(deckHead, cols); // model.c
 
     // game loop
 }

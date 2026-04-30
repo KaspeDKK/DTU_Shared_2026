@@ -13,4 +13,6 @@ add_executable(MOP_2 main.c
         Controller/controller.c
         Model/Card.h
         Model/Card.c
+        Controller/CardServices.c
+        Controller/CardServices.h
 )
