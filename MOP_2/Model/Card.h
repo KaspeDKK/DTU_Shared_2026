@@ -1,13 +1,11 @@
 //
 // Created by kaspe on 30-04-2026.
 //
-#include "../Model/model.h"
+
 
 
 #ifndef MOP_2_CARD_H
 #define MOP_2_CARD_H
-
-#endif //MOP_2_CARD_H
 
 typedef struct Card
 {
@@ -16,3 +14,6 @@ typedef struct Card
     int visible; // (0,1)
     struct Card* next;
 } Card;
+
+#endif //MOP_2_CARD_H
+

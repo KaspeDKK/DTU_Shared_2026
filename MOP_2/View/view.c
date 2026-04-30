@@ -52,6 +52,10 @@ void view_not_started() {
     printf("Message: Enter Command\n");
 }
 
+void view_while_started() {
+    
+}
+
 void showDeck(Card *head)
 {
     if (head == NULL) {
