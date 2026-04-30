@@ -11,5 +11,6 @@ void listToArray(Card *head, Card deck[], int size);
 Card *arrayToList(Card deck[], int size);
 Card *randomShuffle(Card *head);
 Card* getLastCard(Column column);
+Card* getLastCardFoundation(Foundation foundation);
 
 #endif

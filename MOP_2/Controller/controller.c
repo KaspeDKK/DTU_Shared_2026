@@ -178,7 +178,7 @@ Card *splitDeck (Card *head, int split) { //splits deck
 }
 
 Card *randomShuffle(Card *head) {
-
+    srand(time(NULL));
     int sizeNewDeck = 1;
     Card *current = NULL;
     Card *shuffledDeck = head;
@@ -197,18 +197,6 @@ Card *randomShuffle(Card *head) {
 
         int randomIndex = rand() % sizeNewDeck +1;
 
-        //current = placeholder;
-        //for (int i = 0; i <= randomIndex; i++) {
-        //    current = current->next;
-        //}
-        //if (current->next == NULL) {
-        //    current->next = insertCard;
-        //    sizeNewDeck = sizeNewDeck + 1;
-        //} else {
-        //    insertCard->next = current->next;
-        //    current->next = insertCard;
-        //    sizeNewDeck = sizeNewDeck + 1;
-        //}
 
         if (randomIndex == 0) {
             insertCard->next = shuffledDeck;
@@ -277,6 +265,10 @@ void moveCard(Card *moveCard, Column columnFrom, Column columnTo) {
     Card* endOfColumn = getLastCard(columnTo);
 
     while (headCard->next->rank != moveCard->rank && headCard->next->suit != moveCard->suit) {
+        if (headCard->next == NULL) {
+            printf("Picked card is not in column");
+            return;
+        }
         headCard = headCard->next;
     }
 
@@ -290,4 +282,36 @@ Card* getLastCard(Column column) {
         column.ref = column.ref->next;
     }
     return column.ref;
+}
+
+Card* getLastCardFoundation(Foundation foundation) {
+    while (foundation.ref->next != NULL) {
+        foundation.ref = foundation.ref->next;
+    }
+    return foundation.ref;
+}
+
+void moveCardFoundation(Card *moveCard, Column columnFrom, Foundation foundation) {
+    Card* headCard = columnFrom.ref;
+    Card* endOfFoundation = getLastCardFoundation(foundation);
+
+    while (headCard->next->rank != moveCard->rank && headCard->next->suit != moveCard->suit) {
+        headCard = headCard->next;
+    }
+
+    headCard->next = NULL;
+
+    endOfFoundation->next = moveCard;
+}
+
+int isMoveLegal(Card* moveCard, Card* cardTo) {
+    if (moveCard->suit != cardTo->suit) {
+        return 0;
+    }
+
+    if (moveCard->rank >= cardTo->rank) {
+        return 0;
+    }
+
+    return 1;
 }
