@@ -6,7 +6,10 @@
 #define NUM_COLUMNS 7
 #define NUM_FOUNDATIONS 4
 
-
+typedef struct Foundation {
+    Card* ref;
+    char suit;
+} Foundation;
 
 typedef struct Column
 {
