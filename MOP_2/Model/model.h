@@ -10,7 +10,7 @@
 
 typedef struct Column
 {
-    Card ref;
+    Card* ref;
 } Column;
 
 void create_game(Card *deckHead);

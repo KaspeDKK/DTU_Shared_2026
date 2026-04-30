@@ -268,3 +268,23 @@ void listToArray(Card *head, Card deck[], int size)
         current = current->next;
     }
 }
+
+void moveCard(Card *moveCard, Column columnFrom, Column columnTo) {
+    Card* headCard = columnFrom.ref;
+    Card* endOfColumn = getLastCard(columnTo);
+
+    while (headCard->next->rank != moveCard->rank && headCard->next->suit != moveCard->suit) {
+        headCard = headCard->next;
+    }
+
+    headCard->next = NULL;
+
+    endOfColumn->next = moveCard;
+}
+
+Card* getLastCard(Column column) {
+    while (column.ref->next != NULL) {
+        column.ref = column.ref->next;
+    }
+    return column.ref;
+}
