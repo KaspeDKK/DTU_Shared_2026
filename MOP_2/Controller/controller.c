@@ -143,16 +143,6 @@ Card *splitDeck (Card *head, int split) { //splits deck
     Card *newPile = current->next; //Start newPile from current
     current->next = NULL;
 
-    // Save the next cards before changing pointers:
-    //
-    // oldPile     -> A -> B -> ...
-    // newPile     -> D -> E -> ...
-    // nextOldCard -> B
-    // nextNewCard -> E
-    //
-    // Reconnect:
-    // A -> D -> B -> ...
-
     //initiate placeholders for the next cards
     Card *nextOldCard = NULL;
     Card *nextNewCard = NULL;
@@ -179,7 +169,7 @@ Card *splitDeck (Card *head, int split) { //splits deck
 }
 
 Card *randomShuffle(Card *head) {
-    srand(time(NULL));
+    srand(time(NULL)); //generates a seed from the current time, for generating a random number.
     int sizeNewDeck = 1;
     Card *current = NULL;
     Card *shuffledDeck = head;
@@ -310,9 +300,16 @@ int isMoveLegal(Card* moveCard, Card* cardTo) {
         return 0;
     }
 
-    if (moveCard->rank >= cardTo->rank) {
+    char cardRank1 = moveCard->suit;
+    int cardRankInt1;
+    sscanf(&cardRank1, "%d", &cardRankInt1);
+
+    char cardRank2 = cardTo->suit;
+    int cardRankInt2;
+    sscanf(&cardRank2, "%d", &cardRankInt2);
+
+    if (cardRank1 != cardRank2+1) {
         return 0;
     }
-
     return 1;
 }
