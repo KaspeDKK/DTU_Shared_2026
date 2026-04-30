@@ -29,12 +29,12 @@ void create_game(Card *deckHead) {
     // setting up the game
 
     // loop over deckhead linked list and populate the col linked lists
-
+    /*
     // a col is just a name and a ref to the first card
     Column cols[7] = {};
     for (int i = 0; i < 7; i++) {
         cols[i].ref = getNth(deckHead, i);
-    }
+    }*/
 
     /* cards are placed in rows using the linked lists for cols. so c1, c2, c3...
     * each card places increments a counter

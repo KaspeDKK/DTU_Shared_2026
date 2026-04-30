@@ -32,7 +32,7 @@ void run_game()
     // startup loop
     while (1) {
 
-        char input[] = "LD filename";
+        char input[] = "";
         char cmd[2], param[20];
 
         // scan for input
