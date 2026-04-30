@@ -9,15 +9,15 @@
 #include "../Model/model.h"
 #include "../View/view.h"
 
-void start_game(Card *deckHead) {
+void run_game(Card *deckHead) {
     // new stucture
     Column cols[7] = {};
-    create_game(deckHead, cols); // model.c
+    create_game(deckHead, cols[]); // model.c
 
     // game loop
 }
 
-void run_game()
+void game_startup()
 {
     Card deck[52] = {}; // deck size 52
     // TODO LOTS OF STUFF
@@ -69,7 +69,7 @@ void run_game()
 
         if (strcmp(cmd, "P") == 0) {
             // enter play phase
-            start_game(deckHead);
+            run_game(deckHead);
         }
 
         // this needs to be the last command

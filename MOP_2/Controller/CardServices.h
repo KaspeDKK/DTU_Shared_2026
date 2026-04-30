@@ -10,4 +10,4 @@
 #include "../Model/model.h"
 #include "../Model/Card.h"
 
-void insertCard(Column columnCount, Card *current);
+void placeCard(Column column, Card *current);

@@ -3,7 +3,7 @@
 
 int main()
 {
-    run_game();
+    game_startup();
     return 0;
 }
 
