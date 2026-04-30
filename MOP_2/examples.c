@@ -2,6 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+
+// important lessons: the Node** is always the head of the linked list. A node pointer
+
+
+
 // Define the Node structure
 struct Node {
     int data;
