@@ -271,13 +271,13 @@ public class OnlineController {
             //      and check whether this was successfull
         User currUser = onlineState.getSignedInUser();
         Player player = new Player();
-
-// Shallow game reference - just the ID
+        //referencing the whole object will create some conflicts regarding the ID's and creating new players.
+            // Shallow game reference - just the ID
         Game gameRef = new Game();
         gameRef.setUid(game.getUid());
         player.setGame(gameRef);
 
-// Shallow user reference - just the ID
+            // Shallow user reference - just the name
         User userRef = new User();
         userRef.setName(currUser.getName());
         player.setUser(userRef);
