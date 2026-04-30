@@ -34,8 +34,7 @@ struct Card *getNth(Card *deckHead, int n) {
 
 // later we implement rules that say other times we need to switch earlier to the next col.
 
-void create_game(struct Card *deckHead) {
-    Column cols[7] = {};
+void create_game(struct Card *deckHead, struct  Column cols[]) {
     Card *current = deckHead; // first card
 
     // somethings that stops when there are no more cards in the deckhead linked list
