@@ -4,10 +4,13 @@ project(MOP_2 C)
 set(CMAKE_C_STANDARD 11)
 
 add_executable(MOP_2 main.c
-        model.c
-        model.h
-        view.c
-        view.h
+        Model/model.c
+        Model/model.h
+        View/view.c
+        View/view.h
         main.c
-        controller.h
-        controller.c)
+        Controller/controller.h
+        Controller/controller.c
+        Model/Card.h
+        Model/Card.c
+)

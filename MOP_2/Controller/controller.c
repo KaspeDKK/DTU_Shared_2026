@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <string.h>
-#include "controller.h"
+#include "../Controller/controller.h"
 
 #include <ctype.h>
 #include <stdlib.h>
 
-#include "model.h"
-#include "view.h"
+#include "../Model/model.h"
+#include "../View/view.h"
 
 void start_game(Card *deckHead) {
     // new stucture

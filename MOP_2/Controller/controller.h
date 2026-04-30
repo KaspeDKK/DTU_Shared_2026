@@ -1,7 +1,7 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include "model.h"
+#include "../Model/model.h"
 
 void run_game();
 void start_game(Card *deckHead);
