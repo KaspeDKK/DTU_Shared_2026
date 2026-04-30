@@ -4,6 +4,7 @@
 
 #include <ctype.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "../Model/model.h"
 #include "../View/view.h"
@@ -27,13 +28,14 @@ void run_game()
     showDeck(deckHead);
 
     deckHead = randomShuffle(deckHead);
+    deckHead = randomShuffle(deckHead);
 
     showDeck(deckHead);
 
     // startup loop
     while (1) {
 
-        char input[] = "";
+        char input[] = "LD filename";
         char cmd[2], param[20];
 
         // scan for input
@@ -47,37 +49,27 @@ void run_game()
 
         if (strcmp(cmd, "LD") == 0) {
             // load the file using param
-            continue;
         }
 
         if (strcmp(cmd, "SW") == 0) {
             showDeck(deckHead);
-            continue;
         }
 
         if (strcmp(cmd, "SI") == 0) {
             // split shuffle using param as the split parameter
-            splitDeck(deckHead, param);
-            showDeck(deckHead);
-            continue;
         }
 
         if (strcmp(cmd, "SR") == 0) {
             // random shuffle
-            randomShuffle(deckHead);
-            showDeck(deckHead);
-            continue;
         }
 
         if (strcmp(cmd, "SD") == 0) {
             // save current deck to file. filename is param
-            continue;
         }
 
         if (strcmp(cmd, "P") == 0) {
             // enter play phase
             start_game(deckHead);
-            continue;
         }
 
         // this needs to be the last command
@@ -279,4 +271,24 @@ void listToArray(Card *head, Card deck[], int size)
 
         current = current->next;
     }
+}
+
+void moveCard(Card *moveCard, Column columnFrom, Column columnTo) {
+    Card* headCard = columnFrom.ref;
+    Card* endOfColumn = getLastCard(columnTo);
+
+    while (headCard->next->rank != moveCard->rank && headCard->next->suit != moveCard->suit) {
+        headCard = headCard->next;
+    }
+
+    headCard->next = NULL;
+
+    endOfColumn->next = moveCard;
+}
+
+Card* getLastCard(Column column) {
+    while (column.ref->next != NULL) {
+        column.ref = column.ref->next;
+    }
+    return column.ref;
 }

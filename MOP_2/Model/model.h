@@ -7,11 +7,14 @@
 #define NUM_COLUMNS 7
 #define NUM_FOUNDATIONS 4
 
-
+typedef struct Foundation {
+    Card* ref;
+    char suit;
+} Foundation;
 
 typedef struct Column
 {
-    Card ref;
+    Card* ref;
 } Column;
 
 void create_game(Card *deckHead, Column cols[]);
