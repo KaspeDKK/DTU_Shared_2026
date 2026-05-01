@@ -39,10 +39,7 @@ public class Game {
     //      the game started or finish (after the game started
     //      you might not want new players coming in etc.)
     //      See analogous classes in client.
-
-    private enum state {
-        SIGN_UP, ACTIVE
-    }
+    
 
     public User getOwner(){return this.owner;}
 

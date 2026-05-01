@@ -27,6 +27,8 @@ public class GameController {
         return gameService.getGames();
     }
 
+    @PatchMapping("/")
+
 
     // TODO Assignment 7b: Create a post method in this controller for creating a new game
     //      this method should call the corresponding service for creating a game

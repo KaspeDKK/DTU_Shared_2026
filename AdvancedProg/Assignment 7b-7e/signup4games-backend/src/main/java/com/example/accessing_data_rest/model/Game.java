@@ -33,9 +33,11 @@ public class Game {
     //      you might not want new players coming in etc.)
     //      See analogous classes in client.
 
-    private enum state {
+    public enum GameState {
         SIGN_UP, ACTIVE
     }
+
+    private GameState state = GameState.SIGN_UP;
 
     @ManyToOne
     @JoinColumn(name = "owner_name")
@@ -89,4 +91,11 @@ public class Game {
         this.players = players;
     }
 
+    public GameState getState() {
+        return state;
+    }
+
+    public void setState(GameState state) {
+        this.state = state;
+    }
 }
