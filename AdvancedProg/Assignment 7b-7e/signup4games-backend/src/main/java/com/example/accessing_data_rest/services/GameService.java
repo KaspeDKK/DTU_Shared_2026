@@ -34,24 +34,43 @@ public class GameService {
         return games;
     }
 
-    // TODO Assignment 7b: create a game in the repository and return the result
+    // DONE Assignment 7b: create a game in the repository and return the result
+    // DONE Assignment 7c: make sure that the game is created with the owner
+    //      who must be in the repository already, and also with the owner as first player
 
+    /** Creates a game in the repository and returns the result. The game must have at least 2 players, and the owner must be an existing user in the repository.
+     * The owner is also added as the first player of the game.
+     *
+     * @param game The game to create. The owner must be an existing user in the repository, and the game must have at least 2 players and at max 6 players.
+     * @return  The created game with the owner and the first player set to the owner.
+     * @throws IllegalStateException If the game has less than 2 players or if the owner is not an existing user in the repository or if there are more than 6 players.
+     */
     @Transactional
     public Game createGame(Game game) {
+        try {
+            User owner = userRepository.findByName(game.getOwner().getName()).getFirst();
+            if (game.getMinPlayers() >= 2 && game.getMaxPlayers() <= 6 && owner != null) {
 
-        User owner = userRepository.findByName(game.getOwner().getName()).get(0);
+                game.setOwner(owner);  // Now game points to user
 
-        game.setOwner(owner);  // Now game points to user
+                Game savedGame = gameRepository.save(game);  // Game now has ID
 
-        Game savedGame = gameRepository.save(game);  // Game now has ID
+                Player player = new Player();
+                player.setGame(savedGame);   // Managed game
+                player.setUser(owner);       // Managed user
+                player.setName(owner.getName());
+                playerRepository.save(player);
 
-        Player player = new Player();
-        player.setGame(savedGame);   // Managed game
-        player.setUser(owner);       // Managed user
-        player.setName(owner.getName());
-        playerRepository.save(player);
+                return gameRepository.findByUid(savedGame.getUid()).get(0);
 
-        return gameRepository.findByUid(savedGame.getUid()).get(0);
+            } else {throw new IllegalStateException("Game must have at least 2 players and at max 6 players, and the owner must be an existing user in the repository.");}
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+        return null;
+
     }
 
     @Transactional
@@ -59,7 +78,6 @@ public class GameService {
         gameRepository.deleteById(gameUid);
     }
 
-    // TODO Assignment 7c: make sure that the game is created with the owner
-    //      who must be in the repository already, and also with the owner as first player
+
 
 }
