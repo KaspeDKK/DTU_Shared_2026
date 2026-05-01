@@ -28,8 +28,8 @@ public class AppDialogs {
         TextField userName = new TextField();
 
         Button cancel = new Button("Cancel");
-        cancel.setOnAction( e -> stage.close() );
-        Button register= new Button("Sign in");
+        cancel.setOnAction(e -> stage.close());
+        Button register = new Button("Sign in");
         register.setOnAction(
                 e -> {
                     String name = userName.getText();
@@ -59,16 +59,14 @@ public class AppDialogs {
         TextField userName = new TextField();
 
         Button cancel = new Button("Cancel");
-        cancel.setOnAction( e -> stage.close() );
+        cancel.setOnAction(e -> stage.close());
 
-        Button register= new Button("Sign up");
+        Button register = new Button("Sign up");
         register.setOnAction(
                 e -> {
                     String name = userName.getText();
-                    if (name.length() >= 4) {
-                        stage.close();
-                        onlineController.signUp(name);
-                    }
+                    stage.close();
+                    onlineController.signUp(name);
                 }
         );
 
@@ -94,18 +92,18 @@ public class AppDialogs {
 
         Label labelGameName = new Label("Name:");
         TextField gameName = new TextField();
-        HBox nameBox = new HBox(labelGameName,gameName);
+        HBox nameBox = new HBox(labelGameName, gameName);
 
         Label minLabel = new Label("min:");
         TextField min = new TextField();
         Label maxLabel = new Label("max:");
         TextField max = new TextField();
-        HBox minMaxBox = new HBox(minLabel,min,maxLabel,max);
+        HBox minMaxBox = new HBox(minLabel, min, maxLabel, max);
 
 
         Button cancel = new Button("Cancel");
-        cancel.setOnAction( e -> stage.close() );
-        Button create= new Button("Create");
+        cancel.setOnAction(e -> stage.close());
+        Button create = new Button("Create");
         create.setOnAction(
                 e -> {
                     try {
