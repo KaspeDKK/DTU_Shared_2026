@@ -309,64 +309,41 @@ void moveCardFoundation(Card *moveCard, Column columnFrom, Foundation foundation
     endOfFoundation->next = moveCard;
 }
 
+int determineRank(Card card) {
+    char cardRank = card.rank;
+    int cardRankInt;
+
+    if (cardRank == 'A'){cardRankInt = 1;}
+    else if (cardRank == 'K'){cardRankInt = 13;
+    } else if (cardRank == 'Q'){cardRankInt = 12;
+    } else if (cardRank == 'J'){cardRankInt = 11;
+    } else if (cardRank == 'T'){cardRankInt = 10;
+    } else {
+        sscanf(&cardRank, "%d", &cardRankInt);
+    }
+    return cardRankInt;
+}
+
 int isMoveLegal(Card* moveCard, Card* cardTo) {
-    if (moveCard->suit != cardTo->suit) {
-        return 0;
-    }
+    int cardRank = determineRank(*moveCard);
+    int cardRank2 = determineRank(*cardTo);
 
-    char cardRank1 = moveCard->suit;
-    int cardRankInt1;
+    if (moveCard->suit == cardTo->suit) {return 0;}
 
-	// For billedekort, skal angive tal i hiearki
-	if (cardRank1.rank = 'A' ||){
-		cardRankInt1 = 1;
-	} else if (cardRank1.rank = 'K' ||){
-		cardRankInt1 = 13;
-	} else if (cardRank1.rank = 'Q' ||){
-		cardRankInt1 = 12;
-	} else if (cardRank1.rank = 'J' ||){
-		cardRankInt1 = 11;
-	} else if (cardRank1.rank = 'T' ||){
-		cardRankInt1 = 10;
-	} else {
-        sscanf(&cardRank1, "%d", &cardRankInt1);
-	}
-
-	char cardRank2 = cardTo->suit;
-    int cardRankInt2;
-
-	// For billedekort, skal angive tal i hiearki
-    if (cardRank2.rank = 'A' ||){cardRankInt2 = 1;
-    } else if (cardRank2.rank = 'K' ||){cardRankInt2 = 13;
-    } else if (cardRank2.rank = 'Q' ||){cardRankInt2 = 12;
-    } else if (cardRank2.rank = 'J' ||){cardRankInt2 = 11;
-    } else if (cardRank2.rank = 'T' ||){cardRankInt2 = 10;
-    } else { sscanf(&cardRank2, "%d", &cardRankInt2); }
-
-    if (cardRank1 != cardRank2+1) {
-        return 0;
-    }
+    if (cardRank != cardRank2+1) {return 0;}
 
     return 1;
 }
 
-int isMoveLegalFoundation(Card* movecard, Card* cardTo, Foundation foundation) {
-	char cardRank1 = moveCard->suit;
-    int cardRankInt1;
-    sscanf(&cardRank1, "%d", &cardRankInt1);
+int isMoveLegalFoundation(Card* moveCard, Card* cardTo, Foundation foundation) {
+    int cardRank = determineRank(*moveCard);
+    int cardRank2 = determineRank(*cardTo);
 
-    char cardRank2 = cardTo->suit;
-    int cardRankInt2;
-    sscanf(&cardRank2, "%d", &cardRankInt2);
+    if (moveCard->suit != cardTo->suit) {return 0;}
+    if (cardRank != cardRank2+1) {return 0;}
 
-    if (cardRank1 != cardRank2+1) {
-        return 0;
-    }
-
-	if (foundation.ref->next.rank != movecard->rank) { return 0;}
-
-
-	return 1;
+    return 1;
 }
 
 // Vi burde nok lave en convert rank to int metode, så vi slipper for 100 linjer ekstra kode :)
+// DONE
