@@ -1,25 +1,16 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include "../Model/Card.h"
 #include "../Controller/CardServices.h"
+#include "../Model/Types.h"
 
 #define NUM_COLUMNS 7
 #define NUM_FOUNDATIONS 4
 
-typedef struct Foundation {
-    Card* ref;
-    char suit;
-} Foundation;
-
-typedef struct Column
-{
-    Card* ref;
-} Column;
 
 void create_game(Card *deckHead, Column cols[]);
 
-struct Card *getNth(Card *deckHead, int n);
+Card *getNth(Card *deckHead, int n);
 
 
 

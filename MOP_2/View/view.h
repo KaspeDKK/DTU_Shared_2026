@@ -1,8 +1,7 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include "../Model/model.h"
-#include "../Model/Card.h"
+#include "../Model/Types.h"
 
 
 // TODO

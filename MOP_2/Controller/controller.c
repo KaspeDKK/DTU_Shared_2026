@@ -5,7 +5,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <time.h>
-
+#include "../Model/Types.h"
 #include "../Model/model.h"
 #include "../View/view.h"
 
@@ -49,27 +49,37 @@ void game_startup()
 
         if (strcmp(cmd, "LD") == 0) {
             // load the file using param
+            continue;
         }
 
         if (strcmp(cmd, "SW") == 0) {
             showDeck(deckHead);
+            continue;
         }
 
         if (strcmp(cmd, "SI") == 0) {
             // split shuffle using param as the split parameter
+            splitDeck(deckHead, param);
+            showDeck(deckHead);
+            continue;
         }
 
         if (strcmp(cmd, "SR") == 0) {
             // random shuffle
+            randomShuffle(deckHead);
+            showDeck(deckHead);
+            continue;
         }
 
         if (strcmp(cmd, "SD") == 0) {
             // save current deck to file. filename is param
+            continue;
         }
 
         if (strcmp(cmd, "P") == 0) {
             // enter play phase
             run_game(deckHead);
+            continue;
         }
 
         // this needs to be the last command
