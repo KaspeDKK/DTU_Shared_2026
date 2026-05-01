@@ -5,7 +5,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <time.h>
-
+#include "../Model/Types.h"
 #include "../Model/model.h"
 #include "../View/view.h"
 
