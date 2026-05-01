@@ -264,7 +264,6 @@ public class OnlineController {
     }
 
     public void joinGame(Game game) {
-
             // TODO Assignment 7c: add the currently active user as a Player for
             //      the given game if this user is not a player yet and if there
             //      is still room for a player. If so post his to the backend,
@@ -285,13 +284,12 @@ public class OnlineController {
         player.setName(currUser.getName());
 
 
-        for (Player p : game.getPlayers()) {
-            if (p.getUser().getUid() == currUser.getUid()) {
-                throw new IllegalArgumentException("player already in game");
-            }
-        }
-
         try {
+            for (Player p : game.getPlayers()) {
+                if (p.getUser().getUid() == currUser.getUid()) {
+                    throw new IllegalArgumentException("player already in game");
+                }
+            }
             if (game.getMaxPlayers() > game.getPlayers().size()){
                 Player created = restClient.post()
                         .uri("/player")
@@ -324,9 +322,7 @@ public class OnlineController {
     public void deleteGame(Game game) {
         try {
 
-            // TODO Assignment 7d: delete the given game from the games
-            //      in the backend
-
+            restClient.delete().uri("/game/{id}",game.getUid()).retrieve().toBodilessEntity();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -335,17 +331,22 @@ public class OnlineController {
     }
 
     public boolean userInGame(Game game) {
-
-        // TODO Assignment 7c: this method should return true if the
-        //      currently active user is a player of the game
-
+        User currUser = onlineState.getSignedInUser();
+        for (Player p : game.getPlayers()) {
+            if (p.getUser().getUid() == currUser.getUid()) {
+                return true;
+            }
+        }
         return false;
     }
 
     public boolean userOwnsGame(Game game) {
-
-        // TODO Assignment 7c: this method should return true
-        //      if the currently active user the owner of the given game
+        if (game.getOwner() == null){
+            game.setOwner(onlineState.getSignedInUser());
+        }
+        if (game.getOwner().getUid() == onlineState.getSignedInUser().getUid()){
+            return true;
+        }
 
         return false;
     }

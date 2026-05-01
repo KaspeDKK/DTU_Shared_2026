@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <string.h>
-#include "../Controller/controller.h"
-
 #include <ctype.h>
 #include <stdlib.h>
 #include <time.h>
+
+#include "../Controller/controller.h"
 #include "../Model/Types.h"
 #include "../Model/model.h"
 #include "../View/view.h"
@@ -20,22 +20,13 @@ void run_game(Card *deckHead) {
 void game_startup()
 {
     Card deck[52] = {}; // deck size 52
-    // TODO LOTS OF STUFF
-    Card *deckHead = readDeck("../deckOne.txt", deck);
-
-
-
-    showDeck(deckHead);
-
-    deckHead = randomShuffle(deckHead);
-    deckHead = randomShuffle(deckHead);
-
+    Card *deckHead = readDeck("../deckOne.txt", deck); // standard deck
     showDeck(deckHead);
 
     // startup loop
     while (1) {
 
-        char input[] = "LD filename";
+        char input[] = "";
         char cmd[2], param[20];
 
         // scan for input
@@ -49,27 +40,50 @@ void game_startup()
 
         if (strcmp(cmd, "LD") == 0) {
             // load the file using param
+
+            // format the parameter into ../param.txt
+            char filename[100];
+            snprintf(filename, sizeof(filename), "../%s.txt", param);
+            deckHead = readDeck(filename, deck);
+            continue;
         }
 
         if (strcmp(cmd, "SW") == 0) {
             showDeck(deckHead);
+            continue;
         }
 
         if (strcmp(cmd, "SI") == 0) {
-            // split shuffle using param as the split parameter
+            // validate that param contains only digits
+            for (int i = 0; param[i] != '\0'; i++) {
+                if (!isdigit((unsigned char)param[i])) {
+                    printf("Error: split parameter must be a valid integer.\n");
+                    continue;
+                }
+            }
+            const int param_int = atoi(param);  // convert to int
+
+            splitDeck(deckHead, param_int);
+            showDeck(deckHead);
+            continue;
         }
 
         if (strcmp(cmd, "SR") == 0) {
             // random shuffle
+            randomShuffle(deckHead);
+            showDeck(deckHead);
+            continue;
         }
 
         if (strcmp(cmd, "SD") == 0) {
             // save current deck to file. filename is param
+            continue;
         }
 
         if (strcmp(cmd, "P") == 0) {
             // enter play phase
             run_game(deckHead);
+            continue;
         }
 
         // this needs to be the last command
