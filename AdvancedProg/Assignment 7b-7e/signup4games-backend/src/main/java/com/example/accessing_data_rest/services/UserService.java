@@ -1,12 +1,12 @@
 package com.example.accessing_data_rest.services;
 
+import com.example.accessing_data_rest.exceptions.CouldNotCreateUserException;
 import com.example.accessing_data_rest.model.User;
 
 import com.example.accessing_data_rest.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -26,12 +26,13 @@ public class UserService {
     }
 
     @Transactional
-    public User createUser(@RequestBody User user) {
-        try {
-            return userRepository.save(user);
-        } catch (RuntimeException ex) {
-            ex.printStackTrace();
+    public User createUser(User user) {
+        if (user.getName().length() < 4) {
+            throw new CouldNotCreateUserException("User name must be at least 4 characters long");
         }
-        throw new RuntimeException();
+        if (!userRepository.findByName(user.getName()).isEmpty()) {
+            throw new CouldNotCreateUserException("User with name " + user.getName() + " already exists");
+        }
+        return userRepository.save(user);
     }
 }

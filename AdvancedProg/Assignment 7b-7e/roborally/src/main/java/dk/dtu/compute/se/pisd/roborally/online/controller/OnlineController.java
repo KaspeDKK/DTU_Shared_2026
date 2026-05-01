@@ -9,6 +9,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
 import java.util.ArrayList;
@@ -16,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class OnlineController {
-
 
 
     public final AppController appController;
@@ -58,14 +58,15 @@ public class OnlineController {
                 List<User> users = restClient.get()
                         .uri(uriBuilder -> uriBuilder
                                 .path("/user/search")
-                                .queryParam("name",name)
+                                .queryParam("name", name)
                                 .build())
                         .retrieve()
-                        .body(new ParameterizedTypeReference<>(){}); //typecasts the JSON response to User
-                if (!users.isEmpty()){
+                        .body(new ParameterizedTypeReference<>() {
+                        }); //typecasts the JSON response to User
+                if (!users.isEmpty()) {
                     setOnlineUser(users.get(0));
                 } else {
-                    Alert alert  = new Alert(Alert.AlertType.INFORMATION);
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Error");
                     alert.setHeaderText("User not found");
                     alert.showAndWait();
@@ -88,7 +89,7 @@ public class OnlineController {
             alert.setTitle("Game selection is active");
             alert.setHeaderText(
                     "You cannot sign in while a game selection " +
-                    "for a signed in user is active!");
+                            "for a signed in user is active!");
             alert.showAndWait();
         } else {
             appDialogs.signIn();
@@ -112,37 +113,22 @@ public class OnlineController {
 
 
     public void signUp(String name) {
-        if (name.length() >= 4) {
-            try {
-                List<User> users = restClient.get()
-                        .uri(uriBuilder -> uriBuilder
-                                .path("/user/search")
-                                .queryParam("name",name)
-                                .build())
-                        .retrieve()
-                        .body(new ParameterizedTypeReference<>(){}); //typecasts the JSON response to User
-                if (!users.isEmpty()){
-                    throw new RuntimeException();
-                }
-            } catch (RuntimeException e) {
-                e.printStackTrace();
-                Alert alert  = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Error");
-                alert.setHeaderText("User Already Exists");
-                alert.showAndWait();
-                return;
-            }
+        try {
             User user = new User();
             user.setName(name);
-            restClient.post()
+            user = restClient.post()
                     .uri("/user")
                     .body(user)
                     .retrieve()
                     .body(User.class);
             setOnlineUser(user);
+        } catch (HttpClientErrorException.Conflict e) { //catches the conflict that is returned in the server side
+            Alert alert = new  Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
         }
     }
-
     public void signUp() {
         if (appController.isGameRunning()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -185,7 +171,8 @@ public class OnlineController {
             List<Game> games = restClient.get()
                     .uri("/game/getGames")
                     .retrieve()
-                    .body(new ParameterizedTypeReference<List<Game>>() {});
+                    .body(new ParameterizedTypeReference<List<Game>>() {
+                    });
 
             onlineState.setOpenGames(games != null ? games : new ArrayList<>());
         } catch (Exception e) {
@@ -193,7 +180,7 @@ public class OnlineController {
         }
     }
 
-        private boolean gameSelectionOn = false;
+    private boolean gameSelectionOn = false;
 
     public void selectGame() {
         if (appController.isGameRunning()) {
@@ -206,7 +193,7 @@ public class OnlineController {
             alert.setTitle("Not signed in");
             alert.setHeaderText(
                     "You cannot select a game when not signed in!\n" +
-                    "Sign in first!");
+                            "Sign in first!");
             alert.showAndWait();
         } else {
             refreshGames();
@@ -240,12 +227,12 @@ public class OnlineController {
 
                 // TODO Assignment 7b: Create the game (in the backend) with the config information
                 //      provided in the game configuration
-                    restClient.post()
-                            .uri("/game")
-                            .body(game)
-                            .retrieve()
-                            .body(Game.class);
-                
+                restClient.post()
+                        .uri("/game")
+                        .body(game)
+                        .retrieve()
+                        .body(Game.class);
+
                 // DONE Assignment 7c: Extend the game creation so that the currently signed in user
                 //      is the owener of the game, which should also be registered as the first
                 //      player of the game
@@ -264,19 +251,19 @@ public class OnlineController {
     }
 
     public void joinGame(Game game) {
-            // TODO Assignment 7c: add the currently active user as a Player for
-            //      the given game if this user is not a player yet and if there
-            //      is still room for a player. If so post his to the backend,
-            //      and check whether this was successfull
+        // TODO Assignment 7c: add the currently active user as a Player for
+        //      the given game if this user is not a player yet and if there
+        //      is still room for a player. If so post his to the backend,
+        //      and check whether this was successfull
         User currUser = onlineState.getSignedInUser();
         Player player = new Player();
         //referencing the whole object will create some conflicts regarding the ID's and creating new players.
-            // Shallow game reference - just the ID
+        // Shallow game reference - just the ID
         Game gameRef = new Game();
         gameRef.setUid(game.getUid());
         player.setGame(gameRef);
 
-            // Shallow user reference - just the name
+        // Shallow user reference - just the name
         User userRef = new User();
         userRef.setName(currUser.getName());
         player.setUser(userRef);
@@ -290,14 +277,14 @@ public class OnlineController {
                     throw new IllegalArgumentException("player already in game");
                 }
             }
-            if (game.getMaxPlayers() > game.getPlayers().size()){
+            if (game.getMaxPlayers() > game.getPlayers().size()) {
                 Player created = restClient.post()
                         .uri("/player")
                         .body(player)
                         .retrieve()
                         .body(Player.class);
             } else {
-                System.out.println(player.getName() + " cant join "+ game.getName());
+                System.out.println(player.getName() + " cant join " + game.getName());
                 throw new IllegalArgumentException("cant join game. Game is full");
             }
         } catch (Exception e) {
@@ -322,7 +309,7 @@ public class OnlineController {
     public void deleteGame(Game game) {
         try {
 
-            restClient.delete().uri("/game/{id}",game.getUid()).retrieve().toBodilessEntity();
+            restClient.delete().uri("/game/{id}", game.getUid()).retrieve().toBodilessEntity();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -341,10 +328,10 @@ public class OnlineController {
     }
 
     public boolean userOwnsGame(Game game) {
-        if (game.getOwner() == null){
+        if (game.getOwner() == null) {
             game.setOwner(onlineState.getSignedInUser());
         }
-        if (game.getOwner().getUid() == onlineState.getSignedInUser().getUid()){
+        if (game.getOwner().getUid() == onlineState.getSignedInUser().getUid()) {
             return true;
         }
 
@@ -357,10 +344,10 @@ public class OnlineController {
         //      And every user who had joined the game should be able to start
         //      it in their client (individually -- no interactive gameplay
         //      required for Assignment 7)!
-        Board board = new Board(8,8);
+        Board board = new Board(8, 8);
         GameController gameController = new GameController(board);
         int i = 0;
-        for (Player player: game.getPlayers()) {
+        for (Player player : game.getPlayers()) {
             String name = player.getName();
             if (name == null) {
                 name = "Player " + (i + 1);
