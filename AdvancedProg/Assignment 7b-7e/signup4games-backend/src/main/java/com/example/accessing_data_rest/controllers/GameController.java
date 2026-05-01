@@ -39,7 +39,10 @@ public class GameController {
         return gameService.createGame(game);
     }
     // TODO Assignment 7d: Create a method and @RequestMpping for deleting a game
-
+    @DeleteMapping(value = "{id}")
+    public void deleteGame(@PathVariable("id") long gameUid){
+        gameService.deleteGame(gameUid);
+    }
     // TODO Assignment 7c-7e: At some point you might want to implement an
     //      endpoint for obtaining open games (open for joining) only or
     //      games that have started.

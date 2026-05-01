@@ -17,5 +17,6 @@ public interface GameRepository extends PagingAndSortingRepository<Game, Long>, 
 
     List<Game> findByUid(long uid);
 
-
+    @Override
+    void deleteById(Long aLong);
 }

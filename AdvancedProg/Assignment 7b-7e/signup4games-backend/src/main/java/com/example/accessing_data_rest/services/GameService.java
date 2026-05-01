@@ -54,6 +54,11 @@ public class GameService {
         return gameRepository.findByUid(savedGame.getUid()).get(0);
     }
 
+    @Transactional
+    public void deleteGame(long gameUid){
+        gameRepository.deleteById(gameUid);
+    }
+
     // TODO Assignment 7c: make sure that the game is created with the owner
     //      who must be in the repository already, and also with the owner as first player
 
