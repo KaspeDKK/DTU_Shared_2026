@@ -25,6 +25,7 @@ public class UserController {
         return userService.searchUsers(name);
     }
 
+    //TODO javadoc
     @PostMapping(
             value = "",
             consumes = "application/json",
@@ -33,7 +34,7 @@ public class UserController {
     public User SignUp(@RequestBody User user) {
         return userService.createUser(user);
     }
-
+    // TODO javadoc til exceptionhandler
     //Catches the CouldNotCreateUserException and returns a response with the exception message
     // and a 409 Conflict status code instead of 500 to the client
     @ExceptionHandler(CouldNotCreateUserException.class)

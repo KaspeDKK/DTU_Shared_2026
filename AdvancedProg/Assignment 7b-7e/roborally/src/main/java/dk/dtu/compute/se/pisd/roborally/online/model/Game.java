@@ -4,6 +4,7 @@ package dk.dtu.compute.se.pisd.roborally.online.model;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import javax.swing.plaf.nimbus.State;
 import java.util.List;
 
 /*
@@ -38,6 +39,10 @@ public class Game {
     //      the game started or finish (after the game started
     //      you might not want new players coming in etc.)
     //      See analogous classes in client.
+
+    private enum state {
+        SIGN_UP, ACTIVE
+    }
 
     public User getOwner(){return this.owner;}
 

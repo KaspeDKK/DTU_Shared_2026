@@ -16,6 +16,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    //TODO javadoc
     public List<User> searchUsers(String name) {
         // DONE Assignment 7b: obtain a list of users with the given name
         //      from the userRepository and return the result (instead
@@ -24,7 +25,7 @@ public class UserService {
 
         return users;
     }
-
+    //TODO javadoc
     @Transactional
     public User createUser(User user) {
         if (user.getName().length() < 4) {

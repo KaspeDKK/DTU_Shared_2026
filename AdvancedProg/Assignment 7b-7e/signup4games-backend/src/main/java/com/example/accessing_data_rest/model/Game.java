@@ -33,6 +33,10 @@ public class Game {
     //      you might not want new players coming in etc.)
     //      See analogous classes in client.
 
+    private enum state {
+        SIGN_UP, ACTIVE
+    }
+
     @ManyToOne
     @JoinColumn(name = "owner_name")
     private User owner;
