@@ -232,8 +232,11 @@ public class OnlineController {
                 //      is the owener of the game, which should also be registered as the first
                 //      player of the game
 
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (HttpClientErrorException.BadRequest ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(ex.getMessage());
+                alert.showAndWait();
             }
 
             // update the game select view (which should get the new game from the backend)

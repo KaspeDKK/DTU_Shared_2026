@@ -1,9 +1,12 @@
 package com.example.accessing_data_rest.controllers;
 
+import com.example.accessing_data_rest.exceptions.CouldNotUpdateGameStateException;
 import com.example.accessing_data_rest.model.Game;
 
 import com.example.accessing_data_rest.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,4 +57,8 @@ public class GameController {
     //      endpoint for obtaining open games (open for joining) only or
     //      games that have started.
 
+    @ExceptionHandler(CouldNotUpdateGameStateException.class)
+    public ResponseEntity<String> handleCouldNotUpdateGameStateException(CouldNotUpdateGameStateException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
