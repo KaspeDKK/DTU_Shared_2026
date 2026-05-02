@@ -32,9 +32,9 @@ public class PlayerController {
 
     // TODO Assignment 7d for a player (user) leaving the game, you need to have a delete method for
     //      players here.
-    @DeleteMapping
-    public void leaveGame(@RequestBody Player player) {
-        playerService.leaveGame(player);
+    @DeleteMapping("/{playerUid}")
+    public void leaveGame(@PathVariable Long playerUid) {
+        playerService.leaveGame(playerUid);
     }
 
     @ExceptionHandler(CouldNotCreatePlayerException.class)

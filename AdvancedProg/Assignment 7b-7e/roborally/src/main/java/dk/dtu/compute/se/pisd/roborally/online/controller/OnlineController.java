@@ -289,11 +289,13 @@ public class OnlineController {
         }
     }
 
-    public void leaveGame(Game game) {
+    public void leaveGame(Player player) {
         try {
             // TODO Assignment 7d: delete the currently active user as a player
             //      for the given game (in the backend)
-            restClient.delete().uri("/game/{id}", game.getUid()).retrieve().toBodilessEntity();
+            restClient.delete().uri("/player/{playerUid}", player.getUid())
+                    .retrieve()
+                    .toBodilessEntity();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -304,7 +306,10 @@ public class OnlineController {
     public void deleteGame(Game game) {
         try {
 
-            restClient.delete().uri("/game/{id}", game.getUid()).retrieve().toBodilessEntity();
+            restClient.delete().
+                    uri("/game/{id}", game.getUid())
+                    .retrieve()
+                    .toBodilessEntity();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

@@ -52,6 +52,7 @@ public class GamesView extends GridPane {
                     Text playerInfo = new Text("\n  Player " + player.getName()
                              + " (" + player.getUser().getName() + ")" );
                     gameInfo.getChildren().add(playerInfo);
+
                 }
                 gameInfo.setTextAlignment(TextAlignment.LEFT);
                 gameInfo.setLineSpacing(1.0);
@@ -74,12 +75,21 @@ public class GamesView extends GridPane {
                 Button leaveButton = new Button("Leave");
                 leaveButton.setOnAction( e -> {
                     try {
-                        onlineController.leaveGame(game);
+                        for (Player player: game.getPlayers()) {
+                            if (player.getUser().getUid() == (onlineController.onlineState.getSignedInUser().getUid())) {
+                                onlineController.leaveGame(player);
+                            }
+                        }
+
+
                     } catch (Exception exception) {
                         // probably not needed since joinGame should catch possible exceptions
+                        /*
                         Label text = new Label("There was a problem leaving the game");
                         this.add(text, 0, 0);
                         exception.printStackTrace();
+
+                         */
                     }
                 });
                 if (!onlineController.userInGame(game) || onlineController.userOwnsGame(game)) {

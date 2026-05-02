@@ -53,17 +53,22 @@ public class PlayerService {
         return playerRepository.save(player);
     }
 
-    public void leaveGame(Player player) {
-        Long playerUid = player.getUid();
+    @Transactional
+    public void leaveGame(Long playerUid) {
+
+        // is present check
         if (!playerRepository.existsById(playerUid)) {
             throw new CouldNotFindPlayerException("Could not find player");
         }
+
+        Player player = playerRepository.findById(playerUid).get();
 
         if (player.getGame().getGameState() == Game.GameState.ACTIVE) {
             throw new CannotLeaveActiveGameException("Game is already active. Player could not leave game (delete player)");
         }
 
-        if (player.getGame().getOwner() == player.getUser()) {
+        // we can use == to compare
+        if (player.getGame().getOwner().getUid() == (player.getUser().getUid())) {
             throw new CouldNotDeletePlayerException("Game owner cannot leave game");
         }
 
