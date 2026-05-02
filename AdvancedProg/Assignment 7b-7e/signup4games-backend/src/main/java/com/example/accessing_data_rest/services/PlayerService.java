@@ -53,6 +53,14 @@ public class PlayerService {
         return playerRepository.save(player);
     }
 
+    /** this method deletes the player belonging to the given playerUid from the player repository.
+     * Conditions for this deletion are the following:
+     *  - playerUid actually belongs to a player
+     *  - the game hasn't been started yet
+     *  - the playerUid doesn't belong to the owner of the game
+     * 
+     * @param playerUid of the player that wishes to leave the game
+     */
     @Transactional
     public void leaveGame(Long playerUid) {
 
@@ -67,7 +75,7 @@ public class PlayerService {
             throw new CannotLeaveActiveGameException("Game is already active. Player could not leave game (delete player)");
         }
 
-        // we can use == to compare
+        // using userUid to check if this player is the owner
         if (player.getGame().getOwner().getUid() == (player.getUser().getUid())) {
             throw new CouldNotDeletePlayerException("Game owner cannot leave game");
         }
