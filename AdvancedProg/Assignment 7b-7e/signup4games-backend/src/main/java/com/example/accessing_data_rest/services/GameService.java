@@ -9,7 +9,6 @@ import com.example.accessing_data_rest.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,21 +72,16 @@ public class GameService {
 
     }
 
-    @Transactional
-    public Game updateGameState(long gameUid, Game.GameState gameState) {
-        try {
-            Game existingGame = gameRepository.findByUid(gameUid).get(0);
-            if (existingGame != null) {
-                existingGame.setGameState(gameState);
-                return gameRepository.save(existingGame);
-            } else {
-                throw new IllegalStateException("Game with uid " + existingGame.getUid() + " does not exist.");
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
-        }
+@Transactional
+public Game updateGameState(long gameUid, Game.GameState gameState) {
+    Game existingGame = gameRepository.findByUid(gameUid).get(0);
+    if (existingGame != null) {
+        existingGame.setGameState(gameState);
+        return gameRepository.save(existingGame);
+    } else {
+        throw new IllegalStateException("Game with uid " + gameUid + " does not exist.");
+    }
+}
 
     @Transactional
     public void deleteGame(long gameUid){

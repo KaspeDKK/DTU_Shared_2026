@@ -27,7 +27,8 @@ public class GameController {
         return gameService.getGames();
     }
 
-    @PatchMapping("/{gameId}")
+    //TODO javadoc
+    @PatchMapping("/{gameUid}")
     public Game updateGameState(@PathVariable long gameUid, @RequestBody Game game) {
         return gameService.updateGameState(gameUid, game.getGameState());
     }
