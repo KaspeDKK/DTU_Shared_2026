@@ -22,12 +22,15 @@ public class GameController {
     //      getGames) and returns this list (in JSON representation).
     //      See class UserController for inspiration and class GameService
 
-    @GetMapping(value = "/getGames",produces="application/json")
-    public List<Game> getGames(){
+    @GetMapping(value = "/getGames", produces = "application/json")
+    public List<Game> getGames() {
         return gameService.getGames();
     }
 
-    @PatchMapping("/")
+    @PatchMapping("/{gameId}")
+    public Game updateGameState(@PathVariable long gameUid, @RequestBody Game game) {
+        return gameService.updateGameState(gameUid, game.getGameState());
+    }
 
 
     // TODO Assignment 7b: Create a post method in this controller for creating a new game
@@ -37,12 +40,13 @@ public class GameController {
             consumes = "application/json",
             produces = "application/json"
     )
-    public Game postGame(@RequestBody Game game){
+    public Game postGame(@RequestBody Game game) {
         return gameService.createGame(game);
     }
+
     // TODO Assignment 7d: Create a method and @RequestMpping for deleting a game
     @DeleteMapping(value = "{id}")
-    public void deleteGame(@PathVariable("id") long gameUid){
+    public void deleteGame(@PathVariable("id") long gameUid) {
         gameService.deleteGame(gameUid);
     }
     // TODO Assignment 7c-7e: At some point you might want to implement an

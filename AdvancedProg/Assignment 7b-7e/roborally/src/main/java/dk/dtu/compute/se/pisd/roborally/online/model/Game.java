@@ -39,7 +39,12 @@ public class Game {
     //      the game started or finish (after the game started
     //      you might not want new players coming in etc.)
     //      See analogous classes in client.
-    
+
+    public enum GameState {
+        SIGN_UP, ACTIVE
+    }
+
+    private GameState state = GameState.SIGN_UP;
 
     public User getOwner(){return this.owner;}
 
@@ -85,6 +90,14 @@ public class Game {
         this.players = players;
     }
 
+    public GameState getGameState() {
+        return state;
+    }
+
+    public void setGameState(GameState state) {
+        this.state = state;
+    }
+
     @Override
     public String toString() {
         return "Game{" +
@@ -92,6 +105,7 @@ public class Game {
                 ", name='" + name + '\'' +
                 ", minPlayers=" + minPlayers +
                 ", maxPlayers=" + maxPlayers +
+                ", state=" + state +
                 '}';
     }
 

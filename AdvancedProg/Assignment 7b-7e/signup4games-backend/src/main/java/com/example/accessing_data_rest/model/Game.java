@@ -91,11 +91,11 @@ public class Game {
         this.players = players;
     }
 
-    public GameState getState() {
+    public GameState getGameState() {
         return state;
     }
 
-    public void setState(GameState state) {
+    public void setGameState(GameState state) {
         this.state = state;
     }
 }

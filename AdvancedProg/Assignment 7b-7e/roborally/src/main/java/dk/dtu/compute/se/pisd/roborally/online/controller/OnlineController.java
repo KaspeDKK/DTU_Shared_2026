@@ -199,12 +199,15 @@ public class OnlineController {
             appController.roboRally.createGameSelectionView(null);
             gameSelectionOn = false;
 
-            Game result = null;
             if (game != null) {
 
                 // TODO Assignment 7e: make sure the game is set to the active state
                 //      here and in the backend, so that no new players can sign up.
-
+                    Game result = restClient.patch()
+                            .uri("/game/{id}", game.getUid())
+                            .body(game)
+                            .retrieve()
+                            .body(Game.class);
                 // Then show the game board and the game (with uid from backend) is then started
                 startGame(result);
             }
@@ -336,8 +339,19 @@ public class OnlineController {
         //      And every user who had joined the game should be able to start
         //      it in their client (individually -- no interactive gameplay
         //      required for Assignment 7)!
+
+        Game stateUpdate = new Game();
+        stateUpdate.setGameState(Game.GameState.ACTIVE);
+
+        Game updatedGame = restClient.patch()
+                .uri("/game/{id}", game.getUid())
+                .body(stateUpdate)
+                .retrieve()
+                .body(Game.class);
+
         Board board = new Board(8, 8);
         GameController gameController = new GameController(board);
+
         int i = 0;
         for (Player player : game.getPlayers()) {
             String name = player.getName();
@@ -352,7 +366,6 @@ public class OnlineController {
         }
 
         gameSelectionOn = false;
-
         gameController.startProgrammingPhase();
         appController.roboRally.createBoardView(gameController);
     }

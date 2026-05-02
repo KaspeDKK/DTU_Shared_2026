@@ -74,10 +74,24 @@ public class GameService {
     }
 
     @Transactional
+    public Game updateGameState(long gameUid, Game.GameState gameState) {
+        try {
+            Game existingGame = gameRepository.findByUid(gameUid).get(0);
+            if (existingGame != null) {
+                existingGame.setGameState(gameState);
+                return gameRepository.save(existingGame);
+            } else {
+                throw new IllegalStateException("Game with uid " + existingGame.getUid() + " does not exist.");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+        }
+
+    @Transactional
     public void deleteGame(long gameUid){
         gameRepository.deleteById(gameUid);
     }
-
-
 
 }
