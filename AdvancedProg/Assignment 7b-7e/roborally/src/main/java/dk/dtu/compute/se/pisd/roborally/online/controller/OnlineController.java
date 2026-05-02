@@ -198,18 +198,25 @@ public class OnlineController {
         if (!appController.isGameRunning() /* && onlineState.getSignedInUser() != null && gameSelectionOn */) {
             appController.roboRally.createGameSelectionView(null);
             gameSelectionOn = false;
-
+            try {
             if (game != null) {
-
+                Game stateUpdate = new Game();
+                stateUpdate.setGameState(Game.GameState.ACTIVE);
                 // TODO Assignment 7e: make sure the game is set to the active state
                 //      here and in the backend, so that no new players can sign up.
                     Game result = restClient.patch()
                             .uri("/game/{id}", game.getUid())
-                            .body(game)
+                            .body(stateUpdate)
                             .retrieve()
                             .body(Game.class);
                 // Then show the game board and the game (with uid from backend) is then started
                 startGame(result);
+            }
+            } catch (HttpClientErrorException.NotFound e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(e.getMessage());
+                alert.showAndWait();
             }
         }
     }
@@ -217,8 +224,6 @@ public class OnlineController {
     public void createGame(Game game) {
         if (!appController.isGameRunning() && onlineState.getSignedInUser() != null && gameSelectionOn) {
             game.setOwner(onlineState.getSignedInUser());
-
-            try {
 
                 // TODO Assignment 7b: Create the game (in the backend) with the config information
                 //      provided in the game configuration
@@ -231,13 +236,6 @@ public class OnlineController {
                 // DONE Assignment 7c: Extend the game creation so that the currently signed in user
                 //      is the owener of the game, which should also be registered as the first
                 //      player of the game
-
-            } catch (HttpClientErrorException.BadRequest ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(ex.getMessage());
-                alert.showAndWait();
-            }
 
             // update the game select view (which should get the new game from the backend)
             selectGame();
@@ -270,23 +268,22 @@ public class OnlineController {
 
 
         try {
-            for (Player p : game.getPlayers()) {
-                if (p.getUser().getUid() == currUser.getUid()) {
-                    throw new IllegalArgumentException("player already in game");
-                }
-            }
-            if (game.getMaxPlayers() > game.getPlayers().size()) {
+            // for (Player p : game.getPlayers()) {
+                // if (p.getUser().getUid() == currUser.getUid()) {
+                //    throw new IllegalArgumentException("player already in game");
+              //  }
+            //}
+
                 Player created = restClient.post()
                         .uri("/player")
                         .body(player)
                         .retrieve()
                         .body(Player.class);
-            } else {
-                System.out.println(player.getName() + " cant join " + game.getName());
-                throw new IllegalArgumentException("cant join game. Game is full");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (HttpClientErrorException.Conflict | HttpClientErrorException.NotFound ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(ex.getMessage());
+            alert.showAndWait();
         } finally {
             selectGame();
         }

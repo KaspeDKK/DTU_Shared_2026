@@ -3,6 +3,7 @@ package com.example.accessing_data_rest.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.accessing_data_rest.exceptions.CannotJoinActiveGameException;
 import com.example.accessing_data_rest.exceptions.CouldNotCreatePlayerException;
 import com.example.accessing_data_rest.model.Game;
 import com.example.accessing_data_rest.model.Player;
@@ -39,8 +40,12 @@ public class PlayerService {
         Game game = games.get(0);
         User owner = users.get(0);
 
+        if (game.getGameState() == Game.GameState.ACTIVE){
+            throw new CannotJoinActiveGameException("Game is already active. could not create player");
+        }
+
         if (game.getPlayers().size() >= game.getMaxPlayers()){
-            throw new CouldNotCreatePlayerException("No more space in game. could not create user");
+            throw new CouldNotCreatePlayerException("Can't join game. Game is full");
         }
 
         player.setGame(game);

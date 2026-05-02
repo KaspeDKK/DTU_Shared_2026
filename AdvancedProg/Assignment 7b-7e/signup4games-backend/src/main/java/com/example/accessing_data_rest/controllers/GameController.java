@@ -59,6 +59,6 @@ public class GameController {
 
     @ExceptionHandler(CouldNotUpdateGameStateException.class)
     public ResponseEntity<String> handleCouldNotUpdateGameStateException(CouldNotUpdateGameStateException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 }

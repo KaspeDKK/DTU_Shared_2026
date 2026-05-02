@@ -1,8 +1,12 @@
 package com.example.accessing_data_rest.controllers;
 
+import com.example.accessing_data_rest.exceptions.CannotJoinActiveGameException;
+import com.example.accessing_data_rest.exceptions.CouldNotCreatePlayerException;
 import com.example.accessing_data_rest.services.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.accessing_data_rest.model.Player;
 
@@ -29,5 +33,15 @@ public class PlayerController {
 
     // TODO Assignment 7d for a player (user) leaving the game, you need to have a delete method for
     //      players here.
+
+    @ExceptionHandler(CouldNotCreatePlayerException.class)
+    public ResponseEntity<String> handleCouldNotCreatePlayerException(CouldNotCreatePlayerException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CannotJoinActiveGameException.class)
+    public ResponseEntity<String> handleCannotJoinActiveGameException(CannotJoinActiveGameException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
 
 }
