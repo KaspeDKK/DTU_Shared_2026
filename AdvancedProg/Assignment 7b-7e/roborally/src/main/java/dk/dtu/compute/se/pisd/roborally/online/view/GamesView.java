@@ -77,6 +77,9 @@ public class GamesView extends GridPane {
                         onlineController.leaveGame(game);
                     } catch (Exception exception) {
                         // probably not needed since joinGame should catch possible exceptions
+                        Label text = new Label("There was a problem leaving the game");
+                        this.add(text, 0, 0);
+                        exception.printStackTrace();
                     }
                 });
                 if (!onlineController.userInGame(game) || onlineController.userOwnsGame(game)) {

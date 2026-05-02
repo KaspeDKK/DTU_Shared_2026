@@ -293,7 +293,7 @@ public class OnlineController {
         try {
             // TODO Assignment 7d: delete the currently active user as a player
             //      for the given game (in the backend)
-
+            restClient.delete().uri("/game/{id}", game.getUid()).retrieve().toBodilessEntity();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
