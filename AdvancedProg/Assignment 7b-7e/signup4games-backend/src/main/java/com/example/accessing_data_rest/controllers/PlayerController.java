@@ -1,7 +1,6 @@
 package com.example.accessing_data_rest.controllers;
 
-import com.example.accessing_data_rest.exceptions.CannotJoinActiveGameException;
-import com.example.accessing_data_rest.exceptions.CouldNotCreatePlayerException;
+import com.example.accessing_data_rest.exceptions.*;
 import com.example.accessing_data_rest.services.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -33,10 +32,29 @@ public class PlayerController {
 
     // TODO Assignment 7d for a player (user) leaving the game, you need to have a delete method for
     //      players here.
+    @DeleteMapping
+    public void leaveGame(@RequestBody Player player) {
+        playerService.leaveGame(player);
+    }
 
     @ExceptionHandler(CouldNotCreatePlayerException.class)
     public ResponseEntity<String> handleCouldNotCreatePlayerException(CouldNotCreatePlayerException ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CouldNotDeletePlayerException.class)
+    public ResponseEntity<String> handleCouldNotDeletePlayerException(CouldNotDeletePlayerException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(CouldNotFindPlayerException.class)
+    public ResponseEntity<String> handleCouldNotFindPlayerException(CouldNotFindPlayerException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CannotLeaveActiveGameException.class)
+    public ResponseEntity<String> handleCannotLeaveActiveGameException(CannotLeaveActiveGameException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(CannotJoinActiveGameException.class)

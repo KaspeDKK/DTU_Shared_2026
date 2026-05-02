@@ -3,8 +3,7 @@ package com.example.accessing_data_rest.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.accessing_data_rest.exceptions.CannotJoinActiveGameException;
-import com.example.accessing_data_rest.exceptions.CouldNotCreatePlayerException;
+import com.example.accessing_data_rest.exceptions.*;
 import com.example.accessing_data_rest.model.Game;
 import com.example.accessing_data_rest.model.Player;
 import com.example.accessing_data_rest.model.User;
@@ -52,6 +51,23 @@ public class PlayerService {
         player.setUser(owner);
 
         return playerRepository.save(player);
+    }
+
+    public void leaveGame(Player player) {
+        Long playerUid = player.getUid();
+        if (!playerRepository.existsById(playerUid)) {
+            throw new CouldNotFindPlayerException("Could not find player");
+        }
+
+        if (player.getGame().getGameState() == Game.GameState.ACTIVE) {
+            throw new CannotLeaveActiveGameException("Game is already active. Player could not leave game (delete player)");
+        }
+
+        if (player.getGame().getOwner() == player.getUser()) {
+            throw new CouldNotDeletePlayerException("Game owner cannot leave game");
+        }
+
+        playerRepository.deleteById(playerUid);
     }
 
 }
