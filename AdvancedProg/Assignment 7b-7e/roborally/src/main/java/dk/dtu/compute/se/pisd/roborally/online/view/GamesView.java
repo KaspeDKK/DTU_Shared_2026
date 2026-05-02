@@ -85,8 +85,13 @@ public class GamesView extends GridPane {
                     leaveButton.setDisable(false);
                 }
 
-                Button startButton = new Button("Start");
+                Button startButton = new Button();
                 startButton.setOnAction( e -> onlineController.gameSelected(game) );
+                if (game.getGameState() == Game.GameState.ACTIVE) {
+                    startButton.setText("Play");
+                } else {
+                    startButton.setText("Start");
+                }
                 if (game.getMinPlayers() <= game.getPlayers().size() &&
                         game.getMaxPlayers() >= game.getPlayers().size() &&
                         onlineController.userInGame(game)) {
