@@ -474,11 +474,6 @@ int gameWon (Foundation foundation[NUM_FOUNDATIONS]) {
     }
     return 1; // Alle 4 foundations er færdige
 
-int gameWon (Foundation foundation[]) {
-    if (determineRank(*getLastCardFoundation(foundation[1])) == 13) {
-
-    }
 }
-
 // Vi burde nok lave en convert rank to int metode, så vi slipper for 100 linjer ekstra kode :)
 // DONE
