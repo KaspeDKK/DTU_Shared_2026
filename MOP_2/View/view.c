@@ -9,8 +9,8 @@ static void print_card(const Card* card)
     }
     if (card->visible == 1) {
         printf("[%c%c]", card->rank,card->suit);
-    } else if (card->visible == 0) {
-        printf("[]");
+    } else {
+        printf("[  ]");
     }
 }
 
@@ -23,7 +23,7 @@ static void print_card_face_up(const Card *card)
 void print_deck(const Card *deck, const int size) //right now this takes an array - needs to be changed to *head -> linked list.
 {
     for (int i = 0; i < size; i++) {
-        printf("[%c%c] ", deck[i].rank, deck[i].suit); // print format, c and c
+        printf("[%c%c]", deck[i].rank, deck[i].suit); // print format, c and c
     }
     printf("\n");
 }

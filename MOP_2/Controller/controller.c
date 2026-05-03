@@ -18,6 +18,7 @@ void run_game(Card *deckHead) {
 
     // print game
     debugShowGame(cols);
+    showGame(cols);
 
     int gameIsRunning = 0;
 
