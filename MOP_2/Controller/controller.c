@@ -397,8 +397,8 @@ int isMoveLegalFoundation(Card* moveCard, Card* cardTo) {
 
 
 // Tjek for spillet er vundet (condition)
-int gameWon (Foundation foundation) {
-    if (determineRank(*getLastCardFoundation(foundation)) == 13) {
+int gameWon (Foundation foundation1, Foundation foundation2, Foundation foundation3, Foundation foundation4) {
+    if (determineRank(*getLastCardFoundation(foundation1)) == 13) {
 
     }
 }
