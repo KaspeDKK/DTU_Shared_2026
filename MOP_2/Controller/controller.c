@@ -105,7 +105,6 @@ void run_game(Card *deckHead) {
         } else {
             printf("Invalid destination\n");
         }
-        debugShowGame(cols);
     }
 }
 
