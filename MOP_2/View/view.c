@@ -62,13 +62,10 @@ void showCol(Card *head) {
     int count = 0;
 
     while (current != NULL) {
+        printf("\n");
         print_card_face_up(current);
         current = current->next;
         count++;
-    }
-
-    if (count % 7 != 0) {
-        printf("\n");
     }
 }
 

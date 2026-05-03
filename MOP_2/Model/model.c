@@ -48,10 +48,9 @@ void create_game(struct Card *deckHead, struct  Column cols[]) {
 
         columnCount = colStart;
 
-        *current = *current->next; // next card in the pile
-
         // insert card at the bottom of the current column
-        placeCard(cols[columnCount], current); // insert current card at given column list
+        placeCard(&cols[columnCount], current); // insert current card at given column list
+        current = current->next; // next card in the pile
 
         columnCount++;
 
