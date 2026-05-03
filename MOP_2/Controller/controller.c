@@ -13,6 +13,7 @@ void run_game(Card *deckHead) {
     // new stucture
     Column cols[7] = {};
     Foundation foundations[4] = {};
+
     create_game(deckHead, cols); // model.c
 
     // print game
@@ -22,39 +23,88 @@ void run_game(Card *deckHead) {
 
     while (gameIsRunning) {
         char input[100] = "";
-        char cmd[10], param1[20], param2[20];
+        char from[20], to[20];
 
         // scan for input
         printf("Please enter your command: ");
 
         gets(input); // read user input
 
-        sscanf(input, "%s %s %s", cmd, param1, param2);
+        // Remove newline from fgets
+        input[strcspn(input, "\n")] = 0;
 
-        printf("Command: %s\n, Param1: %s\n, Param2: %s\n", cmd, param1, param2);
-
-        if (strcmp(cmd, "MV") == 0) {
-            // move card from column to column
+        // Parse the move command: split on "->"
+        char *arrow = strstr(input, "->");
+        if (arrow == NULL) {
+            printf("Invalid command format. Use <from>-><to>\n");
             continue;
         }
 
-        if (strcmp(cmd, "MF") == 0) {
-            // move card from column to foundation
-            continue;
-        }
+        // Copy from and to parts
+        size_t fromLen = arrow - input;
+        strncpy(from, input, fromLen);
+        from[fromLen] = '\0';
+        strcpy(to, arrow + 2);  // Skip "->"
 
-         if (strcmp(cmd, "Q") == 0) {
-            return;
-         }
-         if (strcmp(cmd, "QQ") == 0) {
-             exit(0);
-         } else {
-             printf("No such command exists!\n");
-         }
+        printf("From: %s, To: %s\n", from, to);
+        
+        
+        
+
+            if (to[0] == 'C') {
+            // Move to column
+            int toCol = to[1] - '0' - 1;  // 'C4' -> index 3
+
+            if (strchr(from, ':') != NULL) { //searches for char
+                // Specific card: "C6:4H"
+                char colStr[3], cardStr[3];
+                sscanf(from, "%[^:]:%s", colStr, cardStr);
+                int fromCol = colStr[1] - '0' - 1;
+                Card moveToCard = parseCard(cardStr);
+                // For now, assume single card move (extend for stacks later)
+                moveCard(&moveToCard, &cols[fromCol], &cols[toCol]);
+            } else if (from[0] == 'C') {
+                // Bottom card of column: "C6"
+                int fromCol = from[1] - '0' - 1;
+                Card *bottomCard = getLastCard(cols[fromCol]);
+                if (bottomCard != NULL) {
+                    moveCard(bottomCard, &cols[fromCol], &cols[toCol]);
+                }
+            } else if (from[0] == 'F') {
+                // Top card of foundation: "F3"
+                int fromFound = from[1] - '0' - 1;
+                Card *topCard = getLastCardFoundation(foundations[fromFound]);
+                if (topCard != NULL) {
+                    // Need a moveFoundationToColumn function
+                    // For now, placeholder
+                    printf("Foundation to column move not implemented yet\n");
+                }
+            }
+        } else if (to[0] == 'F') {
+            // Move to foundation
+            int toFound = to[1] - '0' - 1;
+
+            if (from[0] == 'C') {
+                if (strchr(from, ':') != NULL) {
+                    // Specific card from column to foundation
+                    char colStr[3], cardStr[3];
+                    sscanf(from, "%[^:]:%s", colStr, cardStr);
+                    int fromCol = colStr[1] - '0' - 1;
+                    Card moveToCard = parseCard(cardStr);
+                    moveCardFoundation(&moveToCard, &cols[fromCol], &foundations[toFound]);
+                } else {
+                    // Bottom card of column to foundation
+                    int fromCol = from[1] - '0' - 1;
+                    Card *bottomCard = getLastCard(cols[fromCol]);
+                    if (bottomCard != NULL) {
+                        moveCardFoundation(bottomCard, &cols[fromCol], &foundations[toFound]);
+                    }
+                }
+            }
+        } else {
+            printf("Invalid destination\n");
+        }
     }
-
-
-    // game loop
 }
 
 void game_startup()
@@ -309,6 +359,15 @@ void listToArray(Card *head, Card deck[], int size)
     }
 }
 
+Card parseCard(const char *cardStr) {
+    Card card;
+    card.rank = cardStr[0];
+    card.suit = cardStr[1];
+    card.visible = 1;  // Cards being moved should be visible
+    card.next = NULL;
+    return card;
+}
+
 void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
     Card* headCard = columnFrom->ref;
     Card* endOfColumn = getLastCard(*columnTo);
@@ -344,9 +403,9 @@ Card* getLastCardFoundation(Foundation foundation) {
     return foundation.ref;
 }
 
-void moveCardFoundation(Card *moveCard, Column columnFrom, Foundation foundation) {
-    Card* headCard = columnFrom.ref;
-    Card* endOfFoundation = getLastCardFoundation(foundation);
+void moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundation) {
+    Card* headCard = columnFrom->ref;
+    Card* endOfFoundation = getLastCardFoundation(*foundation);
 
     while (headCard->next->rank != moveCard->rank || headCard->next->suit != moveCard->suit) {
         headCard = headCard->next;
@@ -357,6 +416,15 @@ void moveCardFoundation(Card *moveCard, Column columnFrom, Foundation foundation
         endOfFoundation->next = cardToMove;
     } else {
         printf("Illegal move");
+    }
+}
+
+void moveCardFromFoundation(Card *moveCard, Column columnFrom, Foundation foundation) {
+    Card* headCard = columnFrom.ref;
+    Card* endOfFoundation = getLastCardFoundation(foundation);
+
+    while (headCard->next->rank != moveCard->rank || headCard->next->suit != moveCard->suit) {
+        headCard = headCard->next;
     }
 }
 
@@ -407,6 +475,5 @@ int gameWon (Foundation foundation[NUM_FOUNDATIONS]) {
     return 1; // Alle 4 foundations er færdige
 
 }
-
 // Vi burde nok lave en convert rank to int metode, så vi slipper for 100 linjer ekstra kode :)
 // DONE
