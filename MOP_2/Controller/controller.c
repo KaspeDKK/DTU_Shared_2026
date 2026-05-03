@@ -16,20 +16,17 @@ void run_game(Card *deckHead) {
 
     create_game(deckHead, cols); // model.c
 
-    // print game
-    debugShowGame(cols);
-    showGame(cols);
-
     int gameIsRunning = 1;
 
     while (gameIsRunning) {
         char input[100] = "";
         char from[20], to[20];
 
+        // print game
         debugShowGame(cols); // NEEDS TO BE CHANGED TO NORMAL FUNC LATER
 
         // scan for input
-        printf("\n INPUT: ");
+        printf("\nINPUT: ");
 
         gets(input); // read user input
 
@@ -66,15 +63,14 @@ void run_game(Card *deckHead) {
             } else if (from[0] == 'C') {
                 // Bottom card of column: "C6"
                 int fromCol = from[1] - '0' - 1;
-                Card *bottomCard = getLastCard(&cols[fromCol]);
-
+                Card *bottomCard = getLastCard(cols[fromCol]);
                 if (bottomCard != NULL) {
                     moveCard(bottomCard, &cols[fromCol], &cols[toCol]);
                 }
             } else if (from[0] == 'F') {
                 // Top card of foundation: "F3"
                 int fromFound = from[1] - '0' - 1;
-                Card *topCard = getLastCardFoundation(&foundations[fromFound]);
+                Card *topCard = getLastCardFoundation(foundations[fromFound]);
                 if (topCard != NULL) {
                     // Need a moveFoundationToColumn function
                     // For now, placeholder
@@ -92,13 +88,13 @@ void run_game(Card *deckHead) {
                     sscanf(from, "%[^:]:%s", colStr, cardStr);
                     int fromCol = colStr[1] - '0' - 1;
                     Card moveToCard = parseCard(cardStr);
-                    moveCardFoundation(&moveToCard, &cols[fromCol], &foundations[toFound]);
+                    moveCardFoundation(&moveToCard, &cols[fromCol], foundations[toFound]);
                 } else {
                     // Bottom card of column to foundation
                     int fromCol = from[1] - '0' - 1;
-                    Card *bottomCard = getLastCard(&cols[fromCol]);
+                    Card *bottomCard = getLastCard(cols[fromCol]);
                     if (bottomCard != NULL) {
-                        moveCardFoundation(bottomCard, &cols[fromCol], &foundations[toFound]);
+                        moveCardFoundation(bottomCard, &cols[fromCol], foundations[toFound]);
                     }
                 }
             }
@@ -371,34 +367,12 @@ Card parseCard(const char *cardStr) {
 }
 
 void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
-    if (moveCard == NULL || columnFrom == NULL || columnTo == NULL) {
-        printf("Invalid parameters\n");
-        return;
-    }
     Card* headCard = columnFrom->ref;
-    Card* endOfColumn = getLastCard(columnTo);
+    Card* endOfColumn = getLastCard(*columnTo);
 
-    if (endOfColumn == NULL) {
-        printf("Destination column is empty\n");
-        return;
-    }
-    // Check if moveCard is the first card in the column
-    if (headCard == moveCard) {
-        if (isMoveLegal(moveCard, endOfColumn) == 1) {
-            columnFrom->ref = moveCard->next;  // Remove from source
-            moveCard->next = NULL;
-            endOfColumn->next = moveCard;  // Add to destination
-        } else {
-            printf("Illegal move\n");
-        }
-        return;
-    }
-
-    // Else, iterate and find in the list
-    while (headCard->next != NULL && headCard->next != moveCard) {
+    while (headCard->next != NULL && (headCard->next->rank != moveCard->rank || headCard->next->suit != moveCard->suit)) {
         headCard = headCard->next;
     }
-
     if (headCard->next == NULL) {
         printf("Picked card is not in column");
         return;
@@ -413,50 +387,37 @@ void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
     }
 }
 
-Card* getLastCard(Column *column) {
-    if (column->ref == NULL) {
-        return NULL; //return null for empty column
+Card* getLastCard(Column column) {
+    while (column.ref->next != NULL) {
+        column.ref = column.ref->next;
     }
-    Card *current = column->ref;
-    while (current->next != NULL) {
-        current = current->next;
-    }
-    return current;
+    return column.ref;
 }
 
-Card* getLastCardFoundation(Foundation *foundation) {
-    if (foundation->ref == NULL) {
-        return NULL;
+Card* getLastCardFoundation(Foundation foundation) {
+    while (foundation.ref->next != NULL) {
+        foundation.ref = foundation.ref->next;
     }
-    Card *current = foundation->ref;
-    while (current->next != NULL) {
-        current = current->next;
-    }
-    return current;
+    return foundation.ref;
 }
 
-void moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundation) {
-    if (moveCard == NULL || columnFrom == NULL || foundation == NULL) {
-        printf("Invalid parameters\n");
-        return;
+void moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation foundation) {
+    Card* headCard = columnFrom->ref;
+    Card* endOfFoundation = getLastCardFoundation(foundation);
+
+    while (headCard->next->rank != moveCard->rank || headCard->next->suit != moveCard->suit) {
+        headCard = headCard->next;
     }
-
-        Card* headCard = columnFrom->ref;
-        Card* endOfFoundation = getLastCardFoundation(foundation);
-
-        while (headCard->next->rank != moveCard->rank || headCard->next->suit != moveCard->suit) {
-            headCard = headCard->next;
-        }
-        if (isMoveLegalFoundation(moveCard, headCard)== 1) { //condition check
-            Card* cardToMove = headCard->next;
-            headCard->next = NULL;
-            endOfFoundation->next = cardToMove;
-        } else {
-            printf("Illegal move");
-        }
+    if (isMoveLegalFoundation(moveCard, headCard)== 1) { //condition check
+        Card* cardToMove = headCard->next;
+        headCard->next = NULL;
+        endOfFoundation->next = cardToMove;
+    } else {
+        printf("Illegal move");
     }
+}
 
-void moveCardFromFoundation(Card *moveCard, Column *columnTo, Foundation* fromFoundation) {
+void moveCardFromFoundation(Card *moveCard, Column columnTo, Foundation fromFoundation) {
     Card* endOfFoundation = getLastCardFoundation(fromFoundation);
     Card* endOFColumn = getLastCard(columnTo);
 
@@ -466,8 +427,8 @@ void moveCardFromFoundation(Card *moveCard, Column *columnTo, Foundation* fromFo
         endOFColumn->next = cardToMove;
 
         // Fjern kortet fra foundation
-        Card* current = fromFoundation->ref;
-        while (current->next != endOFColumn) {
+        Card* current = fromFoundation.ref;
+        while (current->next != endOfFoundation) {
             current = current->next;
         }
 
@@ -493,8 +454,10 @@ int determineRank(Card card) {
 int isMoveLegal(Card* moveCard, Card* cardTo) {
     int cardRank = determineRank(*moveCard);
     int cardRank2 = determineRank(*cardTo);
+
     if (moveCard->suit == cardTo->suit) {return 0;}
     if (cardRank != cardRank2-1) {return 0;}
+
     return 1;
 }
 
@@ -510,9 +473,9 @@ int isMoveLegalFoundation(Card* moveCard, Card* cardTo) {
 
 
 // Tjek for spillet er vundet (condition)
-int gameWon (Foundation *foundation[NUM_FOUNDATIONS]) {
+int gameWon (Foundation foundation[NUM_FOUNDATIONS]) {
     for (int i = 0; i < NUM_FOUNDATIONS; i++) {
-        if (foundation[i]->ref == NULL || // Null checks! Ellers crasher den?
+        if (foundation[i].ref == NULL || // Null checks! Ellers crasher den?
             determineRank(*getLastCardFoundation(foundation[i])) != 13) {
             return 0;
         }
