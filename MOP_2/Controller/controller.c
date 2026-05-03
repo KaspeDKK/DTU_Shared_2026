@@ -376,10 +376,30 @@ void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
     Card* endOfColumn = getLastCard(*columnTo);
 
     if (endOfColumn == NULL) {
+
+        // Kun konge kan placeres på en tom kolonne
+        if (determineRank(*moveCard) != 13) {
+            printf("Illegal move\n");
+            return;
+        }
+
         columnTo->ref = moveCard;
         columnFrom->ref = moveCard->next;
         moveCard->next = NULL;
         return;
+    }
+
+    // Dette burde fikse problem med at flytte sidste kort i kolonnen
+    if (headCard->rank == moveCard->rank && headCard->suit == moveCard->suit) {
+        columnFrom->ref = moveCard->next;
+
+        if (isMoveLegal(moveCard, endOfColumn)== 1) {
+            endOfColumn->next = moveCard;
+            return;
+        } else {
+            printf("Illegal move\n");
+            return;
+        }
     }
 
     while (headCard->next != NULL && (headCard->next->rank != moveCard->rank || headCard->next->suit != moveCard->suit)) {
