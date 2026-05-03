@@ -363,6 +363,15 @@ void moveCardFoundation(Card *moveCard, Column columnFrom, Foundation foundation
     }
 }
 
+void moveCardFromFoundation(Card *moveCard, Column columnFrom, Foundation foundation) {
+    Card* headCard = columnFrom.ref;
+    Card* endOfFoundation = getLastCardFoundation(foundation);
+
+    while (headCard->next->rank != moveCard->rank || headCard->next->suit != moveCard->suit) {
+        headCard = headCard->next;
+    }
+}
+
 int determineRank(Card card) {
     char cardRank = card.rank;
     int cardRankInt;
