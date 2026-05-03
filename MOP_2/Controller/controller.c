@@ -17,10 +17,7 @@ void run_game(Card *deckHead) {
     create_game(deckHead, cols); // model.c
 
     // print game
-    for (int i = 0; i < 7; i++) {
-        showCol(cols[i].ref);
-        printf("   ");
-    }
+    showGame(cols);
 
     int gameIsRunning = 0;
 

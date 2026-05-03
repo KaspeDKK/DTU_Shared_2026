@@ -52,14 +52,21 @@ void view_not_started() {
     printf("Message: Enter Command\n");
 }
 
-void showGame(Column cols[]) //initial view of the deck, before the columns have been made.
+void showGame(Column cols[])
 {
-    for (int i = 0; i < 11; i++) {
-        for (int col = 0; col < 7; col++) {
-            Card *card = getRowCard(cols[col].ref, i);
-            print_card(card);
-            printf("   ");
+    printf("C1    C2    C3    C4    C5    C6    C7\n\n");
 
+    for (int row = 0; row < 11; row++) {
+        for (int col = 0; col < 7; col++) {
+            Card *card = getRowCard(cols[col].ref, row);
+
+            if (card != NULL) {
+                print_card(card);
+            } else {
+                printf("    ");
+            }
+
+            printf("  ");
         }
         printf("\n");
     }
@@ -111,18 +118,14 @@ void showDeck(Card *head) //initial view of the deck, before the columns have be
         printf("Message: OK\n");
 }
 
-Card getRowCard(Card *colHead, int row) {
+Card *getRowCard(Card *colHead, int row) {
     Card *current = colHead;
-    int count = 0;
 
-    while (current != NULL && count < row) {
+    for (int i = 0; i < row; i++) {
+        if (current == NULL) {
+            return NULL;
+        }
         current = current->next;
-        count++;
-    }
-
-    if (current == NULL) {
-        printf("Row out of bounds\n");
-        return;
     }
 
     return current;
