@@ -395,7 +395,7 @@ void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
         headCard->next = NULL;
         endOfColumn->next = cardToMove;
     } else {
-        printf("Illegal move");
+        printf("Illegal move\n");
     }
 }
 
