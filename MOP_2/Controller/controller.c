@@ -169,9 +169,8 @@ void game_startup()
         }
 
         if (strcmp(cmd, "P") == 0) {
-            // enter play phase
-            run_game(deckHead);
-            continue;
+            // enter play phase outside while loop
+            break;
         }
 
         if (strcmp(cmd, "Q") == 0) {
@@ -185,6 +184,8 @@ void game_startup()
             printf("No such command exists!\n");
         }
     }
+
+    run_game(deckHead);
 
 }
 
