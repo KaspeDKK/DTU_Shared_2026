@@ -26,6 +26,8 @@ void run_game(Card *deckHead) {
         char input[100] = "";
         char from[20], to[20];
 
+        debugShowGame(cols); // NEEDS TO BE CHANGED TO NORMAL FUNC LATER
+
         // scan for input
         printf("\n INPUT: ");
 
@@ -171,9 +173,8 @@ void game_startup()
         }
 
         if (strcmp(cmd, "P") == 0) {
-            // enter play phase
-            run_game(deckHead);
-            continue;
+            // enter play phase outside while loop
+            break;
         }
 
         if (strcmp(cmd, "Q") == 0) {
@@ -187,6 +188,8 @@ void game_startup()
             printf("No such command exists!\n");
         }
     }
+
+    run_game(deckHead);
 
 }
 
