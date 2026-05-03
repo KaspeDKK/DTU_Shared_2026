@@ -377,6 +377,9 @@ void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
         printf("Picked card is not in column");
         return;
     }
+    printf("MOVE: %c%c -> %c%c\n",
+       moveCard->rank, moveCard->suit,
+       endOfColumn->rank, endOfColumn->suit);
 
     if (isMoveLegal(moveCard, endOfColumn)== 1) { //condition check
         Card* cardToMove = headCard->next;
@@ -437,19 +440,16 @@ void moveCardFromFoundation(Card *moveCard, Column columnTo, Foundation fromFoun
 }
 
 int determineRank(Card card) {
-    char cardRank = card.rank;
-    int cardRankInt;
-
-    if (cardRank == 'A'){cardRankInt = 1;}
-    else if (cardRank == 'K'){cardRankInt = 13;
-    } else if (cardRank == 'Q'){cardRankInt = 12;
-    } else if (cardRank == 'J'){cardRankInt = 11;
-    } else if (cardRank == 'T'){cardRankInt = 10;
-    } else {
-        sscanf(&cardRank, "%d", &cardRankInt);
+    switch (card.rank) {
+        case 'A': return 1;
+        case 'T': return 10;
+        case 'J': return 11;
+        case 'Q': return 12;
+        case 'K': return 13;
+        default:  return card.rank - '0'; // '2' -> 2, etc.
     }
-    return cardRankInt;
 }
+
 
 int isMoveLegal(Card* moveCard, Card* cardTo) {
     int cardRank = determineRank(*moveCard);
