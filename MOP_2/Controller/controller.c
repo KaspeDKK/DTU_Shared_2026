@@ -395,5 +395,13 @@ int isMoveLegalFoundation(Card* moveCard, Card* cardTo) {
     return 1;
 }
 
+
+// Tjek for spillet er vundet (condition)
+int gameWon (Foundation foundation) {
+    if (determineRank(*getLastCardFoundation(foundation)) == 13) {
+
+    }
+}
+
 // Vi burde nok lave en convert rank to int metode, så vi slipper for 100 linjer ekstra kode :)
 // DONE
