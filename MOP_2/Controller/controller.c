@@ -44,7 +44,9 @@ void run_game(Card *deckHead) {
         strcpy(to, arrow + 2);  // Skip "->"
 
         printf("From: %s, To: %s\n", from, to);
-
+        
+        
+        
 
             if (to[0] == 'C') {
             // Move to column
