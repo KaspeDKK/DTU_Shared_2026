@@ -60,15 +60,12 @@ void showCol(Card *head) {
 
     Card *current = head;
     int count = 0;
-    int row = 0;
-    int f = 1;
 
     while (current != NULL) {
-        print_card_face_up(current);
-    }
-
-    if (count % 7 != 0) {
         printf("\n");
+        print_card_face_up(current);
+        current = current->next;
+        count++;
     }
 }
 

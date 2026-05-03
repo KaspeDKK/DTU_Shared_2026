@@ -24,20 +24,21 @@ struct Card *getNth(Card *deckHead, int n) {
     exit(1);
 }
 
-// we need to make a function that takes a deck of 52 cards. Aka a linked list of 52 cards. The input will just be the deckhead and then we use that
-
-// we will have to loop across all 7 cols inserting one card per col then switching to next one. When we reach the 7th col (%7==0) then we will go back to the first.
-
-    // when inserting a card, we need to look at the former one. and set thats reference to the card we are inserting. If there are no cards in the list we ofc still need a ref. That will be the cols own ref.
-
-// repeat until all cards from the original deck linked list are gone.
-
-// later we implement rules that say other times we need to switch earlier to the next col.
-
+/*
+ * create_game
+ *
+ *
+ * we need to make a function that takes a deck of 52 cards. Aka a linked list of 52 cards. The input will just be the deckhead and then we use that
+ *
+ * we will have to loop across all 7 cols inserting one card per col then switching to next one. When we reach the 7th col (%7==0) then we will go back to the first.
+ *     when inserting a card, we need to look at the former one. and set thats reference to the card we are inserting. If there are no cards in the list we ofc still need a ref. That will be the cols own ref.
+ * repeat until all cards from the original deck linked list are gone.
+ * later we implement rules that say other times we need to switch earlier to the next col.
+*/
 void create_game(struct Card *deckHead, struct  Column cols[]) {
     Card *current = deckHead; // first card
 
-    // somethings that stops when there are no more cards in the deckhead linked list
+    // something that stops when there are no more cards in the deckhead linked list
 
     int rowCount = 0;
     int colStart = 0;
@@ -47,10 +48,9 @@ void create_game(struct Card *deckHead, struct  Column cols[]) {
 
         columnCount = colStart;
 
-        *current = *current->next; // next card in the pile
-
         // insert card at the bottom of the current column
-        placeCard(cols[columnCount], current); // insert current card at given column list
+        placeCard(&cols[columnCount], current); // insert current card at given column list
+        current = current->next; // next card in the pile
 
         columnCount++;
 

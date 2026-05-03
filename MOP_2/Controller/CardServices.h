@@ -9,6 +9,6 @@
 
 #include "../Model/Types.h"
 
-void placeCard(Column column, Card *card);
+void placeCard(Column *column, Card *card);
 
 #endif //MOP_2_CARDSERVICES_H
