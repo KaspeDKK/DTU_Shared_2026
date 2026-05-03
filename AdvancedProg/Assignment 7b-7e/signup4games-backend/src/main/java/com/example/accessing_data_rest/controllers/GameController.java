@@ -37,7 +37,7 @@ public class GameController {
     }
 
 
-    // TODO Assignment 7b: Create a post method in this controller for creating a new game
+    // DONE Assignment 7b: Create a post method in this controller for creating a new game
     //      this method should call the corresponding service for creating a game
     @PostMapping(
             value = "",
@@ -48,7 +48,7 @@ public class GameController {
         return gameService.createGame(game);
     }
 
-    // TODO Assignment 7d: Create a method and @RequestMpping for deleting a game
+    // DONE Assignment 7d: Create a method and @RequestMpping for deleting a game
     @DeleteMapping(value = "{id}")
     public void deleteGame(@PathVariable("id") long gameUid) {
         gameService.deleteGame(gameUid);

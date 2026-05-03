@@ -26,6 +26,10 @@ public class GameService {
     @Autowired
     private PlayerRepository playerRepository;
 
+    /**
+     *
+     * @return a list of all games from the repository
+     */
     public List<Game> getGames() {
         // DONE Assignment 7b: Implement the method for obtaining all games from the
         //      GameRepository (using finaAll) and returning it as a list
@@ -73,7 +77,13 @@ public class GameService {
         return null;
 
     }
-    //TODO 7e JAVADOC
+
+    /** updates the state of the game. This is used when handling going from sign up / sign in ---> ACTIVE (an ongoing game)
+     *
+     * @param gameUid of the game to change the gameState
+     * @param gameState the gameState enum to attribute your game
+     * @return an updated game
+     */
     @Transactional
     public Game updateGameState(long gameUid, Game.GameState gameState) {
         Game existingGame = gameRepository.findByUid(gameUid).get(0);
@@ -85,6 +95,10 @@ public class GameService {
         }
     }
 
+    /**
+     *
+     * @param gameUid of the game to delete
+     */
     @Transactional
     public void deleteGame(long gameUid) {
         gameRepository.deleteById(gameUid);

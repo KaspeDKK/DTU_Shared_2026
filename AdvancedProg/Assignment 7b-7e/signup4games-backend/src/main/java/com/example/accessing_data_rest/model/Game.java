@@ -91,11 +91,11 @@ public class Game {
         this.players = players;
     }
 
-    // TODO 7e
+    // DONE 7e
     public GameState getGameState() {
         return state;
     }
-    // TODO 7e
+    // DONE 7e
     public void setGameState(GameState state) {
         this.state = state;
     }
