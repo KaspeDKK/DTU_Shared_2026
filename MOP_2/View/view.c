@@ -61,7 +61,7 @@ void showGame(Column cols[])
             Card *card = getRowCard(cols[col].ref, row);
 
             if (card != NULL) {
-                print_card_face_up(card);
+                print_card(card);
             } else {
                 printf("    ");
             }
