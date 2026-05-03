@@ -39,15 +39,15 @@ void create_game(struct Card *deckHead, struct  Column cols[]) {
 
     // somethings that stops when there are no more cards in the deckhead linked list
 
+    int rowCount = 0;
+    int colStart = 0;
+    int columnCount = colStart;
+
     for (int i = 0; i < 52; i++) {
 
+        columnCount = colStart;
+
         *current = *current->next; // next card in the pile
-
-        int rowCount = 0;
-        int colStart = 0;
-        int columnCount = colStart;
-
-        // when row counter is 6 i needs to start at 1 instead of 0.
 
         // insert card at the bottom of the current column
         placeCard(cols[columnCount], current); // insert current card at given column list
@@ -56,38 +56,43 @@ void create_game(struct Card *deckHead, struct  Column cols[]) {
 
         if (columnCount%6==0) { // col 7 is col index 6
 
+            rowCount++;
+
             if (rowCount == 1 && colStart == 0) {
                 colStart++;
+                rowCount = 0;
             }
 
-            if (rowCount == 6 && colStart == 1) {
+            if (rowCount == 6 && colStart == 1) { // when row counter is 6 i needs to start at 1 instead of 0.
                 colStart++;
+                rowCount = 0;
             }
 
             if (rowCount == 7 && colStart == 2) {
                 colStart++;
+                rowCount = 0;
             }
 
             if (rowCount == 8 && colStart == 3) {
                 colStart++;
+                rowCount = 0;
             }
 
             if (rowCount == 9 && colStart == 4) {
                 colStart++;
+                rowCount = 0;
             }
 
             if (rowCount == 10 && colStart == 5) {
                 colStart++;
+                rowCount = 0;
             }
 
             if (rowCount == 11 && colStart == 6) {
-                colStart++;
+                // done
+                break;
             }
-
-            rowCount++;
         }
     }
-
-
 
 }
