@@ -367,8 +367,20 @@ Card parseCard(const char *cardStr) {
 }
 
 void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
+    if (moveCard == NULL || columnFrom == NULL || columnTo == NULL) {
+        printf("Illegal move\n");
+        return;
+    }
+
     Card* headCard = columnFrom->ref;
     Card* endOfColumn = getLastCard(*columnTo);
+
+    if (endOfColumn == NULL) {
+        columnTo->ref = moveCard;
+        columnFrom->ref = moveCard->next;
+        moveCard->next = NULL;
+        return;
+    }
 
     while (headCard->next != NULL && (headCard->next->rank != moveCard->rank || headCard->next->suit != moveCard->suit)) {
         headCard = headCard->next;
