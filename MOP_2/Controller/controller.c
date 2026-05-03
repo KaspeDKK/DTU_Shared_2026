@@ -14,6 +14,8 @@ void run_game(Card *deckHead) {
     Column cols[7] = {};
     create_game(deckHead, cols); // model.c
 
+    // print game
+
     // game loop
 }
 

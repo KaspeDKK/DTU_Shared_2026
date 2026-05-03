@@ -44,8 +44,9 @@ void create_game(struct Card *deckHead, struct  Column cols[]) {
         *current = *current->next; // next card in the pile
 
         int rowCount = 0;
-        int columnCount = 0;
         int colStart = 0;
+        int columnCount = colStart;
+
         // when row counter is 6 i needs to start at 1 instead of 0.
 
         // insert card at the bottom of the current column
@@ -53,16 +54,37 @@ void create_game(struct Card *deckHead, struct  Column cols[]) {
 
         columnCount++;
 
-        if (columnCount%7==0) {
+        if (columnCount%6==0) { // col 7 is col index 6
+
+            if (rowCount == 1 && colStart == 0) {
+                colStart++;
+            }
+
+            if (rowCount == 6 && colStart == 1) {
+                colStart++;
+            }
+
+            if (rowCount == 7 && colStart == 2) {
+                colStart++;
+            }
+
+            if (rowCount == 8 && colStart == 3) {
+                colStart++;
+            }
+
+            if (rowCount == 9 && colStart == 4) {
+                colStart++;
+            }
+
+            if (rowCount == 10 && colStart == 5) {
+                colStart++;
+            }
+
+            if (rowCount == 11 && colStart == 6) {
+                colStart++;
+            }
+
             rowCount++;
-        }
-
-        if (rowCount==1) {
-            colStart++;
-        }
-
-        if (rowCount==6) {
-            colStart++;
         }
     }
 
