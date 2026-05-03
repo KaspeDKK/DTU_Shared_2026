@@ -418,7 +418,6 @@ void moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundati
 }
 
 void moveCardFromFoundation(Card *moveCard, Column columnTo, Foundation fromFoundation) {
-    Card* headCard = columnTo.ref;
     Card* endOfFoundation = getLastCardFoundation(fromFoundation);
     Card* endOFColumn = getLastCard(columnTo);
 
