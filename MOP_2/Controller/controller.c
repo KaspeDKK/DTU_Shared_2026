@@ -16,7 +16,13 @@ void run_game(Card *deckHead) {
 
     create_game(deckHead, cols); // model.c
 
-    int gameIsRunning = 1;
+    // print game
+    for (int i = 0; i < 7; i++) {
+        showCol(cols[i].ref);
+        printf("   ");
+    }
+
+    int gameIsRunning = 0;
 
     while (gameIsRunning) {
         char input[100] = "";
@@ -453,6 +459,15 @@ int isMoveLegalFoundation(Card* moveCard, Card* cardTo) {
 
 
 // Tjek for spillet er vundet (condition)
+int gameWon (Foundation foundation[NUM_FOUNDATIONS]) {
+    for (int i = 0; i < NUM_FOUNDATIONS; i++) {
+        if (foundation[i].ref == NULL || // Null checks! Ellers crasher den?
+            determineRank(*getLastCardFoundation(foundation[i])) != 13) {
+            return 0;
+        }
+    }
+    return 1; // Alle 4 foundations er færdige
+
 int gameWon (Foundation foundation[]) {
     if (determineRank(*getLastCardFoundation(foundation[1])) == 13) {
 

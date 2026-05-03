@@ -24,75 +24,34 @@ struct Card *getNth(Card *deckHead, int n) {
     exit(1);
 }
 
-// we need to make a function that takes a deck of 52 cards. Aka a linked list of 52 cards. The input will just be the deckhead and then we use that
+/*
+ * create_game
+ *
+ *
+ * we need to make a function that takes a deck of 52 cards. Aka a linked list of 52 cards. The input will just be the deckhead and then we use that
+ *
+ * we will have to loop across all 7 cols inserting one card per col then switching to next one. When we reach the 7th col (%7==0) then we will go back to the first.
+ *     when inserting a card, we need to look at the former one. and set thats reference to the card we are inserting. If there are no cards in the list we ofc still need a ref. That will be the cols own ref.
+ * repeat until all cards from the original deck linked list are gone.
+ * later we implement rules that say other times we need to switch earlier to the next col.
+*/
+void create_game(Card *deckHead, Column cols[]) {
+    Card *current = deckHead;
 
-// we will have to loop across all 7 cols inserting one card per col then switching to next one. When we reach the 7th col (%7==0) then we will go back to the first.
+    int startColPerRow[11] = {
+        0, 1, 1, 1, 1, 1, 2, 3, 4, 5, 6
+    };
 
-    // when inserting a card, we need to look at the former one. and set thats reference to the card we are inserting. If there are no cards in the list we ofc still need a ref. That will be the cols own ref.
+    for (int row = 0; row < 11; row++) {
+        for (int col = startColPerRow[row]; col < 7; col++) {
+            if (current == NULL) return;
 
-// repeat until all cards from the original deck linked list are gone.
+            Card *next = current->next;
+            current->next = NULL;
 
-// later we implement rules that say other times we need to switch earlier to the next col.
+            placeCard(&cols[col], current);
 
-void create_game(struct Card *deckHead, struct  Column cols[]) {
-    Card *current = deckHead; // first card
-
-    // somethings that stops when there are no more cards in the deckhead linked list
-
-    int rowCount = 0;
-    int colStart = 0;
-    int columnCount = colStart;
-
-    for (int i = 0; i < 52; i++) {
-
-        columnCount = colStart;
-
-        *current = *current->next; // next card in the pile
-
-        // insert card at the bottom of the current column
-        placeCard(cols[columnCount], current); // insert current card at given column list
-
-        columnCount++;
-
-        if (columnCount%6==0) { // col 7 is col index 6
-
-            rowCount++;
-
-            if (rowCount == 1 && colStart == 0) {
-                colStart++;
-                rowCount = 0;
-            }
-
-            if (rowCount == 6 && colStart == 1) { // when row counter is 6 i needs to start at 1 instead of 0.
-                colStart++;
-                rowCount = 0;
-            }
-
-            if (rowCount == 7 && colStart == 2) {
-                colStart++;
-                rowCount = 0;
-            }
-
-            if (rowCount == 8 && colStart == 3) {
-                colStart++;
-                rowCount = 0;
-            }
-
-            if (rowCount == 9 && colStart == 4) {
-                colStart++;
-                rowCount = 0;
-            }
-
-            if (rowCount == 10 && colStart == 5) {
-                colStart++;
-                rowCount = 0;
-            }
-
-            if (rowCount == 11 && colStart == 6) {
-                // done
-                break;
-            }
+            current = next;
         }
     }
-
 }
