@@ -52,9 +52,11 @@ void view_not_started() {
     printf("Message: Enter Command\n");
 }
 
-void view_while_started() {
-    
+void showGame(Column cols[]) //initial view of the deck, before the columns have been made.
+{
+
 }
+
 
 void showCol(Card *head) {
 
