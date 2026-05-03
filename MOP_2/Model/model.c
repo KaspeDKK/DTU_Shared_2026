@@ -35,64 +35,23 @@ struct Card *getNth(Card *deckHead, int n) {
  * repeat until all cards from the original deck linked list are gone.
  * later we implement rules that say other times we need to switch earlier to the next col.
 */
-void create_game(struct Card *deckHead, struct  Column cols[]) {
-    Card *current = deckHead; // first card
+void create_game(Card *deckHead, Column cols[]) {
+    Card *current = deckHead;
 
-    // something that stops when there are no more cards in the deckhead linked list
+    int startColPerRow[11] = {
+        0, 1, 1, 1, 1, 1, 2, 3, 4, 5, 6
+    };
 
-    int rowCount = 0;
-    int colStart = 0;
-    int columnCount = colStart;
+    for (int row = 0; row < 11; row++) {
+        for (int col = startColPerRow[row]; col < 7; col++) {
+            if (current == NULL) return;
 
-    for (int i = 0; i < 52; i++) {
+            Card *next = current->next;
+            current->next = NULL;
 
-        columnCount = colStart;
+            placeCard(&cols[col], current);
 
-        // insert card at the bottom of the current column
-        placeCard(&cols[columnCount], current); // insert current card at given column list
-        current = current->next; // next card in the pile
-
-        columnCount++;
-
-        if (columnCount%6==0) { // col 7 is col index 6
-
-            rowCount++;
-
-            if (rowCount == 1 && colStart == 0) {
-                colStart++;
-                rowCount = 0;
-            }
-
-            if (rowCount == 6 && colStart == 1) { // when row counter is 6 i needs to start at 1 instead of 0.
-                colStart++;
-                rowCount = 0;
-            }
-
-            if (rowCount == 7 && colStart == 2) {
-                colStart++;
-                rowCount = 0;
-            }
-
-            if (rowCount == 8 && colStart == 3) {
-                colStart++;
-                rowCount = 0;
-            }
-
-            if (rowCount == 9 && colStart == 4) {
-                colStart++;
-                rowCount = 0;
-            }
-
-            if (rowCount == 10 && colStart == 5) {
-                colStart++;
-                rowCount = 0;
-            }
-
-            if (rowCount == 11 && colStart == 6) {
-                // done
-                break;
-            }
+            current = next;
         }
     }
-
 }

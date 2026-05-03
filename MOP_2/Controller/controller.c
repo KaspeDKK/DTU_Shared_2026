@@ -15,7 +15,13 @@ void run_game(Card *deckHead) {
     Foundation foundations[4] = {};
     create_game(deckHead, cols); // model.c
 
-    int gameIsRunning = 1;
+    // print game
+    for (int i = 0; i < 7; i++) {
+        showCol(cols[i].ref);
+        printf("\nNew Line\n");
+    }
+
+    int gameIsRunning = 0;
 
     while (gameIsRunning) {
         char input[100] = "";
@@ -50,11 +56,7 @@ void run_game(Card *deckHead) {
          }
     }
 
-    // print game
-    for (int i = 0; i < 7; i++) {
-        showCol(cols[i].ref);
-        printf("\n New Line");
-    }
+
     // game loop
 }
 
