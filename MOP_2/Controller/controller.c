@@ -397,10 +397,15 @@ int isMoveLegalFoundation(Card* moveCard, Card* cardTo) {
 
 
 // Tjek for spillet er vundet (condition)
-int gameWon (Foundation foundation1, Foundation foundation2, Foundation foundation3, Foundation foundation4) {
-    if (determineRank(*getLastCardFoundation(foundation1)) == 13) {
-
+int gameWon (Foundation foundation[NUM_FOUNDATIONS]) {
+    for (int i = 0; i < NUM_FOUNDATIONS; i++) {
+        if (foundation[i].ref == NULL || // Null checks! Ellers crasher den?
+            determineRank(*getLastCardFoundation(foundation[i])) != 13) {
+            return 0;
+        }
     }
+    return 1; // Alle 4 foundations er færdige
+
 }
 
 // Vi burde nok lave en convert rank to int metode, så vi slipper for 100 linjer ekstra kode :)
