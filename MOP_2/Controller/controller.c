@@ -50,6 +50,11 @@ void run_game(Card *deckHead) {
          }
     }
 
+    // print game
+    for (int i = 0; i < 7; i++) {
+        showCol(&*cols[i].ref);
+    }
+    // game loop
 }
 
 void game_startup()

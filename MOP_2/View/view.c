@@ -56,6 +56,22 @@ void view_while_started() {
     
 }
 
+void showCol(Card *head) {
+
+    Card *current = head;
+    int count = 0;
+    int row = 0;
+    int f = 1;
+
+    while (current != NULL) {
+        print_card_face_up(current);
+    }
+
+    if (count % 7 != 0) {
+        printf("\n");
+    }
+}
+
 void showDeck(Card *head) //initial view of the deck, before the columns have been made.
 {
     if (head == NULL) {
