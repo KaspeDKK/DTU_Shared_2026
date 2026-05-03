@@ -39,7 +39,7 @@ void create_game(Card *deckHead, Column cols[]) {
     Card *current = deckHead;
 
     int startColPerRow[11] = {
-        0, 1, 1, 1, 1, 1, 2, 3, 4, 5, 6
+        0, 1, 1, 1, 1, 1, 2, 3, 4, 5, 6 // these represent the "col start" value for each row. These are always the same.
     };
 
     for (int row = 0; row < 11; row++) {
