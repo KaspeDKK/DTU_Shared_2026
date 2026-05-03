@@ -396,6 +396,7 @@ void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
     while (headCard->next != NULL && headCard->next != moveCard) {
         headCard = headCard->next;
     }
+
     if (headCard->next == NULL) {
         printf("Picked card is not in column");
         return;
@@ -490,10 +491,8 @@ int determineRank(Card card) {
 int isMoveLegal(Card* moveCard, Card* cardTo) {
     int cardRank = determineRank(*moveCard);
     int cardRank2 = determineRank(*cardTo);
-
     if (moveCard->suit == cardTo->suit) {return 0;}
     if (cardRank != cardRank2-1) {return 0;}
-
     return 1;
 }
 
