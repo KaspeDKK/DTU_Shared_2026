@@ -26,11 +26,16 @@ public class PlayerService {
     private GameRepository gameRepository;
 
 
+    /** Used for PlayerController to Post to an endpoint
+     *
+     * @param player to save to the repository after changes
+     * @return a player with a game, its user and an id
+     */
     @Transactional
     public Player signUpPlayer(Player player){
 
         List<Game> games = gameRepository.findByUid(player.getGame().getUid());
-        List<User> users = userRepository.findByName(player.getUser().getName());
+        List<User> users = userRepository.findByName(player.getUser().getName()); // names are unique
 
         if (games.isEmpty() || users.isEmpty()){
             throw new CouldNotCreatePlayerException("Could not find user or game");
@@ -54,11 +59,11 @@ public class PlayerService {
     }
 
     /** this method deletes the player belonging to the given playerUid from the player repository.
-     * Conditions for this deletion are the following:
+     * Conditions for this deletion are the following:<p></p>
      *  - playerUid actually belongs to a player
      *  - the game hasn't been started yet
      *  - the playerUid doesn't belong to the owner of the game
-     * 
+     *
      * @param playerUid of the player that wishes to leave the game
      */
     @Transactional

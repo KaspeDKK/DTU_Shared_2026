@@ -16,7 +16,13 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    //TODO javadoc
+    // TODO refactor to return a user instead of a list (since name is a unique). Could we also not just remove userId?
+    /** This method will find a user by its name, returned in a list.
+     * Since the method body uses a query, we are returning a list of users, but in reality its only going to find 1 user.
+     *
+     * @param name name of user to query for
+     * @return a list of users (only element is the user belonging to given name)
+     */
     public List<User> searchUsers(String name) {
         // DONE Assignment 7b: obtain a list of users with the given name
         //      from the userRepository and return the result (instead
@@ -25,7 +31,12 @@ public class UserService {
 
         return users;
     }
-    //TODO javadoc
+
+    /** creates a user. if name length is under 4 then throw an exception. If name already exists then throw an exception
+     *
+     * @param user FRONTEND user object
+     * @return user with updated name
+     */
     @Transactional
     public User createUser(User user) {
         if (user.getName().length() < 4) {
