@@ -269,17 +269,20 @@ void moveCard(Card *moveCard, Column columnFrom, Column columnTo) {
     Card* headCard = columnFrom.ref;
     Card* endOfColumn = getLastCard(columnTo);
 
-    while (headCard->next->rank != moveCard->rank && headCard->next->suit != moveCard->suit) {
-        if (headCard->next == NULL) {
-            printf("Picked card is not in column");
-            return;
-        }
+    while (headCard->next != NULL && (headCard->next->rank != moveCard->rank || headCard->next->suit != moveCard->suit)) {
         headCard = headCard->next;
     }
+    if (headCard->next == NULL) {
+        printf("Picked card is not in column");
+        return;
+    }
 
-    headCard->next = NULL;
-
-    endOfColumn->next = moveCard;
+    if (isMoveLegalFoundation(moveCard, endOfColumn)== 1) { //condition check
+        headCard->next = NULL;
+        endOfColumn->next = moveCard;
+    } else {
+        printf("Illegal move");
+    }
 }
 
 Card* getLastCard(Column column) {
@@ -303,10 +306,12 @@ void moveCardFoundation(Card *moveCard, Column columnFrom, Foundation foundation
     while (headCard->next->rank != moveCard->rank && headCard->next->suit != moveCard->suit) {
         headCard = headCard->next;
     }
-
-    headCard->next = NULL;
-
-    endOfFoundation->next = moveCard;
+    if (isMoveLegalFoundation(moveCard, headCard)== 1) { //condition check
+        headCard->next = NULL;
+        endOfFoundation->next = moveCard;
+    } else {
+        printf("Illegal move");
+    }
 }
 
 int determineRank(Card card) {
@@ -335,7 +340,7 @@ int isMoveLegal(Card* moveCard, Card* cardTo) {
     return 1;
 }
 
-int isMoveLegalFoundation(Card* moveCard, Card* cardTo, Foundation foundation) {
+int isMoveLegalFoundation(Card* moveCard, Card* cardTo) {
     int cardRank = determineRank(*moveCard);
     int cardRank2 = determineRank(*cardTo);
 

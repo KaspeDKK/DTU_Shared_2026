@@ -12,5 +12,7 @@ Card *arrayToList(Card deck[], int size);
 Card *randomShuffle(Card *head);
 Card* getLastCard(Column column);
 Card* getLastCardFoundation(Foundation foundation);
+int isMoveLegal(Card* moveCard, Card* cardTo);
+int isMoveLegalFoundation(Card* moveCard, Card* cardTo);
 
 #endif
