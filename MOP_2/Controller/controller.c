@@ -428,7 +428,7 @@ void moveCardFromFoundation(Card *moveCard, Column columnTo, Foundation fromFoun
 
         // Fjern kortet fra foundation
         Card* current = fromFoundation.ref;
-        while (current->next != endOFColumn) {
+        while (current->next != endOfFoundation) {
             current = current->next;
         }
 
