@@ -52,6 +52,26 @@ void view_not_started() {
     printf("Message: Enter Command\n");
 }
 
+void debugShowGame(Column cols[])
+{
+    printf("C1    C2    C3    C4    C5    C6    C7\n\n");
+
+    for (int row = 0; row < 11; row++) {
+        for (int col = 0; col < 7; col++) {
+            Card *card = getRowCard(cols[col].ref, row);
+
+            if (card != NULL) {
+                print_card_face_up(card);
+            } else {
+                printf("    ");
+            }
+
+            printf("  ");
+        }
+        printf("\n");
+    }
+}
+
 void showGame(Column cols[])
 {
     printf("C1    C2    C3    C4    C5    C6    C7\n\n");

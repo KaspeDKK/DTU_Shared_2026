@@ -16,7 +16,7 @@ void run_game(Card *deckHead) {
     create_game(deckHead, cols); // model.c
 
     // print game
-    showGame(cols);
+    debugShowGame(cols);
 
     int gameIsRunning = 0;
 
