@@ -26,8 +26,8 @@ void game_startup()
     // startup loop
     while (1) {
 
-        char input[] = "";
-        char cmd[2], param[20];
+        char input[100] = "";
+        char cmd[10], param[20];
 
         // scan for input
         printf("Please enter your command: ");
@@ -58,7 +58,7 @@ void game_startup()
             for (int i = 0; param[i] != '\0'; i++) {
                 if (!isdigit((unsigned char)param[i])) {
                     printf("Error: split parameter must be a valid integer.\n");
-                    continue;
+                    break;
                 }
             }
             const int param_int = atoi(param);  // convert to int
@@ -84,6 +84,10 @@ void game_startup()
             // enter play phase
             run_game(deckHead);
             continue;
+        }
+
+        if (strcmp(cmd, "Q") == 0) {
+            return;
         }
 
         // this needs to be the last command
@@ -334,7 +338,6 @@ int isMoveLegal(Card* moveCard, Card* cardTo) {
     int cardRank2 = determineRank(*cardTo);
 
     if (moveCard->suit == cardTo->suit) {return 0;}
-
     if (cardRank != cardRank2+1) {return 0;}
 
     return 1;
