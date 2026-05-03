@@ -403,6 +403,7 @@ void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
 }
 
 Card* getLastCard(Column column) {
+    if (column.ref == NULL){ return NULL;}
     while (column.ref->next != NULL) {
         column.ref = column.ref->next;
     }
@@ -410,6 +411,7 @@ Card* getLastCard(Column column) {
 }
 
 Card* getLastCardFoundation(Foundation foundation) {
+    if (foundation.ref == NULL){ return NULL;}
     while (foundation.ref->next != NULL) {
         foundation.ref = foundation.ref->next;
     }
