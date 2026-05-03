@@ -54,9 +54,11 @@ void view_not_started() {
 
 void debugShowGame(Column cols[])
 {
+    int maxRows = getMaxRows(cols);
+
     printf("C1    C2    C3    C4    C5    C6    C7\n\n");
 
-    for (int row = 0; row < 11; row++) {
+    for (int row = 0; row < maxRows; row++) {
         for (int col = 0; col < 7; col++) {
             Card *card = getRowCard(cols[col].ref, row);
 
@@ -68,15 +70,18 @@ void debugShowGame(Column cols[])
 
             printf("  ");
         }
+
         printf("\n");
     }
 }
 
 void showGame(Column cols[])
 {
+    int maxRows = getMaxRows(cols);
+
     printf("C1    C2    C3    C4    C5    C6    C7\n\n");
 
-    for (int row = 0; row < 11; row++) {
+    for (int row = 0; row < maxRows; row++) { //
         for (int col = 0; col < 7; col++) {
             Card *card = getRowCard(cols[col].ref, row);
 
@@ -88,6 +93,7 @@ void showGame(Column cols[])
 
             printf("  ");
         }
+
         printf("\n");
     }
 }
@@ -149,4 +155,31 @@ Card *getRowCard(Card *colHead, int row) {
     }
 
     return current;
+}
+
+int getColumnLength(Card *head) // we just traverse the col (linked list) till bottom is found and note down the count
+{
+    int count = 0;
+
+    while (head != NULL) {
+        count++;
+        head = head->next;
+    }
+
+    return count;
+}
+
+int getMaxRows(Column cols[]) // traverse each col in the game with the get col length func
+{
+    int max = 0;
+
+    for (int i = 0; i < 7; i++) {
+        int len = getColumnLength(cols[i].ref);
+
+        if (len > max) {
+            max = len;
+        }
+    }
+
+    return max;
 }
