@@ -12,7 +12,43 @@
 void run_game(Card *deckHead) {
     // new stucture
     Column cols[7] = {};
+    Foundation foundations[4] = {};
     create_game(deckHead, cols); // model.c
+
+    int gameIsRunning = 1;
+
+    while (gameIsRunning) {
+        char input[100] = "";
+        char cmd[10], param1[20], param2[20];
+
+        // scan for input
+        printf("Please enter your command: ");
+
+        gets(input); // read user input
+
+        sscanf(input, "%s %s %s", cmd, param1, param2);
+
+        printf("Command: %s\n, Param1: %s\n, Param2: %s\n", cmd, param1, param2);
+
+        if (strcmp(cmd, "MV") == 0) {
+            // move card from column to column
+            continue;
+        }
+
+        if (strcmp(cmd, "MF") == 0) {
+            // move card from column to foundation
+            continue;
+        }
+
+         if (strcmp(cmd, "Q") == 0) {
+            return;
+         }
+         if (strcmp(cmd, "QQ") == 0) {
+             exit(0);
+         } else {
+             printf("No such command exists!\n");
+         }
+    }
 
     // print game
     for (int i = 0; i < 7; i++) {
@@ -274,9 +310,9 @@ void listToArray(Card *head, Card deck[], int size)
     }
 }
 
-void moveCard(Card *moveCard, Column columnFrom, Column columnTo) {
-    Card* headCard = columnFrom.ref;
-    Card* endOfColumn = getLastCard(columnTo);
+void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
+    Card* headCard = columnFrom->ref;
+    Card* endOfColumn = getLastCard(*columnTo);
 
     while (headCard->next != NULL && (headCard->next->rank != moveCard->rank || headCard->next->suit != moveCard->suit)) {
         headCard = headCard->next;
@@ -286,9 +322,10 @@ void moveCard(Card *moveCard, Column columnFrom, Column columnTo) {
         return;
     }
 
-    if (isMoveLegalFoundation(moveCard, endOfColumn)== 1) { //condition check
+    if (isMoveLegal(moveCard, endOfColumn)== 1) { //condition check
+        Card* cardToMove = headCard->next;
         headCard->next = NULL;
-        endOfColumn->next = moveCard;
+        endOfColumn->next = cardToMove;
     } else {
         printf("Illegal move");
     }
@@ -316,8 +353,9 @@ void moveCardFoundation(Card *moveCard, Column columnFrom, Foundation foundation
         headCard = headCard->next;
     }
     if (isMoveLegalFoundation(moveCard, headCard)== 1) { //condition check
+        Card* cardToMove = headCard->next;
         headCard->next = NULL;
-        endOfFoundation->next = moveCard;
+        endOfFoundation->next = cardToMove;
     } else {
         printf("Illegal move");
     }
@@ -356,6 +394,14 @@ int isMoveLegalFoundation(Card* moveCard, Card* cardTo) {
     if (cardRank != cardRank2+1) {return 0;}
 
     return 1;
+}
+
+
+// Tjek for spillet er vundet (condition)
+int gameWon (Foundation foundation1, Foundation foundation2, Foundation foundation3, Foundation foundation4) {
+    if (determineRank(*getLastCardFoundation(foundation1)) == 13) {
+
+    }
 }
 
 // Vi burde nok lave en convert rank to int metode, så vi slipper for 100 linjer ekstra kode :)
