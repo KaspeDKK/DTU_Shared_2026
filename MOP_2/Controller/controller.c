@@ -70,7 +70,7 @@ void game_startup()
 
         if (strcmp(cmd, "SR") == 0) {
             // random shuffle
-            randomShuffle(deckHead);
+            deckHead = randomShuffle(deckHead);
             showDeck(deckHead);
             continue;
         }
@@ -303,7 +303,7 @@ void moveCardFoundation(Card *moveCard, Column columnFrom, Foundation foundation
     Card* headCard = columnFrom.ref;
     Card* endOfFoundation = getLastCardFoundation(foundation);
 
-    while (headCard->next->rank != moveCard->rank && headCard->next->suit != moveCard->suit) {
+    while (headCard->next->rank != moveCard->rank || headCard->next->suit != moveCard->suit) {
         headCard = headCard->next;
     }
     if (isMoveLegalFoundation(moveCard, headCard)== 1) { //condition check
