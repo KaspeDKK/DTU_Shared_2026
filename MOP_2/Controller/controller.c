@@ -19,14 +19,14 @@ void run_game(Card *deckHead) {
     // print game
     debugShowGame(cols);
 
-    int gameIsRunning = 0;
+    int gameIsRunning = 1;
 
     while (gameIsRunning) {
         char input[100] = "";
         char from[20], to[20];
 
         // scan for input
-        printf("Please enter your command: ");
+        printf("INPUT: ");
 
         gets(input); // read user input
 
@@ -47,9 +47,6 @@ void run_game(Card *deckHead) {
         strcpy(to, arrow + 2);  // Skip "->"
 
         printf("From: %s, To: %s\n", from, to);
-        
-        
-        
 
             if (to[0] == 'C') {
             // Move to column
@@ -448,7 +445,7 @@ int isMoveLegal(Card* moveCard, Card* cardTo) {
     int cardRank2 = determineRank(*cardTo);
 
     if (moveCard->suit == cardTo->suit) {return 0;}
-    if (cardRank != cardRank2+1) {return 0;}
+    if (cardRank != cardRank2-1) {return 0;}
 
     return 1;
 }
