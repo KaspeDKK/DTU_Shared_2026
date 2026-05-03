@@ -17,14 +17,16 @@ void run_game(Card *deckHead) {
     create_game(deckHead, cols); // model.c
 
     // print game
-    debugShowGame(cols);
     showGame(cols);
+    debugShowGame(cols);
 
     int gameIsRunning = 1;
 
     while (gameIsRunning) {
         char input[100] = "";
         char from[20], to[20];
+
+        debugShowGame(cols); // NEEDS TO BE CHANGED TO NORMAL FUNC LATER
 
         // scan for input
         printf("INPUT: ");
