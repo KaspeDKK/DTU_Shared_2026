@@ -420,12 +420,23 @@ void moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundati
     }
 }
 
-void moveCardFromFoundation(Card *moveCard, Column columnFrom, Foundation foundation) {
-    Card* headCard = columnFrom.ref;
-    Card* endOfFoundation = getLastCardFoundation(foundation);
+void moveCardFromFoundation(Card *moveCard, Column columnTo, Foundation fromFoundation) {
+    Card* headCard = columnTo.ref;
+    Card* endOfFoundation = getLastCardFoundation(fromFoundation);
+    Card* endOFColumn = getLastCard(columnTo);
 
-    while (headCard->next->rank != moveCard->rank || headCard->next->suit != moveCard->suit) {
-        headCard = headCard->next;
+    if (isMoveLegal(endOfFoundation, endOFColumn)) {
+        // Flyt kortet til kolonnen
+        Card* cardToMove = endOfFoundation;
+        endOFColumn->next = cardToMove;
+
+        // Fjern kortet fra foundation
+        Card* current = fromFoundation.ref;
+        while (current->next != endOFColumn) {
+            current = current->next;
+        }
+
+        current->next = NULL;
     }
 }
 
