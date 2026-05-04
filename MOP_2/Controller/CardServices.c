@@ -47,23 +47,12 @@ void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
     Card* headCard = columnFrom->ref;
     Card* endOfColumn = getLastCard(*columnTo);
 
-    if (endOfColumn == NULL) {
 
-        // Kun konge kan placeres på en tom kolonne
-        if (determineRank(*moveCard) != 13) {
-            printf("Illegal move\n");
-            return;
-        }
-
-        columnTo->ref = moveCard;
-        columnFrom->ref = moveCard->next;
-        //moveCard->next = NULL;
-        return;
-    }
 
     // Dette burde fikse problem med at flytte sidste kort i kolonnen
     if (headCard->rank == moveCard->rank && headCard->suit == moveCard->suit) {
         columnFrom->ref = moveCard->next;
+
 
         if (isMoveLegal(moveCard, endOfColumn)== 1) {
             endOfColumn->next = moveCard;
@@ -73,10 +62,25 @@ void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
             return;
         }
     }
-
+    //iterate through the column to find the card to move, and keep track of the card before it (headCard)
     while (headCard->next != NULL && (headCard->next->rank != moveCard->rank || headCard->next->suit != moveCard->suit)) {
         headCard = headCard->next;
     }
+    // if the column is empty
+    if (endOfColumn == NULL) {
+
+        // Kun konge kan placeres på en tom kolonne
+        if (determineRank(*moveCard) != 13) {
+            printf("Illegal move\n");
+            return;
+        }
+
+        columnTo->ref = moveCard;
+        //columnFrom->ref = moveCard->next;
+        headCard->next = NULL;
+        return;
+    }
+
     if (headCard->next == NULL) {
         printf("Picked card is not in column\n");
         return;

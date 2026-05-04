@@ -43,7 +43,7 @@ AS
 4S
 5S
 6S
-7s
+7S
 8S
 9S
 TS
