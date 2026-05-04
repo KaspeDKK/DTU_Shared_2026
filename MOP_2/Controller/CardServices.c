@@ -78,7 +78,7 @@ void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
         headCard = headCard->next;
     }
     if (headCard->next == NULL) {
-        printf("Picked card is not in column");
+        printf("Picked card is not in column\n");
         return;
     }
     printf("MOVE: %c%c -> %c%c\n",
