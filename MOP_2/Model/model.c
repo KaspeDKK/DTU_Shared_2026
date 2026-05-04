@@ -4,25 +4,7 @@
 
 // TODO LOTS OF STUFF
 
-struct Card *getNth(Card *deckHead, int n) {
-    Card *current = deckHead;
-    int count = 0;
 
-    // Traverse the list until we reach the nth node or the end
-    while (current != NULL) {
-        if (count == n) {
-            // Found the nth card, return its value
-            return current;
-        }
-        count++;
-        current = current->next;
-    }
-
-    // If we reach here, n was out of bounds (larger than the deck size)
-    // You should handle this based on your project requirements
-    // (e.g., return an empty Card or exit)
-    exit(1);
-}
 
 /*
  * create_game

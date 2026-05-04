@@ -14,4 +14,6 @@ add_executable(MOP_2 main.c
         Controller/CardServices.c
         Controller/CardServices.h
         Model/Types.h
+        Model/deck.h
+        Model/deck.c
 )

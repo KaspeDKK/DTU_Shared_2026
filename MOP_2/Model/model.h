@@ -10,11 +10,6 @@
 
 void create_game(Card *deckHead, Column cols[]);
 
-Card *getNth(Card *deckHead, int n);
-
-
-
-
 // TODO LOTS OF STUFF
 
 #endif
