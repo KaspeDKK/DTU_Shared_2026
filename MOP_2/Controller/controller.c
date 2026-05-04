@@ -173,10 +173,6 @@ void game_startup()
             break;
         }
 
-        if (strcmp(cmd, "Q") == 0) {
-            return;
-        }
-
         // this needs to be the last command
         if (strcmp(cmd, "QQ") == 0) {
             exit(0);
