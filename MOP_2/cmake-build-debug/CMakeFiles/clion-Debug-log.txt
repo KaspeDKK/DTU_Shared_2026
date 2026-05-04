@@ -1,0 +1,4 @@
+Cannot generate into C:\Users\ttorr\Documents\GitHub\DTU_Shared_2026\MOP_2\cmake-build-debug
+It was created with incompatible generator 'Ninja'
+
+Please either delete it manually or select another generation directory
