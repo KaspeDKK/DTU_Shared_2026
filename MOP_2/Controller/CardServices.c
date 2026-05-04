@@ -99,7 +99,6 @@ void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
 
     if (isMoveLegal(moveCard, endOfColumn)== 1) { //condition check
         Card* cardToMove = headCard->next;
-        headCard->next = NULL;
         endOfColumn->next = cardToMove;
 
         //If the moved card was the head of the column, set old column pointer to null
