@@ -2,6 +2,7 @@
 #define VIEW_H
 
 #include "../Model/Types.h"
+#include "../Model/deck.h"
 
 
 // TODO

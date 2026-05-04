@@ -133,7 +133,34 @@ Card *randomShuffle(Card *head) {
     return shuffledDeck;
 }
 
+Card *arrayToList(Card deck[], int size)
+{
+    Card *head = NULL;
+    Card *current = NULL;
 
+    for (int i = 0; i < size; i++)
+    {
+        Card *newNode = malloc(sizeof(Card));
+
+        newNode->rank = deck[i].rank;
+        newNode->suit = deck[i].suit;
+        newNode->visible = deck[i].visible;
+        newNode->next = NULL;
+
+        if (head == NULL)
+        {
+            head = newNode;
+            current = newNode;
+        }
+        else
+        {
+            current->next = newNode;
+            current = newNode;
+        }
+    }
+
+    return head;
+}
 
 void listToArray(Card *head, Card deck[], int size)
 {
