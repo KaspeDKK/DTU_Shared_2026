@@ -90,7 +90,7 @@ void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
         headCard->next = NULL;
         endOfColumn->next = cardToMove;
         if (headCard->visible == 0) {
-            headCard->visible = 1; //Card should be visible when its the last card
+            headCard->visible = 1; //Card should be visible when it is the last card
         }
     } else {
         printf("Illegal move\n");
@@ -113,9 +113,9 @@ Card* getLastCardFoundation(Foundation foundation) {
     return foundation.ref;
 }
 
-void moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation foundation) {
+void moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundation) {
     Card* headCard = columnFrom->ref;
-    Card* endOfFoundation = getLastCardFoundation(foundation);
+    Card* endOfFoundation = getLastCardFoundation(*foundation);
 
     // Foundations første kort SKAL være ES (1)
     if (endOfFoundation == NULL) {
@@ -124,16 +124,32 @@ void moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation foundatio
             return;
         }
         
-        foundation.ref = moveCard;
+        foundation->ref = moveCard;
         columnFrom->ref = moveCard->next;
         moveCard->next = NULL;
         return;
     }
+    // Dette burde fikse problem med at flytte sidste kort i kolonnen
+    if (headCard->rank == moveCard->rank && headCard->suit == moveCard->suit) {
+        columnFrom->ref = moveCard->next;
 
-    while (headCard->next->rank != moveCard->rank || headCard->next->suit != moveCard->suit) {
+        if (isMoveLegalFoundation(moveCard, endOfFoundation)== 1) {
+            endOfFoundation->next = moveCard;
+            return;
+        } else {
+            printf("Illegal move\n");
+            return;
+        }
+    }
+
+    while (headCard->next != NULL && (headCard->next->rank != moveCard->rank || headCard->next->suit != moveCard->suit)) {
         headCard = headCard->next;
     }
-    if (isMoveLegalFoundation(moveCard, headCard)== 1) { //condition check
+    if (headCard->next == NULL) {
+        printf("Picked card is not in column\n");
+        return;
+    }
+    if (isMoveLegalFoundation(moveCard, endOfFoundation)== 1) { //condition check
         Card* cardToMove = headCard->next;
         headCard->next = NULL;
         endOfFoundation->next = cardToMove;
