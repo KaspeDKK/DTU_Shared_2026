@@ -57,7 +57,7 @@ void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
 
         columnTo->ref = moveCard;
         columnFrom->ref = moveCard->next;
-        moveCard->next = NULL;
+        //moveCard->next = NULL;
         return;
     }
 

@@ -194,7 +194,7 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
 
             Card *bottomCard = getLastCard(cols[fromCol]);
             if (bottomCard != NULL) {
-                moveCardFoundation(bottomCard, &cols[fromCol], foundations[toFound]);
+                moveCardFoundation(bottomCard, &cols[fromCol], &foundations[toFound]);
                 snprintf(response, maxLen, "OK|Move to foundation successful");
             } else {
                 snprintf(response, maxLen, "ERROR|Source column empty");
