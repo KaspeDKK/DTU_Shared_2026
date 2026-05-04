@@ -7,15 +7,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
+#include <errno.h>
 #include "../Model/model.h"
 #include "../Model/deck.h"
 #include "../Model/Types.h"
 #include "../Controller/controller.h"
 #include "../View/view.h"
 
-#pragma comment(lib, "ws2_32.lib")
+// Platform-specific socket headers
+#ifdef _WIN32
+    #include <winsock2.h>
+    #include <ws2tcpip.h>
+    #pragma comment(lib, "ws2_32.lib")
+    #define CLOSE_SOCKET(s) closesocket(s)
+    #define GET_SOCKET_ERROR() WSAGetLastError()
+    #define SOCKET_INIT_ERROR -1
+#else
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
+    #include <unistd.h>
+    typedef int SOCKET;
+    #define INVALID_SOCKET (-1)
+    #define SOCKET_ERROR (-1)
+    #define CLOSE_SOCKET(s) close(s)
+    #define GET_SOCKET_ERROR() errno
+    #define SOCKET_INIT_ERROR 0
+#endif
 
 #define PORT 5000
 #define BUFFER_SIZE 1024
@@ -176,7 +194,7 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
 
             Card *bottomCard = getLastCard(cols[fromCol]);
             if (bottomCard != NULL) {
-                moveCardFoundation(bottomCard, &cols[fromCol], foundations[toFound]);
+                moveCardFoundation(bottomCard, &cols[fromCol], &foundations[toFound]);
                 snprintf(response, maxLen, "OK|Move to foundation successful");
             } else {
                 snprintf(response, maxLen, "ERROR|Source column empty");
@@ -196,22 +214,36 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
 }
 
 int main(void) {
+#ifdef _WIN32
     WSADATA wsaData;
-    SOCKET listenSocket = INVALID_SOCKET;
-    SOCKET clientSocket = INVALID_SOCKET;
-
-    // Initialize Winsock
     int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (iResult != 0) {
         printf("WSAStartup failed: %d\n", iResult);
         return 1;
     }
+#endif
+
+    SOCKET listenSocket = INVALID_SOCKET;
+    SOCKET clientSocket = INVALID_SOCKET;
 
     // Create listening socket
     listenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (listenSocket == INVALID_SOCKET) {
-        printf("socket failed: %ld\n", WSAGetLastError());
+        printf("socket failed: %d\n", GET_SOCKET_ERROR());
+#ifdef _WIN32
         WSACleanup();
+#endif
+        return 1;
+    }
+
+    // Allow reusing the address to avoid "Address already in use" error
+    int reuseAddr = 1;
+    if (setsockopt(listenSocket, SOL_SOCKET, SO_REUSEADDR, (const char *)&reuseAddr, sizeof(reuseAddr)) < 0) {
+        printf("setsockopt failed: %d\n", GET_SOCKET_ERROR());
+        CLOSE_SOCKET(listenSocket);
+#ifdef _WIN32
+        WSACleanup();
+#endif
         return 1;
     }
 
@@ -221,20 +253,24 @@ int main(void) {
     serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     serverAddr.sin_port = htons(PORT);
 
-    iResult = bind(listenSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr));
+    int iResult = bind(listenSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr));
     if (iResult == SOCKET_ERROR) {
-        printf("bind failed: %ld\n", WSAGetLastError());
-        closesocket(listenSocket);
+        printf("bind failed: %d\n", GET_SOCKET_ERROR());
+        CLOSE_SOCKET(listenSocket);
+#ifdef _WIN32
         WSACleanup();
+#endif
         return 1;
     }
 
     // Start listening
     iResult = listen(listenSocket, 1);
     if (iResult == SOCKET_ERROR) {
-        printf("listen failed: %ld\n", WSAGetLastError());
-        closesocket(listenSocket);
+        printf("listen failed: %d\n", GET_SOCKET_ERROR());
+        CLOSE_SOCKET(listenSocket);
+#ifdef _WIN32
         WSACleanup();
+#endif
         return 1;
     }
 
@@ -243,11 +279,15 @@ int main(void) {
     // Accept and handle connections
     while (1) {
         struct sockaddr_in clientAddr;
+#ifdef _WIN32
         int clientAddrLen = sizeof(clientAddr);
+#else
+        socklen_t clientAddrLen = sizeof(clientAddr);
+#endif
 
         clientSocket = accept(listenSocket, (struct sockaddr *)&clientAddr, &clientAddrLen);
         if (clientSocket == INVALID_SOCKET) {
-            printf("accept failed: %ld\n", WSAGetLastError());
+            printf("accept failed: %d\n", GET_SOCKET_ERROR());
             continue;
         }
 
@@ -280,7 +320,7 @@ int main(void) {
             // Send response
             int iSend = send(clientSocket, sendBuf, (int)strlen(sendBuf), 0);
             if (iSend == SOCKET_ERROR) {
-                printf("send failed: %ld\n", WSAGetLastError());
+                printf("send failed: %d\n", GET_SOCKET_ERROR());
                 break;
             }
 
@@ -292,12 +332,14 @@ int main(void) {
             }
         }
 
-        closesocket(clientSocket);
+        CLOSE_SOCKET(clientSocket);
         printf("Client disconnected\n");
     }
 
-    closesocket(listenSocket);
+    CLOSE_SOCKET(listenSocket);
+#ifdef _WIN32
     WSACleanup();
+#endif
     return 0;
 }
 

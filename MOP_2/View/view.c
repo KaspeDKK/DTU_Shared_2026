@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "view.h"
+#include "../Controller/CardServices.h"
 
 static void print_card(const Card* card)
 {
@@ -52,13 +53,14 @@ void view_not_started() {
     printf("Message: Enter Command\n");
 }
 
-void debugShowGame(Column cols[])
+void debugShowGame(Column cols[], Foundation foundations[])
 {
     int maxRows = getMaxRows(cols);
 
-    printf("C1    C2    C3    C4    C5    C6    C7\n\n");
+    printf("C1    C2    C3    C4    C5    C6    C7         F1    F2    F3    F4\n\n");
 
     for (int row = 0; row < maxRows; row++) {
+        // print columns
         for (int col = 0; col < 7; col++) {
             Card *card = getRowCard(cols[col].ref, row);
 
@@ -67,10 +69,38 @@ void debugShowGame(Column cols[])
             } else {
                 printf("    ");
             }
-
             printf("  ");
         }
 
+        // print foundations on the first row only (top card = last card in list)
+        if (row == 0) {
+            printf("     ");
+            for (int f = 0; f < 4; f++) {
+                Card *top = getLastCardFoundation(foundations[f]);
+                if (top != NULL) {
+                    print_card_face_up(top);
+                } else {
+                    printf("[  ]");
+                }
+                printf("  ");
+            }
+        }
+
+        printf("\n");
+    }
+
+    // edge case: if all columns are empty, still show foundations
+    if (maxRows == 0) {
+        printf("                                            ");
+        for (int f = 0; f < 4; f++) {
+            Card *top = foundations[f].ref;
+            if (top != NULL) {
+                print_card_face_up(top);
+            } else {
+                printf("[  ]");
+            }
+            printf("  ");
+        }
         printf("\n");
     }
 }
