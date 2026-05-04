@@ -114,6 +114,19 @@ void moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation foundatio
     Card* headCard = columnFrom->ref;
     Card* endOfFoundation = getLastCardFoundation(foundation);
 
+    // Foundations første kort SKAL være ES (1)
+    if (endOfFoundation == NULL) {
+        if (determineRank(*moveCard) != 1) {
+            printf("Illegal move\n");
+            return;
+        }
+        
+        foundation.ref = moveCard;
+        columnFrom->ref = moveCard->next;
+        moveCard->next = NULL;
+        return;
+    }
+
     while (headCard->next->rank != moveCard->rank || headCard->next->suit != moveCard->suit) {
         headCard = headCard->next;
     }
