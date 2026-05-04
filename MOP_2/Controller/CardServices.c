@@ -110,9 +110,9 @@ Card* getLastCardFoundation(Foundation foundation) {
     return foundation.ref;
 }
 
-void moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation foundation) {
+void moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation* foundation) {
     Card* headCard = columnFrom->ref;
-    Card* endOfFoundation = getLastCardFoundation(foundation);
+    Card* endOfFoundation = getLastCardFoundation(*foundation);
 
     // Foundations første kort SKAL være ES (1)
     if (endOfFoundation == NULL) {
@@ -120,8 +120,8 @@ void moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation foundatio
             printf("Illegal move\n");
             return;
         }
-        
-        foundation.ref = moveCard;
+
+        foundation->ref = moveCard;
         columnFrom->ref = moveCard->next;
         moveCard->next = NULL;
         return;

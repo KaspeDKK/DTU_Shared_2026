@@ -89,13 +89,13 @@ void run_game(Card *deckHead) {
                     sscanf(from, "%[^:]:%s", colStr, cardStr);
                     int fromCol = colStr[1] - '0' - 1;
                     Card moveToCard = parseCard(cardStr);
-                    moveCardFoundation(&moveToCard, &cols[fromCol], foundations[toFound]);
+                    moveCardFoundation(&moveToCard, &cols[fromCol], &foundations[toFound]);
                 } else {
                     // Bottom card of column to foundation
                     int fromCol = from[1] - '0' - 1;
                     Card *bottomCard = getLastCard(cols[fromCol]);
                     if (bottomCard != NULL) {
-                        moveCardFoundation(bottomCard, &cols[fromCol], foundations[toFound]);
+                        moveCardFoundation(bottomCard, &cols[fromCol], &foundations[toFound]);
                     }
                 }
             }

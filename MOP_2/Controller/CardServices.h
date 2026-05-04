@@ -15,7 +15,7 @@ Card* getLastCardFoundation(Foundation foundation);
 int isMoveLegal(Card* moveCard, Card* cardTo);
 int isMoveLegalFoundation(Card* moveCard, Card* cardTo);
 Card parseCard(const char *cardStr);
-void moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation foundation);
+void moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation* foundation);
 void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo);
 int determineRank(Card card);
 
