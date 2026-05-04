@@ -58,9 +58,21 @@ void run_game(Card *deckHead) {
                 char colStr[3], cardStr[3];
                 sscanf(from, "%[^:]:%s", colStr, cardStr);
                 int fromCol = colStr[1] - '0' - 1;
-                Card moveToCard = parseCard(cardStr);
+                //Card moveToCard = parseCard(cardStr);
                 // For now, assume single card move (extend for stacks later)
-                moveCard(&moveToCard, &cols[fromCol], &cols[toCol]);
+                // moveCard(&moveToCard, &cols[fromCol], &cols[toCol]);
+
+                Card *cardToMove = cols[fromCol].ref;
+                while (cardToMove != NULL && (cardToMove->rank != cardStr[0] || cardToMove->suit != cardStr[1])) {
+                    cardToMove = cardToMove->next;
+                }
+
+                if (cardToMove == NULL) {
+                    printf("Card not found in column\n");
+                } else {
+                    moveCard(cardToMove, &cols[fromCol], &cols[toCol]);
+                }
+
             } else if (from[0] == 'C') {
                 // Bottom card of column: "C6"
                 int fromCol = from[1] - '0' - 1;
@@ -88,8 +100,19 @@ void run_game(Card *deckHead) {
                     char colStr[3], cardStr[3];
                     sscanf(from, "%[^:]:%s", colStr, cardStr);
                     int fromCol = colStr[1] - '0' - 1;
-                    Card moveToCard = parseCard(cardStr);
-                    moveCardFoundation(&moveToCard, &cols[fromCol], &foundations[toFound]);
+                    //Card moveToCard = parseCard(cardStr);
+                    //moveCardFoundation(&moveToCard, &cols[fromCol], &foundations[toFound]);
+
+                    Card *cardToMove = cols[fromCol].ref;
+                    while (cardToMove != NULL && (cardToMove->rank != cardStr[0] || cardToMove->suit != cardStr[1])) {
+                        cardToMove = cardToMove->next;
+                    }
+
+                    if (cardToMove == NULL) {
+                        printf("Card not found in column\n");
+                    } else {
+                        moveCardFoundation(cardToMove, &cols[fromCol], &foundations[toFound]);
+                    }
                 } else {
                     // Bottom card of column to foundation
                     int fromCol = from[1] - '0' - 1;
