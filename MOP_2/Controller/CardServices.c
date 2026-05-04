@@ -130,6 +130,13 @@ Card* getLastCardFoundation(Foundation foundation) {
 
 void moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundation) {
     Card* endOfFoundation = getLastCardFoundation(*foundation);
+    Card* endOfColumn = getLastCard(*columnFrom);
+
+    // Kun sidste kort i kolonnen må rykkes til foundation
+    if (endOfColumn->rank != moveCard->rank || endOfColumn->suit != moveCard->suit) {
+        printf("Illegal move\n");
+        return;
+    }
 
     // Foundations første kort SKAL være ES (1)
     if (endOfFoundation == NULL) {
@@ -143,36 +150,30 @@ void moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundati
         return;
     }
 
-    // Check if moveCard is the head of the column
-    if (columnFrom->ref != NULL &&
-        columnFrom->ref->rank == moveCard->rank &&
-        columnFrom->ref->suit == moveCard->suit) {
-
+    // Kolonnen har kun ét kort
+    if (columnFrom->ref->rank == moveCard->rank && columnFrom->ref->suit == moveCard->suit) {
         if (isMoveLegalFoundation(moveCard, endOfFoundation) != 1) {
             printf("Illegal move\n");
             return;
         }
-        columnFrom->ref = moveCard->next;
+        columnFrom->ref = NULL;
         moveCard->next = NULL;
         endOfFoundation->next = moveCard;
         return;
-        }
+    }
 
-    // Card is deeper in the column — find the node before it
     Card* headCard = columnFrom->ref;
-    while (headCard->next != NULL &&
-           (headCard->next->rank != moveCard->rank || headCard->next->suit != moveCard->suit)) {
+    while (headCard->next != NULL && (headCard->next->rank != moveCard->rank || headCard->next->suit != moveCard->suit)) {
         headCard = headCard->next;
-           }
+    }
     if (headCard->next == NULL) {
         printf("Card not found in column\n");
         return;
     }
 
-    if (isMoveLegalFoundation(moveCard, endOfFoundation) == 1) { //condition check
+    if (isMoveLegalFoundation(moveCard, endOfFoundation) == 1) {
         Card* cardToMove = headCard->next;
-        headCard->next = moveCard->next;
-        cardToMove->next = NULL;
+        headCard->next = NULL;
         endOfFoundation->next = cardToMove;
     } else {
         printf("Illegal move\n");
