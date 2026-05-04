@@ -81,7 +81,7 @@ void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
         printf("Picked card is not in column\n");
         return;
     }
-    printf("MOVE: %c%c -> %c%c\n",
+    printf("MOVE: %c%c -> %c%c\n", //Check to see what cards are being moved and where they are being moved to
        moveCard->rank, moveCard->suit,
        endOfColumn->rank, endOfColumn->suit);
 
@@ -89,6 +89,9 @@ void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
         Card* cardToMove = headCard->next;
         headCard->next = NULL;
         endOfColumn->next = cardToMove;
+        if (headCard->visible == 0) {
+            headCard->visible = 1; //Card should be visible when its the last card
+        }
     } else {
         printf("Illegal move\n");
     }
