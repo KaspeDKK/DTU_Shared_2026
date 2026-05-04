@@ -47,13 +47,21 @@ void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
     Card* headCard = columnFrom->ref;
     Card* endOfColumn = getLastCard(*columnTo);
 
-
-
     // Dette burde fikse problem med at flytte sidste kort i kolonnen
     if (headCard->rank == moveCard->rank && headCard->suit == moveCard->suit) {
+        //Hvis det kort der rykkes er det første kort, skal vi opdatere pointeren fra columnFrom til null
+        if (columnFrom->ref == moveCard) {
+            columnFrom->ref = NULL;
+            if (isMoveLegal(moveCard, endOfColumn)== 1) {
+                endOfColumn->next = moveCard;
+                return;
+            } else {
+                printf("Illegal move\n");
+                return;
+            }
+        }
+        //Else
         columnFrom->ref = moveCard->next;
-
-
         if (isMoveLegal(moveCard, endOfColumn)== 1) {
             endOfColumn->next = moveCard;
             return;
@@ -93,6 +101,12 @@ void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
         Card* cardToMove = headCard->next;
         headCard->next = NULL;
         endOfColumn->next = cardToMove;
+
+        //If the moved card was the head of the column, set old column pointer to null
+        if (columnFrom->ref == moveCard) {
+            columnFrom->ref = NULL;
+        }
+
     } else {
         printf("Illegal move\n");
     }
