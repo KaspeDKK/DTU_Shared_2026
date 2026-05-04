@@ -139,9 +139,9 @@ void moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation* foundati
     }
 }
 
-void moveCardFromFoundation(Card *moveCard, Column columnTo, Foundation fromFoundation) {
-    Card* endOfFoundation = getLastCardFoundation(fromFoundation);
-    Card* endOFColumn = getLastCard(columnTo);
+void moveCardFromFoundation(Card *moveCard, Column *columnTo, Foundation *fromFoundation) {
+    Card* endOfFoundation = getLastCardFoundation(*fromFoundation);
+    Card* endOFColumn = getLastCard(*columnTo);
 
     if (isMoveLegal(endOfFoundation, endOFColumn)) {
         // Flyt kortet til kolonnen
@@ -149,7 +149,7 @@ void moveCardFromFoundation(Card *moveCard, Column columnTo, Foundation fromFoun
         endOFColumn->next = cardToMove;
 
         // Fjern kortet fra foundation
-        Card* current = fromFoundation.ref;
+        Card* current = fromFoundation->ref;
         while (current->next != endOfFoundation) {
             current = current->next;
         }

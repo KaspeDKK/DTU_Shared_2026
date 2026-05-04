@@ -18,5 +18,6 @@ Card parseCard(const char *cardStr);
 void moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation* foundation);
 void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo);
 int determineRank(Card card);
+void moveCardFromFoundation(Card *moveCard, Column *columnTo, Foundation *fromFoundation);
 
 #endif //MOP_2_CARDSERVICES_H
