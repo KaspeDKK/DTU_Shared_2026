@@ -190,7 +190,10 @@ void moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundati
 void moveCardFromFoundation(Card *moveCard, Column *columnTo, Foundation *fromFoundation) {
     Card* endOfFoundation = getLastCardFoundation(*fromFoundation);
     Card* endOFColumn = getLastCard(*columnTo);
-
+    if (columnTo->ref==NULL) {
+        printf("Illegal move\n");
+        return;
+    }
     if (isMoveLegal(endOfFoundation, endOFColumn)) {
         // flyt kortet til kolonnen
         Card* cardToMove = endOfFoundation;
@@ -198,8 +201,12 @@ void moveCardFromFoundation(Card *moveCard, Column *columnTo, Foundation *fromFo
 
         // fjern kortet fra foundation
         Card* current = fromFoundation->ref;
-        while (current->next != endOfFoundation) {
+        while (current->next != endOfFoundation && current->next != NULL) {
             current = current->next;
+        }
+        //if there is only one card in the column
+        if (fromFoundation->ref == moveCard) {
+            fromFoundation->ref = NULL;
         }
 
         current->next = NULL;
