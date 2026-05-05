@@ -1,0 +1,4 @@
+/Users/magnusfriis/Documents/GitHub/DTU_Shared_2026/MOP_2/cmake-build-debug/CMakeFiles/MOP_2.dir
+/Users/magnusfriis/Documents/GitHub/DTU_Shared_2026/MOP_2/cmake-build-debug/CMakeFiles/server.dir
+/Users/magnusfriis/Documents/GitHub/DTU_Shared_2026/MOP_2/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/magnusfriis/Documents/GitHub/DTU_Shared_2026/MOP_2/cmake-build-debug/CMakeFiles/rebuild_cache.dir

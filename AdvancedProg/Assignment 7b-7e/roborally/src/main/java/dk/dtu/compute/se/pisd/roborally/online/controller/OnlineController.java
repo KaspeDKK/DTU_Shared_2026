@@ -400,12 +400,19 @@ public class OnlineController {
 
         Game stateUpdate = new Game();
         stateUpdate.setGameState(Game.GameState.ACTIVE);
+        try {
+            Game updatedGame = restClient.patch()
+                    .uri("/game/{id}", game.getUid())
+                    .body(stateUpdate)
+                    .retrieve()
+                    .body(Game.class);
 
-        Game updatedGame = restClient.patch()
-                .uri("/game/{id}", game.getUid())
-                .body(stateUpdate)
-                .retrieve()
-                .body(Game.class);
+        } catch (HttpClientErrorException.NotFound e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
+        }
 
         Board board = new Board(8, 8);
         GameController gameController = new GameController(board);
