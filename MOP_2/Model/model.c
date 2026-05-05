@@ -24,6 +24,10 @@ void create_game(Card *deckHead, Column cols[]) {
         0, 1, 1, 1, 1, 1, 2, 3, 4, 5, 6 // these represent the "col start" value for each row. These are always the same.
     };
 
+    int ColInvisibleDepth[7] = {
+        0, 1, 2, 3, 4, 5, 6 // these represent the depth after which visible cards should be placed in the initial version of the game deck. (All cards are invisible when created unless set otherwise)
+    };
+
     for (int row = 0; row < 11; row++) {
         for (int col = startColPerRow[row]; col < 7; col++) {
             if (current == NULL) return;
