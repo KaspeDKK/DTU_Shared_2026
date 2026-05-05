@@ -107,6 +107,9 @@ void moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
             columnFrom->ref = NULL;
         }
 
+        // last card of each column is always visible
+        if (columnFrom->ref != NULL) getLastCard(*columnFrom)->visible = 1;
+        if (columnTo->ref != NULL) getLastCard(*columnTo)->visible = 1;
     } else {
         printf("Illegal move\n");
     }
