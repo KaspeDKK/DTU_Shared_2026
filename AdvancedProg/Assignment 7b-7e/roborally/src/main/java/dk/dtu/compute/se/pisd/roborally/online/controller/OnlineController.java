@@ -164,9 +164,9 @@ public class OnlineController {
     // DONE Assignment 7c: you might want to implement a method of signing up
     //      (registering) a new user here!
 
-    /**
+    /** Set the user of the client side. This is used when signing in, signing out or creating a new user
      *
-     * @param user
+     * @param user to set as Online
      */
     public void setOnlineUser(User user) {
         if (!appController.isGameRunning() && !gameSelectionOn) {
@@ -183,9 +183,13 @@ public class OnlineController {
         }
     }
 
-    // TODO Assignment 7b: Obtain the list of all games from the backend!
+    // DONE Assignment 7b: Obtain the list of all games from the backend!
     // TODO Assignment 7c/7e: And at some later point, this should only
     //      return the games open for registration (not started yet).
+
+    /** refresh list of games from backend
+     *
+     */
     public void refreshGames() {
         try {
             List<Game> games = restClient.get()
@@ -202,8 +206,16 @@ public class OnlineController {
 
     private boolean gameSelectionOn = false;
 
+    /** functionality for "Select Online Game" button. When pressed refresh list of games, go into gameSelectionPhase (gameSelectionOn),
+     * and create the gameSelectionView using this OnlineController. <p>
+     *     If you are not signed in, then a message will appear telling you to sign in before trying to select an online game.
+     * </p> <p>
+     *     If you are already playing a game, then you cannot select a new game
+     * </p>
+     *
+     */
     public void selectGame() {
-        if (appController.isGameRunning()) {
+        if (appController.isGameRunning()) { // is currently not working
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Game running");
             alert.setHeaderText("You cannot select a game while a game is running!");
@@ -249,6 +261,10 @@ public class OnlineController {
         }
     }
 
+    /** Creates a new game using POST method if a game is not running & a user is signed in & if you are in gameSelection mode
+     *
+     * @param game
+     */
     public void createGame(Game game) {
         try {
             if (!appController.isGameRunning() && onlineState.getSignedInUser() != null && gameSelectionOn) {
@@ -276,6 +292,9 @@ public class OnlineController {
         }
     }
 
+    /**
+     * functionality for create new game button. This will load a new Dialog, where the user will enter game details in order to create a new game
+     */
     public void createGame() {
         appDialogs.createNewGame();
     }
