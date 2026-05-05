@@ -85,10 +85,12 @@ void render_board(char *output, size_t maxLen) {
         // Print columns
         for (int col = 0; col < 7 && remaining > 0; col++) {
             if (current[col] != NULL) {
-                len = snprintf(pos, remaining, "[%c%c]  ", current[col]->rank, current[col]->suit);
+                // Use * for hidden cards, space for visible
+                char vis = current[col]->visible ? ' ' : '*';
+                len = snprintf(pos, remaining, "%c[%c%c]  ", vis, current[col]->rank, current[col]->suit);
                 current[col] = current[col]->next;
             } else {
-                len = snprintf(pos, remaining, "[  ]  ");
+                len = snprintf(pos, remaining, " [  ]  ");
             }
             pos += len;
             remaining -= len;
@@ -175,29 +177,71 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
                 return;
             }
 
-            Card *bottomCard = getLastCard(cols[fromCol]);
-            if (bottomCard != NULL) {
-                moveCard(bottomCard, &cols[fromCol], &cols[toCol]);
+            // Check if specific card is requested (e.g., "C7:QD")
+            Card *cardToMove = NULL;
+            if (strchr(from, ':') != NULL) {
+                // Specific card format: "C7:QD"
+                char cardStr[3];
+                sscanf(from, "%*[^:]:%2s", cardStr);
+                cardToMove = cols[fromCol].ref;
+                while (cardToMove != NULL && (cardToMove->rank != cardStr[0] || cardToMove->suit != cardStr[1])) {
+                    cardToMove = cardToMove->next;
+                }
+            } else {
+                // Default to bottom card
+                cardToMove = getLastCard(cols[fromCol]);
+            }
+
+            if (cardToMove != NULL) {
+                moveCard(cardToMove, &cols[fromCol], &cols[toCol]);
                 snprintf(response, maxLen, "OK|Move successful");
             } else {
-                snprintf(response, maxLen, "ERROR|Source column empty");
+                snprintf(response, maxLen, "ERROR|Source card not found");
             }
         } else if (to[0] == 'F') {
             // Column to foundation
-            int fromCol = from[1] - '0' - 1;
             int toFound = to[1] - '0' - 1;
 
-            if (fromCol < 0 || fromCol > 6 || toFound < 0 || toFound > 3) {
-                snprintf(response, maxLen, "ERROR|Invalid column or foundation");
+            if (toFound < 0 || toFound > 3) {
+                snprintf(response, maxLen, "ERROR|Invalid foundation");
                 return;
             }
 
-            Card *bottomCard = getLastCard(cols[fromCol]);
-            if (bottomCard != NULL) {
-                moveCardFoundation(bottomCard, &cols[fromCol], &foundations[toFound]);
-                snprintf(response, maxLen, "OK|Move to foundation successful");
+            // Check if specific card is requested (e.g., "C7:QD")
+            Card *cardToMove = NULL;
+            if (strchr(from, ':') != NULL) {
+                // Specific card format: "C7:QD"
+                char colStr[3], cardStr[3];
+                sscanf(from, "%[^:]:%2s", colStr, cardStr);
+                int fromCol = colStr[1] - '0' - 1;
+                if (fromCol < 0 || fromCol > 6) {
+                    snprintf(response, maxLen, "ERROR|Invalid column");
+                    return;
+                }
+                cardToMove = cols[fromCol].ref;
+                while (cardToMove != NULL && (cardToMove->rank != cardStr[0] || cardToMove->suit != cardStr[1])) {
+                    cardToMove = cardToMove->next;
+                }
+                if (cardToMove != NULL) {
+                    moveCardFoundation(cardToMove, &cols[fromCol], &foundations[toFound]);
+                    snprintf(response, maxLen, "OK|Move to foundation successful");
+                } else {
+                    snprintf(response, maxLen, "ERROR|Source card not found");
+                }
             } else {
-                snprintf(response, maxLen, "ERROR|Source column empty");
+                // Default to bottom card
+                int fromCol = from[1] - '0' - 1;
+                if (fromCol < 0 || fromCol > 6) {
+                    snprintf(response, maxLen, "ERROR|Invalid column");
+                    return;
+                }
+                cardToMove = getLastCard(cols[fromCol]);
+                if (cardToMove != NULL) {
+                    moveCardFoundation(cardToMove, &cols[fromCol], &foundations[toFound]);
+                    snprintf(response, maxLen, "OK|Move to foundation successful");
+                } else {
+                    snprintf(response, maxLen, "ERROR|Source column empty");
+                }
             }
         } else {
             snprintf(response, maxLen, "ERROR|Invalid destination");
@@ -253,7 +297,7 @@ int main(void) {
     serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     serverAddr.sin_port = htons(PORT);
 
-    int iResult = bind(listenSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr));
+    iResult = bind(listenSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr));
     if (iResult == SOCKET_ERROR) {
         printf("bind failed: %d\n", GET_SOCKET_ERROR());
         CLOSE_SOCKET(listenSocket);

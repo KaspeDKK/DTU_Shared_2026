@@ -11,7 +11,7 @@ class BackendClient:
         self.host = host
         self.port = port
         self.socket = None
-        self.timeout = 5
+        self.timeout = 2
 
     def connect(self):
         """Connect to the backend server"""
@@ -34,18 +34,25 @@ class BackendClient:
             # Send command
             self.socket.sendall((command + "\n").encode())
 
-            # Receive response (may be multi-line for board state)
+            # Receive response
             response = b""
+            self.socket.settimeout(self.timeout)  # Initial timeout
+            
             while True:
                 try:
                     chunk = self.socket.recv(4096)
                     if not chunk:
                         break
                     response += chunk
-                    # For simple responses, break after first chunk
-                    if len(response) > 0 and b"\n" in response:
+                    
+                    # Check for complete message (ends with newline)
+                    if response.endswith(b"\n"):
                         break
+                    
+                    # For subsequent reads, use a shorter timeout (fast fail)
+                    self.socket.settimeout(0.1)
                 except socket.timeout:
+                    # Timeout is OK - we've likely received everything
                     break
             
             return response.decode('utf-8', errors='ignore').strip()

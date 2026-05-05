@@ -21,6 +21,18 @@ class YukonGUI:
         # Game state
         self.selected = None  # "C1", "C2:7H", etc.
         self.board_state = ""
+        self.columns_data = [[] for _ in range(7)]  # Track card data for click detection
+        
+        # ---- Drawing/layout constants (initialized FIRST) ----
+        self.CARD_W = 70
+        self.CARD_H = 100
+        self.COL_SPACING_X = 140
+        self.COL_START_X = 40
+        self.COL_START_Y = 70
+        self.COL_Y_STEP = int(self.CARD_H * 0.60)  # 60px when CARD_H=100
+        self.FOUND_START_X = self.COL_START_X + 7 * self.COL_SPACING_X + 40
+        self.FOUND_START_Y = self.COL_START_Y
+        self.FOUND_Y_STEP = self.CARD_H + 25
 
         # UI Elements (set up FIRST)
         self.setup_ui()
@@ -186,7 +198,7 @@ class YukonGUI:
 
         # Parse and draw cards from board state (skip header line)
         # We need to track cards per column to calculate overlapping positions
-        columns = [[] for _ in range(7)]  # Store cards for each column
+        columns = [[] for _ in range(7)]  # Store cards for each column: [(card_text, is_visible), ...]
         foundations = ["", "", "", ""]  # Store top card for each foundation
 
         import re
@@ -203,22 +215,29 @@ class YukonGUI:
                 if f_match:
                     foundations[f_idx] = f_match.group(1).strip()
 
-            # Only treat lines with bracket-cards as tableau rows.
-            card_matches = re.findall(r'\[(.{2})\]', line)
+            # Parse tableau rows with visibility markers
+            # Pattern: optional visibility marker (*=hidden, space=visible), then [rank suit]
+            card_pattern = r'(\*| )\[(.{2})\]'
+            card_matches = re.findall(card_pattern, line)
             if not card_matches:
                 continue
 
             for col in range(min(7, len(card_matches))):
-                card_text = card_matches[col].strip()
-                if card_text:  # Skip empty slots like "  "
-                    columns[col].append(card_text)
+                vis_marker, card_text = card_matches[col]
+                card_text = card_text.strip()
+                if card_text and card_text != "  ":  # Skip empty slots
+                    is_visible = (vis_marker == ' ')
+                    columns[col].append((card_text, is_visible))
+        
+        # Store for click detection
+        self.columns_data = columns
         
         # Now draw cards with overlapping
         for col in range(7):
-            for card_idx, card_text in enumerate(columns[col]):
+            for card_idx, (card_text, is_visible) in enumerate(columns[col]):
                 x = start_x + col * spacing_x
                 y = start_y + card_idx * y_step
-                self.draw_card(x, y, card_text, card_width, card_height)
+                self.draw_card(x, y, card_text, card_width, card_height, is_visible)
 
         # Draw foundations as a vertical stack of slots on the right
         for f_idx in range(4):
@@ -237,7 +256,7 @@ class YukonGUI:
 
             top_card = foundations[f_idx] if f_idx < len(foundations) else ""
             if top_card:
-                self.draw_card(fx, fy, top_card, card_width, card_height)
+                self.draw_card(fx, fy, top_card, card_width, card_height, True)
             else:
                 self.canvas.create_text(
                     fx + card_width // 2,
@@ -247,11 +266,24 @@ class YukonGUI:
                     font=("Consolas", 12, "bold")
                 )
 
-    def draw_card(self, x, y, card_text, width, height):
-        """Draw a single card with rank and suit"""
+    def draw_card(self, x, y, card_text, width, height, is_visible=True):
+        """Draw a single card with rank and suit, or card back if hidden"""
+        if not is_visible:
+            # Draw card back (hidden card)
+            self.canvas.create_rectangle(x, y, x + width, y + height, 
+                                        fill="#0a5c0a", outline="black", width=2)
+            # Add cross pattern to indicate hidden
+            self.canvas.create_line(x, y, x + width, y + height, fill="darkgray", width=1)
+            self.canvas.create_line(x + width, y, x, y + height, fill="darkgray", width=1)
+            return
+        
+        # Draw visible card
         # Determine suit color
         suit_char = card_text[1] if len(card_text) > 1 else ' '
         rank_char = card_text[0] if len(card_text) > 0 else ' '
+        
+        # Convert rank for display (T -> 10)
+        rank_display = '10' if rank_char == 'T' else rank_char
         
         # Red suits: D (Diamonds), H (Hearts), Black suits: C (Clubs), S (Spades)
         is_red = suit_char in ['D', 'H']
@@ -268,32 +300,43 @@ class YukonGUI:
         # Top-left corner
         self.canvas.create_text(x + 5, y + 3, text=suit_display, fill=color, 
                                font=("Arial", 12, "bold"), anchor="nw")
-        self.canvas.create_text(x + 5, y + 16, text=rank_char, fill=color, 
-                               font=("Arial", 10, "bold"), anchor="nw")
+        self.canvas.create_text(x + 5, y + 16, text=rank_display, fill=color, 
+                               font=("Arial", 9, "bold"), anchor="nw")
         
         # Bottom-right corner (upside down)
         self.canvas.create_text(x + width - 5, y + height - 3, text=suit_display, fill=color, 
                                font=("Arial", 12, "bold"), anchor="se")
-        self.canvas.create_text(x + width - 5, y + height - 16, text=rank_char, fill=color, 
-                               font=("Arial", 10, "bold"), anchor="se")
+        self.canvas.create_text(x + width - 5, y + height - 16, text=rank_display, fill=color, 
+                               font=("Arial", 9, "bold"), anchor="se")
 
     def on_canvas_click(self, event):
-        """Handle canvas clicks for column/card selection"""
-        # Map clicks to tableau columns (must match draw layout)
+        """Handle canvas clicks for card/column selection"""
+        # Map clicks to tableau columns and cards
         col = (event.x - self.COL_START_X) // self.COL_SPACING_X
 
         if col < 0 or col > 6:
             return
 
-        # First click: select source
+        # Determine which card was clicked based on Y coordinate
+        card_idx = (event.y - self.COL_START_Y) // self.COL_Y_STEP
+        
+        # Get the column data
+        if col >= len(self.columns_data) or card_idx >= len(self.columns_data[col]):
+            # Click is below all cards or on empty column
+            return
+        
+        # Get the actual card at this position
+        card_text, is_visible = self.columns_data[col][card_idx]
+        
+        # First click: select source card
         if self.selected is None:
-            self.selected = f"C{col + 1}"
+            self.selected = f"C{col + 1}:{card_text}"
             self.source_entry.delete(0, tk.END)
             self.source_entry.insert(0, self.selected)
             self.update_message(f"Selected: {self.selected}")
             self.draw_board()
         else:
-            # Second click: attempt move
+            # Second click: attempt move to destination column
             destination = f"C{col + 1}"
             self.try_move(self.selected, destination)
             self.selected = None
