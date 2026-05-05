@@ -20,8 +20,12 @@ public class PlayerController {
     //      and you will need to add corresponding service class PlayerService in package services,
     //      and implement the respective logic there.
 
+    /** POST mapping to endpoint to create a new player in our playerRepo
+     *
+     * @param player object body that will be sent in the request
+     */
     @PostMapping(
-            produces = "application/json"
+            consumes = "application/json"
     )
     public void signUpPlayer(@RequestBody Player player){
             playerService.signUpPlayer(player);
