@@ -53,7 +53,7 @@ void processMove(char *input, Column cols[], Foundation foundations[]) {
             while (cardToMove != NULL && (cardToMove->rank != cardStr[0] || cardToMove->suit != cardStr[1])) {
                 cardToMove = cardToMove->next;
             }
-
+            if (cols[fromCol].ref != NULL) getLastCard(cols[fromCol])->visible = 1;
             if (cardToMove == NULL) {
                 printf("Card not found in column\n");
             } else {
@@ -66,6 +66,7 @@ void processMove(char *input, Column cols[], Foundation foundations[]) {
             if (bottomCard != NULL) {
                 moveCard(bottomCard, &cols[fromCol], &cols[toCol]);
             }
+            if (cols[fromCol].ref != NULL) getLastCard(cols[fromCol])->visible = 1;
         } else if (from[0] == 'F') {
             // top card of foundation
             int fromFound = from[1] - '0' - 1;
@@ -73,7 +74,9 @@ void processMove(char *input, Column cols[], Foundation foundations[]) {
             if (topCard != NULL) {
                 moveCardFromFoundation(topCard, &cols[toCol], &foundations[fromFound]);
             }
+
         }
+
     } else if (to[0] == 'F') {
         // Move to foundation
         int toFound = to[1] - '0' - 1;
@@ -86,6 +89,7 @@ void processMove(char *input, Column cols[], Foundation foundations[]) {
                 int fromCol = colStr[1] - '0' - 1;
 
                 Card *cardToMove = cols[fromCol].ref;
+                if (cols[fromCol].ref != NULL) getLastCard(cols[fromCol])->visible = 1;
                 while (cardToMove != NULL && (cardToMove->rank != cardStr[0] || cardToMove->suit != cardStr[1])) {
                     cardToMove = cardToMove->next;
                 }
@@ -101,6 +105,7 @@ void processMove(char *input, Column cols[], Foundation foundations[]) {
                 Card *bottomCard = getLastCard(cols[fromCol]);
                 if (bottomCard != NULL) {
                     moveCardFoundation(bottomCard, &cols[fromCol], &foundations[toFound]);
+                    if (cols[fromCol].ref != NULL) getLastCard(cols[fromCol])->visible = 1;
                 }
             }
         }
@@ -117,7 +122,7 @@ void run_game(Card *deckHead) {
     create_game(deckHead, cols); // model.c
 
     /* TESTING BELOW */
-    int testing = 1; // ENABLE // DISABLE
+    int testing = 0; // ENABLE // DISABLE
     if (testing) {
         // replay moves JUST FOR TESTING
         const char *replay[] = {
@@ -154,6 +159,8 @@ void run_game(Card *deckHead) {
         input[strcspn(input, "\n")] = 0;
 
         processMove(input, cols, foundations);
+
+
 
         if (gameWon(foundations)) {
             printf("\nYou have won!\n");
