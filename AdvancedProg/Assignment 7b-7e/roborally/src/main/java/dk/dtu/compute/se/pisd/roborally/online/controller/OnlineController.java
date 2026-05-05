@@ -296,8 +296,11 @@ public class OnlineController {
             restClient.delete().uri("/player/{playerUid}", player.getUid())
                     .retrieve()
                     .toBodilessEntity();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (HttpClientErrorException.Conflict | HttpClientErrorException.NotFound ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(ex.getMessage());
+            alert.showAndWait();
         } finally {
             selectGame();
         }

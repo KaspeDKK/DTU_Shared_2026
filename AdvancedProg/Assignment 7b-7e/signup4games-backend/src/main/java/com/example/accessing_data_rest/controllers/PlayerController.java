@@ -3,13 +3,10 @@ package com.example.accessing_data_rest.controllers;
 import com.example.accessing_data_rest.exceptions.*;
 import com.example.accessing_data_rest.services.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.accessing_data_rest.model.Player;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("roborally/player")
@@ -42,6 +39,11 @@ public class PlayerController {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(CannotJoinFullGameException.class)
+    public ResponseEntity<String> handleCannotJoinFullGameException(CannotJoinFullGameException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(CouldNotDeletePlayerException.class)
     public ResponseEntity<String> handleCouldNotDeletePlayerException(CouldNotDeletePlayerException ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
@@ -52,8 +54,8 @@ public class PlayerController {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(CannotLeaveActiveGameException.class)
-    public ResponseEntity<String> handleCannotLeaveActiveGameException(CannotLeaveActiveGameException ex){
+    @ExceptionHandler(CouldNotJoinActiveGameException.class)
+    public ResponseEntity<String> handleCannotLeaveActiveGameException(CouldNotJoinActiveGameException ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 

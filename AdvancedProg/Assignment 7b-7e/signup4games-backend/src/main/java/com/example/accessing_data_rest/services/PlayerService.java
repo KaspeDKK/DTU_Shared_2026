@@ -1,7 +1,6 @@
 package com.example.accessing_data_rest.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.example.accessing_data_rest.exceptions.*;
 import com.example.accessing_data_rest.model.Game;
@@ -49,7 +48,7 @@ public class PlayerService {
         }
 
         if (game.getPlayers().size() >= game.getMaxPlayers()){
-            throw new CouldNotCreatePlayerException("Can't join game. Game is full");
+            throw new CannotJoinFullGameException("Can't join game. Game is full");
         }
 
         player.setGame(game);
@@ -77,7 +76,7 @@ public class PlayerService {
         Player player = playerRepository.findById(playerUid).get();
 
         if (player.getGame().getGameState() == Game.GameState.ACTIVE) {
-            throw new CannotLeaveActiveGameException("Game is already active. Player could not leave game (delete player)");
+            throw new CouldNotJoinActiveGameException("Game is already active. Player could not leave game (delete player)");
         }
 
         // using userUid to check if this player is the owner
