@@ -1,0 +1,43 @@
+# CMake build directories
+cmake-build-*/
+build/
+dist/
+
+# Build artifacts
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# IDE/Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# CMake
+CMakeUserPresets.json
+cmake_install.cmake
+CMakeCache.txt
+
+# OS
+.DS_Store
+._.DS_Store
+**/.DS_Store
+

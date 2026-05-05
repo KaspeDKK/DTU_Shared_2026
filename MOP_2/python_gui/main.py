@@ -22,17 +22,18 @@ class YukonGUI:
         self.selected = None  # "C1", "C2:7H", etc.
         self.board_state = ""
         self.columns_data = [[] for _ in range(7)]  # Track card data for click detection
+        self.foundations_data = ["", "", "", ""]  # Track foundation top cards for click detection
         
         # ---- Drawing/layout constants (initialized FIRST) ----
-        self.CARD_W = 70
-        self.CARD_H = 100
-        self.COL_SPACING_X = 140
-        self.COL_START_X = 40
+        self.CARD_W = 50
+        self.CARD_H = 75
+        self.COL_SPACING_X = 110
+        self.COL_START_X = 25
         self.COL_START_Y = 70
-        self.COL_Y_STEP = int(self.CARD_H * 0.60)  # 60px when CARD_H=100
-        self.FOUND_START_X = self.COL_START_X + 7 * self.COL_SPACING_X + 40
+        self.COL_Y_STEP = int(self.CARD_H * 0.40)  # 40% for 30px step - less overlap, more cards visible
+        self.FOUND_START_X = self.COL_START_X + 7 * self.COL_SPACING_X + 30
         self.FOUND_START_Y = self.COL_START_Y
-        self.FOUND_Y_STEP = self.CARD_H + 25
+        self.FOUND_Y_STEP = self.CARD_H + 20
 
         # UI Elements (set up FIRST)
         self.setup_ui()
@@ -68,19 +69,19 @@ class YukonGUI:
         self.canvas.bind("<Button-1>", self.on_canvas_click)
 
         # ---- Drawing/layout constants (keep these in ONE place) ----
-        self.CARD_W = 70
-        self.CARD_H = 100
-        self.COL_SPACING_X = 140
-        self.COL_START_X = 40
+        self.CARD_W = 50
+        self.CARD_H = 75
+        self.COL_SPACING_X = 110
+        self.COL_START_X = 25
         self.COL_START_Y = 70
         # How far down the next card starts.
-        # Larger number = less overlap. ~60% of the card height feels like “half visible”.
-        self.COL_Y_STEP = int(self.CARD_H * 0.60)  # 60px when CARD_H=100
+        # Smaller number = more cards visible. 40% of card height = 30px per card.
+        self.COL_Y_STEP = int(self.CARD_H * 0.40)
 
-        # Foundations are drawn in their own vertical “column” on the right.
-        self.FOUND_START_X = self.COL_START_X + 7 * self.COL_SPACING_X + 40
+        # Foundations are drawn in their own vertical "column" on the right.
+        self.FOUND_START_X = self.COL_START_X + 7 * self.COL_SPACING_X + 30
         self.FOUND_START_Y = self.COL_START_Y
-        self.FOUND_Y_STEP = self.CARD_H + 25
+        self.FOUND_Y_STEP = self.CARD_H + 20
 
         # Move controls
         move_frame = tk.LabelFrame(self.root, text="Make Move", padx=10, pady=10)
@@ -231,6 +232,7 @@ class YukonGUI:
         
         # Store for click detection
         self.columns_data = columns
+        self.foundations_data = foundations
         
         # Now draw cards with overlapping
         for col in range(7):
@@ -298,20 +300,43 @@ class YukonGUI:
         suit_display = suit_symbols.get(suit_char, '?')
         
         # Top-left corner
-        self.canvas.create_text(x + 5, y + 3, text=suit_display, fill=color, 
-                               font=("Arial", 12, "bold"), anchor="nw")
-        self.canvas.create_text(x + 5, y + 16, text=rank_display, fill=color, 
-                               font=("Arial", 9, "bold"), anchor="nw")
+        self.canvas.create_text(x + 4, y + 2, text=suit_display, fill=color, 
+                               font=("Arial", 10, "bold"), anchor="nw")
+        self.canvas.create_text(x + 4, y + 12, text=rank_display, fill=color, 
+                               font=("Arial", 7, "bold"), anchor="nw")
         
         # Bottom-right corner (upside down)
-        self.canvas.create_text(x + width - 5, y + height - 3, text=suit_display, fill=color, 
-                               font=("Arial", 12, "bold"), anchor="se")
-        self.canvas.create_text(x + width - 5, y + height - 16, text=rank_display, fill=color, 
-                               font=("Arial", 9, "bold"), anchor="se")
+        self.canvas.create_text(x + width - 4, y + height - 2, text=suit_display, fill=color, 
+                               font=("Arial", 10, "bold"), anchor="se")
+        self.canvas.create_text(x + width - 4, y + height - 12, text=rank_display, fill=color, 
+                               font=("Arial", 7, "bold"), anchor="se")
 
     def on_canvas_click(self, event):
-        """Handle canvas clicks for card/column selection"""
-        # Map clicks to tableau columns and cards
+        """Handle canvas clicks for card/column/foundation selection"""
+        # Check if clicked on foundation area
+        if event.x >= self.FOUND_START_X:
+            # Foundation click
+            found_col = (event.y - self.FOUND_START_Y) // self.FOUND_Y_STEP
+            
+            if 0 <= found_col < 4:
+                card_text = self.foundations_data[found_col]
+                if card_text and card_text.strip():  # Only if foundation has a card
+                    if self.selected is None:
+                        # Select foundation card as source
+                        self.selected = f"F{found_col + 1}:{card_text}"
+                        self.source_entry.delete(0, tk.END)
+                        self.source_entry.insert(0, self.selected)
+                        self.update_message(f"Selected: {self.selected}")
+                        self.draw_board()
+                    else:
+                        # Move to foundation
+                        destination = f"F{found_col + 1}"
+                        self.try_move(self.selected, destination)
+                        self.selected = None
+                        self.draw_board()
+            return
+        
+        # Tableau column click
         col = (event.x - self.COL_START_X) // self.COL_SPACING_X
 
         if col < 0 or col > 6:
@@ -364,6 +389,9 @@ class YukonGUI:
             if "OK" in response:
                 self.update_message(f"Moved {source} -> {destination}")
                 self.refresh_board()
+                # Clear input fields after successful move
+                self.source_entry.delete(0, tk.END)
+                self.dest_entry.delete(0, tk.END)
             elif "ERROR" in response:
                 self.update_message(f"Illegal move: {source} -> {destination}")
                 messagebox.showwarning("Illegal Move", f"Cannot move {source} to {destination}")
