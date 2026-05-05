@@ -106,23 +106,26 @@ void run_game(Card *deckHead) {
     create_game(deckHead, cols); // model.c
 
     /* TESTING BELOW */
-    // replay moves JUST FOR TESTING
-    const char *replay[] = {
-        "C1->F1", "C6->C3", "C3:QH->C7", "C3->C5", "C7:KS->C1",
-        "C3->F2", "C5:5S->C2", "C5->F3", "C2:8S->C5", "C6:TH->C1",
-        "C6->C2", "C3->C1", "C5->C1", "C6->C7", "C4->C6",
-        "C7:QS->C4", "C7->C4", "C5:9H->C4", "C3->C5", "C5:3H->C6",
-        "C3->C5", "C4:KH->C3", "C2:7D->C4", "C2->F4", "C1->C3",
-        "C7->C1", "C7->C4", "C1:6S->C3", "C3:8D->C5", "C2->C3",
-        "C2->C4", "C4:KD->C2", "C1->F3", "C2->F1", "C4:9D->C1",
-        "C6->F4",
-        NULL
-    };
+    int testing = 1; // ENABLE // DISABLE
+    if (testing) {
+        // replay moves JUST FOR TESTING
+        const char *replay[] = {
+            "C1->F1", "C6->C3", "C3:QH->C7", "C3->C5", "C7:KS->C1",
+            "C3->F2", "C5:5S->C2", "C5->F3", "C2:8S->C5", "C6:TH->C1",
+            "C6->C2", "C3->C1", "C5->C1", "C6->C7", "C4->C6",
+            "C7:QS->C4", "C7->C4", "C5:9H->C4", "C3->C5", "C5:3H->C6",
+            "C3->C5", "C4:KH->C3", "C2:7D->C4", "C2->F4", "C1->C3",
+            "C7->C1", "C7->C4", "C1:6S->C3", "C3:8D->C5", "C2->C3",
+            "C2->C4", "C4:KD->C2", "C1->F3", "C2->F1", "C4:9D->C1",
+            "C6->F4",
+            NULL
+        };
 
-    for (int i = 0; replay[i] != NULL; i++) {
-        char buf[100];
-        strcpy(buf, replay[i]);
-        processMove(buf, cols, foundations);
+        for (int i = 0; replay[i] != NULL; i++) {
+            char buf[100];
+            strcpy(buf, replay[i]);
+            processMove(buf, cols, foundations);
+        }
     }
     /* ^^^^ TESTING ^^^^ */
 
