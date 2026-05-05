@@ -10,6 +10,17 @@
 #include "../Model/deck.h"
 #include "../View/view.h"
 
+// Tjek for spillet er vundet (condition)
+int gameWon (Foundation foundations[]) {
+    for (int i = 0; i < NUM_FOUNDATIONS; i++) {
+        if (foundations[i].ref == NULL || // Null checks! Ellers crasher den?
+            determineRank(*getLastCardFoundation(foundations[i])) != 13) {
+            return 0;
+            }
+    }
+    return 1; // Alle 4 foundations er færdige
+}
+
 void processMove(char *input, Column cols[], Foundation foundations[]) {
     char from[20], to[20];
 
@@ -106,7 +117,7 @@ void run_game(Card *deckHead) {
     create_game(deckHead, cols); // model.c
 
     /* TESTING BELOW */
-    int testing = 0; // ENABLE // DISABLE
+    int testing = 1; // ENABLE // DISABLE
     if (testing) {
         // replay moves JUST FOR TESTING
         const char *replay[] = {
@@ -144,7 +155,7 @@ void run_game(Card *deckHead) {
 
         processMove(input, cols, foundations);
 
-        if (strcmp(input, "IWON") == 0) {
+        if (gameWon(foundations)) {
             printf("\nYou have won!\n");
             exit(0);
         }
@@ -230,17 +241,3 @@ void game_startup()
     run_game(deckHead);
 
 }
-
-// Tjek for spillet er vundet (condition)
-int gameWon (Foundation foundation[NUM_FOUNDATIONS]) {
-    for (int i = 0; i < NUM_FOUNDATIONS; i++) {
-        if (foundation[i].ref == NULL || // Null checks! Ellers crasher den?
-            determineRank(*getLastCardFoundation(foundation[i])) != 13) {
-            return 0;
-        }
-    }
-    return 1; // Alle 4 foundations er færdige
-
-}
-// Vi burde nok lave en convert rank to int metode, så vi slipper for 100 linjer ekstra kode :)
-// DONE
