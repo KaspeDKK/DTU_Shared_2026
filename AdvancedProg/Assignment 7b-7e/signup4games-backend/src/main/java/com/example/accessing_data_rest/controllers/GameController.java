@@ -1,6 +1,7 @@
 package com.example.accessing_data_rest.controllers;
 
 import com.example.accessing_data_rest.exceptions.CouldNotUpdateGameStateException;
+import com.example.accessing_data_rest.exceptions.IllegalPlayerCountException;
 import com.example.accessing_data_rest.model.Game;
 
 import com.example.accessing_data_rest.services.GameService;
@@ -82,5 +83,10 @@ public class GameController {
     @ExceptionHandler(CouldNotUpdateGameStateException.class)
     public ResponseEntity<String> handleCouldNotUpdateGameStateException(CouldNotUpdateGameStateException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(IllegalPlayerCountException.class)
+    public ResponseEntity<String> handleIllegalPlayerCountException(IllegalPlayerCountException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 }

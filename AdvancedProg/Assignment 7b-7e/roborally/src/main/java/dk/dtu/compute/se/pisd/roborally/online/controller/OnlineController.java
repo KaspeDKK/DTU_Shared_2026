@@ -36,6 +36,10 @@ public class OnlineController {
      */
     private RestClient restClient;
 
+    /** constructor for the OnlineController object which contains an appController, onlineState, restClient and appDialogs
+     *
+     * @param appController for your current app
+     */
     public OnlineController(AppController appController) {
         this.appController = appController;
         this.onlineState = new OnlineState();
@@ -45,6 +49,10 @@ public class OnlineController {
         this.appDialogs = new AppDialogs(this);
     }
 
+    /** Sign In with your given unique username
+     *
+     * @param name of your user
+     */
     public void signIn(String name) {
         // DONE Assignment 7b: make sure that the user with the given name
         //      exist in the backend; and make sure that you set the user
@@ -69,6 +77,10 @@ public class OnlineController {
         }
     }
 
+    /** Method to enter signIn appDialog / signIn-section, where you enter your credentials.
+     * Note that this does in fact NOT sign you in.
+     *
+     */
     public void signIn() {
         if (appController.isGameRunning()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -87,6 +99,9 @@ public class OnlineController {
         }
     }
 
+    /** current signed-in user will be signed out after doing a signOut confirmation
+     *
+     */
     public void signOut() {
         if (onlineState.getSignedInUser() != null) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -102,6 +117,11 @@ public class OnlineController {
         }
     }
 
+    /** Signs up user with the given name. This is a POST method to create this new user with the given name.
+     * A server side error can be thrown from UserService, passed to UserController and finally caught clientside in this method.
+     *
+     * @param name you want to assign to your user
+     */
 
     public void signUp(String name) {
         try {
@@ -121,6 +141,10 @@ public class OnlineController {
         }
     }
 
+    /** signIn button function which will open up signUp appDialogs / signUp section, where you enter credentials for your signUp.
+     * You cannot signUp if a game is running or
+     *
+     */
     public void signUp() {
         if (appController.isGameRunning()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -137,9 +161,13 @@ public class OnlineController {
         }
     }
 
-    // TODO Assignment 7c: you might want to implement a method of signing up
+    // DONE Assignment 7c: you might want to implement a method of signing up
     //      (registering) a new user here!
 
+    /**
+     *
+     * @param user
+     */
     public void setOnlineUser(User user) {
         if (!appController.isGameRunning() && !gameSelectionOn) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -222,10 +250,11 @@ public class OnlineController {
     }
 
     public void createGame(Game game) {
-        if (!appController.isGameRunning() && onlineState.getSignedInUser() != null && gameSelectionOn) {
-            game.setOwner(onlineState.getSignedInUser());
+        try {
+            if (!appController.isGameRunning() && onlineState.getSignedInUser() != null && gameSelectionOn) {
+                game.setOwner(onlineState.getSignedInUser());
 
-                // TODO Assignment 7b: Create the game (in the backend) with the config information
+                // DONE Assignment 7b: Create the game (in the backend) with the config information
                 //      provided in the game configuration
                 restClient.post()
                         .uri("/game")
@@ -237,8 +266,13 @@ public class OnlineController {
                 //      is the owener of the game, which should also be registered as the first
                 //      player of the game
 
-            // update the game select view (which should get the new game from the backend)
-            selectGame();
+                // update the game select view (which should get the new game from the backend)
+                selectGame();
+        }} catch (HttpClientErrorException.Conflict ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(ex.getMessage());
+            alert.showAndWait();
         }
     }
 
@@ -296,11 +330,8 @@ public class OnlineController {
             restClient.delete().uri("/player/{playerUid}", player.getUid())
                     .retrieve()
                     .toBodilessEntity();
-        } catch (HttpClientErrorException.Conflict | HttpClientErrorException.NotFound ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(ex.getMessage());
-            alert.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             selectGame();
         }
