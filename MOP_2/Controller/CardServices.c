@@ -164,6 +164,12 @@ int moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundatio
             headCard->next = NULL; // Fjern kortet fra kolonnen
         }
         moveCard->next = NULL;
+
+        Card *newLast = getLastCard(*columnFrom);
+        if (newLast != NULL) {
+            newLast->visible = 1;
+        }
+
         return 1;
     }
 
@@ -181,7 +187,13 @@ int moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundatio
         columnFrom->ref = NULL;
         moveCard->next = NULL;
         endOfFoundation->next = moveCard;
+
+        Card *newLast = getLastCard(*columnFrom);
+        if (newLast != NULL) {
+            newLast->visible = 1;
+        }
         return 1;
+
     }
 
 
