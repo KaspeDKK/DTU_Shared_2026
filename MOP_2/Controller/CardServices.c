@@ -10,6 +10,7 @@ void placeCard(Column *column, Card *card) {
     struct Card *newNode = (struct Card *)malloc(sizeof(struct Card));
     newNode->rank = card->rank;
     newNode->suit = card->suit;
+    newNode->visible = card->visible;
     newNode->next = NULL;
 
     // If the column is empty, set it as the head

@@ -24,7 +24,7 @@ void run_game(Card *deckHead) {
         char from[20], to[20];
 
         // print game
-        debugShowGame(cols,foundations); // NEEDS TO BE CHANGED TO NORMAL FUNC LATER
+        showGame(cols,foundations);
 
         // scan for input
         printf("\nINPUT: ");

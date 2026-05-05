@@ -24,7 +24,7 @@ void create_game(Card *deckHead, Column cols[]) {
         0, 1, 1, 1, 1, 1, 2, 3, 4, 5, 6 // these represent the "col start" value for each row. These are always the same.
     };
 
-    int ColInvisibleDepth[7] = {
+    int colInvisibleDepth[7] = {
         0, 1, 2, 3, 4, 5, 6 // these represent the depth after which visible cards should be placed in the initial version of the game deck. (All cards are invisible when created unless set otherwise)
     };
 
@@ -34,6 +34,13 @@ void create_game(Card *deckHead, Column cols[]) {
 
             Card *next = current->next;
             current->next = NULL;
+
+            // setting visibility before placing
+            if (row < colInvisibleDepth[col]) {
+                current->visible = 0;
+            } else {
+                current->visible = 1;
+            }
 
             placeCard(&cols[col], current);
 

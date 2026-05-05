@@ -103,29 +103,55 @@ void debugShowGame(Column cols[], Foundation foundations[])
     }
 }
 
-void showGame(Column cols[])
+void showGame(Column cols[], Foundation foundations[])
 {
     int maxRows = getMaxRows(cols);
+    int f = 0; // foundation index, incremented as we place them
 
     printf("C1    C2    C3    C4    C5    C6    C7\n\n");
 
-    for (int row = 0; row < maxRows; row++) { //
+    for (int row = 0; row < maxRows; row++) {
+        // print columns
         for (int col = 0; col < 7; col++) {
             Card *card = getRowCard(cols[col].ref, row);
 
             if (card != NULL) {
-                print_card(card);
+                print_card(card);  // respects visible property
             } else {
                 printf("    ");
             }
-
             printf("  ");
+        }
+
+        // print foundations on odd rows, one per row
+        if (row % 2 == 1 && f < 4) {
+            Card *top = getLastCardFoundation(foundations[f]);
+            if (top != NULL) {
+                printf("     ");
+                print_card_face_up(top);  // foundations always face up
+                printf("   F%d", f + 1);
+            } else {
+                printf("     [  ]   F%d", f + 1);
+            }
+            f++;
         }
 
         printf("\n");
     }
-}
 
+    // edge case: if all columns are empty, still show foundations
+    if (maxRows == 0) {
+        for (int i = 0; i < 4; i++) {
+            Card *top = getLastCardFoundation(foundations[i]);
+            if (top != NULL) {
+                print_card_face_up(top);
+            } else {
+                printf("[  ]");
+            }
+            printf("   F%d\n", i + 1);
+        }
+    }
+}
 
 void showCol(Card *head) {
 
