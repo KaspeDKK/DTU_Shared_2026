@@ -16,7 +16,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    // TODO refactor to return a user instead of a list (since name is a unique). Could we also not just remove userId?
     /** This method will find a user by its name, returned in a list.
      * Since the method body uses a query, we are returning a list of users, but in reality its only going to find 1 user.
      *
