@@ -37,6 +37,7 @@ public class UserController {
     // TODO javadoc til exceptionhandler
     //Catches the CouldNotCreateUserException and returns a response with the exception message
     // and a 409 Conflict status code instead of 500 to the client
+
     @ExceptionHandler(CouldNotCreateUserException.class)
     public ResponseEntity<String> handleCouldNotCreateUserException(CouldNotCreateUserException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
