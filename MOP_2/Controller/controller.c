@@ -49,48 +49,48 @@ void run_game(Card *deckHead) {
 
         printf("From: %s, To: %s\n", from, to);
 
-            if (to[0] == 'C') {
-            // Move to column
-            int toCol = to[1] - '0' - 1;  // 'C4' -> index 3
+        if (to[0] == 'C') {
+        // Move to column
+        int toCol = to[1] - '0' - 1;  // 'C4' -> index 3
 
-            if (strchr(from, ':') != NULL) { //searches for char
-                // Specific card: "C6:4H"
-                char colStr[3], cardStr[3];
-                sscanf(from, "%[^:]:%s", colStr, cardStr);
-                int fromCol = colStr[1] - '0' - 1;
-                //Card moveToCard = parseCard(cardStr);
-                // For now, assume single card move (extend for stacks later)
-                // moveCard(&moveToCard, &cols[fromCol], &cols[toCol]);
+        if (strchr(from, ':') != NULL) { //searches for char
+            // Specific card: "C6:4H"
+            char colStr[3], cardStr[3];
+            sscanf(from, "%[^:]:%s", colStr, cardStr);
+            int fromCol = colStr[1] - '0' - 1;
+            //Card moveToCard = parseCard(cardStr);
+            // For now, assume single card move (extend for stacks later)
+            // moveCard(&moveToCard, &cols[fromCol], &cols[toCol]);
 
-                Card *cardToMove = cols[fromCol].ref;
-                while (cardToMove != NULL && (cardToMove->rank != cardStr[0] || cardToMove->suit != cardStr[1])) {
-                    cardToMove = cardToMove->next;
-                }
+            Card *cardToMove = cols[fromCol].ref;
+            while (cardToMove != NULL && (cardToMove->rank != cardStr[0] || cardToMove->suit != cardStr[1])) {
+                cardToMove = cardToMove->next;
+            }
 
-                if (cardToMove == NULL) {
-                    printf("Card not found in column\n");
-                } else {
-                    moveCard(cardToMove, &cols[fromCol], &cols[toCol]);
-                }
-
-            } else if (from[0] == 'C') {
+            if (cardToMove == NULL) {
+                printf("Card not found in column\n");
+            } else {
+                moveCard(cardToMove, &cols[fromCol], &cols[toCol]);
+            }
+            } 
+            else if (from[0] == 'C') {
                 // Bottom card of column: "C6"
                 int fromCol = from[1] - '0' - 1;
                 Card *bottomCard = getLastCard(cols[fromCol]);
                 if (bottomCard != NULL) {
                     moveCard(bottomCard, &cols[fromCol], &cols[toCol]);
                 }
-            } else if (from[0] == 'F') {
-                // Top card of foundation: "F3"
+            }
+            else if (from[0] == 'F') {
+                // top card of foundation
                 int fromFound = from[1] - '0' - 1;
                 Card *topCard = getLastCardFoundation(foundations[fromFound]);
                 if (topCard != NULL) {
-                    // Need a moveFoundationToColumn function
-                    // For now, placeholder
-                    printf("Foundation to column move not implemented yet\n");
+                    moveCardFromFoundation(topCard, &cols[toCol], &foundations[fromFound]);
                 }
             }
-        } else if (to[0] == 'F') {
+        }
+        else if (to[0] == 'F') {
             // Move to foundation
             int toFound = to[1] - '0' - 1;
 
@@ -110,10 +110,12 @@ void run_game(Card *deckHead) {
 
                     if (cardToMove == NULL) {
                         printf("Card not found in column\n");
-                    } else {
+                    }
+                    else {
                         moveCardFoundation(cardToMove, &cols[fromCol], &foundations[toFound]);
                     }
-                } else {
+                }
+                else {
                     // Bottom card of column to foundation
                     int fromCol = from[1] - '0' - 1;
                     Card *bottomCard = getLastCard(cols[fromCol]);
@@ -122,7 +124,8 @@ void run_game(Card *deckHead) {
                     }
                 }
             }
-        } else {
+        }
+        else {
             printf("Invalid destination\n");
         }
     }
