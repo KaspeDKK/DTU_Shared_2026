@@ -135,6 +135,16 @@ Card* getLastCardFoundation(Foundation foundation) {
     return foundation.ref;
 }
 
+void revealAfterFoundationMove(Column *columnFrom, Foundation *foundation) {
+    if (columnFrom->ref != NULL) {
+        getLastCard(*columnFrom)->visible = 1;
+    }
+
+    if (foundation->ref != NULL) {
+        getLastCardFoundation(*foundation)->visible = 1;
+    }
+}
+
 int moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundation) {
     Card* endOfFoundation = getLastCardFoundation(*foundation);
     Card* endOfColumn = getLastCard(*columnFrom);
@@ -164,6 +174,7 @@ int moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundatio
             headCard->next = NULL; // Fjern kortet fra kolonnen
         }
         moveCard->next = NULL;
+        revealAfterFoundationMove(columnFrom, foundation);
         return 1;
     }
 
@@ -181,6 +192,7 @@ int moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundatio
         columnFrom->ref = NULL;
         moveCard->next = NULL;
         endOfFoundation->next = moveCard;
+        revealAfterFoundationMove(columnFrom, foundation);
         return 1;
     }
 
