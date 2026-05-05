@@ -157,14 +157,17 @@ void run_game(Card *deckHead) {
 
         // remove newline from fgets
         input[strcspn(input, "\n")] = 0;
-
+        if (strcmp(input, "Q") == 0) {
+            printf("Quitting game. Returning to startup phase\n");
+            return;
+        }
         processMove(input, cols, foundations);
 
 
 
         if (gameWon(foundations)) {
             printf("\nYou have won!\n");
-            exit(0);
+            return;
         }
     }
 }
@@ -246,5 +249,6 @@ void game_startup()
     }
 
     run_game(deckHead);
+    game_startup();
 
 }

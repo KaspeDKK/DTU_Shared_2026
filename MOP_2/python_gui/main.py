@@ -11,8 +11,8 @@ class YukonGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("Yukon Solitaire - GUI")
-        # Bigger window so columns don't run out of space vertically
-        self.root.geometry("1400x900")
+        # Window size - narrower and shorter to fit on screen better
+        self.root.geometry("1200x750")
 
         # Backend client
         self.backend = BackendClient()
@@ -64,7 +64,7 @@ class YukonGUI:
         board_frame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
 
         # Canvas for drawing the game board
-        self.canvas = tk.Canvas(board_frame, width=1250, height=720, bg="darkgreen")
+        self.canvas = tk.Canvas(board_frame, width=1100, height=600, bg="darkgreen")
         self.canvas.pack(fill=tk.BOTH, expand=True)
         self.canvas.bind("<Button-1>", self.on_canvas_click)
 
@@ -236,10 +236,25 @@ class YukonGUI:
         
         # Now draw cards with overlapping
         for col in range(7):
-            for card_idx, (card_text, is_visible) in enumerate(columns[col]):
+            if len(columns[col]) == 0:
+                # Draw empty column placeholder
                 x = start_x + col * spacing_x
-                y = start_y + card_idx * y_step
-                self.draw_card(x, y, card_text, card_width, card_height, is_visible)
+                y = start_y
+                self.canvas.create_rectangle(
+                    x, y, x + card_width, y + card_height,
+                    fill="#1a4d1a", outline="white", width=1, dash=(2, 2)
+                )
+                self.canvas.create_text(
+                    x + card_width // 2, y + card_height // 2,
+                    text="K only",
+                    fill="white", font=("Arial", 8),
+                    justify="center"
+                )
+            else:
+                for card_idx, (card_text, is_visible) in enumerate(columns[col]):
+                    x = start_x + col * spacing_x
+                    y = start_y + card_idx * y_step
+                    self.draw_card(x, y, card_text, card_width, card_height, is_visible)
 
         # Draw foundations as a vertical stack of slots on the right
         for f_idx in range(4):
@@ -320,20 +335,21 @@ class YukonGUI:
             
             if 0 <= found_col < 4:
                 card_text = self.foundations_data[found_col]
-                if card_text and card_text.strip():  # Only if foundation has a card
-                    if self.selected is None:
-                        # Select foundation card as source
-                        self.selected = f"F{found_col + 1}:{card_text}"
-                        self.source_entry.delete(0, tk.END)
-                        self.source_entry.insert(0, self.selected)
-                        self.update_message(f"Selected: {self.selected}")
-                        self.draw_board()
-                    else:
-                        # Move to foundation
-                        destination = f"F{found_col + 1}"
-                        self.try_move(self.selected, destination)
-                        self.selected = None
-                        self.draw_board()
+                
+                # If foundation has a card and no source selected, select it as source
+                if card_text and card_text.strip() and self.selected is None:
+                    # Select foundation card as source
+                    self.selected = f"F{found_col + 1}:{card_text}"
+                    self.source_entry.delete(0, tk.END)
+                    self.source_entry.insert(0, self.selected)
+                    self.update_message(f"Selected: {self.selected}")
+                    self.draw_board()
+                # If source already selected, attempt move to this foundation (empty or not)
+                elif self.selected is not None:
+                    destination = f"F{found_col + 1}"
+                    self.try_move(self.selected, destination)
+                    self.selected = None
+                    self.draw_board()
             return
         
         # Tableau column click
@@ -346,12 +362,30 @@ class YukonGUI:
         card_idx = (event.y - self.COL_START_Y) // self.COL_Y_STEP
         
         # Get the column data
-        if col >= len(self.columns_data) or card_idx >= len(self.columns_data[col]):
-            # Click is below all cards or on empty column
+        col_data = self.columns_data[col]
+        
+        # If empty column, card_idx must be 0 (the placeholder)
+        if len(col_data) == 0:
+            if card_idx != 0:
+                return  # Click is below the placeholder
+            # Empty column - can only be a destination
+            if self.selected is None:
+                self.update_message("Empty column - select a source first")
+                return
+            else:
+                destination = f"C{col + 1}"
+                self.try_move(self.selected, destination)
+                self.selected = None
+                self.draw_board()
+            return
+        
+        # Column has cards
+        if card_idx >= len(col_data):
+            # Click is below all cards
             return
         
         # Get the actual card at this position
-        card_text, is_visible = self.columns_data[col][card_idx]
+        card_text, is_visible = col_data[card_idx]
         
         # First click: select source card
         if self.selected is None:

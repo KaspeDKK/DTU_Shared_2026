@@ -184,8 +184,20 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
                 char cardStr[3];
                 sscanf(from, "%*[^:]:%2s", cardStr);
                 cardToMove = cols[fromCol].ref;
+
+                // Search for card in the specified column
                 while (cardToMove != NULL && (cardToMove->rank != cardStr[0] || cardToMove->suit != cardStr[1])) {
                     cardToMove = cardToMove->next;
+                }
+
+                // Validate: card must be found AND must be visible
+                if (cardToMove == NULL) {
+                    snprintf(response, maxLen, "ERROR|Card not found in source column");
+                    return;
+                }
+                if (!cardToMove->visible) {
+                    snprintf(response, maxLen, "ERROR|Cannot move a hidden card");
+                    return;
                 }
             } else {
                 // Default to bottom card
@@ -193,8 +205,12 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
             }
 
             if (cardToMove != NULL) {
-                moveCard(cardToMove, &cols[fromCol], &cols[toCol]);
-                snprintf(response, maxLen, "OK|Move successful");
+                int moveResult = moveCard(cardToMove, &cols[fromCol], &cols[toCol]);
+                if (moveResult) {
+                    snprintf(response, maxLen, "OK|Move successful");
+                } else {
+                    snprintf(response, maxLen, "ERROR|Illegal move");
+                }
             } else {
                 snprintf(response, maxLen, "ERROR|Source card not found");
             }
@@ -219,14 +235,27 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
                     return;
                 }
                 cardToMove = cols[fromCol].ref;
+
+                // Search for card in the specified column
                 while (cardToMove != NULL && (cardToMove->rank != cardStr[0] || cardToMove->suit != cardStr[1])) {
                     cardToMove = cardToMove->next;
                 }
-                if (cardToMove != NULL) {
-                    moveCardFoundation(cardToMove, &cols[fromCol], &foundations[toFound]);
+
+                // Validate: card must be found AND must be visible
+                if (cardToMove == NULL) {
+                    snprintf(response, maxLen, "ERROR|Card not found in source column");
+                    return;
+                }
+                if (!cardToMove->visible) {
+                    snprintf(response, maxLen, "ERROR|Cannot move a hidden card");
+                    return;
+                }
+
+                int moveResult = moveCardFoundation(cardToMove, &cols[fromCol], &foundations[toFound]);
+                if (moveResult) {
                     snprintf(response, maxLen, "OK|Move to foundation successful");
                 } else {
-                    snprintf(response, maxLen, "ERROR|Source card not found");
+                    snprintf(response, maxLen, "ERROR|Illegal move");
                 }
             } else {
                 // Default to bottom card
@@ -237,8 +266,12 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
                 }
                 cardToMove = getLastCard(cols[fromCol]);
                 if (cardToMove != NULL) {
-                    moveCardFoundation(cardToMove, &cols[fromCol], &foundations[toFound]);
-                    snprintf(response, maxLen, "OK|Move to foundation successful");
+                    int moveResult = moveCardFoundation(cardToMove, &cols[fromCol], &foundations[toFound]);
+                    if (moveResult) {
+                        snprintf(response, maxLen, "OK|Move to foundation successful");
+                    } else {
+                        snprintf(response, maxLen, "ERROR|Illegal move");
+                    }
                 } else {
                     snprintf(response, maxLen, "ERROR|Source column empty");
                 }
