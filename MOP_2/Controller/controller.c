@@ -122,7 +122,7 @@ void run_game(Card *deckHead) {
     create_game(deckHead, cols); // model.c
 
     /* TESTING BELOW */
-    int testing = 0; // ENABLE // DISABLE
+    int testing = 1; // ENABLE // DISABLE
     if (testing) {
         // replay moves JUST FOR TESTING
         const char *replay[] = {

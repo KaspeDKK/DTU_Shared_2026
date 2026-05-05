@@ -299,6 +299,8 @@ int main(void) {
         return 1;
     }
 #endif
+    int iResult;
+
 
     SOCKET listenSocket = INVALID_SOCKET;
     SOCKET clientSocket = INVALID_SOCKET;
