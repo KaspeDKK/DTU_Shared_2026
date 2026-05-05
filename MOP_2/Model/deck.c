@@ -113,7 +113,6 @@ Card *randomShuffle(Card *head) {
 
         int randomIndex = rand() % sizeNewDeck +1;
 
-
         if (randomIndex == 0) {
             insertCard->next = shuffledDeck;
             shuffledDeck = insertCard;
@@ -130,6 +129,22 @@ Card *randomShuffle(Card *head) {
         sizeNewDeck = sizeNewDeck + 1;
     }
 
+    //Første kort er ikke random derfor
+    int move = rand() % (sizeNewDeck - 1) + 1;   // Vælg et tilfældigt tal
+
+    Card *first = shuffledDeck; //Pejer på første kort
+    Card *target = shuffledDeck; //Pejer på den kort, det første kort skal placeres efter.
+
+    for (int i = 1; i < move; i++) { //ittere hen til random plads
+        target = target->next;
+    }
+
+    //pladsere kort
+    shuffledDeck = first->next;
+    first->next = target->next;
+    target->next = first;
+
+    //returnere head til kort
     return shuffledDeck;
 }
 

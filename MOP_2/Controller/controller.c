@@ -122,7 +122,7 @@ void run_game(Card *deckHead) {
     create_game(deckHead, cols); // model.c
 
     /* TESTING BELOW */
-    int testing = 1; // ENABLE // DISABLE
+    int testing = 0; // ENABLE // DISABLE
     if (testing) {
         // replay moves JUST FOR TESTING
         const char *replay[] = {
@@ -178,7 +178,7 @@ void game_startup()
 {
     Card deck[52] = {}; // deck size 52
     Card *deckHead = readDeck("../deckOne.txt", deck); // standard deck
-    showDeck(deckHead);
+    //showDeck(deckHead);
 
     // startup loop
     while (1) {
