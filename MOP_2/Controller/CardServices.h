@@ -19,5 +19,6 @@ int moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundatio
 int moveCardFromFoundation(Card *moveCard, Column *columnTo, Foundation *fromFoundation);
 int moveCard(Card *moveCard, Column *columnFrom, Column *columnTo);
 int determineRank(Card card);
+void showAllLastCards(Column cols[]);
 
 #endif //MOP_2_CARDSERVICES_H

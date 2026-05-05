@@ -267,3 +267,16 @@ int isMoveLegalFoundation(Card* moveCard, Card* cardTo) {
 
     return 1;
 }
+
+void showAllLastCards(Column cols[]) {
+    //Brute force
+    Card* lastCard;
+    for (int i = 0; i < NUM_COLUMNS; i++) {
+        lastCard = getLastCard(cols[i]);
+        if (lastCard == NULL) {
+            continue;
+        }
+            lastCard->visible = 1;
+        }
+
+    }

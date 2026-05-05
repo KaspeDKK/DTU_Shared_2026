@@ -163,6 +163,8 @@ void run_game(Card *deckHead) {
         }
         processMove(input, cols, foundations);
 
+        //bruteforce visibility - may be deleted later
+        showAllLastCards(cols);
 
 
         if (gameWon(foundations)) {
