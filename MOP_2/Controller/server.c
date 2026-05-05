@@ -253,6 +253,10 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
 
                 int moveResult = moveCardFoundation(cardToMove, &cols[fromCol], &foundations[toFound]);
                 if (moveResult) {
+                    Card *newLast = getLastCard(cols[fromCol]);
+                    if (newLast != NULL) {
+                        newLast->visible = 1;
+                    }
                     snprintf(response, maxLen, "OK|Move to foundation successful");
                 } else {
                     snprintf(response, maxLen, "ERROR|Illegal move");
@@ -268,6 +272,10 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
                 if (cardToMove != NULL) {
                     int moveResult = moveCardFoundation(cardToMove, &cols[fromCol], &foundations[toFound]);
                     if (moveResult) {
+                        Card *newLast = getLastCard(cols[fromCol]);
+                        if (newLast != NULL) {
+                            newLast->visible = 1;
+                        }
                         snprintf(response, maxLen, "OK|Move to foundation successful");
                     } else {
                         snprintf(response, maxLen, "ERROR|Illegal move");
