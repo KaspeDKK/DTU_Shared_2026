@@ -291,16 +291,15 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
 }
 
 int main(void) {
+    int iResult;
 #ifdef _WIN32
     WSADATA wsaData;
-    int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+     iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (iResult != 0) {
         printf("WSAStartup failed: %d\n", iResult);
         return 1;
     }
 #endif
-    int iResult;
-
 
     SOCKET listenSocket = INVALID_SOCKET;
     SOCKET clientSocket = INVALID_SOCKET;
