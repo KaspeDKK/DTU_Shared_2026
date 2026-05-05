@@ -1,6 +1,7 @@
 package com.example.accessing_data_rest.services;
 
 import com.example.accessing_data_rest.exceptions.CouldNotUpdateGameStateException;
+import com.example.accessing_data_rest.exceptions.IllegalPlayerCountException;
 import com.example.accessing_data_rest.model.Game;
 import com.example.accessing_data_rest.model.Player;
 import com.example.accessing_data_rest.model.User;
@@ -48,11 +49,10 @@ public class GameService {
      *
      * @param game The game to create. The owner must be an existing user in the repository, and the game must have at least 2 players and at max 6 players.
      * @return The created game with the owner and the first player set to the owner.
-     * @throws IllegalStateException If the game has less than 2 players or if the owner is not an existing user in the repository or if there are more than 6 players.
+     * @throws IllegalPlayerCountException If the game has less than 2 players or if the owner is not an existing user in the repository or if there are more than 6 players.
      */
     @Transactional
     public Game createGame(Game game) {
-        try {
             User owner = userRepository.findByName(game.getOwner().getName()).getFirst();
             if (game.getMinPlayers() >= 2 && game.getMaxPlayers() <= 6 && owner != null) {
 
@@ -69,12 +69,8 @@ public class GameService {
                 return gameRepository.findByUid(savedGame.getUid()).get(0);
 
             } else {
-                throw new IllegalStateException("Game must have at least 2 players and at max 6 players, and the owner must be an existing user in the repository.");
+                throw new IllegalPlayerCountException("Game must have at least 2 players and at max 6 players, and the owner must be an existing user in the repository.");
             }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
 
     }
 
