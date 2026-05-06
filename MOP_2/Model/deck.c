@@ -63,11 +63,15 @@ Card* readDeck (const char *filename,Card *deck) { //function that takes a file,
 }
 
 
-int saveDeck(Card *head, const char *filename)
+int saveDeck(const char *filename, Card *head)
 {
     if (head == NULL) {
         printf("Message: no deck loaded\n");
         return 0;
+    }
+
+    if (filename == NULL) {
+        filename = "../cards.txt";
     }
 
     FILE *file = fopen(filename, "w");

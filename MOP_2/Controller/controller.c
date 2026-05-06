@@ -248,6 +248,10 @@ void game_startup()
 
         if (strcmp(cmd, "SD") == 0) {
             // save current deck to file. filename is param
+            char filename[100];
+            snprintf(filename, sizeof(filename), "../%s.txt", param);
+            saveDeck(filename, deckHead);
+
             printf("\nLast command: %s\n", cmd);
             printf("Message: OK\n");
             continue;

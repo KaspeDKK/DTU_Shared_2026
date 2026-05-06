@@ -8,6 +8,7 @@
 
 
 Card* readDeck(const char *filename, Card *deck);
+int saveDeck(const char *filename, Card *head);
 Card *splitDeck (Card *head, int split);
 void listToArray(Card *head, Card deck[], int size);
 Card *arrayToList(Card deck[], int size);
