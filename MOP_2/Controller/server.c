@@ -36,7 +36,7 @@
 #endif
 
 #define PORT 5000
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 4096
 
 // Global game state
 Column cols[7] = {};
@@ -274,7 +274,7 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
 
     if (strncmp(cmd, "STATE", 5) == 0) {
         if (!gameStarted) {
-            snprintf(response, maxLen, "ERROR|Game not started");
+            snprintf(response, maxLen, "STATE|Game not started");
             return;
         }
         char board[2048] = {};

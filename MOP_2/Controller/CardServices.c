@@ -45,8 +45,47 @@ int moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
         return 0;
     }
 
+    if (!moveCard->visible) {
+        printf("Cannot move hidden card\n");
+        return 0;
+    }
+
     Card* headCard = columnFrom->ref;
     Card* endOfColumn = getLastCard(*columnTo);
+
+    // if the column is empty (check before isMoveLegal, so it doesn't give problems in the server)
+    if (endOfColumn == NULL) {
+        if (determineRank(*moveCard) != 13) {
+            printf("Illegal move\n");
+            return 0;
+        }
+
+        if (headCard->rank == moveCard->rank && headCard->suit == moveCard->suit) {
+            columnFrom->ref = NULL;
+            columnTo->ref = moveCard;
+            return 1;
+        }
+
+        while (headCard->next != NULL &&
+               (headCard->next->rank != moveCard->rank ||
+                headCard->next->suit != moveCard->suit)) {
+            headCard = headCard->next;
+                }
+
+        if (headCard->next == NULL) {
+            printf("Picked card is not in column\n");
+            return 0;
+        }
+
+        columnTo->ref = headCard->next;
+        headCard->next = NULL;
+
+        if (columnFrom->ref != NULL) {
+            getLastCard(*columnFrom)->visible = 1;
+        }
+
+        return 1;
+    }
 
     // Dette burde fikse problem med at flytte sidste kort i kolonnen
     if (headCard->rank == moveCard->rank && headCard->suit == moveCard->suit) {
@@ -77,19 +116,7 @@ int moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
     while (headCard->next != NULL && (headCard->next->rank != moveCard->rank || headCard->next->suit != moveCard->suit)) {
         headCard = headCard->next;
     }
-    // if the column is empty
-    if (endOfColumn == NULL) {
 
-        // Kun konge kan placeres på en tom kolonne
-        if (determineRank(*moveCard) != 13) {
-            printf("Illegal move\n");
-            return 0;
-        }
-
-        columnTo->ref = moveCard;
-        headCard->next = NULL;
-        return 1;
-    }
 
     if (headCard->next == NULL) {
         printf("Picked card is not in column\n");
