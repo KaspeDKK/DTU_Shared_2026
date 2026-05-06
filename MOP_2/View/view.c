@@ -117,7 +117,6 @@ void showDeck(Card *head) //initial view of the deck, before the columns have be
 void showDeckWithVisibility(Card *head) //initial view of the deck, before the columns have been made.
 {
     if (head == NULL) {
-        printf("LAST Command: SW\n");
         return;
     }
 
