@@ -161,12 +161,14 @@ void run_game(Card *deckHead) {
             printf("Quitting game. Returning to startup phase\n");
             return;
         }
+
+        //initiate move
         processMove(input, cols, foundations);
 
         //bruteforce visibility - may be deleted later
         showAllLastCards(cols);
 
-
+        //game winning condition
         if (gameWon(foundations)) {
             printf("\nYou have won!\n");
             return;
@@ -179,6 +181,7 @@ void game_startup()
     Card deck[52] = {}; // deck size 52
     Card *deckHead = readDeck("../deckOne.txt", deck); // standard deck
     //showDeck(deckHead);
+
 
     // startup loop
     while (1) {
@@ -202,6 +205,7 @@ void game_startup()
             char filename[100];
             snprintf(filename, sizeof(filename), "../%s.txt", param);
             deckHead = readDeck(filename, deck);
+            showDeckWithVisibility(deckHead);
             continue;
         }
 
@@ -221,14 +225,14 @@ void game_startup()
             const int param_int = atoi(param);  // convert to int
 
             splitDeck(deckHead, param_int);
-            showDeck(deckHead);
+            showDeckWithVisibility(deckHead);
             continue;
         }
 
         if (strcmp(cmd, "SR") == 0) {
             // random shuffle
             deckHead = randomShuffle(deckHead);
-            showDeck(deckHead);
+            showDeckWithVisibility(deckHead);
             continue;
         }
 
