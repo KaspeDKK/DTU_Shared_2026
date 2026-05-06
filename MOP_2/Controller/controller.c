@@ -249,6 +249,10 @@ void game_startup()
         }
 
         if (strcmp(cmd, "P") == 0) {
+            if (deckHead == NULL) {
+                printf("\nNo deck loaded, please use LD <deck name> before initiating game\n");
+                continue;
+            }
             // enter play phase outside while loop
             break;
         }
