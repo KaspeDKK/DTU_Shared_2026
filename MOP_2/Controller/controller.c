@@ -254,8 +254,6 @@ void game_startup()
             } else {
                 snprintf(filename, sizeof(filename), "../%s.txt", param);
             }
-
-            snprintf(filename, sizeof(filename), "../%s.txt", param);
             saveDeck(filename, deckHead);
 
             printf("\nLast command: %s\n", cmd);
