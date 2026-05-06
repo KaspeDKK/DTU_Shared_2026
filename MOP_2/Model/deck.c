@@ -70,10 +70,6 @@ int saveDeck(const char *filename, Card *head)
         return 0;
     }
 
-    if (filename == NULL) {
-        filename = "../cards.txt";
-    }
-
     FILE *file = fopen(filename, "w");
 
     if (file == NULL) {

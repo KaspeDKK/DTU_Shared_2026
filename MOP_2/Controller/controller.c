@@ -186,10 +186,9 @@ void game_startup()
     // startup loop
     while (1) {
 
-
         char input[100] = "";
-        char cmd[10], param[20];
-
+        char cmd[10] = "";
+        char param[20] = "";
 
         // scan for input
         printf("Please enter your command: ");
@@ -249,6 +248,13 @@ void game_startup()
         if (strcmp(cmd, "SD") == 0) {
             // save current deck to file. filename is param
             char filename[100];
+
+            if (strlen(param) == 0) {
+                strcpy(filename, "../cards.txt");
+            } else {
+                snprintf(filename, sizeof(filename), "../%s.txt", param);
+            }
+
             snprintf(filename, sizeof(filename), "../%s.txt", param);
             saveDeck(filename, deckHead);
 
