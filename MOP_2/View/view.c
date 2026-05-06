@@ -117,7 +117,6 @@ void showDeck(Card *head) //initial view of the deck, before the columns have be
 void showDeckWithVisibility(Card *head) //initial view of the deck, before the columns have been made.
 {
     if (head == NULL) {
-        printf("LAST Command: SW\n");
         return;
     }
 
@@ -149,9 +148,6 @@ void showDeckWithVisibility(Card *head) //initial view of the deck, before the c
     if (count % 7 != 0) {
         printf("\n");
     }
-
-    printf("\nLAST Command: SW\n");
-    printf("Message: OK\n");
 }
 
 Card *getRowCard(Card *colHead, int row) {
