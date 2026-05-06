@@ -173,7 +173,7 @@ int moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundatio
         return 1;
     }
 
-    if (headCard->next == NULL) { //edge case
+    if (headCard->next == NULL && headCard != moveCard) { //edge case
         printf("Card not found in column\n");
         return 0;
     }
