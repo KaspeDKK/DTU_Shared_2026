@@ -20,18 +20,45 @@ Card* readDeck (const char *filename,Card *deck) { //function that takes a file,
     int i = 0;
     char buffer[10];
 
+    //We initialize a seen array that we will store all the cards we go through
+    char seenCard[52][2] = {0};
+    int seenCount = 0;
+
+
     while (i < 52 && fgets(buffer, sizeof(buffer), file) != NULL) {
         if (buffer[0] == '\n' || buffer[0] == '\0') {
             continue;
         }
 
+
+        // Before we store each card in a "seen array" we check if it has already appeared
+        for (int j = 0; j < seenCount; j++) {
+            if (seenCard[j][0] == buffer[0] && seenCard[j][1] == buffer[1]) {
+                printf("LAST Command LD");
+                printf("Message: Duplicate card found in deck file\n");
+                fclose(file);
+                return NULL;
+            }
+        }
         deck[i].rank = buffer[0];
         deck[i].suit = buffer[1];
         deck[i].visible = 0;
+
+        //We store the cards we haven't been seen before
+        seenCard[seenCount][0] = buffer[0];
+        seenCard[seenCount][1] = buffer[1];
+
+        seenCount++;
+
         i++;
     }
 
     fclose(file);
+    if (i != 52) {
+        printf("LAST Command LD");
+        printf("Message: Deck file must contain exactly 52 cards\n");
+        return NULL;
+    }
     return arrayToList(deck, i);
 }
 
