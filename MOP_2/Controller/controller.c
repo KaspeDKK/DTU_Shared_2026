@@ -179,8 +179,8 @@ void run_game(Card *deckHead) {
 void game_startup()
 {
     Card deck[52] = {}; // deck size 52
-    Card *deckHead = readDeck("../deckOne.txt", deck); // standard deck
-    //showDeck(deckHead);
+    Card *deckHead = NULL;
+    showDeck(deckHead);
 
 
     // startup loop
