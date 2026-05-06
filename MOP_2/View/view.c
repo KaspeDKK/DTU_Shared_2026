@@ -74,7 +74,12 @@ void showGame(Column cols[], Foundation foundations[])
 void showDeck(Card *head) //initial view of the deck, before the columns have been made.
 {
     if (head == NULL) {
-        printf("LAST Command: SW\n");
+        printf("C1    C2    C3    C4    C5    C6    C7\n\n");
+
+        printf("                                             [  ]   F1\n\n");
+        printf("                                             [  ]   F2\n\n");
+        printf("                                             [  ]   F3\n\n");
+        printf("                                             [  ]   F4\n\n");
         return;
     }
 
@@ -107,8 +112,6 @@ void showDeck(Card *head) //initial view of the deck, before the columns have be
             printf("\n");
         }
 
-        printf("\nLAST Command: SW\n");
-        printf("Message: OK\n");
 }
 
 void showDeckWithVisibility(Card *head) //initial view of the deck, before the columns have been made.
