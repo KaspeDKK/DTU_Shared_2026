@@ -54,8 +54,9 @@ Card* readDeck (const char *filename,Card *deck) { //function that takes a file,
     }
 
     fclose(file);
+    // checks if there are exactly 52 cards
     if (i != 52) {
-        printf("LAST Command LD");
+        printf("LAST Command LD\n");
         printf("Message: Deck file must contain exactly 52 cards\n");
         return NULL;
     }

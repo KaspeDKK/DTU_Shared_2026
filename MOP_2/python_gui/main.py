@@ -4,7 +4,7 @@ Communicates with C backend via TCP/IP sockets
 """
 
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, simpledialog
 from backend_client import BackendClient
 
 class YukonGUI:
@@ -19,6 +19,7 @@ class YukonGUI:
         self.connected = False
 
         # Game state
+        self.game_phase = "STARTUP"  # STARTUP or PLAY
         self.selected = None  # "C1", "C2:7H", etc.
         self.board_state = ""
         self.columns_data = [[] for _ in range(7)]  # Track card data for click detection
@@ -55,7 +56,6 @@ class YukonGUI:
         )
         self.status_label.pack(side=tk.LEFT, padx=10)
 
-        tk.Button(top_frame, text="Start Game", command=self.start_game).pack(side=tk.LEFT, padx=5)
         tk.Button(top_frame, text="Refresh", command=self.refresh_board).pack(side=tk.LEFT, padx=5)
         tk.Button(top_frame, text="Quit", command=self.quit_game).pack(side=tk.LEFT, padx=5)
 
@@ -68,7 +68,7 @@ class YukonGUI:
         self.canvas.pack(fill=tk.BOTH, expand=True)
         self.canvas.bind("<Button-1>", self.on_canvas_click)
 
-        # ---- Drawing/layout constants (keep these in ONE place) ----
+        # ---- Drawing/layout constants ----
         self.CARD_W = 50
         self.CARD_H = 75
         self.COL_SPACING_X = 110
@@ -83,19 +83,9 @@ class YukonGUI:
         self.FOUND_START_Y = self.COL_START_Y
         self.FOUND_Y_STEP = self.CARD_H + 20
 
-        # Move controls
-        move_frame = tk.LabelFrame(self.root, text="Make Move", padx=10, pady=10)
-        move_frame.pack(padx=10, pady=5, fill=tk.X)
-
-        tk.Label(move_frame, text="Source (e.g. C1, C3:7H):").pack(side=tk.LEFT, padx=5)
-        self.source_entry = tk.Entry(move_frame, width=15)
-        self.source_entry.pack(side=tk.LEFT, padx=5)
-
-        tk.Label(move_frame, text="Destination (e.g. C4, F1):").pack(side=tk.LEFT, padx=5)
-        self.dest_entry = tk.Entry(move_frame, width=15)
-        self.dest_entry.pack(side=tk.LEFT, padx=5)
-
-        tk.Button(move_frame, text="Move", command=self.manual_move).pack(side=tk.LEFT, padx=5)
+        # Controls frame (will be dynamically populated based on phase)
+        self.controls_frame = tk.LabelFrame(self.root, text="Controls", padx=10, pady=10)
+        self.controls_frame.pack(padx=10, pady=5, fill=tk.X)
 
         # Status area
         status_frame = tk.LabelFrame(self.root, text="Status", padx=10, pady=10)
@@ -109,11 +99,130 @@ class YukonGUI:
         if self.backend.connect():
             self.connected = True
             self.status_label.config(text="Connected", fg="green")
-            self.update_message("Connected to backend")
+            self.game_phase = "STARTUP"
+            self.update_message("Connected to backend - Startup Phase")
+            self.show_startup_controls()
+            self.draw_startup_board()
         else:
             self.connected = False
             self.status_label.config(text="Disconnected", fg="red")
             self.update_message("Failed to connect to backend")
+
+    def show_startup_controls(self):
+        """Show startup phase controls (LD, SW, SR, SI, P)"""
+        self.game_phase = "STARTUP"
+
+        # Clear any existing controls
+        for widget in self.controls_frame.winfo_children():
+            widget.destroy()
+
+
+        # Button frame
+        button_frame = tk.Frame(self.controls_frame)
+        button_frame.pack(pady=5)
+
+        tk.Button(button_frame, text="Load Deck (LD)",
+                 command=self.startup_load_deck, width=15).pack(side=tk.LEFT, padx=3)
+        tk.Button(button_frame, text="Show Deck (SW)",
+                 command=self.startup_show_deck, width=15).pack(side=tk.LEFT, padx=3)
+        tk.Button(button_frame, text="Shuffle (SR)",
+                 command=self.startup_shuffle, width=15).pack(side=tk.LEFT, padx=3)
+        tk.Button(button_frame, text="Split (SI)",
+                 command=self.startup_split, width=15).pack(side=tk.LEFT, padx=3)
+
+        # Play button (to transition to play phase)
+        button_frame2 = tk.Frame(self.controls_frame)
+        button_frame2.pack(pady=5)
+
+        tk.Button(button_frame2, text="Play Game (P)", command=self.startup_play,
+                 width=20, bg="green", fg="white", font=("Arial", 11, "bold")).pack(side=tk.LEFT, padx=3)
+
+    def show_play_controls(self):
+        """Show play phase controls (move entry + click-to-play)"""
+        self.game_phase = "PLAY"
+
+        # Clear any existing controls
+        for widget in self.controls_frame.winfo_children():
+            widget.destroy()
+
+        # Instructions
+        instr_label = tk.Label(self.controls_frame,
+                              text="Play Phase: Click cards to select/move or use manual entry",
+                              font=("Arial", 10, "bold"), fg="green")
+        instr_label.pack()
+
+        # Move controls
+        move_frame = tk.Frame(self.controls_frame)
+        move_frame.pack(pady=5)
+
+        tk.Label(move_frame, text="Source (e.g. C1, C3:7H):").pack(side=tk.LEFT, padx=5)
+        self.source_entry = tk.Entry(move_frame, width=15)
+        self.source_entry.pack(side=tk.LEFT, padx=5)
+
+        tk.Label(move_frame, text="Destination (e.g. C4, F1):").pack(side=tk.LEFT, padx=5)
+        self.dest_entry = tk.Entry(move_frame, width=15)
+        self.dest_entry.pack(side=tk.LEFT, padx=5)
+
+        tk.Button(move_frame, text="Move", command=self.manual_move).pack(side=tk.LEFT, padx=5)
+
+    def startup_load_deck(self):
+        """Load deck in startup phase (LD command)"""
+        filename = simpledialog.askstring("Load Deck", "Enter filename:\n(Leave blank for default 'deckOne')")
+        
+        # Default to deckOne if no filename provided
+        if not filename or filename.strip() == "":
+            filename = "deckOne"
+        
+        filename = filename.strip()
+        
+        # Send the LD command
+        command = f"LD {filename}"
+        response = self.backend.startup_command(command)
+        
+        if response and "OK" in response:
+            self.update_message(f"Deck loaded: {filename}")
+            self.refresh_board()
+        else:
+            self.update_message(f"Deck load failed")
+            messagebox.showerror("Error", f"Failed to load deck.\nResponse: {response}")
+
+    def startup_show_deck(self):
+        """Show deck in startup phase (SW command)"""
+        response = self.backend.startup_command("SW")
+        if response:
+            self.update_message("Deck state displayed")
+            self.refresh_board()
+
+    def startup_shuffle(self):
+        """Random shuffle in startup phase (SR command)"""
+        response = self.backend.startup_command("SR")
+        if response and "OK" in response:
+            self.update_message("Deck shuffled randomly")
+            self.refresh_board()
+        else:
+            messagebox.showerror("Error", f"Failed to shuffle: {response}")
+
+    def startup_split(self):
+        """Split deck in startup phase (SI command)"""
+        split_val = simpledialog.askinteger("Split Deck", "Enter split position:\n1-51 for specific, 0 for random")
+        if split_val is not None:
+            response = self.backend.startup_command(f"SI {split_val}")
+            if response and "OK" in response:
+                self.update_message(f"Deck split at position {split_val}")
+                self.refresh_board()
+            else:
+                messagebox.showerror("Error", f"Failed to split: {response}")
+
+    def startup_play(self):
+        """Transition from startup to play phase (P command)"""
+        response = self.backend.startup_command("P")
+        if response and "OK" in response:
+            self.selected = None
+            self.update_message("Game started! Entering play phase...")
+            self.show_play_controls()
+            self.refresh_board()
+        else:
+            messagebox.showerror("Error", f"Failed to start game: {response}")
 
     def start_game(self):
         """Start a new game"""
@@ -138,10 +247,44 @@ class YukonGUI:
         if response:
             if response.startswith("STATE|"):
                 self.board_state = response[6:]  # Remove "STATE|" prefix
-            self.draw_board()
+
+            if self.game_phase == "STARTUP":
+                self.draw_startup_board()
+            else:
+                self.draw_board()
+
+    def draw_startup_board(self):
+        """Draw the deck state in startup phase (simple text display)"""
+        self.canvas.delete("all")
+
+        # Draw background
+        self.canvas.update_idletasks()
+        cw = max(1, self.canvas.winfo_width())
+        ch = max(1, self.canvas.winfo_height())
+        self.canvas.create_rectangle(0, 0, cw, ch, fill="darkgreen", outline="black", width=2)
+
+        # Display startup info
+        if self.board_state and self.board_state != "Game not started":
+            # Show board state (deck contents in startup phase)
+            self.canvas.create_text(
+                50, 50,
+                text="Deck Status:\n" + self.board_state[:800],
+                fill="white",
+                font=("Arial", 10),
+                justify="left",
+                anchor="nw"
+            )
+        else:
+            self.canvas.create_text(
+                600, 300,
+                text="Startup Phase\n\nLoad a deck to begin:\n  1. Click 'Load Deck (LD)'\n  2. Optionally shuffle (SR) or split (SI)\n  3. Click 'Play Game (P)' to start",
+                fill="white",
+                font=("Arial", 14),
+                justify="center"
+            )
 
     def draw_board(self):
-        """Draw the game board with card graphics"""
+        """Draw the game board with card graphics (play phase)"""
         self.canvas.delete("all")
 
         # Draw green felt background (match current canvas size)
@@ -156,7 +299,7 @@ class YukonGUI:
         else:
             self.canvas.create_text(
                 600, 375,
-                text="Game not started.\nClick 'Start Game'.",
+                text="Game not started.\nClick 'Play Game'.",
                 fill="white",
                 font=("Arial", 14),
                 justify="center"
@@ -327,7 +470,12 @@ class YukonGUI:
                                font=("Arial", 7, "bold"), anchor="se")
 
     def on_canvas_click(self, event):
-        """Handle canvas clicks for card/column/foundation selection"""
+        """Handle canvas clicks for card/column/foundation selection (play phase only)"""
+        # Only allow clicks in play phase
+        if self.game_phase != "PLAY":
+            self.update_message("Click cards during play phase")
+            return
+
         # Check if clicked on foundation area
         if event.x >= self.FOUND_START_X:
             # Foundation click
@@ -402,7 +550,11 @@ class YukonGUI:
             self.draw_board()
 
     def manual_move(self):
-        """Make a move using manual entry"""
+        """Make a move using manual entry (play phase only)"""
+        if self.game_phase != "PLAY":
+            messagebox.showwarning("Warning", "Can only move during play phase")
+            return
+
         source = self.source_entry.get().strip()
         dest = self.dest_entry.get().strip()
 
@@ -413,14 +565,23 @@ class YukonGUI:
         self.try_move(source, dest)
 
     def try_move(self, source, destination):
-        """Try to move a card"""
+        """Try to move a card (play phase only)"""
+        if self.game_phase != "PLAY":
+            return
+            
         if not self.connected:
             messagebox.showerror("Error", "Not connected to backend")
             return
 
         response = self.backend.make_move(source, destination)
         if response:
-            if "OK" in response:
+            if "GAME_WON" in response:
+                self.update_message("🎉 You won! Congratulations!")
+                self.refresh_board()
+                self.source_entry.delete(0, tk.END)
+                self.dest_entry.delete(0, tk.END)
+                messagebox.showinfo("Victory!", "You have successfully completed the game!\n\nCongratulations!")
+            elif "OK" in response:
                 self.update_message(f"Moved {source} -> {destination}")
                 self.refresh_board()
                 # Clear input fields after successful move

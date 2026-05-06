@@ -42,7 +42,21 @@
 Column cols[7] = {};
 Foundation foundations[4] = {};
 Card *deckHead = NULL;
+Card deck_array[52] = {};
 int gameStarted = 0;
+
+// Helper: check if move was successful and build response
+void handle_move_response(int moveResult, Foundation foundations[], char *response, size_t maxLen, const char *successMsg) {
+    if (moveResult) {
+        if (gameWon(foundations)) {
+            snprintf(response, maxLen, "OK|GAME_WON");
+        } else {
+            snprintf(response, maxLen, "OK|%s", successMsg);
+        }
+    } else {
+        snprintf(response, maxLen, "ERROR|Illegal move");
+    }
+}
 
 // Helper: render board state as string
 void render_board(char *output, size_t maxLen) {
@@ -121,12 +135,124 @@ void render_board(char *output, size_t maxLen) {
 
 // Process commands from the client
 void process_command(const char *cmd, char *response, size_t maxLen) {
+    // LD {filename} - Load Deck
+    if (strncmp(cmd, "LD", 2) == 0) {
+        char filename[256];
+        memset(filename, 0, sizeof(filename));
+        sscanf(cmd, "LD %255s", filename);
+
+        if (strlen(filename) == 0) {
+            strcpy(filename, "deckOne.txt");
+        } else if (strstr(filename, ".txt") == NULL) {
+            strcat(filename, ".txt");
+        }
+
+        memset(deck_array, 0, sizeof(deck_array));
+        deckHead = readDeck(filename, deck_array);
+
+        if (deckHead == NULL) {
+            snprintf(response, maxLen, "ERROR|Failed to load deck: %s", filename);
+        } else {
+            snprintf(response, maxLen, "OK|Deck loaded: %s", filename);
+        }
+        return;
+    }
+
+    // SW - Show deck (display current deck state)
+    if (strncmp(cmd, "SW", 2) == 0) {
+        if (deckHead == NULL) {
+            snprintf(response, maxLen, "ERROR|No deck loaded");
+            return;
+        }
+
+        char *pos = response;
+        size_t remaining = maxLen;
+        int cardCount = 0;
+
+        Card *current = deckHead;
+        while (current != NULL && cardCount < 52 && remaining > 10) {
+            int len = snprintf(pos, remaining, "[%c%c] ", current->rank, current->suit);
+            if (len > 0) {
+                pos += len;
+                remaining -= len;
+            }
+            current = current->next;
+            cardCount++;
+
+            if (cardCount % 13 == 0 && remaining > 2) {
+                *pos = '\n';
+                pos++;
+                remaining--;
+            }
+        }
+
+        if (remaining > 20) {
+            snprintf(pos, remaining, "\nTotal: %d cards", cardCount);
+        }
+        return;
+    }
+
+    // SR - Random Shuffle
+    if (strncmp(cmd, "SR", 2) == 0) {
+        if (deckHead == NULL) {
+            snprintf(response, maxLen, "ERROR|No deck loaded");
+            return;
+        }
+
+        deckHead = randomShuffle(deckHead);
+        snprintf(response, maxLen, "OK|Deck shuffled randomly");
+        return;
+    }
+
+    // SI {split} - Split deck
+    if (strncmp(cmd, "SI", 2) == 0) {
+        if (deckHead == NULL) {
+            snprintf(response, maxLen, "ERROR|No deck loaded");
+            return;
+        }
+
+        int splitPos = 0;
+        sscanf(cmd, "SI %d", &splitPos);
+
+        deckHead = splitDeck(deckHead, splitPos);
+        if (deckHead != NULL) {
+            snprintf(response, maxLen, "OK|Deck split at position %d", splitPos);
+        } else {
+            snprintf(response, maxLen, "ERROR|Failed to split deck");
+        }
+        return;
+    }
+
+    // P - Play (start game from loaded/shuffled deck)
+    if (strncmp(cmd, "P", 1) == 0) {
+        if (deckHead == NULL) {
+            snprintf(response, maxLen, "ERROR|No deck loaded");
+            return;
+        }
+
+        gameStarted = 0;
+
+        // Reset columns and foundations
+        for (int i = 0; i < 7; i++) {
+            cols[i].ref = NULL;
+        }
+        for (int i = 0; i < 4; i++) {
+            foundations[i].ref = NULL;
+        }
+
+        // Create game from current deck
+        create_game(deckHead, cols);
+        gameStarted = 1;
+        snprintf(response, maxLen, "OK|Game started");
+        return;
+    }
+
     if (strncmp(cmd, "START", 5) == 0) {
         // Allow game restart
         gameStarted = 0;
 
         // Load deck
-        Card deck_array[52] = {};
+        memset(deck_array, 0, sizeof(deck_array));
         deckHead = readDeck("../deckOne.txt", deck_array);
         if (deckHead == NULL) {
             snprintf(response, maxLen, "ERROR|Failed to load deck");
@@ -168,51 +294,76 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
         sscanf(moveStr, "%[^-]->%s", from, to);
 
         if (to[0] == 'C') {
-            // Column to column
-            int fromCol = from[1] - '0' - 1;
+            // Destination is column - can come from column or foundation
             int toCol = to[1] - '0' - 1;
 
-            if (fromCol < 0 || fromCol > 6 || toCol < 0 || toCol > 6) {
+            if (toCol < 0 || toCol > 6) {
                 snprintf(response, maxLen, "ERROR|Invalid column");
                 return;
             }
 
-            // Check if specific card is requested (e.g., "C7:QD")
-            Card *cardToMove = NULL;
-            if (strchr(from, ':') != NULL) {
-                // Specific card format: "C7:QD"
-                char cardStr[3];
-                sscanf(from, "%*[^:]:%2s", cardStr);
-                cardToMove = cols[fromCol].ref;
+            // Check if source is column or foundation
+            if (from[0] == 'C') {
+                // Column to column
+                int fromCol = from[1] - '0' - 1;
 
-                // Search for card in the specified column
-                while (cardToMove != NULL && (cardToMove->rank != cardStr[0] || cardToMove->suit != cardStr[1])) {
-                    cardToMove = cardToMove->next;
-                }
-
-                // Validate: card must be found AND must be visible
-                if (cardToMove == NULL) {
-                    snprintf(response, maxLen, "ERROR|Card not found in source column");
+                if (fromCol < 0 || fromCol > 6) {
+                    snprintf(response, maxLen, "ERROR|Invalid column");
                     return;
                 }
-                if (!cardToMove->visible) {
-                    snprintf(response, maxLen, "ERROR|Cannot move a hidden card");
-                    return;
-                }
-            } else {
-                // Default to bottom card
-                cardToMove = getLastCard(cols[fromCol]);
-            }
 
-            if (cardToMove != NULL) {
-                int moveResult = moveCard(cardToMove, &cols[fromCol], &cols[toCol]);
-                if (moveResult) {
-                    snprintf(response, maxLen, "OK|Move successful");
+                // Check if specific card is requested (e.g., "C7:QD")
+                Card *cardToMove = NULL;
+                if (strchr(from, ':') != NULL) {
+                    // Specific card format: "C7:QD"
+                    char cardStr[3];
+                    sscanf(from, "%*[^:]:%2s", cardStr);
+                    cardToMove = cols[fromCol].ref;
+
+                    // Search for card in the specified column
+                    while (cardToMove != NULL && (cardToMove->rank != cardStr[0] || cardToMove->suit != cardStr[1])) {
+                        cardToMove = cardToMove->next;
+                    }
+
+                    // Validate: card must be found AND must be visible
+                    if (cardToMove == NULL) {
+                        snprintf(response, maxLen, "ERROR|Card not found in source column");
+                        return;
+                    }
+                    if (!cardToMove->visible) {
+                        snprintf(response, maxLen, "ERROR|Cannot move a hidden card");
+                        return;
+                    }
                 } else {
-                    snprintf(response, maxLen, "ERROR|Illegal move");
+                    // Default to bottom card
+                    cardToMove = getLastCard(cols[fromCol]);
+                }
+
+                if (cardToMove != NULL) {
+                    int moveResult = moveCard(cardToMove, &cols[fromCol], &cols[toCol]);
+                    handle_move_response(moveResult, foundations, response, maxLen, "Move successful");
+                } else {
+                    snprintf(response, maxLen, "ERROR|Source card not found");
+                }
+            } else if (from[0] == 'F') {
+                // Foundation to column
+                int fromFound = from[1] - '0' - 1;
+
+                if (fromFound < 0 || fromFound > 3) {
+                    snprintf(response, maxLen, "ERROR|Invalid foundation");
+                    return;
+                }
+
+                Card *cardToMove = getLastCardFoundation(foundations[fromFound]);
+                if (cardToMove != NULL) {
+                    int moveResult = moveCardFromFoundation(cardToMove, &cols[toCol], &foundations[fromFound]);
+                    handle_move_response(moveResult, foundations, response, maxLen, "Move from foundation successful");
+                } else {
+                    snprintf(response, maxLen, "ERROR|Foundation is empty");
                 }
             } else {
-                snprintf(response, maxLen, "ERROR|Source card not found");
+                snprintf(response, maxLen, "ERROR|Invalid source");
+                return;
             }
         } else if (to[0] == 'F') {
             // Column to foundation
@@ -257,10 +408,8 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
                     if (newLast != NULL) {
                         newLast->visible = 1;
                     }
-                    snprintf(response, maxLen, "OK|Move to foundation successful");
-                } else {
-                    snprintf(response, maxLen, "ERROR|Illegal move");
                 }
+                handle_move_response(moveResult, foundations, response, maxLen, "Move to foundation successful");
             } else {
                 // Default to bottom card
                 int fromCol = from[1] - '0' - 1;
@@ -276,10 +425,8 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
                         if (newLast != NULL) {
                             newLast->visible = 1;
                         }
-                        snprintf(response, maxLen, "OK|Move to foundation successful");
-                    } else {
-                        snprintf(response, maxLen, "ERROR|Illegal move");
                     }
+                    handle_move_response(moveResult, foundations, response, maxLen, "Move to foundation successful");
                 } else {
                     snprintf(response, maxLen, "ERROR|Source column empty");
                 }
@@ -401,10 +548,14 @@ int main(void) {
             printf("Received: %s\n", recvBuf);
 
             // Process command
-            process_command(recvBuf, sendBuf, BUFFER_SIZE - 1);
+            process_command(recvBuf, sendBuf, BUFFER_SIZE - 2);
 
-            // Send response
-            int iSend = send(clientSocket, sendBuf, (int)strlen(sendBuf), 0);
+            // Send response with newline
+            int responseLen = strlen(sendBuf);
+            sendBuf[responseLen] = '\n';
+            sendBuf[responseLen + 1] = '\0';
+
+            int iSend = send(clientSocket, sendBuf, responseLen + 1, 0);
             if (iSend == SOCKET_ERROR) {
                 printf("send failed: %d\n", GET_SOCKET_ERROR());
                 break;

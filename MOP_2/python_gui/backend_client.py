@@ -44,7 +44,7 @@ class BackendClient:
                     if not chunk:
                         break
                     response += chunk
-                    
+
                     # Check for complete message (ends with newline)
                     if response.endswith(b"\n"):
                         break
@@ -55,14 +55,18 @@ class BackendClient:
                     # Timeout is OK - we've likely received everything
                     break
             
-            return response.decode('utf-8', errors='ignore').strip()
+            result = response.decode('utf-8', errors='ignore').strip()
+            return result
         except Exception as e:
-            print(f"Communication error: {e}")
             return None
 
     def start_game(self):
         """Start a new game"""
         return self.send_command("START")
+
+    def startup_command(self, command):
+        """Send a startup phase command (LD, SW, SR, SI, P)"""
+        return self.send_command(command)
 
     def get_state(self):
         """Get current board state"""

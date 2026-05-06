@@ -1,1 +1,0 @@
-/usr/bin/cc -g -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/MOP_2.dir/main.c.o CMakeFiles/MOP_2.dir/Model/model.c.o CMakeFiles/MOP_2.dir/View/view.c.o CMakeFiles/MOP_2.dir/Controller/controller.c.o CMakeFiles/MOP_2.dir/Controller/CardServices.c.o CMakeFiles/MOP_2.dir/Model/deck.c.o -o MOP_2

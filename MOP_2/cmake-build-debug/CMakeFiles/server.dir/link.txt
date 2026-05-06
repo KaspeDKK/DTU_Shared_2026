@@ -1,1 +1,0 @@
-/usr/bin/cc -g -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/server.dir/Controller/server.c.o CMakeFiles/server.dir/Model/model.c.o CMakeFiles/server.dir/View/view.c.o CMakeFiles/server.dir/Controller/controller.c.o CMakeFiles/server.dir/Controller/CardServices.c.o CMakeFiles/server.dir/Model/deck.c.o -o server
