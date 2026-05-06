@@ -122,18 +122,47 @@ void run_game(Card *deckHead) {
     create_game(deckHead, cols); // model.c
 
     /* TESTING BELOW */
-    int testing = 0; // ENABLE // DISABLE
+    int testing = 1; // ENABLE // DISABLE
     if (testing) {
         // replay moves JUST FOR TESTING
         const char *replay[] = {
-            "C1->F1", "C6->C3", "C3:QH->C7", "C3->C5", "C7:KS->C1",
-            "C3->F2", "C5:5S->C2", "C5->F3", "C2:8S->C5", "C6:TH->C1",
-            "C6->C2", "C3->C1", "C5->C1", "C6->C7", "C4->C6",
-            "C7:QS->C4", "C7->C4", "C5:9H->C4", "C3->C5", "C5:3H->C6",
-            "C3->C5", "C4:KH->C3", "C2:7D->C4", "C2->F4", "C1->C3",
-            "C7->C1", "C7->C4", "C1:6S->C3", "C3:8D->C5", "C2->C3",
-            "C2->C4", "C4:KD->C2", "C1->F3", "C2->F1", "C4:9D->C1",
-            "C6->F4",
+            "C1:AC->F1",
+            "C7:KS->C1",
+            "C3:QH->C1",
+            "C6:JS->C1",
+            "C3:7H->C5",
+            "C3:AH->F2",
+            "C3:8D->C6",
+            "C5:7H->C6",
+            "C5:5S->C2",
+            "C5:AS->F3",
+            "C2:8S->C5",
+            "C6:TH->C1",
+            "C6:4H->C2",
+            "C6:JD->C7",
+            "C4:4S->C6",
+            "C7:QS->C4",
+            "C7:TS->C4",
+            "C5:3H->C6",
+            "C1:7H->C6",
+            "C7:7S->C1",
+            "C3:2D->C7",
+            "C7:3S->C2",
+            "C5:TD->C7",
+            "C3:9C->C4",
+            "C3:3C->C5",
+            "C4:KH->C3",
+            "C6:9H->C7",
+            "C7:8S->C3",
+            "C2:8C->C7",
+            "C2:2C->F1",
+            "C7:KD->C2",
+            "C2:6H->C7",
+            "C7:7D->C4",
+            "C7:AD->F4",
+            "C4:2D->F4",
+            "C5:3C->F1",
+            "C1:2S->C6",
             NULL
         };
 
