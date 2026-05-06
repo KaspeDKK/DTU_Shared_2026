@@ -57,6 +57,29 @@ void showGame(Column cols[], Foundation foundations[])
         printf("\n");
     }
 
+    if (maxRows % 2 == 0) {
+        printf("\n");
+    }
+
+    // Print foundations, så vi stadig kan se dem, når kolonnerne bliver mindre
+    while (f < 4) {
+
+        for (int col = 0; col < 7; col++) {
+            printf("      ");
+        }
+        Card *top = getLastCardFoundation(foundations[f]);
+
+        if (top != NULL) {
+            printf("     ");
+            print_card_face_up(top);
+            printf("   F%d", f+1);
+        } else {
+            printf("     [  ]   F%d", f+1);
+        }
+        f++;
+        printf("\n\n");
+    }
+
     // edge case: if all columns are empty, still show foundations
     if (maxRows == 0) {
         for (int i = 0; i < 4; i++) {
