@@ -186,8 +186,10 @@ void game_startup()
     // startup loop
     while (1) {
 
+
         char input[100] = "";
         char cmd[10], param[20];
+
 
         // scan for input
         printf("Please enter your command: ");
@@ -206,11 +208,13 @@ void game_startup()
             snprintf(filename, sizeof(filename), "../%s.txt", param);
             deckHead = readDeck(filename, deck);
             showDeckWithVisibility(deckHead);
+            printf("\nLast command: %s\n", cmd);
             continue;
         }
 
         if (strcmp(cmd, "SW") == 0) {
             showDeck(deckHead);
+            printf("\nLast command: %s\n", cmd);
             continue;
         }
 
@@ -226,6 +230,7 @@ void game_startup()
 
             splitDeck(deckHead, param_int);
             showDeckWithVisibility(deckHead);
+            printf("\nLast command: %s\n", cmd);
             continue;
         }
 
@@ -233,11 +238,13 @@ void game_startup()
             // random shuffle
             deckHead = randomShuffle(deckHead);
             showDeckWithVisibility(deckHead);
+            printf("\nLast command: %s\n", cmd);
             continue;
         }
 
         if (strcmp(cmd, "SD") == 0) {
             // save current deck to file. filename is param
+            printf("\nLast command: %s\n", cmd);
             continue;
         }
 
@@ -252,6 +259,7 @@ void game_startup()
         } else {
             printf("No such command exists!\n");
         }
+
     }
 
     run_game(deckHead);
