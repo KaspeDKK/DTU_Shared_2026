@@ -148,9 +148,6 @@ void showDeckWithVisibility(Card *head) //initial view of the deck, before the c
     if (count % 7 != 0) {
         printf("\n");
     }
-
-    printf("\nLAST Command: SW\n");
-    printf("Message: OK\n");
 }
 
 Card *getRowCard(Card *colHead, int row) {

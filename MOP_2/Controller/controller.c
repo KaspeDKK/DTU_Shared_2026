@@ -209,12 +209,14 @@ void game_startup()
             deckHead = readDeck(filename, deck);
             showDeckWithVisibility(deckHead);
             printf("\nLast command: %s\n", cmd);
+            printf("Message: OK\n");
             continue;
         }
 
         if (strcmp(cmd, "SW") == 0) {
             showDeck(deckHead);
             printf("\nLast command: %s\n", cmd);
+            printf("Message: OK\n");
             continue;
         }
 
@@ -231,6 +233,7 @@ void game_startup()
             splitDeck(deckHead, param_int);
             showDeckWithVisibility(deckHead);
             printf("\nLast command: %s\n", cmd);
+            printf("Message: OK\n");
             continue;
         }
 
@@ -239,12 +242,18 @@ void game_startup()
             deckHead = randomShuffle(deckHead);
             showDeckWithVisibility(deckHead);
             printf("\nLast command: %s\n", cmd);
+            printf("Message: OK\n");
             continue;
         }
 
         if (strcmp(cmd, "SD") == 0) {
             // save current deck to file. filename is param
+            char filename[100];
+            snprintf(filename, sizeof(filename), "../%s.txt", param);
+            saveDeck(filename, deckHead);
+
             printf("\nLast command: %s\n", cmd);
+            printf("Message: OK\n");
             continue;
         }
 

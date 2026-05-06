@@ -62,6 +62,37 @@ Card* readDeck (const char *filename,Card *deck) { //function that takes a file,
     return arrayToList(deck, i);
 }
 
+
+int saveDeck(const char *filename, Card *head)
+{
+    if (head == NULL) {
+        printf("Message: no deck loaded\n");
+        return 0;
+    }
+
+    if (filename == NULL) {
+        filename = "../cards.txt";
+    }
+
+    FILE *file = fopen(filename, "w");
+
+    if (file == NULL) {
+        perror("Error saving deck");
+        return 0;
+    }
+
+    Card *current = head;
+
+    while (current != NULL) {
+        fprintf(file, "%c%c\n", current->rank, current->suit); // putting in the deck
+        current = current->next;
+    }
+
+    fclose(file);
+    return 1;
+}
+
+
 Card *splitDeck (Card *head, int split) { //splits deck
     if (head == NULL) { //guard
         printf("LAST Command SI");
