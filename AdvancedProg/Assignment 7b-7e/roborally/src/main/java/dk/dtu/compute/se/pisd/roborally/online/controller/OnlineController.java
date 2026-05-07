@@ -360,6 +360,10 @@ public class OnlineController {
         }
     }
 
+    /**
+     * deletes the game that is passed as a parameter.
+     * @param game the game to check if the user is a player in
+     */
     public void deleteGame(Game game) {
         try {
             restClient.delete().
