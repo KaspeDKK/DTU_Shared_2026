@@ -234,6 +234,13 @@ public class OnlineController {
         }
     }
 
+    /**
+     * Handles the selection of an online game.
+     * The selected game is set to ACTIVE in the backend
+     * and then started locally on the client.
+     *
+     * @param game the selected game to start
+     */
     public void gameSelected(Game game) {
         if (!appController.isGameRunning() /* && onlineState.getSignedInUser() != null && gameSelectionOn */) {
             appController.roboRally.createGameSelectionView(null);

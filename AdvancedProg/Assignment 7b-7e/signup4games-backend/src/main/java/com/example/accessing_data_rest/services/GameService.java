@@ -53,24 +53,28 @@ public class GameService {
      */
     @Transactional
     public Game createGame(Game game) {
-            User owner = userRepository.findByName(game.getOwner().getName()).getFirst();
-            if (game.getMinPlayers() >= 2 && game.getMaxPlayers() <= 6 && owner != null) {
 
-                game.setOwner(owner);  // Now game points to user
+        List<User> users = userRepository.findByName(game.getOwner().getName());
+        if (users.isEmpty()) throw new IllegalPlayerCountException("Game must have at least 2 players and at max 6 players, and the owner must be an existing user in the repository."); // making sure a user owner at least exists first
+        User owner = users.getFirst();
 
-                Game savedGame = gameRepository.save(game);  // Game now has ID
+        if (game.getMinPlayers() >= 2 && game.getMaxPlayers() <= 6 && owner != null) {
 
-                Player player = new Player();
-                player.setGame(savedGame);   // Managed game
-                player.setUser(owner);       // Managed user
-                player.setName(owner.getName());
-                playerRepository.save(player);
+            game.setOwner(owner);  // Now game points to user
 
-                return gameRepository.findByUid(savedGame.getUid()).get(0);
+            Game savedGame = gameRepository.save(game);  // Game now has ID
 
-            } else {
-                throw new IllegalPlayerCountException("Game must have at least 2 players and at max 6 players, and the owner must be an existing user in the repository.");
-            }
+            Player player = new Player();
+            player.setGame(savedGame);   // Managed game
+            player.setUser(owner);       // Managed user
+            player.setName(owner.getName());
+            playerRepository.save(player);
+
+            return gameRepository.findByUid(savedGame.getUid()).get(0);
+
+        } else {
+            throw new IllegalPlayerCountException("Game must have at least 2 players and at max 6 players, and the owner must be an existing user in the repository.");
+        }
 
     }
 
