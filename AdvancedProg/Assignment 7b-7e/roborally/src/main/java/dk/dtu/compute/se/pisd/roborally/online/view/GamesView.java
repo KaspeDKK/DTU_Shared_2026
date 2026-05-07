@@ -34,8 +34,10 @@ public class GamesView extends GridPane {
     }
 
     /** Updates the GameView. This handles flowcontrol safeguarding by only allowing specific event inputs on the view under certain circumstances:
-     *  <p>- Join button is enabled if player count is lower than {@link maxPlayers} or if a user is a part of the game (and maybe has left the game and wants to join again) </p>
-     *
+     *  <p>- Join button is enabled if player count is lower than maximum player count or if a user is a part of the game (and maybe has left the game and wants to join again), and... </p>
+     *  <p>- Leave button is enabled if user is not the owner of the game or if the game has started, and...</p>
+     *  <p>- Start button is enabled if game hasn't started yet, and you have joined the gamelobby. Play is enabled if the game already has started, and...</p>
+     *  <p>- Delete button is enabled only if the user signed in the view / onlineController is the game owner</p>
      */
 
     private void update() {
