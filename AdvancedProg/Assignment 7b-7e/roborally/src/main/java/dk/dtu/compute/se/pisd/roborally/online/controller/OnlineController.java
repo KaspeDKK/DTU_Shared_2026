@@ -67,6 +67,7 @@ public class OnlineController {
                 .retrieve() // gets response from backend
                 .body(new ParameterizedTypeReference<>() {
                 }); //typecasts the JSON response to User
+        assert users != null;
         if (!users.isEmpty()) {
             setOnlineUser(users.get(0));
         } else {
@@ -257,6 +258,7 @@ public class OnlineController {
                             .retrieve()
                             .body(Game.class);
                 // Then show the game board and the game (with uid from backend) is then started
+                assert result != null;
                 startGame(result);
             }
             } catch (HttpClientErrorException.NotFound e) {
@@ -374,7 +376,7 @@ public class OnlineController {
     /**
      *  Deletes the given game. This will delete the game in the backend, and then update the game select view.
      *  The deletion of the players are happening in the backend through the use of CASCADE on delete.
-     * @param game
+     * @param game the game that will be deleted
      */
     public void deleteGame(Game game) {
         try {
