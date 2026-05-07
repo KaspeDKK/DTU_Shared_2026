@@ -270,7 +270,7 @@ public class OnlineController {
 
     /** Creates a new game using POST method if a game is not running & a user is signed in & if you are in gameSelection mode
      *
-     * @param game
+     * @param game the game that a player wants to make
      */
     public void createGame(Game game) {
         try {
@@ -310,7 +310,7 @@ public class OnlineController {
      * join the given game as the currently active user.
      * This will add the user as a player to the game in the backend,
      * and then update the game select view.
-     * @param game
+     * @param game the game that a player wants to join
      */
     public void joinGame(Game game) {
         // DONE Assignment 7c: add the currently active user as a Player for
