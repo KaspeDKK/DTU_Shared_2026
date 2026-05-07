@@ -60,11 +60,11 @@ public class OnlineController {
         //      as onLineUser in this controller! (NOT the once created
         //      in the code below!)
         List<User> users = restClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/user/search")
-                        .queryParam("name", name)
-                        .build())
-                .retrieve()
+                .uri(uriBuilder -> uriBuilder //lambda function
+                        .path("/user/search") //determines path of endpoint
+                        .queryParam("name", name) //adds the query parameter to the URL
+                        .build())//builds the JSON
+                .retrieve() // gets response from backend
                 .body(new ParameterizedTypeReference<>() {
                 }); //typecasts the JSON response to User
         if (!users.isEmpty()) {
@@ -133,7 +133,7 @@ public class OnlineController {
                     .retrieve()
                     .body(User.class);
             setOnlineUser(user);
-        } catch (HttpClientErrorException.Conflict e) { //catches the conflict that is returned in the server side
+        } catch (HttpClientErrorException.Conflict e) { //catches the conflict that is returned in the server side - See README
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(e.getMessage());
@@ -299,40 +299,39 @@ public class OnlineController {
         appDialogs.createNewGame();
     }
 
+    /**
+     * join the given game as the currently active user.
+     * This will add the user as a player to the game in the backend,
+     * and then update the game select view.
+     * @param game
+     */
     public void joinGame(Game game) {
-        // TODO Assignment 7c: add the currently active user as a Player for
+        // DONE Assignment 7c: add the currently active user as a Player for
         //      the given game if this user is not a player yet and if there
         //      is still room for a player. If so post his to the backend,
         //      and check whether this was successfull
         User currUser = onlineState.getSignedInUser();
         Player player = new Player();
-        //referencing the whole object will create some conflicts regarding the ID's and creating new players.
-        // Shallow game reference - just the ID
+
+        //referencing the whole object will create some errors or conflicts from the ID's and creating new players.
+        //therefore new games and users are created client side.
         Game gameRef = new Game();
         gameRef.setUid(game.getUid());
         player.setGame(gameRef);
 
-        // Shallow user reference - just the name
+
         User userRef = new User();
         userRef.setName(currUser.getName());
         player.setUser(userRef);
-
         player.setName(currUser.getName());
 
-
         try {
-            // for (Player p : game.getPlayers()) {
-                // if (p.getUser().getUid() == currUser.getUid()) {
-                //    throw new IllegalArgumentException("player already in game");
-              //  }
-            //}
-
                 Player created = restClient.post()
                         .uri("/player")
                         .body(player)
                         .retrieve()
                         .body(Player.class);
-        } catch (HttpClientErrorException.Conflict | HttpClientErrorException.NotFound ex) {
+        } catch (HttpClientErrorException.Conflict | HttpClientErrorException.NotFound ex) { //catches back end errors that are thrown from the PlayerService and PlayerController and shows the error message in an alert
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(ex.getMessage());
@@ -342,9 +341,14 @@ public class OnlineController {
         }
     }
 
+    /**
+     * leave the given game as the currently active user.
+     * This will delete the player corresponding to the user and the game in the backend,
+     * @param player active user's player.
+     */
     public void leaveGame(Player player) {
         try {
-            // TODO Assignment 7d: delete the currently active user as a player
+            // DONE Assignment 7d: delete the currently active user as a player
             //      for the given game (in the backend)
             restClient.delete().uri("/player/{playerUid}", player.getUid())
                     .retrieve()
@@ -358,7 +362,6 @@ public class OnlineController {
 
     public void deleteGame(Game game) {
         try {
-
             restClient.delete().
                     uri("/game/{id}", game.getUid())
                     .retrieve()
@@ -370,6 +373,13 @@ public class OnlineController {
         }
     }
 
+    /**
+     *  Checks if the current user is a player in the given game.
+     *  This is used to determine whether the user can join or leave the game, and whether they can start the game.
+     *
+     * @param game the game to check if the user is a player in
+     * @return boolean whether or not the player is in the game
+     */
     public boolean userInGame(Game game) {
         User currUser = onlineState.getSignedInUser();
         for (Player p : game.getPlayers()) {
@@ -380,6 +390,14 @@ public class OnlineController {
         return false;
     }
 
+    /**
+     *
+     * Checks if the current user owns the game.
+     * This is used to determine whether the user can delete the game or not. Only the owner of the game can delete it.
+     *
+     * @param game the game to check whether the current user owns it or not
+     * @return boolean for whether or not the user owns the game
+     */
     public boolean userOwnsGame(Game game) {
         if (game.getOwner() == null) {
             game.setOwner(onlineState.getSignedInUser());

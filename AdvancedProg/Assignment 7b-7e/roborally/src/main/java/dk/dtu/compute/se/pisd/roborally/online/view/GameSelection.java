@@ -10,7 +10,11 @@ public class GameSelection extends BorderPane {
 
     OnlineController onlineController;
 
-
+    /** This is the view for the game selection part of the online functionality of roborally.
+     *  It features all the buttons on the game selection view aka, next stage when pressing "Select Online Game" in menubar
+     *
+     * @param onlineController of the app window / app view on the user's current display
+     */
     public GameSelection (OnlineController onlineController) {
         this.onlineController = onlineController;
 

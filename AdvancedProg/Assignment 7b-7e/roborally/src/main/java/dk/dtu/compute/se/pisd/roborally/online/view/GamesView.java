@@ -33,6 +33,11 @@ public class GamesView extends GridPane {
         update();
     }
 
+    /** Updates the GameView. This handles flowcontrol safeguarding by only allowing specific event inputs on the view under certain circumstances:
+     *  <p>- Join button is enabled if player count is lower than {@link maxPlayers} or if a user is a part of the game (and maybe has left the game and wants to join again) </p>
+     *
+     */
+
     private void update() {
         try {
             int i = 0;
