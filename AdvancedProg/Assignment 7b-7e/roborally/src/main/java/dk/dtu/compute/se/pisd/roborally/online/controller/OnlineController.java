@@ -391,8 +391,11 @@ public class OnlineController {
         return false;
     }
 
+    /**
+     * functionality for start game button.
+     */
     private void startGame(Game game) {
-        // TODO Assignment 7e: creation of the board should eventually depend
+        // DONE Assignment 7e: creation of the board should eventually depend
         //      on the board provided by the Game information.
         //      And every user who had joined the game should be able to start
         //      it in their client (individually -- no interactive gameplay
@@ -414,7 +417,7 @@ public class OnlineController {
             alert.showAndWait();
         }
 
-        Board board = new Board(8, 8);
+        Board board = new Board(8, 8); // no need to make it rely on the game info since as stated we arent working on the interactive gameplay stuff
         GameController gameController = new GameController(board);
 
         int i = 0;
