@@ -410,7 +410,7 @@ public class OnlineController {
     }
 
     /**
-     * functionality for start game button.
+     * functionality for start game button. Sets up the board etc.
      * Is called when a game is selected and all a valid state exists to begin said game.
      *
      * @param game
