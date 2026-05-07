@@ -328,6 +328,7 @@ public class OnlineController {
 
 
         User userRef = new User();
+        userRef.setUid(currUser.getUid());
         userRef.setName(currUser.getName());
         player.setUser(userRef);
         player.setName(currUser.getName());
@@ -360,8 +361,11 @@ public class OnlineController {
             restClient.delete().uri("/player/{playerUid}", player.getUid())
                     .retrieve()
                     .toBodilessEntity();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(ex.getMessage());
+            alert.showAndWait();
         } finally {
             selectGame();
         }
