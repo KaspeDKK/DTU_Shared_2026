@@ -43,7 +43,7 @@ public class Game {
     @JoinColumn(name = "owner_name")
     private User owner;
 
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE) //make sure that when a game is deleted, all players in the game are also deleted
     @OneToMany(mappedBy="game")
     private List<Player> players;
 
