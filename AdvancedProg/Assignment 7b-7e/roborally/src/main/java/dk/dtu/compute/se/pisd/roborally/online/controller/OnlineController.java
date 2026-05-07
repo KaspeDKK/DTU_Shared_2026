@@ -411,6 +411,10 @@ public class OnlineController {
 
     /**
      * functionality for start game button.
+     * Is called when a game is selected and all a valid state exists to begin said game.
+     *
+     * @param game
+     * no return (void)
      */
     private void startGame(Game game) {
         // DONE Assignment 7e: creation of the board should eventually depend
