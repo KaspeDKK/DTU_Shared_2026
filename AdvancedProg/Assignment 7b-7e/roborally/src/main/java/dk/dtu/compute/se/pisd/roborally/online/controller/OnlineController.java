@@ -360,14 +360,22 @@ public class OnlineController {
         }
     }
 
+    /**
+     *  Deletes the given game. This will delete the game in the backend, and then update the game select view.
+     *  The deletion of the players are happening in the backend through the use of CASCADE on delete.
+     * @param game
+     */
     public void deleteGame(Game game) {
         try {
             restClient.delete().
                     uri("/game/{id}", game.getUid())
                     .retrieve()
                     .toBodilessEntity();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(ex.getMessage());
+            alert.showAndWait();
         } finally {
             selectGame();
         }
@@ -409,8 +417,15 @@ public class OnlineController {
         return false;
     }
 
+    /**
+     * functionality for start game button. Sets up the board etc.
+     * Is called when a game is selected and all a valid state exists to begin said game.
+     *
+     * @param game
+     * no return (void)
+     */
     private void startGame(Game game) {
-        // TODO Assignment 7e: creation of the board should eventually depend
+        // DONE Assignment 7e: creation of the board should eventually depend
         //      on the board provided by the Game information.
         //      And every user who had joined the game should be able to start
         //      it in their client (individually -- no interactive gameplay
@@ -432,7 +447,7 @@ public class OnlineController {
             alert.showAndWait();
         }
 
-        Board board = new Board(8, 8);
+        Board board = new Board(8, 8); // no need to make it rely on the game info since as stated we arent working on the interactive gameplay stuff
         GameController gameController = new GameController(board);
 
         int i = 0;
