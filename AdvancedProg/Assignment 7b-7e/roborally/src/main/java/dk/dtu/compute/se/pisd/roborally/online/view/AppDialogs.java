@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.springframework.web.client.HttpClientErrorException;
 
 public class AppDialogs {
 
@@ -114,8 +115,11 @@ public class AppDialogs {
                         game.setMaxPlayers(Integer.parseInt(max.getText()));
                         onlineController.createGame(game);
                         stage.close();
-                    } catch (Exception exception) {
-                        //  TODO better error handling here
+                    } catch (HttpClientErrorException.Conflict ex) {
+                        Text errorText = new Text("There was a problem creating the game: " + ex.getMessage());
+                        VBox vbox = new VBox(text, nameBox, minMaxBox, errorText, cancel);
+                        Scene scene = new Scene(vbox);
+                        stage.setScene(scene);
                     }
                 }
         );
