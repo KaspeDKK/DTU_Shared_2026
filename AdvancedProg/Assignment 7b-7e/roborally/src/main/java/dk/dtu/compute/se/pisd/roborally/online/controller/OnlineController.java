@@ -60,11 +60,11 @@ public class OnlineController {
         //      as onLineUser in this controller! (NOT the once created
         //      in the code below!)
         List<User> users = restClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/user/search")
-                        .queryParam("name", name)
-                        .build())
-                .retrieve()
+                .uri(uriBuilder -> uriBuilder //lambda function
+                        .path("/user/search") //determines path of endpoint
+                        .queryParam("name", name) //adds the query parameter to the URL
+                        .build())//builds the JSON
+                .retrieve() // gets response from backend
                 .body(new ParameterizedTypeReference<>() {
                 }); //typecasts the JSON response to User
         if (!users.isEmpty()) {
@@ -321,11 +321,6 @@ public class OnlineController {
 
 
         try {
-            // for (Player p : game.getPlayers()) {
-                // if (p.getUser().getUid() == currUser.getUid()) {
-                //    throw new IllegalArgumentException("player already in game");
-              //  }
-            //}
 
                 Player created = restClient.post()
                         .uri("/player")
@@ -358,7 +353,6 @@ public class OnlineController {
 
     public void deleteGame(Game game) {
         try {
-
             restClient.delete().
                     uri("/game/{id}", game.getUid())
                     .retrieve()
@@ -370,6 +364,13 @@ public class OnlineController {
         }
     }
 
+    /**
+     *  Checks if the current user is a player in the given game.
+     *  This is used to determine whether the user can join or leave the game, and whether they can start the game.
+     *
+     * @param game the game to check if the user is a player in
+     * @return boolean whether or not the player is in the game
+     */
     public boolean userInGame(Game game) {
         User currUser = onlineState.getSignedInUser();
         for (Player p : game.getPlayers()) {
@@ -380,6 +381,14 @@ public class OnlineController {
         return false;
     }
 
+    /**
+     *
+     * Checks if the current user owns the game.
+     * This is used to determine whether the user can delete the game or not. Only the owner of the game can delete it.
+     *
+     * @param game the game to check whether the current user owns it or not
+     * @return boolean for whether or not the user owns the game
+     */
     public boolean userOwnsGame(Game game) {
         if (game.getOwner() == null) {
             game.setOwner(onlineState.getSignedInUser());
