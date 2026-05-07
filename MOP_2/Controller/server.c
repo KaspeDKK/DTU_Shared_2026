@@ -85,6 +85,8 @@ void render_board(char *output, size_t maxLen) {
         if (h > maxHeight) maxHeight = h;
     }
 
+    int f = 0;
+
     // Print each row (columns on left, foundations on right)
     for (int row = 0; row < maxHeight && remaining > 0; row++) {
         Card *current[7];
@@ -111,13 +113,13 @@ void render_board(char *output, size_t maxLen) {
         }
 
         // Add foundation info on right side (one per row)
-        if (row < 4 && remaining > 0) {
-            len = snprintf(pos, remaining, "  F%d: ", row + 1);
+        if (f < 4 && remaining > 0) {
+            len = snprintf(pos, remaining, "  F%d: ", f + 1);
             pos += len;
             remaining -= len;
 
-            if (foundations[row].ref != NULL) {
-                Card *last = foundations[row].ref;
+            if (foundations[f].ref != NULL) {
+                Card *last = foundations[f].ref;
                 while (last->next != NULL) last = last->next;
                 len = snprintf(pos, remaining, "[%c%c]", last->rank, last->suit);
             } else {
@@ -125,7 +127,36 @@ void render_board(char *output, size_t maxLen) {
             }
             pos += len;
             remaining -= len;
+            f++;
         }
+
+        len = snprintf(pos, remaining, "\n");
+        pos += len;
+        remaining -= len;
+    }
+
+    // Print any foundations not covered by the main loop (when maxHeight < 4)
+    while (f < 4 && remaining > 0) {
+        for (int col = 0; col < 7 && remaining > 0; col++) {
+            len = snprintf(pos, remaining, " [  ]  ");
+            pos += len;
+            remaining -= len;
+        }
+
+        len = snprintf(pos, remaining, "  F%d: ", f + 1);
+        pos += len;
+        remaining -= len;
+
+        if (foundations[f].ref != NULL) {
+            Card *last = foundations[f].ref;
+            while (last->next != NULL) last = last->next;
+            len = snprintf(pos, remaining, "[%c%c]", last->rank, last->suit);
+        } else {
+            len = snprintf(pos, remaining, "[  ]");
+        }
+        pos += len;
+        remaining -= len;
+        f++;
 
         len = snprintf(pos, remaining, "\n");
         pos += len;
@@ -146,6 +177,10 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
         } else if (strstr(filename, ".txt") == NULL) {
             strcat(filename, ".txt");
         }
+
+        gameStarted = 0;
+        for (int i = 0; i < 7; i++) cols[i].ref = NULL;
+        for (int i = 0; i < 4; i++) foundations[i].ref = NULL;
 
         memset(deck_array, 0, sizeof(deck_array));
         deckHead = readDeck(filename, deck_array);
@@ -219,6 +254,31 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
             snprintf(response, maxLen, "OK|Deck split at position %d", splitPos);
         } else {
             snprintf(response, maxLen, "ERROR|Failed to split deck");
+        }
+        return;
+    }
+
+    // SD {filename} - Save deck to file
+    if (strncmp(cmd, "SD", 2) == 0) {
+        if (deckHead == NULL) {
+            snprintf(response, maxLen, "ERROR|No deck loaded");
+            return;
+        }
+
+        char filename[256];
+        char param[256] = {};
+        sscanf(cmd, "SD %255s", param);
+
+        if (strlen(param) == 0) {
+            snprintf(filename, sizeof(filename), "../cards.txt");
+        } else {
+            snprintf(filename, sizeof(filename), "../%s.txt", param);
+        }
+
+        if (saveDeck(filename, deckHead)) {
+            snprintf(response, maxLen, "OK|Deck saved to %s", filename);
+        } else {
+            snprintf(response, maxLen, "ERROR|Failed to save deck to %s", filename);
         }
         return;
     }

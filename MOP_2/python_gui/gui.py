@@ -19,6 +19,7 @@ class YukonGUI:
         self.board_state = ""
         self.columns_data = [[] for _ in range(7)]
         self.foundations_data = ["", "", "", ""]
+        self.last_deck = ""
 
         self.setup_ui()
         self.connect_to_backend()
@@ -83,6 +84,8 @@ class YukonGUI:
                   command=self.startup_shuffle, width=15).pack(side=tk.LEFT, padx=3)
         tk.Button(button_frame, text="Split (SI)",
                   command=self.startup_split, width=15).pack(side=tk.LEFT, padx=3)
+        tk.Button(button_frame, text="Save Deck (SD)",
+                  command=self.startup_save_deck, width=15).pack(side=tk.LEFT, padx=3)
 
         button_frame2 = tk.Frame(self.controls_frame)
         button_frame2.pack(pady=5)
@@ -111,6 +114,9 @@ class YukonGUI:
 
         tk.Button(move_frame, text="Move", command=self.manual_move).pack(side=tk.LEFT, padx=5)
 
+        tk.Button(self.controls_frame, text="Leave Game", command=self.leave_game,
+                  bg="orange", fg="white", font=("Arial", 10, "bold")).pack(pady=5)
+
     # ---- Startup commands ----
 
     def startup_load_deck(self):
@@ -121,6 +127,7 @@ class YukonGUI:
 
         response = self.backend.startup_command(f"LD {filename}")
         if response and "OK" in response:
+            self.last_deck = filename
             self.update_message(f"Deck loaded: {filename}")
             self.refresh_board()
         else:
@@ -152,6 +159,19 @@ class YukonGUI:
             else:
                 messagebox.showerror("Error", f"Failed to split: {response}")
 
+    def startup_save_deck(self):
+        filename = simpledialog.askstring("Save Deck", "Enter filename to save to:\n(Leave blank for default 'cards')")
+        if filename is None:
+            return
+        filename = filename.strip()
+        command = f"SD {filename}" if filename else "SD"
+        response = self.backend.startup_command(command)
+        if response and "OK" in response:
+            saved_as = filename if filename else "cards"
+            self.update_message(f"Deck saved to {saved_as}.txt")
+        else:
+            messagebox.showerror("Error", f"Failed to save deck.\nResponse: {response}")
+
     def startup_play(self):
         response = self.backend.startup_command("P")
         if response and "OK" in response:
@@ -161,6 +181,22 @@ class YukonGUI:
             self.refresh_board()
         else:
             messagebox.showerror("Error", f"Failed to start game: {response}")
+
+    def leave_game(self):
+        if not self.last_deck:
+            messagebox.showwarning("Warning", "No deck to return to")
+            return
+        response = self.backend.startup_command(f"LD {self.last_deck}")
+        if response and "OK" in response:
+            self.selected = None
+            self.board_state = ""
+            self.columns_data = [[] for _ in range(7)]
+            self.foundations_data = ["", "", "", ""]
+            self.update_message(f"Returned to startup — deck '{self.last_deck}' ready")
+            self.show_startup_controls()
+            self.draw_startup_board()
+        else:
+            messagebox.showerror("Error", f"Failed to reload deck: {response}")
 
     # ---- Board refresh and drawing ----
 
