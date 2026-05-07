@@ -299,7 +299,12 @@ public class OnlineController {
         appDialogs.createNewGame();
     }
 
-    
+    /**
+     * join the given game as the currently active user.
+     * This will add the user as a player to the game in the backend,
+     * and then update the game select view.
+     * @param game
+     */
     public void joinGame(Game game) {
         // DONE Assignment 7c: add the currently active user as a Player for
         //      the given game if this user is not a player yet and if there
@@ -307,7 +312,9 @@ public class OnlineController {
         //      and check whether this was successfull
         User currUser = onlineState.getSignedInUser();
         Player player = new Player();
+
         //referencing the whole object will create some errors or conflicts from the ID's and creating new players.
+        //therefore new games and users are created client side.
         Game gameRef = new Game();
         gameRef.setUid(game.getUid());
         player.setGame(gameRef);
@@ -316,18 +323,15 @@ public class OnlineController {
         User userRef = new User();
         userRef.setName(currUser.getName());
         player.setUser(userRef);
-
         player.setName(currUser.getName());
 
-
         try {
-
                 Player created = restClient.post()
                         .uri("/player")
                         .body(player)
                         .retrieve()
                         .body(Player.class);
-        } catch (HttpClientErrorException.Conflict | HttpClientErrorException.NotFound ex) {
+        } catch (HttpClientErrorException.Conflict | HttpClientErrorException.NotFound ex) { //catches back end errors that are thrown from the PlayerService and PlayerController and shows the error message in an alert
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(ex.getMessage());
@@ -337,9 +341,14 @@ public class OnlineController {
         }
     }
 
+    /**
+     * leave the given game as the currently active user.
+     * This will delete the player corresponding to the user and the game in the backend,
+     * @param player active user's player.
+     */
     public void leaveGame(Player player) {
         try {
-            // TODO Assignment 7d: delete the currently active user as a player
+            // DONE Assignment 7d: delete the currently active user as a player
             //      for the given game (in the backend)
             restClient.delete().uri("/player/{playerUid}", player.getUid())
                     .retrieve()
