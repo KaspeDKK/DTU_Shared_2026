@@ -133,7 +133,7 @@ public class OnlineController {
                     .retrieve()
                     .body(User.class);
             setOnlineUser(user);
-        } catch (HttpClientErrorException.Conflict e) { //catches the conflict that is returned in the server side
+        } catch (HttpClientErrorException.Conflict e) { //catches the conflict that is returned in the server side - See README
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(e.getMessage());
@@ -299,20 +299,20 @@ public class OnlineController {
         appDialogs.createNewGame();
     }
 
+    
     public void joinGame(Game game) {
-        // TODO Assignment 7c: add the currently active user as a Player for
+        // DONE Assignment 7c: add the currently active user as a Player for
         //      the given game if this user is not a player yet and if there
         //      is still room for a player. If so post his to the backend,
         //      and check whether this was successfull
         User currUser = onlineState.getSignedInUser();
         Player player = new Player();
-        //referencing the whole object will create some conflicts regarding the ID's and creating new players.
-        // Shallow game reference - just the ID
+        //referencing the whole object will create some errors or conflicts from the ID's and creating new players.
         Game gameRef = new Game();
         gameRef.setUid(game.getUid());
         player.setGame(gameRef);
 
-        // Shallow user reference - just the name
+
         User userRef = new User();
         userRef.setName(currUser.getName());
         player.setUser(userRef);
