@@ -335,6 +335,9 @@ public class OnlineController {
         player.setUser(userRef);
         player.setName(currUser.getName());
 
+        //added to make sure you cant join a un-joinable game
+        refreshGames();
+
         try {
                 Player created = restClient.post()
                         .uri("/player")
@@ -446,6 +449,9 @@ public class OnlineController {
 
         Game stateUpdate = new Game();
         stateUpdate.setGameState(Game.GameState.ACTIVE);
+
+        refreshGames();
+
         try {
             Game updatedGame = restClient.patch()
                     .uri("/game/{id}", game.getUid())
