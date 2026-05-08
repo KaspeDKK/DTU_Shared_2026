@@ -459,7 +459,7 @@ public class OnlineController {
                     .retrieve()
                     .body(Game.class);
 
-        } catch (HttpClientErrorException.NotFound e) {
+        } catch ( HttpClientErrorException.NotFound | HttpClientErrorException.Conflict e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(e.getMessage());
