@@ -113,7 +113,8 @@ public class GamesView extends GridPane {
                 }
                 if (game.getMinPlayers() <= game.getPlayers().size() &&
                         game.getMaxPlayers() >= game.getPlayers().size() &&
-                        onlineController.userInGame(game)) {
+                        onlineController.userInGame(game) &&
+                        onlineController.userOwnsGame(game)) {
                     startButton.setDisable(false);
                 } else {
                     startButton.setDisable(true);

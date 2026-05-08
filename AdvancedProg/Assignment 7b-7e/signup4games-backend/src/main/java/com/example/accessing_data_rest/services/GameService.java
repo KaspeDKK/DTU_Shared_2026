@@ -87,12 +87,16 @@ public class GameService {
     @Transactional
     public Game updateGameState(long gameUid, Game.GameState gameState) {
         Game existingGame = gameRepository.findByUid(gameUid).get(0);
-        if (existingGame != null) {
-            existingGame.setGameState(gameState);
-            return gameRepository.save(existingGame);
-        } else {
+
+        if (existingGame == null) {
             throw new CouldNotUpdateGameStateException("Game with uid " + gameUid + " does not exist.");
         }
+
+        if(existingGame.getPlayers().size() < existingGame.getMinPlayers() ) {
+            throw new IllegalPlayerCountException("Game with uid " + gameUid + " does not have enough players to start. Minimum players required: " + existingGame.getMinPlayers());
+        }
+        existingGame.setGameState(gameState);
+        return gameRepository.save(existingGame);
     }
 
     /**
