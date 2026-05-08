@@ -54,11 +54,6 @@ public class OnlineController {
      * @param name of your user
      */
     public void signIn(String name) {
-        // DONE Assignment 7b: make sure that the user with the given name
-        //      exist in the backend; and make sure that you set the user
-        //      returened by the backend (with the correct uid) is added
-        //      as onLineUser in this controller! (NOT the once created
-        //      in the code below!)
         List<User> users = restClient.get()
                 .uri(uriBuilder -> uriBuilder //lambda function
                         .path("/user/search") //determines path of endpoint
@@ -162,9 +157,6 @@ public class OnlineController {
         }
     }
 
-    // DONE Assignment 7c: you might want to implement a method of signing up
-    //      (registering) a new user here!
-
     /** Set the user of the client side. This is used when signing in, signing out or creating a new user
      *
      * @param user to set as Online
@@ -183,10 +175,6 @@ public class OnlineController {
             alert.showAndWait();
         }
     }
-
-    // DONE Assignment 7b: Obtain the list of all games from the backend!
-    // DONE Assignment 7c/7e: And at some later point, this should only
-    //      return the games open for registration (not started yet).
 
     /** refresh list of games from backend
      *
@@ -250,8 +238,6 @@ public class OnlineController {
             if (game != null) {
                 Game stateUpdate = new Game();
                 stateUpdate.setGameState(Game.GameState.ACTIVE);
-                // DONE Assignment 7e: make sure the game is set to the active state
-                //      here and in the backend, so that no new players can sign up.
                     Game result = restClient.patch()
                             .uri("/game/{id}", game.getUid())
                             .body(stateUpdate)
@@ -261,7 +247,7 @@ public class OnlineController {
                 assert result != null;
                 startGame(result);
             }
-            } catch (HttpClientErrorException.NotFound e) {
+            } catch (HttpClientErrorException.NotFound | HttpClientErrorException.Conflict e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(e.getMessage());
@@ -279,18 +265,11 @@ public class OnlineController {
             if (!appController.isGameRunning() && onlineState.getSignedInUser() != null && gameSelectionOn) {
                 game.setOwner(onlineState.getSignedInUser());
 
-                // DONE Assignment 7b: Create the game (in the backend) with the config information
-                //      provided in the game configuration
                 restClient.post()
                         .uri("/game")
                         .body(game)
                         .retrieve()
                         .body(Game.class);
-
-                // DONE Assignment 7c: Extend the game creation so that the currently signed in user
-                //      is the owener of the game, which should also be registered as the first
-                //      player of the game
-
                 // update the game select view (which should get the new game from the backend)
                 selectGame();
         }} catch (HttpClientErrorException.Conflict ex) {
@@ -315,10 +294,6 @@ public class OnlineController {
      * @param game the game that a player wants to join
      */
     public void joinGame(Game game) {
-        // DONE Assignment 7c: add the currently active user as a Player for
-        //      the given game if this user is not a player yet and if there
-        //      is still room for a player. If so post his to the backend,
-        //      and check whether this was successfull
         User currUser = onlineState.getSignedInUser();
         Player player = new Player();
 
@@ -361,8 +336,6 @@ public class OnlineController {
      */
     public void leaveGame(Player player) {
         try {
-            // DONE Assignment 7d: delete the currently active user as a player
-            //      for the given game (in the backend)
             restClient.delete().uri("/player/{playerUid}", player.getUid())
                     .retrieve()
                     .toBodilessEntity();
@@ -441,12 +414,6 @@ public class OnlineController {
      * no return (void)
      */
     private void startGame(Game game) {
-        // DONE Assignment 7e: creation of the board should eventually depend
-        //      on the board provided by the Game information.
-        //      And every user who had joined the game should be able to start
-        //      it in their client (individually -- no interactive gameplay
-        //      required for Assignment 7)!
-
         Game stateUpdate = new Game();
         stateUpdate.setGameState(Game.GameState.ACTIVE);
 
@@ -486,17 +453,5 @@ public class OnlineController {
         gameController.startProgrammingPhase();
         appController.roboRally.createBoardView(gameController);
     }
-
-    // DONE still somethings to do here for the real game play.
-    //      - where to save the game controller (here we just forget it); it should probably be
-    //        part of the online state
-    //      - who is owner (controlling game logic) and communicating that to the backend
-    //      - coordinating with the backend and updating the game state accordingly
-    //      - sending users choices to the backend
-    //      - not showing the hidden data (hand cards and not ye played program cards)
-    //        for the other players in view
-    //      - ...
-    //      But this is not part of the course 02324 and its assignment. This assignment is just
-    //      about creating a game and different users joining it (coordinated by the backend).
 
 }

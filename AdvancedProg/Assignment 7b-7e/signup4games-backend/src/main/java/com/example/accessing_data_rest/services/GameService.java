@@ -32,16 +32,10 @@ public class GameService {
      * @return a list of all games from the repository
      */
     public List<Game> getGames() {
-        // DONE Assignment 7b: Implement the method for obtaining all games from the
-        //      GameRepository (using finaAll) and returning it as a list
         List<Game> games = new ArrayList<>();
         gameRepository.findAll().forEach(games::add);
         return games;
     }
-
-    // DONE Assignment 7b: create a game in the repository and return the result
-    // DONE Assignment 7c: make sure that the game is created with the owner
-    //      who must be in the repository already, and also with the owner as first player
 
     /**
      * Creates a game in the repository and returns the result. The game must have at least 2 players, and the owner must be an existing user in the repository.
@@ -55,7 +49,7 @@ public class GameService {
     public Game createGame(Game game) {
 
         List<User> users = userRepository.findByName(game.getOwner().getName());
-        if (users.isEmpty()) throw new IllegalPlayerCountException("Game must have at least 2 players and at max 6 players, and the owner must be an existing user in the repository."); // making sure a user owner at least exists first
+        if (users.isEmpty()) throw new IllegalPlayerCountException("Game must have at least 2 players and at max 6 players, and the owner must be an existing user in the repository.");
         User owner = users.getFirst();
 
         if (game.getMinPlayers() > game.getMaxPlayers()) {

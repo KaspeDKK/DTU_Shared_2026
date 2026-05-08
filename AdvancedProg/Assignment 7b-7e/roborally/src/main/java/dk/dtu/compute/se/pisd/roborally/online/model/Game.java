@@ -34,12 +34,6 @@ public class Game {
 
     private User owner;
 
-    // DONE There could be more attributes here, kie
-    //      in which state is the sign up for the game, did
-    //      the game started or finish (after the game started
-    //      you might not want new players coming in etc.)
-    //      See analogous classes in client.
-
     public enum GameState {
         SIGN_UP, ACTIVE, FINISHED
     }

@@ -53,8 +53,7 @@ public class GamesView extends GridPane {
                                 ", max: " + game.getMaxPlayers() + ")" );
                 gameInfo.getChildren().add(gameName);
 
-                // DONE Assignment 7c: Update the detailed description of the game
-                //      with game owner and  all players who joined.
+
                 for (Player player: game.getPlayers()) {
                     Text playerInfo = new Text("\n  Player " + player.getName());
                     gameInfo.getChildren().add(playerInfo);
