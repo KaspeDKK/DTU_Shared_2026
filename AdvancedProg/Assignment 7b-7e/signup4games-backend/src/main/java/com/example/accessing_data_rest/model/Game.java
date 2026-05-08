@@ -34,7 +34,7 @@ public class Game {
     //      See analogous classes in client.
 
     public enum GameState {
-        SIGN_UP, ACTIVE
+        SIGN_UP, ACTIVE, FINISHED //TODO add this
     }
 
     private GameState state = GameState.SIGN_UP;
