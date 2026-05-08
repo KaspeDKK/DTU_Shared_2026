@@ -58,6 +58,10 @@ public class GameService {
         if (users.isEmpty()) throw new IllegalPlayerCountException("Game must have at least 2 players and at max 6 players, and the owner must be an existing user in the repository."); // making sure a user owner at least exists first
         User owner = users.getFirst();
 
+        if (game.getMinPlayers() > game.getMaxPlayers()) {
+            throw new IllegalPlayerCountException("Cannot create game with more minum amount of players than maximum amount of players.");
+        }
+
         if (game.getMinPlayers() >= 2 && game.getMaxPlayers() <= 6 && owner != null) {
 
             game.setOwner(owner);  // Now game points to user
