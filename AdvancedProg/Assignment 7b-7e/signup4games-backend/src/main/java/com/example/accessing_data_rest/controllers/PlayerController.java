@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.accessing_data_rest.model.Player;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("roborally/player")
 public class PlayerController {
@@ -65,6 +67,11 @@ public class PlayerController {
 
     @ExceptionHandler(CannotJoinActiveGameException.class)
     public ResponseEntity<String> handleCannotJoinActiveGameException(CannotJoinActiveGameException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleCannotJoinFinishedGameException(CannotJoinFinishedGameException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 

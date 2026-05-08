@@ -92,6 +92,10 @@ public class GameService {
     public Game updateGameState(long gameUid, Game.GameState gameState) {
         Game existingGame = gameRepository.findByUid(gameUid).get(0);
 
+        if (existingGame.getGameState() == Game.GameState.FINISHED){
+            throw new CouldNotUpdateGameStateException("Game has already been finished");
+        }
+
         if (existingGame == null) {
             throw new CouldNotUpdateGameStateException("Game with uid " + gameUid + " does not exist.");
         }

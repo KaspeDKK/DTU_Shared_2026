@@ -127,7 +127,6 @@ public class AppDialogs {
                     try {
                         Game game = new Game();
                         game.setName(gameName.getText());
-                        // TODO needs clean up!!
                         game.setMinPlayers(Integer.parseInt(min.getText()));
                         game.setMaxPlayers(Integer.parseInt(max.getText()));
                         onlineController.createGame(game);

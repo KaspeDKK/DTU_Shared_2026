@@ -185,7 +185,7 @@ public class OnlineController {
     }
 
     // DONE Assignment 7b: Obtain the list of all games from the backend!
-    // TODO Assignment 7c/7e: And at some later point, this should only
+    // DONE Assignment 7c/7e: And at some later point, this should only
     //      return the games open for registration (not started yet).
 
     /** refresh list of games from backend
@@ -250,7 +250,7 @@ public class OnlineController {
             if (game != null) {
                 Game stateUpdate = new Game();
                 stateUpdate.setGameState(Game.GameState.ACTIVE);
-                // TODO Assignment 7e: make sure the game is set to the active state
+                // DONE Assignment 7e: make sure the game is set to the active state
                 //      here and in the backend, so that no new players can sign up.
                     Game result = restClient.patch()
                             .uri("/game/{id}", game.getUid())
@@ -487,7 +487,7 @@ public class OnlineController {
         appController.roboRally.createBoardView(gameController);
     }
 
-    // TODO still somethings to do here for the real game play.
+    // DONE still somethings to do here for the real game play.
     //      - where to save the game controller (here we just forget it); it should probably be
     //        part of the online state
     //      - who is owner (controlling game logic) and communicating that to the backend
