@@ -283,7 +283,7 @@ int determineRank(Card card) {
         case 'Q': return 12;
         case 'K': return 13;
         default:
-            if (card.rank < 2 || card.rank > 9) return -1;
+            if (card.rank < '2' || card.rank > '9') return -1;
             return card.rank - '0';
     }
 }
