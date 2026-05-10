@@ -2,10 +2,6 @@
 #include <string.h>
 #include "model.h"
 
-// TODO LOTS OF STUFF
-
-
-
 /*
  * create_game
  *
@@ -28,8 +24,8 @@ void create_game(Card *deckHead, Column cols[]) {
         0, 1, 2, 3, 4, 5, 6 // these represent the depth after which visible cards should be placed in the initial version of the game deck. (All cards are invisible when created unless set otherwise)
     };
 
-    for (int row = 0; row < 11; row++) {
-        for (int col = startColPerRow[row]; col < 7; col++) {
+    for (int row = 0; row < 11; row++) { // rowwise
+        for (int col = startColPerRow[row]; col < 7; col++) { // uses the start col values to know when to stop using a column
             if (current == NULL) return;
 
             Card *next = current->next;
