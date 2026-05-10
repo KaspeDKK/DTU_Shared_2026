@@ -5,13 +5,11 @@
 /*
  * create_game
  *
+ * The function takes a deck of 52 cards (linked list) as deckHead and distributes them into 7 columns.
  *
- * we need to make a function that takes a deck of 52 cards. Aka a linked list of 52 cards. The input will just be the deckhead and then we use that
- *
- * we will have to loop across all 7 cols inserting one card per col then switching to next one. When we reach the 7th col (%7==0) then we will go back to the first.
- *     when inserting a card, we need to look at the former one. and set thats reference to the card we are inserting. If there are no cards in the list we ofc still need a ref. That will be the cols own ref.
- * repeat until all cards from the original deck linked list are gone.
- * later we implement rules that say other times we need to switch earlier to the next col.
+ * We loop across all 7 cols inserting one card per col then switching to the next one.
+ * Cards are inserted using placeCard which handles placing the card correctly in the column
+ * We repeat until all cards from the original deck linked list are gone.
 */
 void create_game(Card *deckHead, Column cols[]) {
     Card *current = deckHead;
@@ -21,7 +19,9 @@ void create_game(Card *deckHead, Column cols[]) {
     };
 
     int colInvisibleDepth[7] = {
-        0, 1, 2, 3, 4, 5, 6 // these represent the depth after which visible cards should be placed in the initial version of the game deck. (All cards are invisible when created unless set otherwise)
+        // these represent the depth after which visible cards should be placed in the initial version of the game deck.
+        // (All cards are invisible when created unless set otherwise)
+        0, 1, 2, 3, 4, 5, 6
     };
 
     for (int row = 0; row < 11; row++) { // rowwise
