@@ -7,20 +7,27 @@
 #include <time.h>
 #include "deck.h"
 
+#include <string.h>
+
 Card* readDeck (const char *filename,Card *deck) { //function that takes a file, and
-    FILE *file = fopen(filename, "r");
+    FILE *file = NULL;
+
+    // if no filename was given, use default deck
+    if (filename == NULL || strcmp(filename, "") == 0) {
+        file = fopen("../default.txt", "r");
+    }
+    // if filename was given
+    else {
+        file = fopen(filename, "r");
+    }
     if (file == NULL) {
-        file = fopen("../deckOne.txt", "r");
-        if (file == NULL) {
-            perror("Error opening file");
-            return NULL;
-        }
+        return NULL; // file was not found
     }
 
     int i = 0;
     char buffer[10];
 
-    //We initialize a seen array that we will store all the cards we go through
+    // We initialize a seen array that we will store all the cards we go through
     char seenCard[52][2] = {0};
     int seenCount = 0;
 

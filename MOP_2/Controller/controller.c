@@ -181,11 +181,23 @@ void game_startup()
 
             // format the parameter into ../param.txt
             char filename[100];
-            snprintf(filename, sizeof(filename), "../%s.txt", param);
+            if (param == NULL || strcmp(param, "") == 0) {
+                filename[0] = '\0';
+            } else {
+                snprintf(filename, sizeof(filename), "../%s.txt", param);
+            }
+
             deckHead = readDeck(filename, deck);
-            showDeckWithVisibility(deckHead);
-            printf("\nLast command: %s\n", cmd);
-            printf("Message: OK\n");
+
+            if (deckHead != NULL) {
+                showDeckWithVisibility(deckHead);
+                printf("\nLast command: %s\n", cmd);
+                printf("Message: OK\n");
+            } else {
+                printf("\nLast command: %s\n", cmd);
+                printf("Message: Error loading deck\n");
+            }
+
             continue;
         }
 
