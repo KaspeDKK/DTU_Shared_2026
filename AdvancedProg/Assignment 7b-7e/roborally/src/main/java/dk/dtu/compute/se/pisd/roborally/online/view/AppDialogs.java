@@ -94,9 +94,6 @@ public class AppDialogs {
 
     }
 
-    // Done Assignment 7c you might want to implement a dialog for a SingUp or
-    //      registering a new user.
-
     /** Dialog buttons for event of "new game" button in an online game.
      *  When pushing "new game" button, then a createNewGame dialog will appear and ask you for the name of the game, the minimum player count and maximum player count.
      *  If minimum player number input < 2, then catch the exception thrown from the backend, and display an error message
@@ -127,7 +124,6 @@ public class AppDialogs {
                     try {
                         Game game = new Game();
                         game.setName(gameName.getText());
-                        // TODO needs clean up!!
                         game.setMinPlayers(Integer.parseInt(min.getText()));
                         game.setMaxPlayers(Integer.parseInt(max.getText()));
                         onlineController.createGame(game);

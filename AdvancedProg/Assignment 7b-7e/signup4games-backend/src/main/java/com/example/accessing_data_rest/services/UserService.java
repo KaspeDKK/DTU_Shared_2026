@@ -23,9 +23,6 @@ public class UserService {
      * @return a list of users (only element is the user belonging to given name)
      */
     public List<User> searchUsers(String name) {
-        // DONE Assignment 7b: obtain a list of users with the given name
-        //      from the userRepository and return the result (instead
-        //      the empty list below).
         List<User> users = userRepository.findByName(name);
 
         return users;

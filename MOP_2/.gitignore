@@ -42,3 +42,5 @@ CMakeCache.txt
 **/.DS_Store
 
 .gitignore
+.ai
+.claude

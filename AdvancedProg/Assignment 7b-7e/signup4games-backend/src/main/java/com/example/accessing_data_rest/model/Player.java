@@ -12,9 +12,6 @@ import jakarta.persistence.*;
         property = "uid")
 public class Player {
 
-    // FIXME the ID of this could actually be the two foreign keys game_id and
-    //       user_id, but this is a bit tricky to start with. So this will
-    //       Not be done in the context of course 02324!
     @Id
     @Column(name="player_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,7 +23,6 @@ public class Player {
     @JoinColumn
     private Game game;
 
-    // DONE Assignment 7a: Add the reference to the user
     @ManyToOne
     @JoinColumn
     private User user;
@@ -55,8 +51,7 @@ public class Player {
         this.game = game;
     }
 
-    // DONE Assignment 7a: added the reference to the user
-    //      (corresponding getter and setter).
+
     public User getUser() {
         return user;
     }

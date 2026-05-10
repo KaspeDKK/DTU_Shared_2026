@@ -32,16 +32,10 @@ public class GameService {
      * @return a list of all games from the repository
      */
     public List<Game> getGames() {
-        // DONE Assignment 7b: Implement the method for obtaining all games from the
-        //      GameRepository (using finaAll) and returning it as a list
         List<Game> games = new ArrayList<>();
         gameRepository.findAll().forEach(games::add);
         return games;
     }
-
-    // DONE Assignment 7b: create a game in the repository and return the result
-    // DONE Assignment 7c: make sure that the game is created with the owner
-    //      who must be in the repository already, and also with the owner as first player
 
     /**
      * Creates a game in the repository and returns the result. The game must have at least 2 players, and the owner must be an existing user in the repository.
@@ -55,8 +49,12 @@ public class GameService {
     public Game createGame(Game game) {
 
         List<User> users = userRepository.findByName(game.getOwner().getName());
-        if (users.isEmpty()) throw new IllegalPlayerCountException("Game must have at least 2 players and at max 6 players, and the owner must be an existing user in the repository."); // making sure a user owner at least exists first
+        if (users.isEmpty()) throw new IllegalPlayerCountException("Game must have at least 2 players and at max 6 players, and the owner must be an existing user in the repository.");
         User owner = users.getFirst();
+
+        if (game.getMinPlayers() > game.getMaxPlayers()) {
+            throw new IllegalPlayerCountException("Cannot create game with more minum amount of players than maximum amount of players.");
+        }
 
         if (game.getMinPlayers() >= 2 && game.getMaxPlayers() <= 6 && owner != null) {
 
@@ -87,12 +85,20 @@ public class GameService {
     @Transactional
     public Game updateGameState(long gameUid, Game.GameState gameState) {
         Game existingGame = gameRepository.findByUid(gameUid).get(0);
-        if (existingGame != null) {
-            existingGame.setGameState(gameState);
-            return gameRepository.save(existingGame);
-        } else {
+
+        if (existingGame.getGameState() == Game.GameState.FINISHED){
+            throw new CouldNotUpdateGameStateException("Game has already been finished");
+        }
+
+        if (existingGame == null) {
             throw new CouldNotUpdateGameStateException("Game with uid " + gameUid + " does not exist.");
         }
+
+        if(existingGame.getPlayers().size() < existingGame.getMinPlayers() ) {
+            throw new IllegalPlayerCountException("Game with uid " + gameUid + " does not have enough players to start. Minimum players required: " + existingGame.getMinPlayers());
+        }
+        existingGame.setGameState(gameState);
+        return gameRepository.save(existingGame);
     }
 
     /**

@@ -53,8 +53,7 @@ public class GamesView extends GridPane {
                                 ", max: " + game.getMaxPlayers() + ")" );
                 gameInfo.getChildren().add(gameName);
 
-                // TODO Assignment 7c: Update the detailed description of the game
-                //      with game owner and  all players who joined.
+
                 for (Player player: game.getPlayers()) {
                     Text playerInfo = new Text("\n  Player " + player.getName());
                     gameInfo.getChildren().add(playerInfo);
@@ -113,7 +112,8 @@ public class GamesView extends GridPane {
                 }
                 if (game.getMinPlayers() <= game.getPlayers().size() &&
                         game.getMaxPlayers() >= game.getPlayers().size() &&
-                        onlineController.userInGame(game)) {
+                        onlineController.userInGame(game) &&
+                        onlineController.userOwnsGame(game)) {
                     startButton.setDisable(false);
                 } else {
                     startButton.setDisable(true);

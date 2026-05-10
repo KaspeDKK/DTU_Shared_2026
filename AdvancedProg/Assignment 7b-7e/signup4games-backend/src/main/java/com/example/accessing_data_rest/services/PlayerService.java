@@ -47,6 +47,10 @@ public class PlayerService {
             throw new CannotJoinActiveGameException("Game is already active. could not create player");
         }
 
+        if(game.getGameState() == Game.GameState.FINISHED){
+            throw new CannotJoinFinishedGameException("Game is already finished. could not create player");
+        }
+
         if (game.getPlayers().size() >= game.getMaxPlayers()){
             throw new CannotJoinFullGameException("Can't join game. Game is full");
         }

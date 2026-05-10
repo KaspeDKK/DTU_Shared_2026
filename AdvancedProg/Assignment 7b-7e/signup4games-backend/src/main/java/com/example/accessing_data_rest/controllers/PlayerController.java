@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.accessing_data_rest.model.Player;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("roborally/player")
 public class PlayerController {
@@ -15,11 +17,6 @@ public class PlayerController {
 
     @Autowired
     PlayerService playerService;
-
-    // DONE Assignment 7c: For adding players to a game, you will need to add a @PostMapping here
-    //      and you will need to add corresponding service class PlayerService in package services,
-    //      and implement the respective logic there.
-
     /** POST mapping to endpoint to create a new player in our playerRepo
      *
      * @param player object body that will be sent in the request
@@ -31,8 +28,6 @@ public class PlayerController {
             playerService.signUpPlayer(player);
     }
 
-    // DONE Assignment 7d for a player (user) leaving the game, you need to have a delete method for
-    //      players here.
     @DeleteMapping("/{playerUid}")
     public void leaveGame(@PathVariable Long playerUid) {
         playerService.leaveGame(playerUid);
@@ -65,6 +60,11 @@ public class PlayerController {
 
     @ExceptionHandler(CannotJoinActiveGameException.class)
     public ResponseEntity<String> handleCannotJoinActiveGameException(CannotJoinActiveGameException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleCannotJoinFinishedGameException(CannotJoinFinishedGameException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
