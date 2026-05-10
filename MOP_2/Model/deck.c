@@ -9,6 +9,8 @@
 
 #include <string.h>
 
+#include "../Controller/CardServices.h"
+
 // Reads a deck from a file and returns it as a linked list
 Card* readDeck (const char *filename,Card *deck) { //function that takes a file, and
     FILE *file = NULL;
@@ -48,6 +50,17 @@ Card* readDeck (const char *filename,Card *deck) { //function that takes a file,
                 return NULL;
             }
         }
+        Card tempCard;
+        tempCard.rank = buffer[0];
+        tempCard.suit = buffer[1];
+
+        if (determineRank(tempCard) == -1){
+            printf("LAST Command LD\n");
+            printf("Message: Invalid card: %c%c\n", buffer[0], buffer[1]);
+            fclose(file);
+            return NULL;
+        }
+
         deck[i].rank = buffer[0];
         deck[i].suit = buffer[1];
         deck[i].visible = 0;
