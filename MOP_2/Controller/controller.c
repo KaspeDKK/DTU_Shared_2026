@@ -121,24 +121,6 @@ void run_game(Card *deckHead) {
 
     create_game(deckHead, cols); // model.c
 
-    /* TESTING BELOW */
-    int testing = 0; // ENABLE 1 // DISABLE 0
-    if (testing) {
-        // replay moves JUST FOR TESTING
-        const char *replay[] = {
-            "C1->F1","C3->C7","C6->C7","C3:7H->C5","C3:AH->F2","C2:8C->C6","C6:TH->C7","C7:7S->C3","C7->C6","C2->F1","C3:KD->C1","C1->C3","C3:KS->C2","C3->C1","C7->C1","C4:9D->C3","C4->C3","C2:9S->C4","C7->C2","C5:5S->C4","C5->F3","C2:6S->C4","C2->F3","C6->F3","C3:4S->C4","C7->C3","C4:TC->C1","C5:3H->C4","C1:8S->C4","C6->C1","C3:TS->C6","C7->C3","C2:JS->C6","C6:JD->C2","C4:9H->C5","C4:4C->C6","C5:5H->C3","C6:5D->C5","C7->C4","C2:QH->C4","C6->C2","C1:6H->C7","C6->C1","C4:KH->C6","C7:7C->C4","C3:2D->C5","C4:8H->C3","C4->F2","C1:8C->C4","C5:8D->C1","C3:9C->C6","C3->F1","C1->C6","C1->F3","C5:4C->C1","C6:4H->C5","C6->F3","C5:5D->C4","C5->F3","C1:6D->C5","C1->F3","C6:7C->C1","C4:7D->C6","C4->F4","C5->F4","C5->F2","C6->F4","C6->F2","C5->F1","C5->F2","C1->F2","C5->C1","C5->F2","C6:7D->C4","C6->F2","C5->F3","C5->F2","C6->C5","C6->F2","C5:TD->C6","C5->F4","C4->F4","C1->F4","C6:JS->C2","C5->C6","C5->F1","C4->F1","C1->F1","C4->F4","C4->F1","C1->F4","C4->F4","C1->F3","C2->F1","C4->F3","C1->F1","C2->F4","C1->F2","C2->F3","C4->F4","C6->F1","C2->F1","C4->F2","C6->F4","C1->F3","C1->F4","C2->F3","C4->F1",
-            //"C6->F2", // LAST MOVE
-            NULL
-        };
-
-        for (int i = 0; replay[i] != NULL; i++) {
-            char buf[100];
-            strcpy(buf, replay[i]);
-            processMove(buf, cols, foundations);
-        }
-    }
-    /* ^^^^ TESTING ^^^^ */
-
     while (1) {
         char input[100] = "";
 
