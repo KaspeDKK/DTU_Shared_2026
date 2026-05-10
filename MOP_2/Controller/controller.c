@@ -162,8 +162,9 @@ void game_startup()
         char input[100] = "";
         char cmd[10] = "";
         char param[20] = "";
-
-        printf("Please enter your command: ");
+        
+        // scan for input
+        printf("\nPlease enter your command: ");
 
         gets(input);
 
@@ -241,8 +242,7 @@ void game_startup()
             }
             saveDeck(filename, deckHead);
 
-            printf("\nLast command: %s\n", cmd);
-            printf("Message: OK\n");
+
             continue;
         }
 

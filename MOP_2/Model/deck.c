@@ -74,6 +74,7 @@ Card* readDeck (const char *filename,Card *deck) { //function that takes a file,
 
 int saveDeck(const char *filename, Card *head)
 {
+    printf("\nLast command: SD\n");
     if (head == NULL) {
         printf("Message: no deck loaded\n");
         return 0;
