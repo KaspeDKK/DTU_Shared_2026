@@ -9,6 +9,7 @@
 
 #include <string.h>
 
+// Reads a deck from a file and returns it as a linked list
 Card* readDeck (const char *filename,Card *deck) { //function that takes a file, and
     FILE *file = NULL;
 
