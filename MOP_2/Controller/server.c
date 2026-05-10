@@ -58,7 +58,7 @@ void handle_move_response(int moveResult, Foundation foundations[], char *respon
     }
 }
 
-// Helper: render board state as string
+// render board state as string
 void render_board(char *output, size_t maxLen) {
     if (!gameStarted) {
         snprintf(output, maxLen, "Game not started");
