@@ -30,7 +30,7 @@ void placeCard(Column *column, Card *card) {
 
 }
 
-// Parse a car string into a card struct
+// Parse a char string into a card struct
 Card parseCard(const char *cardStr) {
     Card card;
     card.rank = cardStr[0];
