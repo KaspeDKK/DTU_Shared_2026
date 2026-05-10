@@ -115,8 +115,8 @@ void processMove(char *input, Column cols[], Foundation foundations[]) {
 }
 
 void run_game(Card *deckHead) {
-    Column cols[7] = {};
-    Foundation foundations[4] = {};
+    Column cols[7] = {0};
+    Foundation foundations[4] = {0};
 
     create_game(deckHead, cols); // model.c
 
@@ -151,7 +151,7 @@ void run_game(Card *deckHead) {
 
 void game_startup()
 {
-    Card deck[52] = {};
+    Card deck[52] = {0};
     Card *deckHead = NULL;
     showDeck(deckHead);
 
@@ -162,7 +162,7 @@ void game_startup()
         char input[100] = "";
         char cmd[10] = "";
         char param[20] = "";
-        
+
         // scan for input
         printf("\nPlease enter your command: ");
 

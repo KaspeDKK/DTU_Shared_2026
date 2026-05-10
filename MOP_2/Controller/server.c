@@ -39,10 +39,10 @@
 #define BUFFER_SIZE 4096
 
 // Global game state
-Column cols[7] = {};
-Foundation foundations[4] = {};
+Column cols[7] = {0};
+Foundation foundations[4] = {0};
 Card *deckHead = NULL;
-Card deck_array[52] = {};
+Card deck_array[52] = {0};
 int gameStarted = 0;
 
 // Helper: check if move was successful and build response
@@ -266,7 +266,7 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
         }
 
         char filename[256];
-        char param[256] = {};
+        char param[256] = {0};
         sscanf(cmd, "SD %255s", param);
 
         if (strlen(param) == 0) {
@@ -312,7 +312,7 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
             snprintf(response, maxLen, "STATE|Game not started");
             return;
         }
-        char board[2048] = {};
+        char board[2048] = {0};
         render_board(board, sizeof(board));
         snprintf(response, maxLen, "STATE|%s", board);
         return;

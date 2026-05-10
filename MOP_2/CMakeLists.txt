@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.2)
+cmake_minimum_required(VERSION 4.1.2)
 project(MOP_2 C)
 
 set(CMAKE_C_STANDARD 11)
