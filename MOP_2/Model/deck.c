@@ -36,7 +36,7 @@ Card* readDeck (const char *filename,Card *deck) {
         if (buffer[0] == '\n' || buffer[0] == '\0') {
             continue;
         }
-        
+
         // Before we store each card in a "seen array" we check if it has already appeared and validate its content
         for (int j = 0; j < seenCount; j++) {
             if (seenCard[j][0] == buffer[0] && seenCard[j][1] == buffer[1]) {
