@@ -10,15 +10,15 @@
 #include "../Model/deck.h"
 #include "../View/view.h"
 
-// Tjek for spillet er vundet (condition)
+// Check if game is won
 int gameWon (Foundation foundations[]) {
     for (int i = 0; i < NUM_FOUNDATIONS; i++) {
-        if (foundations[i].ref == NULL || // Null checks! Ellers crasher den?
+        if (foundations[i].ref == NULL || // Null checks required to avoid crash on empty foundation
             determineRank(*getLastCardFoundation(foundations[i])) != 13) {
             return 0;
             }
     }
-    return 1; // Alle 4 foundations er færdige
+    return 1; // All 4 foundations end on a King
 }
 
 void processMove(char *input, Column cols[], Foundation foundations[]) {
@@ -31,7 +31,7 @@ void processMove(char *input, Column cols[], Foundation foundations[]) {
         return;
     }
 
-    // copy from and to parts
+    // Copy from and to parts
     size_t fromLen = arrow - input;
     strncpy(from, input, fromLen);
     from[fromLen] = '\0';
@@ -43,9 +43,9 @@ void processMove(char *input, Column cols[], Foundation foundations[]) {
         // Move to column
         int toCol = to[1] - '0' - 1;  // 'C4' -> index 3
 
-        if (strchr(from, ':') != NULL) { //searches for char
-            // Specific card: "C6:4H"
+        if (strchr(from, ':') != NULL) { // Check if a specific card is given like "C6:4H"
             char colStr[3], cardStr[3];
+            // Split "C6:4H" into column and card parts
             sscanf(from, "%[^:]:%s", colStr, cardStr);
             int fromCol = colStr[1] - '0' - 1;
 
@@ -60,7 +60,7 @@ void processMove(char *input, Column cols[], Foundation foundations[]) {
                 moveCard(cardToMove, &cols[fromCol], &cols[toCol]);
             }
         } else if (from[0] == 'C') {
-            // Bottom card of column: "C6"
+            // Top card of from column
             int fromCol = from[1] - '0' - 1;
             Card *bottomCard = getLastCard(cols[fromCol]);
             if (bottomCard != NULL) {
@@ -68,7 +68,7 @@ void processMove(char *input, Column cols[], Foundation foundations[]) {
             }
             if (cols[fromCol].ref != NULL) getLastCard(cols[fromCol])->visible = 1;
         } else if (from[0] == 'F') {
-            // top card of foundation
+            // Top card of foundation
             int fromFound = from[1] - '0' - 1;
             Card *topCard = getLastCardFoundation(foundations[fromFound]);
             if (topCard != NULL) {
@@ -115,7 +115,6 @@ void processMove(char *input, Column cols[], Foundation foundations[]) {
 }
 
 void run_game(Card *deckHead) {
-    // new structure
     Column cols[7] = {};
     Foundation foundations[4] = {};
 
@@ -124,27 +123,24 @@ void run_game(Card *deckHead) {
     while (1) {
         char input[100] = "";
 
-        // print game
         showGame(cols, foundations);
 
-        // scan for input
         printf("\nINPUT: ");
         gets(input);
 
-        // remove newline from fgets
+        // Remove newline from fgets
         input[strcspn(input, "\n")] = 0;
         if (strcmp(input, "Q") == 0) {
             printf("Quitting game. Returning to startup phase\n");
             return;
         }
 
-        //initiate move
         processMove(input, cols, foundations);
 
-        //bruteforce visibility - may be deleted later
+        // Bruteforce visibility - may be deleted later
         showAllLastCards(cols);
 
-        //game winning condition
+        // Game winning condition
         if (gameWon(foundations)) {
             showGame(cols, foundations);
             printf("\nYou have won!\n");
@@ -155,31 +151,31 @@ void run_game(Card *deckHead) {
 
 void game_startup()
 {
-    Card deck[52] = {}; // deck size 52
+    Card deck[52] = {};
     Card *deckHead = NULL;
     showDeck(deckHead);
 
 
-    // startup loop
+    // Startup loop
     while (1) {
 
         char input[100] = "";
         char cmd[10] = "";
         char param[20] = "";
 
-        // scan for input
         printf("Please enter your command: ");
 
-        gets(input); // read user input
+        gets(input);
 
+        // Split input into command and parameter
         sscanf(input, "%s %s ", cmd, param);
 
         printf("Command: %s\n, Param: %s\n", cmd, param);
 
         if (strcmp(cmd, "LD") == 0) {
-            // load the file using param
+            // Load the file using param
 
-            // format the parameter into ../param.txt
+            // Format the parameter into ../param.txt
             char filename[100];
             snprintf(filename, sizeof(filename), "../%s.txt", param);
             deckHead = readDeck(filename, deck);
@@ -197,14 +193,14 @@ void game_startup()
         }
 
         if (strcmp(cmd, "SI") == 0) {
-            // validate that param contains only digits
+            // Validate that param contains only digits
             for (int i = 0; param[i] != '\0'; i++) {
                 if (!isdigit((unsigned char)param[i])) {
                     printf("Error: split parameter must be a valid integer.\n");
                     break;
                 }
             }
-            const int param_int = atoi(param);  // convert to int
+            const int param_int = atoi(param);  // Convert to int
 
             splitDeck(deckHead, param_int);
             showDeckWithVisibility(deckHead);
@@ -214,7 +210,7 @@ void game_startup()
         }
 
         if (strcmp(cmd, "SR") == 0) {
-            // random shuffle
+            // Random shuffle
             deckHead = randomShuffle(deckHead);
             showDeckWithVisibility(deckHead);
             printf("\nLast command: %s\n", cmd);
@@ -223,7 +219,7 @@ void game_startup()
         }
 
         if (strcmp(cmd, "SD") == 0) {
-            // save current deck to file. filename is param
+            // Save current deck to file. Filename is param
             char filename[100];
 
             if (strlen(param) == 0) {
@@ -243,11 +239,11 @@ void game_startup()
                 printf("\nNo deck loaded, please use LD <deck name> before initiating game\n");
                 continue;
             }
-            // enter play phase outside while loop
+            // Enter play phase outside while loop
             break;
         }
 
-        // this needs to be the last command
+        // This needs to be the last command
         if (strcmp(cmd, "QQ") == 0) {
             exit(0);
         } else {
