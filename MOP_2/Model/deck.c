@@ -61,6 +61,14 @@ Card* readDeck (const char *filename,Card *deck) { //function that takes a file,
             return NULL;
         }
 
+        if (buffer[1] != 'C' && buffer[1] != 'D' &&
+            buffer[1] != 'H' && buffer[1] != 'S') {
+            printf("LAST Command LD\n");
+            printf("Message: Invalid card: %c%c\n", buffer[0], buffer[1]);
+            fclose(file);
+            return NULL;
+        }
+
         deck[i].rank = buffer[0];
         deck[i].suit = buffer[1];
         deck[i].visible = 0;
