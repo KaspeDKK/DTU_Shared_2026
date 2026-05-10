@@ -8,3 +8,42 @@ MachineProg/MOP_project_1/.idea/MOP_project_1.iml
 MachineProg/MOP_project_1/.idea/vcs.xml
 MachineProg/MOP_project_1/.idea/workspace.xml
 MOP_2/python_gui/__pycache__/backend_client.cpython-312.pyc
+AdvancedProg/Assignment 7b-7e/roborally/.idea/compiler.xml
+AdvancedProg/Assignment 7b-7e/roborally/.idea/encodings.xml
+AdvancedProg/Assignment 7b-7e/roborally/.idea/jarRepositories.xml
+AdvancedProg/Assignment 7b-7e/roborally/.idea/material_theme_project_new.xml
+AdvancedProg/Assignment 7b-7e/roborally/.idea/misc.xml
+AdvancedProg/Assignment 7b-7e/roborally/.idea/vcs.xml
+AdvancedProg/Assignment 7b-7e/signup4games-backend/.idea/compiler.xml
+AdvancedProg/Assignment 7b-7e/signup4games-backend/.idea/encodings.xml
+AdvancedProg/Assignment 7b-7e/signup4games-backend/.idea/jarRepositories.xml
+AdvancedProg/Assignment 7b-7e/signup4games-backend/.idea/material_theme_project_new.xml
+AdvancedProg/Assignment 7b-7e/signup4games-backend/.idea/misc.xml
+AdvancedProg/Assignment 7b-7e/signup4games-backend/.idea/vcs.xml
+AdvancedProg/Assignment 7b-7e/signup4games-backend/db/h2-test-7a.mv.db
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/application.properties
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/AccessingDataRestApplication.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/controllers/GameController.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/controllers/PlayerController.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/controllers/UserController.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/exceptions/CannotJoinActiveGameException.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/exceptions/CannotJoinFullGameException.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/exceptions/CouldNotCreateGameException.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/exceptions/CouldNotCreatePlayerException.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/exceptions/CouldNotCreateUserException.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/exceptions/CouldNotDeletePlayerException.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/exceptions/CouldNotFindPlayerException.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/exceptions/CouldNotJoinActiveGameException.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/exceptions/CouldNotUpdateGameStateException.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/exceptions/IllegalPlayerCountException.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/model/Game$GameState.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/model/Game.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/model/Player.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/model/User.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/repositories/GameRepository.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/repositories/PlayerRepository.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/repositories/RestConfiguration.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/repositories/UserRepository.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/services/GameService.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/services/PlayerService.class
+AdvancedProg/Assignment 7b-7e/signup4games-backend/target/classes/com/example/accessing_data_rest/services/UserService.class
