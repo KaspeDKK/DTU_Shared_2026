@@ -1,12 +1,7 @@
-//
-// Created by ttorr on 04-05-2026.
-//
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include "deck.h"
-
 #include <string.h>
 
 // Reads a deck from a file and returns it as a linked list
@@ -39,7 +34,7 @@ Card* readDeck (const char *filename,Card *deck) { //function that takes a file,
         }
 
 
-        // Before we store each card in a "seen array" we check if it has already appeared
+        // Before we store each card in a "seen array" we check if it has already appeared and validate its content
         for (int j = 0; j < seenCount; j++) {
             if (seenCard[j][0] == buffer[0] && seenCard[j][1] == buffer[1]) {
                 printf("LAST Command LD");
