@@ -7,7 +7,9 @@
 #include "../Controller/CardServices.h"
 
 // Reads a deck from a file and returns it as a linked list
-Card* readDeck (const char *filename,Card *deck) { //function that takes a file, and
+/* Returns NULL if
+the file is not found , contains duplicates, invalid cards or not exactly 52 cards */
+Card* readDeck (const char *filename,Card *deck) {
     FILE *file = NULL;
 
     // if no filename was given, use default deck
@@ -34,8 +36,7 @@ Card* readDeck (const char *filename,Card *deck) { //function that takes a file,
         if (buffer[0] == '\n' || buffer[0] == '\0') {
             continue;
         }
-
-
+        
         // Before we store each card in a "seen array" we check if it has already appeared and validate its content
         for (int j = 0; j < seenCount; j++) {
             if (seenCard[j][0] == buffer[0] && seenCard[j][1] == buffer[1]) {
@@ -49,6 +50,7 @@ Card* readDeck (const char *filename,Card *deck) { //function that takes a file,
         tempCard.rank = buffer[0];
         tempCard.suit = buffer[1];
 
+        // Reject cards with invalid rank
         if (determineRank(tempCard) == -1){
             printf("LAST Command LD\n");
             printf("Message: Invalid card: %c%c\n", buffer[0], buffer[1]);
@@ -56,6 +58,7 @@ Card* readDeck (const char *filename,Card *deck) { //function that takes a file,
             return NULL;
         }
 
+        // Reject cards with invalid suit
         if (buffer[1] != 'C' && buffer[1] != 'D' &&
             buffer[1] != 'H' && buffer[1] != 'S') {
             printf("LAST Command LD\n");
