@@ -60,10 +60,6 @@ class BackendClient:
         except Exception as e:
             return None
 
-    def start_game(self):
-        """Start a new game"""
-        return self.send_command("START")
-
     def startup_command(self, command):
         """Send a startup phase command (LD, SW, SR, SI, P)"""
         return self.send_command(command)

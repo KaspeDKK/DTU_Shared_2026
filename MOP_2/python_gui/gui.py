@@ -120,9 +120,9 @@ class YukonGUI:
     # ---- Startup commands ----
 
     def startup_load_deck(self):
-        filename = simpledialog.askstring("Load Deck", "Enter filename:\n(Leave blank for default 'deckOne')")
+        filename = simpledialog.askstring("Load Deck", "Enter filename:\n(Leave blank for default 'default')")
         if not filename or filename.strip() == "":
-            filename = "deckOne"
+            filename = "default"
         filename = filename.strip()
 
         response = self.backend.startup_command(f"LD {filename}")

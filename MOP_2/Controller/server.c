@@ -307,31 +307,6 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
         return;
     }
 
-    if (strncmp(cmd, "START", 5) == 0) {
-        // Allow game restart
-        gameStarted = 0;
-
-        // Load deck
-        memset(deck_array, 0, sizeof(deck_array));
-        deckHead = readDeck("../deckOne.txt", deck_array);
-        if (deckHead == NULL) {
-            snprintf(response, maxLen, "ERROR|Failed to load deck");
-            return;
-        }
-        // Reset columns and foundations
-        for (int i = 0; i < 7; i++) {
-            cols[i].ref = NULL;
-        }
-        for (int i = 0; i < 4; i++) {
-            foundations[i].ref = NULL;
-        }
-        // Create game
-        create_game(deckHead, cols);
-        gameStarted = 1;
-        snprintf(response, maxLen, "OK|Game started");
-        return;
-    }
-
     if (strncmp(cmd, "STATE", 5) == 0) {
         if (!gameStarted) {
             snprintf(response, maxLen, "STATE|Game not started");
@@ -372,10 +347,10 @@ void process_command(const char *cmd, char *response, size_t maxLen) {
                     return;
                 }
 
-                // Check if specific card is requested (e.g., "C7:QD")
+                // Check if specific card is requested (e.g., "col:card")
                 Card *cardToMove = NULL;
                 if (strchr(from, ':') != NULL) {
-                    // Specific card format: "C7:QD"
+                    // Specific card format: "col:card"
                     char cardStr[3];
                     sscanf(from, "%*[^:]:%2s", cardStr);
                     cardToMove = cols[fromCol].ref;
