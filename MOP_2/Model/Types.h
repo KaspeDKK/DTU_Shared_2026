@@ -5,25 +5,22 @@
 #ifndef MOP_2_TYPES_H
 #define MOP_2_TYPES_H
 
-typedef struct Card
+typedef struct Card // uses for linked lists
 {
     char rank;
     char suit;
     int visible; // (0,1)
-    struct Card* next;
+    struct Card* next; // reference to the next card in the linked list
 } Card;
 
 typedef struct Foundation {
-    Card* ref;
+    Card* ref; // reference to the first card in the linked list
     char suit;
 } Foundation;
 
 typedef struct Column
 {
-    Card* ref;
+    Card* ref; // reference to the first card in the linked list
 } Column;
-
-
-
 
 #endif //MOP_2_TYPES_H
