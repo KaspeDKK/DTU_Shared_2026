@@ -1,26 +1,33 @@
-//
-// Created by ttorr on 04-05-2026.
-//
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include "deck.h"
+#include <string.h>
 
-Card* readDeck (const char *filename,Card *deck) { //function that takes a file, and
-    FILE *file = fopen(filename, "r");
+#include "../Controller/CardServices.h"
+
+// Reads a deck from a file and returns it as a linked list
+/* Returns NULL if
+the file is not found , contains duplicates, invalid cards or not exactly 52 cards */
+Card* readDeck (const char *filename,Card *deck) {
+    FILE *file = NULL;
+
+    // if no filename was given, use default deck
+    if (filename == NULL || strcmp(filename, "") == 0) {
+        file = fopen("../default.txt", "r");
+    }
+    // if filename was given
+    else {
+        file = fopen(filename, "r");
+    }
     if (file == NULL) {
-        file = fopen("../deckOne.txt", "r");
-        if (file == NULL) {
-            perror("Error opening file");
-            return NULL;
-        }
+        return NULL; // file was not found
     }
 
     int i = 0;
     char buffer[10];
 
-    //We initialize a seen array that we will store all the cards we go through
+    // We initialize a seen array that we will store all the cards we go through
     char seenCard[52][2] = {0};
     int seenCount = 0;
 
@@ -30,8 +37,7 @@ Card* readDeck (const char *filename,Card *deck) { //function that takes a file,
             continue;
         }
 
-
-        // Before we store each card in a "seen array" we check if it has already appeared
+        // Before we store each card in a "seen array" we check if it has already appeared and validate its content
         for (int j = 0; j < seenCount; j++) {
             if (seenCard[j][0] == buffer[0] && seenCard[j][1] == buffer[1]) {
                 printf("LAST Command LD");
@@ -40,6 +46,27 @@ Card* readDeck (const char *filename,Card *deck) { //function that takes a file,
                 return NULL;
             }
         }
+        Card tempCard;
+        tempCard.rank = buffer[0];
+        tempCard.suit = buffer[1];
+
+        // Reject cards with invalid rank
+        if (determineRank(tempCard) == -1){
+            printf("LAST Command LD\n");
+            printf("Message: Invalid card: %c%c\n", buffer[0], buffer[1]);
+            fclose(file);
+            return NULL;
+        }
+
+        // Reject cards with invalid suit
+        if (buffer[1] != 'C' && buffer[1] != 'D' &&
+            buffer[1] != 'H' && buffer[1] != 'S') {
+            printf("LAST Command LD\n");
+            printf("Message: Invalid card: %c%c\n", buffer[0], buffer[1]);
+            fclose(file);
+            return NULL;
+        }
+
         deck[i].rank = buffer[0];
         deck[i].suit = buffer[1];
         deck[i].visible = 0;
@@ -66,6 +93,7 @@ Card* readDeck (const char *filename,Card *deck) { //function that takes a file,
 
 int saveDeck(const char *filename, Card *head)
 {
+    printf("\nLast command: SD\n");
     if (head == NULL) {
         printf("Message: no deck loaded\n");
         return 0;

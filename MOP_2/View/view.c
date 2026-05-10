@@ -5,13 +5,13 @@
 static void print_card(const Card* card)
 {
     if (card == NULL) {
-        printf("[E]");
+        printf("[E]"); // E for empty slot
         return;
     }
     if (card->visible == 1) {
         printf("[%c%c]", card->rank,card->suit);
     } else {
-        printf("[  ]");
+        printf("[  ]"); // Hidden cards
     }
 }
 
@@ -29,7 +29,7 @@ void showGame(Column cols[], Foundation foundations[])
     printf("C1    C2    C3    C4    C5    C6    C7\n\n");
 
     for (int row = 0; row < maxRows; row++) {
-        // print columns
+        // Prints columns
         for (int col = 0; col < 7; col++) {
             Card *card = getRowCard(cols[col].ref, row);
 
@@ -61,7 +61,7 @@ void showGame(Column cols[], Foundation foundations[])
         printf("\n");
     }
 
-    // Print foundations, så vi stadig kan se dem, når kolonnerne bliver mindre
+    // Print remaining foundations if columns are too short to display them all
     while (f < 4) {
 
         for (int col = 0; col < 7; col++) {
@@ -94,7 +94,8 @@ void showGame(Column cols[], Foundation foundations[])
     }
 }
 
-void showDeck(Card *head) //initial view of the deck, before the columns have been made.
+// Shows all cards in the deck face-up, ignoring whether they are hidden or not
+void showDeck(Card *head)
 {
     if (head == NULL) {
         printf("C1    C2    C3    C4    C5    C6    C7\n\n");
@@ -137,7 +138,8 @@ void showDeck(Card *head) //initial view of the deck, before the columns have be
 
 }
 
-void showDeckWithVisibility(Card *head) //initial view of the deck, before the columns have been made.
+// Shows the deck where hidden cards appear as blank
+void showDeckWithVisibility(Card *head)
 {
     if (head == NULL) {
         return;

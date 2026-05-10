@@ -30,6 +30,7 @@ void placeCard(Column *column, Card *card) {
 
 }
 
+// Parse a char string into a card struct
 Card parseCard(const char *cardStr) {
     Card card;
     card.rank = cardStr[0];
@@ -40,11 +41,13 @@ Card parseCard(const char *cardStr) {
 }
 
 int moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
+    // Validate that no pointers are NULL
     if (moveCard == NULL || columnFrom == NULL || columnTo == NULL) {
         printf("Illegal move\n");
         return 0;
     }
 
+    // Hidden cards cannot be moved
     if (!moveCard->visible) {
         printf("Cannot move hidden card\n");
         return 0;
@@ -53,19 +56,21 @@ int moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
     Card* headCard = columnFrom->ref;
     Card* endOfColumn = getLastCard(*columnTo);
 
-    // if the column is empty (check before isMoveLegal, so it doesn't give problems in the server)
+    // if the destination column is empty, we can only place a king (rank 13)
     if (endOfColumn == NULL) {
         if (determineRank(*moveCard) != 13) {
             printf("Illegal move\n");
             return 0;
         }
 
+        // Check if the card is the first in the fromColumn
         if (headCard->rank == moveCard->rank && headCard->suit == moveCard->suit) {
             columnFrom->ref = NULL;
             columnTo->ref = moveCard;
             return 1;
         }
 
+        // Find the first card in the fromColumn
         while (headCard->next != NULL &&
                (headCard->next->rank != moveCard->rank ||
                 headCard->next->suit != moveCard->suit)) {
@@ -77,6 +82,7 @@ int moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
             return 0;
         }
 
+        // Move card and make the new top card of the fromColumn visible
         columnTo->ref = headCard->next;
         headCard->next = NULL;
 
@@ -89,7 +95,7 @@ int moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
 
     // Dette burde fikse problem med at flytte sidste kort i kolonnen
     if (headCard->rank == moveCard->rank && headCard->suit == moveCard->suit) {
-        //Hvis det kort der rykkes er det første kort, skal vi opdatere pointeren fra columnFrom til null
+        // The card is the first in column -> update pointer from columnFrom to null
         if (columnFrom->ref == moveCard) {
             columnFrom->ref = NULL;
             if (isMoveLegal(moveCard, endOfColumn)== 1) {
@@ -101,7 +107,7 @@ int moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
                 return 0;
             }
         }
-        //Else
+        // if the card is not the first, skip and continue
         columnFrom->ref = moveCard->next;
         if (isMoveLegal(moveCard, endOfColumn)== 1) {
             endOfColumn->next = moveCard;
@@ -146,6 +152,7 @@ int moveCard(Card *moveCard, Column *columnFrom, Column *columnTo) {
     }
 }
 
+// Returns a pointer to the last card in a column
 Card* getLastCard(Column column) {
     if (column.ref == NULL){ return NULL;}
     while (column.ref->next != NULL) {
@@ -154,6 +161,7 @@ Card* getLastCard(Column column) {
     return column.ref;
 }
 
+// Returns a pointer to the last card in a foundation
 Card* getLastCardFoundation(Foundation foundation) {
     if (foundation.ref == NULL){ return NULL;}
     while (foundation.ref->next != NULL) {
@@ -166,7 +174,7 @@ int moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundatio
     Card* endOfFoundation = getLastCardFoundation(*foundation);
     Card* endOfColumn = getLastCard(*columnFrom);
 
-    // Kun sidste kort i kolonnen må rykkes til foundation
+    // Only the top card in the column can be moved to foundation// Kun sidste kort i kolonnen må rykkes til foundation
     if (endOfColumn->rank != moveCard->rank || endOfColumn->suit != moveCard->suit) {
         printf("Illegal move\n");
         return 0;
@@ -177,21 +185,22 @@ int moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundatio
         headCard = headCard->next;
     }
 
-    // Foundations første kort SKAL være ES (1)
+    // The first card placed on a founcation must be an ace (rank 1)
     if (endOfFoundation == NULL) {
         if (determineRank(*moveCard) != 1) {
             printf("Illegal move\n");
             return 0;
         }
-        //Edge case -> hvis det første kort i kolonnen er det der skal flyttes, skal vi opdatere columnFrom pointeren til null
+        //Edge case: If the card is the first in the column, set columnFrom to NULL
         foundation->ref = moveCard;
         if (columnFrom->ref == moveCard) {
             columnFrom->ref = NULL;
         } else {
-            headCard->next = NULL; // Fjern kortet fra kolonnen
+            headCard->next = NULL; // Remove card from column
         }
         moveCard->next = NULL;
 
+        // Make the new top card of the column visible
         Card *newLast = getLastCard(*columnFrom);
         if (newLast != NULL) {
             newLast->visible = 1;
@@ -200,12 +209,12 @@ int moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundatio
         return 1;
     }
 
-    if (headCard->next == NULL && headCard != moveCard) { //edge case
+    if (headCard->next == NULL && headCard != moveCard) {
         printf("Card not found in column\n");
         return 0;
     }
 
-    // Kolonnen har kun ét kort.
+    // Column contains only one card
     if (columnFrom->ref->rank == moveCard->rank && columnFrom->ref->suit == moveCard->suit ) {
         if (isMoveLegalFoundation(moveCard, endOfFoundation) != 1) {
             printf("Illegal move\n");
@@ -223,7 +232,7 @@ int moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundatio
 
     }
 
-
+    // Move the card from the column to the foundation
     if (isMoveLegalFoundation(moveCard, endOfFoundation) == 1) {
         Card* cardToMove = headCard->next;
         headCard->next = NULL;
@@ -238,21 +247,23 @@ int moveCardFoundation(Card *moveCard, Column *columnFrom, Foundation *foundatio
 int moveCardFromFoundation(Card *moveCard, Column *columnTo, Foundation *fromFoundation) {
     Card* endOfFoundation = getLastCardFoundation(*fromFoundation);
     Card* endOFColumn = getLastCard(*columnTo);
+
+    // Cant move to empty column from foundation
     if (columnTo->ref==NULL) {
         printf("Illegal move\n");
         return 0;
     }
     if (isMoveLegal(endOfFoundation, endOFColumn)) {
-        // flyt kortet til kolonnen
+        // Move card to column
         Card* cardToMove = endOfFoundation;
         endOFColumn->next = cardToMove;
 
-        // fjern kortet fra foundation
+        // Remove the card from foundation
         Card* current = fromFoundation->ref;
         while (current->next != endOfFoundation && current->next != NULL) {
             current = current->next;
         }
-        //if there is only one card in the column
+        // If foundation contains only one card
         if (fromFoundation->ref == moveCard) {
             fromFoundation->ref = NULL;
         }
@@ -263,6 +274,7 @@ int moveCardFromFoundation(Card *moveCard, Column *columnTo, Foundation *fromFou
     return 0;
 }
 
+// Converts a card's rank character to numeric value
 int determineRank(Card card) {
     switch (card.rank) {
         case 'A': return 1;
@@ -270,11 +282,13 @@ int determineRank(Card card) {
         case 'J': return 11;
         case 'Q': return 12;
         case 'K': return 13;
-        default:  return card.rank - '0'; // '2' -> 2, etc.
+        default:
+            if (card.rank < '2' || card.rank > '9') return -1;
+            return card.rank - '0';
     }
 }
 
-
+// Checks if a move is legal
 int isMoveLegal(Card* moveCard, Card* cardTo) {
     int cardRank = determineRank(*moveCard);
     int cardRank2 = determineRank(*cardTo);
@@ -285,6 +299,7 @@ int isMoveLegal(Card* moveCard, Card* cardTo) {
     return 1;
 }
 
+// Check if a move to the foundation is legal
 int isMoveLegalFoundation(Card* moveCard, Card* cardTo) {
     int cardRank = determineRank(*moveCard);
     int cardRank2 = determineRank(*cardTo);
@@ -295,6 +310,7 @@ int isMoveLegalFoundation(Card* moveCard, Card* cardTo) {
     return 1;
 }
 
+// Makes sure the top card of every column is always visible
 void showAllLastCards(Column cols[]) {
     //Brute force
     Card* lastCard;
