@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LC-3 Instruction Set — Annotated Reference (02322)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700&family=Newsreader:ital,wght@0,400;0,500;0,600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  :root{
+    --ink:#2b2b2b;
+    --ink-soft:#4a4a4a;
+    --paper:#ffffff;
+    --rule:#d9d2c4;
+    --rule-soft:#ece7db;
+    --accent:#5a6f52;        /* sage — matches study guide */
+    --accent-soft:#eef1e9;
+    --blue:#3f5d7a;
+    --blue-soft:#eaf0f5;
+    --amber:#8a6d3b;
+    --amber-soft:#f6f0e2;
+    --rose:#8a4b4b;
+    --rose-soft:#f6ecec;
+    --code-bg:#f7f6f1;
+    --code-ink:#33352e;
+    /* bitfield fills */
+    --bf-op:#e3e9dc;
+    --bf-reg:#e7eef4;
+    --bf-imm:#f4ecdc;
+    --bf-fix:#efeadd;
+  }
+  *{ box-sizing:border-box; }
+  html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{ font-family:'Newsreader',Georgia,serif; color:var(--ink); background:var(--paper);
+        line-height:1.5; font-size:10.5pt; margin:0; }
+  .wrap{ max-width:850px; margin:0 auto; padding:32px 38px 60px; }
+
+  h1,h2,h3,h4{ font-family:'Fraunces',Georgia,serif; line-height:1.15; }
+  h1{ font-size:29pt; font-weight:700; margin:0 0 4px; letter-spacing:-0.01em; }
+  .subtitle{ font-family:'Newsreader',serif; font-size:12pt; color:var(--ink-soft); font-style:italic; margin:0 0 6px; }
+  h2{ font-size:17pt; font-weight:700; margin:0 0 12px; padding-bottom:6px; border-bottom:2px solid var(--accent); color:var(--accent); }
+  h3{ font-size:13pt; font-weight:600; margin:16px 0 7px; color:var(--ink); }
+  h4{ font-size:10.5pt; font-weight:600; margin:12px 0 4px; color:var(--blue); }
+  p{ margin:0 0 8px; }
+
+  .section{ margin-bottom:28px; }
+
+  /* instruction card */
+  .instr{ border:1px solid var(--rule); border-radius:7px; padding:13px 16px 14px; margin-bottom:15px; background:#fcfbf8; }
+  .instr .ihead{ display:flex; align-items:baseline; gap:10px; margin-bottom:7px; flex-wrap:wrap; }
+  .instr .mnem{ font-family:'JetBrains Mono',monospace; font-weight:700; font-size:14pt; color:var(--accent); letter-spacing:0.02em; }
+  .instr .iname{ font-family:'Fraunces',serif; font-size:11pt; color:var(--ink-soft); font-style:italic; }
+  .instr .op{ margin-left:auto; font-family:'JetBrains Mono',monospace; font-size:8pt; font-weight:700; background:var(--bf-op); color:var(--accent); padding:2px 8px; border-radius:10px; }
+
+  .fmt{ font-family:'JetBrains Mono',monospace; font-size:8.6pt; color:var(--ink-soft); margin:4px 0 7px; }
+  .fmt b{ color:var(--ink); }
+
+  .doc-grid{ }
+  .does, .usedfor, .tie{ margin:6px 0; }
+  .does .lbl, .usedfor .lbl, .tie .lbl{
+    font-family:'JetBrains Mono',monospace; font-size:7.5pt; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.08em; display:inline-block;
+    padding:1px 6px; border-radius:3px; margin-right:6px;
+  }
+  .does .lbl{ background:var(--accent-soft); color:var(--accent); }
+  .usedfor .lbl{ background:var(--blue-soft); color:var(--blue); }
+  .tie .lbl{ background:var(--amber-soft); color:var(--amber); }
+  .tie{ background:var(--amber-soft); border-left:3px solid var(--amber); padding:6px 10px; border-radius:0 4px 4px 0; }
+
+  /* bitfield diagram */
+  .bits{ display:flex; width:100%; margin:7px 0 4px; border:1px solid var(--rule); border-radius:4px; overflow:hidden; }
+  .bf{ flex:1 1 auto; text-align:center; border-right:1px solid var(--rule); padding:3px 2px 4px; min-width:0; }
+  .bf:last-child{ border-right:none; }
+  .bf .br{ font-family:'JetBrains Mono',monospace; font-size:6.5pt; color:#9a937f; display:block; line-height:1.1; }
+  .bf .bv{ font-family:'JetBrains Mono',monospace; font-size:8.5pt; font-weight:700; color:var(--ink); display:block; }
+  .bf.op{ background:var(--bf-op); } .bf.reg{ background:var(--bf-reg); }
+  .bf.imm{ background:var(--bf-imm); } .bf.fix{ background:var(--bf-fix); }
+  .bf.w2{ flex-grow:2; } .bf.w3{ flex-grow:3; } .bf.w4{ flex-grow:4; }
+  .bf.w5{ flex-grow:5; } .bf.w6{ flex-grow:6; } .bf.w8{ flex-grow:8; }
+  .bf.w9{ flex-grow:9; } .bf.w11{ flex-grow:11; } .bf.w12{ flex-grow:12; }
+
+  pre{ font-family:'JetBrains Mono',monospace; font-size:8.4pt; background:var(--code-bg); color:var(--code-ink);
+       border:1px solid var(--rule-soft); border-radius:5px; padding:9px 12px; margin:7px 0; overflow-x:auto; line-height:1.4; white-space:pre; }
+  code{ font-family:'JetBrains Mono',monospace; font-size:9pt; background:var(--code-bg); padding:1px 5px; border-radius:3px; color:var(--code-ink); }
+  pre code{ background:none; padding:0; font-size:8.4pt; }
+  .cmt{ color:#8a8f7e; font-style:italic; }
+
+  .method{ background:var(--accent-soft); border-left:4px solid var(--accent); padding:9px 13px; border-radius:0 5px 5px 0; margin:9px 0; }
+  .keyfact{ background:var(--blue-soft); border-left:4px solid var(--blue); padding:9px 13px; border-radius:0 5px 5px 0; margin:9px 0; }
+  .warn{ background:var(--amber-soft); border-left:4px solid var(--amber); padding:9px 13px; border-radius:0 5px 5px 0; margin:9px 0; }
+  .method .lbl,.keyfact .lbl,.warn .lbl{ font-family:'JetBrains Mono',monospace; font-size:8pt; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; display:block; margin-bottom:3px; }
+  .method .lbl{ color:var(--accent); } .keyfact .lbl{ color:var(--blue); } .warn .lbl{ color:var(--amber); }
+
+  table{ border-collapse:collapse; width:100%; margin:9px 0; font-size:9pt; }
+  th,td{ border:1px solid var(--rule); padding:4px 8px; text-align:left; vertical-align:top; }
+  th{ background:var(--accent-soft); font-family:'Fraunces',serif; font-weight:600; color:var(--accent); }
+  td.mono,th.mono{ font-family:'JetBrains Mono',monospace; font-size:8.4pt; }
+  tr:nth-child(even) td{ background:#faf9f4; }
+
+  ul,ol{ margin:5px 0 8px; padding-left:21px; }
+  li{ margin-bottom:3px; }
+  .two-col{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+
+  .toc{ columns:2; column-gap:30px; font-size:10pt; }
+  .toc a{ color:var(--ink); text-decoration:none; display:block; padding:2px 0; border-bottom:1px dotted var(--rule-soft); }
+  .toc .num{ color:var(--accent); font-family:'JetBrains Mono',monospace; font-weight:700; font-size:8.5pt; margin-right:6px; }
+
+  .cover{ text-align:center; padding:56px 0 36px; border-bottom:3px double var(--accent); margin-bottom:26px; }
+  .cover .course{ font-family:'JetBrains Mono',monospace; font-size:11pt; color:var(--accent); font-weight:700; letter-spacing:0.18em; }
+  .cover .meta{ font-family:'JetBrains Mono',monospace; font-size:9pt; color:var(--ink-soft); letter-spacing:0.1em; text-transform:uppercase; margin-top:12px; }
+
+  .legend{ display:flex; gap:14px; flex-wrap:wrap; font-family:'JetBrains Mono',monospace; font-size:8pt; margin:8px 0; }
+  .legend span{ padding:2px 8px; border-radius:10px; }
+  .legend .l-op{ background:var(--bf-op); } .legend .l-reg{ background:var(--bf-reg); }
+  .legend .l-imm{ background:var(--bf-imm); } .legend .l-fix{ background:var(--bf-fix); }
+
+  hr.soft{ border:none; border-top:1px solid var(--rule-soft); margin:14px 0; }
+
+  @page{ margin:14mm 12mm; }
+  @media print{
+    .wrap{ padding:0; max-width:none; }
+    body{ font-size:9.8pt; }
+    .instr, .method, .keyfact, .warn, pre, table, .bits{ break-inside:avoid; }
+    h2,h3,h4{ break-after:avoid; }
+    .page-break{ break-before:page; }
+    .cover{ break-after:page; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="cover">
+  <div class="course">02322 / 02321</div>
+  <h1>The LC-3 Instruction Set</h1>
+  <div class="subtitle">Annotated Reference — what each opcode does, what it's for, and how it's examined</div>
+  <div class="meta">Encodings · Semantics · Addressing modes · TRAP routines · Exam patterns</div>
+</div>
+
+<div class="section">
+<h2>Contents</h2>
+<div class="toc">
+  <a href="#read"><span class="num">A</span>How to Read an Encoding</a>
+  <a href="#arith"><span class="num">B</span>Arithmetic &amp; Logic — ADD AND NOT</a>
+  <a href="#ctrl"><span class="num">C</span>Control Flow — BR JMP RET JSR JSRR</a>
+  <a href="#load"><span class="num">D</span>Loads — LD LDR LDI LEA</a>
+  <a href="#store"><span class="num">E</span>Stores — ST STR STI</a>
+  <a href="#sys"><span class="num">F</span>System — TRAP RTI · unused 1101</a>
+  <a href="#fields"><span class="num">G</span>Operand Fields &amp; Ranges</a>
+  <a href="#cc"><span class="num">H</span>Condition Codes, SEXT, ZEXT</a>
+  <a href="#trap"><span class="num">I</span>TRAP Service Routines</a>
+  <a href="#patterns"><span class="num">J</span>Exam Pattern Map</a>
+</div>
+</div>
+
+<!-- ===================== A: HOW TO READ ===================== -->
+<div class="section" id="read">
+<h2>A &nbsp;How to Read an Encoding</h2>
+<p>Every LC-3 instruction is exactly <strong>16 bits</strong>. Bits <code>[15:12]</code> are always the <strong>opcode</strong> (which instruction). The remaining 12 bits are split into fields whose meaning depends on the opcode. Throughout this sheet, <strong>PC</strong> in bold means the <em>incremented</em> program counter — the address of the <em>next</em> instruction (A+1 while executing the instruction at A).</p>
+
+<div class="legend">
+  <span class="l-op">opcode [15:12]</span>
+  <span class="l-reg">register (3 bits)</span>
+  <span class="l-imm">immediate / offset (signed)</span>
+  <span class="l-fix">fixed bits</span>
+</div>
+
+<div class="keyfact"><span class="lbl">Register codes</span>
+A register field is 3 bits: R0=<code>000</code>, R1=<code>001</code>, R2=<code>010</code>, R3=<code>011</code>, R4=<code>100</code>, R5=<code>101</code>, R6=<code>110</code>, R7=<code>111</code>.
+</div>
+
+<div class="method"><span class="lbl">Method — assemble (assembly → machine code)</span>
+<ol style="margin-bottom:0;">
+<li>Look up the opcode bits for the mnemonic.</li>
+<li>Fill register fields with their 3-bit codes.</li>
+<li>For an immediate form, set the mode bit and write the value as a signed 2's-complement field of the exact width (imm5, offset6, …).</li>
+<li>For PC-relative instructions (BR, LD, ST, LEA, …) the stored offset = <strong>target − PC</strong> where PC is the address of the <em>next</em> instruction.</li>
+<li>Group the 16 bits into 4 nibbles → hex.</li>
+</ol>
+</div>
+<div class="method"><span class="lbl">Method — disassemble (machine code → assembly)</span>
+Read <code>[15:12]</code> to get the opcode, then slice the remaining fields per the diagram. For PC-relative forms, the referenced address = <strong>PC + SEXT(offset)</strong>. Sign-extend any signed field before using it.
+</div>
+<p class="cmt">These two methods cover the F2024 Q1 / F2022 Q1 / F2021 Q1 style of question, where you convert between assembly, binary, and hex, and the symbol-table questions where you track addresses line by line.</p>
+</div>
+
+<!-- ===================== B: ARITHMETIC & LOGIC ===================== -->
+<div class="section page-break" id="arith">
+<h2>B &nbsp;Arithmetic &amp; Logic</h2>
+
+<!-- ADD -->
+<div class="instr">
+  <div class="ihead"><span class="mnem">ADD</span><span class="iname">Addition</span><span class="op">0001</span></div>
+  <div class="fmt"><b>ADD DR, SR1, SR2</b> &nbsp;|&nbsp; <b>ADD DR, SR1, #imm5</b></div>
+  <div class="bits">
+    <div class="bf op"><span class="br">15&ndash;12</span><span class="bv">0001</span></div>
+    <div class="bf reg w3"><span class="br">11&ndash;9</span><span class="bv">DR</span></div>
+    <div class="bf reg w3"><span class="br">8&ndash;6</span><span class="bv">SR1</span></div>
+    <div class="bf fix"><span class="br">5</span><span class="bv">0</span></div>
+    <div class="bf fix w2"><span class="br">4&ndash;3</span><span class="bv">00</span></div>
+    <div class="bf reg w3"><span class="br">2&ndash;0</span><span class="bv">SR2</span></div>
+  </div>
+  <div class="bits">
+    <div class="bf op"><span class="br">15&ndash;12</span><span class="bv">0001</span></div>
+    <div class="bf reg w3"><span class="br">11&ndash;9</span><span class="bv">DR</span></div>
+    <div class="bf reg w3"><span class="br">8&ndash;6</span><span class="bv">SR1</span></div>
+    <div class="bf fix"><span class="br">5</span><span class="bv">1</span></div>
+    <div class="bf imm w5"><span class="br">4&ndash;0</span><span class="bv">imm5</span></div>
+  </div>
+  <p class="fmt"><b>Operation:</b> DR = SR1 + (bit5 ? SEXT(imm5) : SR2); then <code>setcc()</code>.</p>
+  <div class="does"><span class="lbl">Does</span>Adds two registers, or a register and a small signed constant, into DR. Sets the N/Z/P condition codes from the result.</div>
+  <div class="usedfor"><span class="lbl">Used for</span>The workhorse: counters (<code>ADD R1,R1,#-1</code> to count down), pointer advance (<code>ADD R3,R3,#1</code> to step through a string/array), accumulation (<code>ADD R0,R0,R1</code>), and — combined with NOT — subtraction and comparison.</div>
+  <div class="tie"><span class="lbl">Exam trap</span>The immediate is only 5 bits signed, so <strong>imm5 ∈ [&minus;16, +15]</strong>. <code>ADD R0,R0,#37</code> is illegal — chain several adds (15+15+7) or <code>LD</code> the constant from memory. (F2023 Q1d.)</div>
+</div>
+
+<!-- AND -->
+<div class="instr">
+  <div class="ihead"><span class="mnem">AND</span><span class="iname">Bit-wise Logical AND</span><span class="op">0101</span></div>
+  <div class="fmt"><b>AND DR, SR1, SR2</b> &nbsp;|&nbsp; <b>AND DR, SR1, #imm5</b></div>
+  <div class="bits">
+    <div class="bf op"><span class="br">15&ndash;12</span><span class="bv">0101</span></div>
+    <div class="bf reg w3"><span class="br">11&ndash;9</span><span class="bv">DR</span></div>
+    <div class="bf reg w3"><span class="br">8&ndash;6</span><span class="bv">SR1</span></div>
+    <div class="bf fix"><span class="br">5</span><span class="bv">0</span></div>
+    <div class="bf fix w2"><span class="br">4&ndash;3</span><span class="bv">00</span></div>
+    <div class="bf reg w3"><span class="br">2&ndash;0</span><span class="bv">SR2</span></div>
+  </div>
+  <div class="bits">
+    <div class="bf op"><span class="br">15&ndash;12</span><span class="bv">0101</span></div>
+    <div class="bf reg w3"><span class="br">11&ndash;9</span><span class="bv">DR</span></div>
+    <div class="bf reg w3"><span class="br">8&ndash;6</span><span class="bv">SR1</span></div>
+    <div class="bf fix"><span class="br">5</span><span class="bv">1</span></div>
+    <div class="bf imm w5"><span class="br">4&ndash;0</span><span class="bv">imm5</span></div>
+  </div>
+  <p class="fmt"><b>Operation:</b> DR = SR1 AND (bit5 ? SEXT(imm5) : SR2); then <code>setcc()</code>.</p>
+  <div class="does"><span class="lbl">Does</span>Bit-wise AND of two operands into DR. Sets condition codes.</div>
+  <div class="usedfor"><span class="lbl">Used for</span><b>Clearing a register</b> with <code>AND Rx,Rx,#0</code> (the standard "set to 0" idiom — there is no MOV/LOAD-immediate), and <b>masking</b> bits. E.g. keep only the low 4 bits of a character with <code>AND R1,R2,xF</code>.</div>
+  <div class="tie"><span class="lbl">Exam use</span>The histogram task (F2021 Q2) masks each character's low nibble with <code>AND R1,R2,xF</code> to index a 16-entry array; clearing accumulators with <code>AND R0,R0,#0</code> appears in almost every program.</div>
+</div>
+
+<!-- NOT -->
+<div class="instr">
+  <div class="ihead"><span class="mnem">NOT</span><span class="iname">Bit-wise Complement</span><span class="op">1001</span></div>
+  <div class="fmt"><b>NOT DR, SR</b></div>
+  <div class="bits">
+    <div class="bf op"><span class="br">15&ndash;12</span><span class="bv">1001</span></div>
+    <div class="bf reg w3"><span class="br">11&ndash;9</span><span class="bv">DR</span></div>
+    <div class="bf reg w3"><span class="br">8&ndash;6</span><span class="bv">SR</span></div>
+    <div class="bf fix w6"><span class="br">5&ndash;0</span><span class="bv">111111</span></div>
+  </div>
+  <p class="fmt"><b>Operation:</b> DR = NOT(SR); then <code>setcc()</code>.</p>
+  <div class="does"><span class="lbl">Does</span>Flips every bit of SR into DR (one's complement).</div>
+  <div class="usedfor"><span class="lbl">Used for</span><b>Negation and subtraction.</b> There is no SUB instruction, so to compute &minus;R or A&minus;B you negate then add: <code>NOT Rx,Rx</code> followed by <code>ADD Rx,Rx,#1</code> gives the two's-complement negative (invert + 1).</div>
+  <div class="tie"><span class="lbl">Exam use</span>The "subtract" idiom drives comparisons: to test <code>x &gt; y</code> compute <code>y&minus;x</code> and branch on the flags. Seen in the multiplication table (F2022 Q1) and the compiled <code>func</code> (E2020 Q2).</div>
+</div>
+
+</div>
+
+<!-- ===================== C: CONTROL FLOW ===================== -->
+<div class="section page-break" id="ctrl">
+<h2>C &nbsp;Control Flow</h2>
+
+<!-- BR -->
+<div class="instr">
+  <div class="ihead"><span class="mnem">BR</span><span class="iname">Conditional Branch</span><span class="op">0000</span></div>
+  <div class="fmt"><b>BRn / BRz / BRp / BRzp / BRnp / BRnz / BRnzp / BR</b> &nbsp;LABEL</div>
+  <div class="bits">
+    <div class="bf op"><span class="br">15&ndash;12</span><span class="bv">0000</span></div>
+    <div class="bf fix"><span class="br">11</span><span class="bv">n</span></div>
+    <div class="bf fix"><span class="br">10</span><span class="bv">z</span></div>
+    <div class="bf fix"><span class="br">9</span><span class="bv">p</span></div>
+    <div class="bf imm w9"><span class="br">8&ndash;0</span><span class="bv">PCoffset9</span></div>
+  </div>
+  <p class="fmt"><b>Operation:</b> if ((n&amp;N) OR (z&amp;Z) OR (p&amp;P)) PC = <b>PC</b> + SEXT(PCoffset9).</p>
+  <div class="does"><span class="lbl">Does</span>Looks at the condition codes set by the <em>last</em> result, and jumps to LABEL if any selected flag (n/z/p in the mnemonic) is set. <code>BR</code> / <code>BRnzp</code> are unconditional.</div>
+  <div class="usedfor"><span class="lbl">Used for</span>All loops and if/else logic. The target is PC-relative, so the assembler stores <code>LABEL &minus; (next address)</code>.</div>
+  <div class="tie"><span class="lbl">Exam essentials</span>
+    <ul style="margin:4px 0 0;">
+      <li><b>Flag source:</b> N/Z/P reflect the last value written to a register (by ADD, AND, NOT, LD, LDR, LEA, …).</li>
+      <li><b>Branch sense ⇄ C condition:</b> when translating to C or drawing a flowchart, ask "which flag values take the branch?" e.g. <code>BRz done</code> after <code>LDR</code> means "stop at the <code>\0</code>" — the zero terminator. <code>BRnz label</code> takes the branch when result ≤ 0.</li>
+      <li>Self-branch <code>LOOP BRnzp LOOP</code> encodes offset &minus;1 = <code>x0FFF</code> (F2024 Q1a).</li>
+    </ul>
+  </div>
+</div>
+
+<!-- JMP / RET -->
+<div class="instr">
+  <div class="ihead"><span class="mnem">JMP&nbsp;/&nbsp;RET</span><span class="iname">Jump · Return from Subroutine</span><span class="op">1100</span></div>
+  <div class="fmt"><b>JMP BaseR</b> &nbsp;|&nbsp; <b>RET</b> (= JMP R7)</div>
+  <div class="bits">
+    <div class="bf op"><span class="br">15&ndash;12</span><span class="bv">1100</span></div>
+    <div class="bf fix w3"><span class="br">11&ndash;9</span><span class="bv">000</span></div>
+    <div class="bf reg w3"><span class="br">8&ndash;6</span><span class="bv">BaseR</span></div>
+    <div class="bf fix w6"><span class="br">5&ndash;0</span><span class="bv">000000</span></div>
+  </div>
+  <p class="fmt"><b>Operation:</b> PC = BaseR. &nbsp; RET is the special case BaseR = R7 (encoded <code>1100 000 111 000000</code>).</p>
+  <div class="does"><span class="lbl">Does</span>Unconditionally sets PC to the address held in a register. <code>JMP</code> can use any register; <code>RET</code> always uses R7.</div>
+  <div class="usedfor"><span class="lbl">Used for</span>Returning from a subroutine (<code>RET</code> jumps back to the saved return address in R7), and computed/indirect jumps.</div>
+  <div class="tie"><span class="lbl">Exam use</span>Functions compiled to LC-3 end with <code>RET</code>. In the stack-frame questions, the prologue saves R7 (the return address) on the stack and the epilogue restores it before <code>RET</code> (E2020 Q2).</div>
+</div>
+
+<!-- JSR / JSRR -->
+<div class="instr">
+  <div class="ihead"><span class="mnem">JSR&nbsp;/&nbsp;JSRR</span><span class="iname">Jump to Subroutine</span><span class="op">0100</span></div>
+  <div class="fmt"><b>JSR LABEL</b> &nbsp;|&nbsp; <b>JSRR BaseR</b></div>
+  <div class="bits">
+    <div class="bf op"><span class="br">15&ndash;12</span><span class="bv">0100</span></div>
+    <div class="bf fix"><span class="br">11</span><span class="bv">1</span></div>
+    <div class="bf imm w11"><span class="br">10&ndash;0</span><span class="bv">PCoffset11</span></div>
+  </div>
+  <div class="bits">
+    <div class="bf op"><span class="br">15&ndash;12</span><span class="bv">0100</span></div>
+    <div class="bf fix"><span class="br">11</span><span class="bv">0</span></div>
+    <div class="bf fix w2"><span class="br">10&ndash;9</span><span class="bv">00</span></div>
+    <div class="bf reg w3"><span class="br">8&ndash;6</span><span class="bv">BaseR</span></div>
+    <div class="bf fix w6"><span class="br">5&ndash;0</span><span class="bv">000000</span></div>
+  </div>
+  <p class="fmt"><b>Operation:</b> R7 = <b>PC</b>; then PC = (bit11 ? <b>PC</b> + SEXT(PCoffset11) : BaseR).</p>
+  <div class="does"><span class="lbl">Does</span>Saves the return address (the incremented PC) into R7, then jumps to the subroutine — by PC-relative label (<code>JSR</code>) or by register (<code>JSRR</code>).</div>
+  <div class="usedfor"><span class="lbl">Used for</span>Calling a function. Paired with <code>RET</code>, which jumps back via R7.</div>
+  <div class="tie"><span class="lbl">Exam use</span>The caller side of the runtime-stack model. Because <code>JSR</code> clobbers R7, a function that itself calls others must save R7 on the stack — exactly the prologue/epilogue pattern in the activation-record questions.</div>
+</div>
+
+</div>
+
+<!-- ===================== D: LOADS ===================== -->
+<div class="section page-break" id="load">
+<h2>D &nbsp;Loads (memory → register)</h2>
+
+<div class="keyfact"><span class="lbl">The four addressing modes at a glance</span>
+<ul style="margin-bottom:0;">
+<li><b>LEA</b> — gives you an <em>address</em> (PC + offset). No memory access.</li>
+<li><b>LD</b> — value at <em>PC + offset</em> (one hop).</li>
+<li><b>LDR</b> — value at <em>BaseR + offset</em> (register-based; for arrays, strings, stack frames).</li>
+<li><b>LDI</b> — value at the address <em>stored</em> at PC + offset (two hops; indirect).</li>
+</ul>
+</div>
+
+<!-- LEA -->
+<div class="instr">
+  <div class="ihead"><span class="mnem">LEA</span><span class="iname">Load Effective Address</span><span class="op">1110</span></div>
+  <div class="fmt"><b>LEA DR, LABEL</b></div>
+  <div class="bits">
+    <div class="bf op"><span class="br">15&ndash;12</span><span class="bv">1110</span></div>
+    <div class="bf reg w3"><span class="br">11&ndash;9</span><span class="bv">DR</span></div>
+    <div class="bf imm w9"><span class="br">8&ndash;0</span><span class="bv">PCoffset9</span></div>
+  </div>
+  <p class="fmt"><b>Operation:</b> DR = <b>PC</b> + SEXT(PCoffset9); then <code>setcc()</code>.</p>
+  <div class="does"><span class="lbl">Does</span>Computes an address and puts it in DR — it does <em>not</em> read memory. Think "give me a pointer to LABEL".</div>
+  <div class="usedfor"><span class="lbl">Used for</span>Getting the start address of a string or array so you can walk it, or pass it to <code>PUTS</code>.</div>
+  <div class="tie"><span class="lbl">Exam use</span>Nearly every string program starts with <code>LEA R3, S</code> to point at the text (encryption F2023 Q2, digit count F2022 Q2), or <code>LEA R0, S1</code> before <code>PUTS</code> (dice message E2020 Q4).</div>
+</div>
+
+<!-- LD -->
+<div class="instr">
+  <div class="ihead"><span class="mnem">LD</span><span class="iname">Load (PC-relative)</span><span class="op">0010</span></div>
+  <div class="fmt"><b>LD DR, LABEL</b></div>
+  <div class="bits">
+    <div class="bf op"><span class="br">15&ndash;12</span><span class="bv">0010</span></div>
+    <div class="bf reg w3"><span class="br">11&ndash;9</span><span class="bv">DR</span></div>
+    <div class="bf imm w9"><span class="br">8&ndash;0</span><span class="bv">PCoffset9</span></div>
+  </div>
+  <p class="fmt"><b>Operation:</b> DR = mem[<b>PC</b> + SEXT(PCoffset9)]; then <code>setcc()</code>.</p>
+  <div class="does"><span class="lbl">Does</span>Reads the word stored at a labelled location into DR.</div>
+  <div class="usedfor"><span class="lbl">Used for</span>Loading constants and fixed pointers that live in the program (declared with <code>.FILL</code>). The way around the imm5 limit.</div>
+  <div class="tie"><span class="lbl">Exam use</span><code>LD R1, A</code> / <code>A .FILL #37</code> to add a large constant (F2023 Q1d); <code>LD R2, AR</code> / <code>AR .FILL x4400</code> to load a start address (E2020 Q4); <code>LD R3, inStr</code> for the histogram pointers (F2021 Q2).</div>
+</div>
+
+<!-- LDR -->
+<div class="instr">
+  <div class="ihead"><span class="mnem">LDR</span><span class="iname">Load Base + offset</span><span class="op">0110</span></div>
+  <div class="fmt"><b>LDR DR, BaseR, offset6</b></div>
+  <div class="bits">
+    <div class="bf op"><span class="br">15&ndash;12</span><span class="bv">0110</span></div>
+    <div class="bf reg w3"><span class="br">11&ndash;9</span><span class="bv">DR</span></div>
+    <div class="bf reg w3"><span class="br">8&ndash;6</span><span class="bv">BaseR</span></div>
+    <div class="bf imm w6"><span class="br">5&ndash;0</span><span class="bv">offset6</span></div>
+  </div>
+  <p class="fmt"><b>Operation:</b> DR = mem[BaseR + SEXT(offset6)]; then <code>setcc()</code>.</p>
+  <div class="does"><span class="lbl">Does</span>Reads memory at <em>register + small signed offset</em>. This is how you dereference a pointer held in a register.</div>
+  <div class="usedfor"><span class="lbl">Used for</span>Walking strings/arrays (<code>LDR R0, R3, #0</code> reads <code>*R3</code>), and reaching into a stack frame relative to the frame pointer R5.</div>
+  <div class="tie"><span class="lbl">Exam use</span>The string loop body in every assembly task: <code>LDR R0,R3,#0</code> then <code>BRz done</code>. In compiled functions, <code>LDR R0,R5,#4</code> / <code>#5</code> read arguments and <code>LDR …,R5,#0</code> reads a local (E2020 Q2).</div>
+</div>
+
+<!-- LDI -->
+<div class="instr">
+  <div class="ihead"><span class="mnem">LDI</span><span class="iname">Load Indirect</span><span class="op">1010</span></div>
+  <div class="fmt"><b>LDI DR, LABEL</b></div>
+  <div class="bits">
+    <div class="bf op"><span class="br">15&ndash;12</span><span class="bv">1010</span></div>
+    <div class="bf reg w3"><span class="br">11&ndash;9</span><span class="bv">DR</span></div>
+    <div class="bf imm w9"><span class="br">8&ndash;0</span><span class="bv">PCoffset9</span></div>
+  </div>
+  <p class="fmt"><b>Operation:</b> DR = mem[ mem[<b>PC</b> + SEXT(PCoffset9)] ]; then <code>setcc()</code>.</p>
+  <div class="does"><span class="lbl">Does</span>Two memory accesses: first read a <em>pointer</em> from the labelled cell, then read the value that pointer points at.</div>
+  <div class="usedfor"><span class="lbl">Used for</span>Reading a value whose address is stored elsewhere — e.g. memory-mapped device registers, or a global accessed through a pointer table when the target is out of PCoffset9 range.</div>
+  <div class="tie"><span class="lbl">Exam use</span>Less common than LD/LDR, but you should recognise the double-dereference when disassembling and be able to explain it (the <code>1010</code> opcode).</div>
+</div>
+
+</div>
+
+<!-- ===================== E: STORES ===================== -->
+<div class="section page-break" id="store">
+<h2>E &nbsp;Stores (register → memory)</h2>
+<p>The store instructions mirror the loads exactly, but copy a <strong>source register (SR)</strong> into memory instead of reading from it. Same three addressing modes.</p>
+
+<!-- ST -->
+<div class="instr">
+  <div class="ihead"><span class="mnem">ST</span><span class="iname">Store (PC-relative)</span><span class="op">0011</span></div>
+  <div class="fmt"><b>ST SR, LABEL</b></div>
+  <div class="bits">
+    <div class="bf op"><span class="br">15&ndash;12</span><span class="bv">0011</span></div>
+    <div class="bf reg w3"><span class="br">11&ndash;9</span><span class="bv">SR</span></div>
+    <div class="bf imm w9"><span class="br">8&ndash;0</span><span class="bv">PCoffset9</span></div>
+  </div>
+  <p class="fmt"><b>Operation:</b> mem[<b>PC</b> + SEXT(PCoffset9)] = SR. &nbsp;<span class="cmt">(no setcc)</span></p>
+  <div class="does"><span class="lbl">Does</span>Writes SR into a labelled memory location.</div>
+  <div class="usedfor"><span class="lbl">Used for</span>Saving a result back to a named variable in the program's data area.</div>
+</div>
+
+<!-- STR -->
+<div class="instr">
+  <div class="ihead"><span class="mnem">STR</span><span class="iname">Store Base + offset</span><span class="op">0111</span></div>
+  <div class="fmt"><b>STR SR, BaseR, offset6</b></div>
+  <div class="bits">
+    <div class="bf op"><span class="br">15&ndash;12</span><span class="bv">0111</span></div>
+    <div class="bf reg w3"><span class="br">11&ndash;9</span><span class="bv">SR</span></div>
+    <div class="bf reg w3"><span class="br">8&ndash;6</span><span class="bv">BaseR</span></div>
+    <div class="bf imm w6"><span class="br">5&ndash;0</span><span class="bv">offset6</span></div>
+  </div>
+  <p class="fmt"><b>Operation:</b> mem[BaseR + SEXT(offset6)] = SR. &nbsp;<span class="cmt">(no setcc)</span></p>
+  <div class="does"><span class="lbl">Does</span>Writes SR to <em>register + offset</em> — storing through a pointer held in a register.</div>
+  <div class="usedfor"><span class="lbl">Used for</span>Writing into arrays via an index/base, and <b>pushing onto the runtime stack</b> relative to R6 / R5.</div>
+  <div class="tie"><span class="lbl">Exam use</span>The histogram increments a cell with <code>STR R0,R1,#0</code> (F2021 Q2); the multiplication table writes results with <code>STR R2,R4,#0</code> (F2022 Q1). The function prologue pushes with <code>STR R7,R6,#0</code> and <code>STR R5,R6,#0</code> (E2020 Q2).</div>
+</div>
+
+<!-- STI -->
+<div class="instr">
+  <div class="ihead"><span class="mnem">STI</span><span class="iname">Store Indirect</span><span class="op">1011</span></div>
+  <div class="fmt"><b>STI SR, LABEL</b></div>
+  <div class="bits">
+    <div class="bf op"><span class="br">15&ndash;12</span><span class="bv">1011</span></div>
+    <div class="bf reg w3"><span class="br">11&ndash;9</span><span class="bv">SR</span></div>
+    <div class="bf imm w9"><span class="br">8&ndash;0</span><span class="bv">PCoffset9</span></div>
+  </div>
+  <p class="fmt"><b>Operation:</b> mem[ mem[<b>PC</b> + SEXT(PCoffset9)] ] = SR.</p>
+  <div class="does"><span class="lbl">Does</span>Reads a pointer from the labelled cell, then writes SR to wherever that pointer points (two hops).</div>
+  <div class="usedfor"><span class="lbl">Used for</span>Writing through a stored address — the store counterpart of LDI, e.g. memory-mapped output.</div>
+</div>
+
+</div>
+
+<!-- ===================== F: SYSTEM ===================== -->
+<div class="section page-break" id="sys">
+<h2>F &nbsp;System &amp; Special</h2>
+
+<!-- TRAP -->
+<div class="instr">
+  <div class="ihead"><span class="mnem">TRAP</span><span class="iname">System Call</span><span class="op">1111</span></div>
+  <div class="fmt"><b>TRAP trapvect8</b> &nbsp;(usually written as the alias: GETC, OUT, PUTS, IN, PUTSP, HALT)</div>
+  <div class="bits">
+    <div class="bf op"><span class="br">15&ndash;12</span><span class="bv">1111</span></div>
+    <div class="bf fix w4"><span class="br">11&ndash;8</span><span class="bv">0000</span></div>
+    <div class="bf imm w8"><span class="br">7&ndash;0</span><span class="bv">trapvect8</span></div>
+  </div>
+  <p class="fmt"><b>Operation:</b> R7 = <b>PC</b>; PC = mem[ZEXT(trapvect8)] — jump to the service routine whose address sits in the trap-vector table.</p>
+  <div class="does"><span class="lbl">Does</span>Calls a built-in operating-system routine (mostly console I/O), saving the return address in R7 so control comes back afterwards.</div>
+  <div class="usedfor"><span class="lbl">Used for</span>All input/output. See the full routine table in §I. The common ones: <code>OUT</code> (x21) print one char, <code>PUTS</code> (x22) print a string, <code>GETC</code> (x20) read a key, <code>HALT</code> (x25) stop.</div>
+  <div class="tie"><span class="lbl">Exam use</span><code>HALT</code> (encoded <code>TRAP x25</code>) ends every program; <code>OUT</code> prints each shifted character in the encryption task; <code>PUTS</code> + <code>OUT</code> print the dice message. Note <b>R7 is overwritten</b> by TRAP — same caution as JSR.</div>
+</div>
+
+<!-- RTI -->
+<div class="instr">
+  <div class="ihead"><span class="mnem">RTI</span><span class="iname">Return from Interrupt</span><span class="op">1000</span></div>
+  <div class="fmt"><b>RTI</b> (privileged)</div>
+  <div class="bits">
+    <div class="bf op"><span class="br">15&ndash;12</span><span class="bv">1000</span></div>
+    <div class="bf fix w12"><span class="br">11&ndash;0</span><span class="bv">000000000000</span></div>
+  </div>
+  <p class="fmt"><b>Operation:</b> if in supervisor mode, pop PC and PSR off the supervisor stack (R6) and restore them; otherwise raise a privilege-mode exception.</p>
+  <div class="does"><span class="lbl">Does</span>Returns from an interrupt service routine, restoring the interrupted program's PC and status.</div>
+  <div class="usedfor"><span class="lbl">Used for</span>Interrupt handling. Rarely the focus of these exams, but recognise the <code>1000</code> opcode.</div>
+</div>
+
+<!-- UNUSED -->
+<div class="instr">
+  <div class="ihead"><span class="mnem">— — —</span><span class="iname">Unused / Illegal Opcode</span><span class="op">1101</span></div>
+  <div class="bits">
+    <div class="bf op"><span class="br">15&ndash;12</span><span class="bv">1101</span></div>
+    <div class="bf fix w12"><span class="br">11&ndash;0</span><span class="bv">— anything —</span></div>
+  </div>
+  <p class="fmt"><b>Operation:</b> initiate an illegal-opcode exception. There is no assembler mnemonic.</p>
+  <div class="does"><span class="lbl">Does</span>Nothing useful — <code>1101</code> is the one 4-bit pattern not assigned to an instruction.</div>
+  <div class="tie"><span class="lbl">Exam use</span>The classic "name an invalid opcode / give a 16-bit string that is not a valid instruction" question. Answer: opcode <code>1101</code>, e.g. <code>1101101001100100</code>. (F2024 Q1d.)</div>
+</div>
+
+</div>
+
+<!-- ===================== G: OPERAND FIELDS ===================== -->
+<div class="section page-break" id="fields">
+<h2>G &nbsp;Operand Fields &amp; Ranges</h2>
+<p>Knowing the exact width and range of each field is what lets you assemble correctly and spot illegal instructions. All offsets/immediates are <strong>signed two's-complement</strong> except <code>trapvect8</code>.</p>
+<table>
+<tr><th class="mono">Field</th><th class="mono">Bits</th><th>Used by</th><th class="mono">Range</th><th>How it's combined</th></tr>
+<tr><td class="mono">imm5</td><td class="mono">[4:0]</td><td>ADD, AND (imm)</td><td class="mono">−16 … +15</td><td>SEXT, added to SR1</td></tr>
+<tr><td class="mono">offset6</td><td class="mono">[5:0]</td><td>LDR, STR</td><td class="mono">−32 … +31</td><td>SEXT, added to BaseR</td></tr>
+<tr><td class="mono">PCoffset9</td><td class="mono">[8:0]</td><td>BR, LD, LDI, ST, STI, LEA</td><td class="mono">−256 … +255</td><td>SEXT, added to incremented PC</td></tr>
+<tr><td class="mono">PCoffset11</td><td class="mono">[10:0]</td><td>JSR</td><td class="mono">−1024 … +1023</td><td>SEXT, added to incremented PC</td></tr>
+<tr><td class="mono">trapvect8</td><td class="mono">[7:0]</td><td>TRAP</td><td class="mono">0 … 255</td><td>ZEXT, index into trap table</td></tr>
+<tr><td class="mono">DR/SR/BaseR</td><td class="mono">3 bits</td><td>most</td><td class="mono">R0 … R7</td><td>register selector</td></tr>
+</table>
+<div class="warn"><span class="lbl">Why ranges matter in the exam</span>
+A constant that won't fit a field is the trap. <code>ADD R0,R0,#37</code> (37 &gt; 15) is rejected — and the same logic applies to a branch that is too far to reach in one PCoffset9. The fix is the same family of workarounds: split into steps, or load the value/address from memory.
+</div>
+<div class="keyfact"><span class="lbl">Register conventions on the runtime stack</span>
+<ul style="margin-bottom:0;">
+<li><b>R6 = SP</b> (stack pointer; the stack grows toward lower addresses).</li>
+<li><b>R5 = FP</b> (frame pointer; locals/arguments are read at fixed offsets from R5 via LDR/STR).</li>
+<li><b>R7 = return address</b> — set by JSR and TRAP, used by RET. Save it before nested calls.</li>
+</ul>
+</div>
+</div>
+
+<!-- ===================== H: CONDITION CODES ===================== -->
+<div class="section" id="cc">
+<h2>H &nbsp;Condition Codes, SEXT &amp; ZEXT</h2>
+
+<div class="two-col">
+<div class="instr">
+<h4>setcc() — the N / Z / P flags</h4>
+<p>Many instructions end by setting three single-bit flags from the value just written to DR. Exactly one is 1 at a time:</p>
+<table class="mono">
+<tr><th>Result</th><th>N</th><th>Z</th><th>P</th></tr>
+<tr><td>negative</td><td>1</td><td>0</td><td>0</td></tr>
+<tr><td>zero</td><td>0</td><td>1</td><td>0</td></tr>
+<tr><td>positive</td><td>0</td><td>0</td><td>1</td></tr>
+</table>
+<p class="cmt">Flag-setters: ADD, AND, NOT, LD, LDI, LDR, LEA. Stores and control-flow do <b>not</b> set flags — so a <code>BR</code> reads the flags from the most recent arithmetic/load.</p>
+</div>
+
+<div class="instr">
+<h4>SEXT vs ZEXT</h4>
+<p><b>SEXT(A)</b> — sign-extend: copy A's top bit leftward to 16 bits, preserving signed value. <code>110000 → 1111111111110000</code>.</p>
+<p><b>ZEXT(A)</b> — zero-extend: pad with leading zeros. <code>110000 → 0000000000110000</code>.</p>
+<div class="keyfact"><span class="lbl">Rule of thumb</span>All signed offsets/immediates use SEXT; only <code>trapvect8</code> uses ZEXT (it's an unsigned table index).</div>
+</div>
+</div>
+
+<div class="keyfact"><span class="lbl">PC subtlety (gets people every time)</span>
+For PC-relative addressing, <b>PC</b> means the address of the <em>next</em> instruction. While the CPU executes the instruction at address A, PC already holds A+1. So an offset stored in an instruction at A reaches <code>A + 1 + offset</code>. When computing the offset to assemble, use <code>target − (A + 1)</code>.
+</div>
+</div>
+
+<!-- ===================== I: TRAP ROUTINES ===================== -->
+<div class="section" id="trap">
+<h2>I &nbsp;TRAP Service Routines</h2>
+<table>
+<tr><th class="mono">Vector</th><th class="mono">Name</th><th>What it does</th></tr>
+<tr><td class="mono">x20</td><td class="mono">GETC</td><td>Read one key from the keyboard into R0[7:0] (no echo). High bits cleared.</td></tr>
+<tr><td class="mono">x21</td><td class="mono">OUT</td><td>Print the character in R0[7:0] to the console.</td></tr>
+<tr><td class="mono">x22</td><td class="mono">PUTS</td><td>Print a string: one char per word starting at the address in R0, until a x0000 word.</td></tr>
+<tr><td class="mono">x23</td><td class="mono">IN</td><td>Print a prompt, read one key, echo it, copy to R0[7:0].</td></tr>
+<tr><td class="mono">x24</td><td class="mono">PUTSP</td><td>Print a packed string: two chars per word (low byte first), until x0000.</td></tr>
+<tr><td class="mono">x25</td><td class="mono">HALT</td><td>Stop execution and print a message.</td></tr>
+</table>
+<div class="method"><span class="lbl">I/O recipes seen in the exams</span>
+<ul style="margin-bottom:0;">
+<li><b>Print a fixed string:</b> <code>LEA R0, S</code> then <code>PUTS</code>, with <code>S .STRINGZ "…"</code>.</li>
+<li><b>Print one digit (0–9):</b> add <code>x30</code> ('0') to the value to make it ASCII, then <code>OUT</code>.</li>
+<li><b>Read a line:</b> loop <code>GETC</code> / <code>getchar()</code> until newline, storing chars (the C string-reader and charNode-list tasks).</li>
+<li><b>End:</b> always finish with <code>HALT</code>.</li>
+</ul>
+</div>
+</div>
+
+<!-- ===================== J: EXAM PATTERN MAP ===================== -->
+<div class="section page-break" id="patterns">
+<h2>J &nbsp;Exam Pattern Map</h2>
+<p>How the instruction set actually shows up in the 02322 papers, so you know which details to have on your physical notes.</p>
+
+<table>
+<tr><th>Exam task type</th><th>Instructions in play</th><th>What to remember</th></tr>
+<tr><td>Assemble → machine code / hex</td><td class="mono">any</td><td>Field widths; offset = target − (next addr); group nibbles to hex.</td></tr>
+<tr><td>Disassemble / explain a program</td><td class="mono">any</td><td>Comment each line; name registers; find the backward BR (the loop).</td></tr>
+<tr><td>Symbol table</td><td class="mono">.FILL .STRINGZ</td><td>One word per instruction; STRINGZ = chars + 1 for <code>\0</code>.</td></tr>
+<tr><td>Invalid instruction</td><td class="mono">1101</td><td>Opcode 1101 is unused → illegal.</td></tr>
+<tr><td>Add a big constant</td><td class="mono">ADD, LD</td><td>imm5 limit ±15 → chain adds or <code>LD … .FILL</code>.</td></tr>
+<tr><td>Walk a string</td><td class="mono">LEA, LDR, BRz, ADD</td><td><code>LEA</code> base → <code>LDR</code> char → <code>BRz</code> at <code>\0</code> → <code>ADD #1</code> advance.</td></tr>
+<tr><td>Clear / mask / negate</td><td class="mono">AND, NOT, ADD</td><td><code>AND Rx,#0</code> clear; <code>AND Rx,xF</code> mask; <code>NOT</code>+<code>ADD #1</code> negate.</td></tr>
+<tr><td>Compare / branch logic</td><td class="mono">NOT, ADD, BR</td><td>Subtract then branch on N/Z/P; map sense to the C condition.</td></tr>
+<tr><td>Store into array / histogram</td><td class="mono">STR, LDR, ADD</td><td>base + index addressing; read-modify-write a cell.</td></tr>
+<tr><td>Print output</td><td class="mono">TRAP (OUT/PUTS), HALT</td><td>digit + x30 → OUT; <code>LEA</code>+<code>PUTS</code> for strings; end with HALT.</td></tr>
+<tr><td>Function / runtime stack</td><td class="mono">JSR, RET, STR, LDR</td><td>R6=SP, R5=FP, R7=RA; prologue pushes R7&amp;R5; args/locals via R5 offsets.</td></tr>
+</table>
+
+<hr class="soft">
+<div class="two-col">
+<div class="keyfact"><span class="lbl">Three idioms to never forget</span>
+<ul style="margin-bottom:0;">
+<li><b>Zero:</b> <code>AND Rx, Rx, #0</code></li>
+<li><b>Negate:</b> <code>NOT Rx, Rx</code> + <code>ADD Rx, Rx, #1</code></li>
+<li><b>Dereference pointer in Rp:</b> <code>LDR Rd, Rp, #0</code> (read) / <code>STR Rs, Rp, #0</code> (write)</li>
+</ul>
+</div>
+<div class="warn"><span class="lbl">R7 hazard</span>
+Both <code>JSR</code> and <code>TRAP</code> overwrite <b>R7</b> with the return address. If your routine calls a subroutine <em>or</em> uses a TRAP and then needs to <code>RET</code>, save R7 first (push it on the stack) and restore it before returning.
+</div>
+</div>
+
+<p style="text-align:center; font-family:'JetBrains Mono',monospace; font-size:8pt; color:var(--ink-soft); letter-spacing:0.05em; margin-top:18px;">
+LC-3 annotated instruction reference · companion to the 02322 worked-exam compendium
+</p>
+</div>
+
+</div><!-- /wrap -->
+</body>
+</html>

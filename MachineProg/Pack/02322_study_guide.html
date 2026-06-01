@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>02322 Maskinnær Programmering — Exam Study Guide</title>
+<style>
+  /* ---------- Fonts ---------- */
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700&family=Newsreader:ital,wght@0,400;0,500;0,600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  :root{
+    --ink:#2b2b2b;
+    --ink-soft:#4a4a4a;
+    --paper:#ffffff;
+    --rule:#d9d2c4;
+    --rule-soft:#ece7db;
+    --accent:#5a6f52;        /* muted sage */
+    --accent-soft:#eef1e9;
+    --blue:#3f5d7a;
+    --blue-soft:#eaf0f5;
+    --amber:#8a6d3b;
+    --amber-soft:#f6f0e2;
+    --code-bg:#f7f6f1;
+    --code-ink:#33352e;
+    --rose:#8a4b4b;
+    --rose-soft:#f6ecec;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+
+  body{
+    font-family:'Newsreader', Georgia, serif;
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.5;
+    font-size:10.5pt;
+    margin:0;
+    padding:0;
+  }
+
+  .wrap{ max-width:850px; margin:0 auto; padding:32px 38px 60px; }
+
+  /* ---------- Headings ---------- */
+  h1,h2,h3,h4{ font-family:'Fraunces', Georgia, serif; color:var(--ink); line-height:1.15; }
+
+  h1{ font-size:30pt; font-weight:700; margin:0 0 4px; letter-spacing:-0.01em; }
+  .subtitle{ font-family:'Newsreader',serif; font-size:12pt; color:var(--ink-soft); font-style:italic; margin:0 0 6px; }
+
+  h2{
+    font-size:18pt; font-weight:700; margin:0 0 12px;
+    padding-bottom:6px; border-bottom:2px solid var(--accent);
+    color:var(--accent);
+  }
+  h3{
+    font-size:13pt; font-weight:600; margin:18px 0 8px;
+    color:var(--ink);
+  }
+  h4{
+    font-size:11pt; font-weight:600; margin:14px 0 5px; color:var(--blue);
+  }
+
+  p{ margin:0 0 9px; }
+
+  /* ---------- Section blocks ---------- */
+  .section{ margin-bottom:30px; }
+
+  .topic{
+    border:1px solid var(--rule);
+    border-radius:7px;
+    padding:16px 18px 14px;
+    margin-bottom:18px;
+    background:#fcfbf8;
+  }
+
+  /* ---------- Concept / method callouts ---------- */
+  .method{
+    background:var(--accent-soft);
+    border-left:4px solid var(--accent);
+    padding:10px 14px;
+    border-radius:0 5px 5px 0;
+    margin:10px 0;
+  }
+  .method .lbl{
+    font-family:'JetBrains Mono',monospace; font-size:8pt; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.08em; color:var(--accent);
+    display:block; margin-bottom:4px;
+  }
+
+  .keyfact{
+    background:var(--blue-soft);
+    border-left:4px solid var(--blue);
+    padding:10px 14px; border-radius:0 5px 5px 0; margin:10px 0;
+  }
+  .keyfact .lbl{
+    font-family:'JetBrains Mono',monospace; font-size:8pt; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.08em; color:var(--blue);
+    display:block; margin-bottom:4px;
+  }
+
+  .warn{
+    background:var(--amber-soft);
+    border-left:4px solid var(--amber);
+    padding:10px 14px; border-radius:0 5px 5px 0; margin:10px 0;
+  }
+  .warn .lbl{
+    font-family:'JetBrains Mono',monospace; font-size:8pt; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.08em; color:var(--amber);
+    display:block; margin-bottom:4px;
+  }
+
+  /* ---------- Worked example ---------- */
+  .example{
+    border:1px solid var(--rule-soft);
+    border-radius:6px; margin:12px 0; overflow:hidden;
+  }
+  .example > .ex-head{
+    background:#f1efe7; padding:6px 12px;
+    font-family:'JetBrains Mono',monospace; font-size:8.5pt; font-weight:700;
+    color:var(--ink-soft); letter-spacing:0.03em;
+    border-bottom:1px solid var(--rule-soft);
+  }
+  .example > .ex-body{ padding:11px 14px; }
+  .answer{
+    font-family:'JetBrains Mono',monospace; font-weight:700;
+    background:var(--accent-soft); color:var(--accent);
+    padding:2px 7px; border-radius:4px; display:inline-block;
+  }
+
+  /* ---------- Code ---------- */
+  pre{
+    font-family:'JetBrains Mono',monospace; font-size:8.6pt;
+    background:var(--code-bg); color:var(--code-ink);
+    border:1px solid var(--rule-soft); border-radius:5px;
+    padding:11px 13px; margin:9px 0; overflow-x:auto;
+    line-height:1.42; white-space:pre;
+  }
+  code{
+    font-family:'JetBrains Mono',monospace; font-size:9pt;
+    background:var(--code-bg); padding:1px 5px; border-radius:3px;
+    color:var(--code-ink);
+  }
+  pre code{ background:none; padding:0; font-size:8.6pt; }
+  .cmt{ color:#8a8f7e; font-style:italic; }
+
+  /* ---------- Tables ---------- */
+  table{ border-collapse:collapse; width:100%; margin:10px 0; font-size:9.2pt; }
+  th,td{ border:1px solid var(--rule); padding:4px 8px; text-align:left; vertical-align:top; }
+  th{ background:var(--accent-soft); font-family:'Fraunces',serif; font-weight:600; color:var(--accent); }
+  td.mono,th.mono{ font-family:'JetBrains Mono',monospace; font-size:8.6pt; }
+  tr:nth-child(even) td{ background:#faf9f4; }
+
+  /* stack table style */
+  .stack td{ font-family:'JetBrains Mono',monospace; font-size:8.3pt; padding:3px 7px; }
+  .stack .addr{ color:var(--blue); font-weight:700; width:70px; }
+  .stack .note{ color:var(--rose); }
+
+  ul,ol{ margin:6px 0 9px; padding-left:22px; }
+  li{ margin-bottom:4px; }
+
+  .two-col{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+
+  .pill{
+    display:inline-block; font-family:'JetBrains Mono',monospace; font-size:7.5pt;
+    font-weight:700; padding:2px 7px; border-radius:10px;
+    background:#efeadd; color:var(--ink-soft); letter-spacing:0.04em;
+    text-transform:uppercase; margin-right:5px;
+  }
+
+  /* ---------- TOC ---------- */
+  .toc{ columns:2; column-gap:30px; font-size:10pt; }
+  .toc a{ color:var(--ink); text-decoration:none; display:block; padding:2px 0; border-bottom:1px dotted var(--rule-soft); }
+  .toc .num{ color:var(--accent); font-family:'JetBrains Mono',monospace; font-weight:700; font-size:8.5pt; margin-right:6px; }
+
+  /* ---------- Cover ---------- */
+  .cover{ text-align:center; padding:60px 0 40px; border-bottom:3px double var(--accent); margin-bottom:28px; }
+  .cover .meta{ font-family:'JetBrains Mono',monospace; font-size:9pt; color:var(--ink-soft); letter-spacing:0.1em; text-transform:uppercase; margin-top:14px; }
+  .cover .course{ font-family:'JetBrains Mono',monospace; font-size:11pt; color:var(--accent); font-weight:700; letter-spacing:0.18em; }
+
+  hr.soft{ border:none; border-top:1px solid var(--rule-soft); margin:16px 0; }
+
+  /* ---------- Print ---------- */
+  @page{ margin:14mm 12mm; }
+  @media print{
+    .wrap{ padding:0; max-width:none; }
+    body{ font-size:9.8pt; }
+    .topic, .example, .method, .keyfact, .warn, pre, table{ break-inside:avoid; }
+    h2,h3,h4{ break-after:avoid; }
+    .page-break{ break-before:page; }
+    .cover{ break-after:page; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ===================== COVER ===================== -->
+<div class="cover">
+  <div class="course">02322</div>
+  <h1>Maskinnær Programmering</h1>
+  <div class="subtitle">Machine-Oriented Programming — Worked Exam Compendium &amp; Method Guide</div>
+  <div class="meta">LC-3 Assembly · C · Pointers · Runtime Stack · Number Systems</div>
+  <div class="meta" style="margin-top:6px;">Built from exams E2020 · F2021 · F2022 · F2023 · F2024</div>
+</div>
+
+<!-- ===================== TOC ===================== -->
+<div class="section">
+  <h2>Contents</h2>
+  <div class="toc">
+    <a href="#t1"><span class="num">1</span>Number Representation</a>
+    <a href="#t2"><span class="num">2</span>LC-3 Instruction Encoding</a>
+    <a href="#t3"><span class="num">3</span>Reading &amp; Reverse-Engineering LC-3</a>
+    <a href="#t4"><span class="num">4</span>Writing LC-3 Programs</a>
+    <a href="#t5"><span class="num">5</span>Flowcharts</a>
+    <a href="#t6"><span class="num">6</span>C: Strings, Arrays &amp; Pointers</a>
+    <a href="#t7"><span class="num">7</span>C: Linked Lists</a>
+    <a href="#t8"><span class="num">8</span>The Runtime Stack</a>
+    <a href="#t9"><span class="num">9</span>Quick Reference Card</a>
+  </div>
+</div>
+
+<!-- ===================== TOPIC 1 ===================== -->
+<div class="section" id="t1">
+<h2>1 &nbsp;Number Representation</h2>
+
+<div class="topic">
+<h3>1.1 &nbsp;Two's Complement</h3>
+
+<div class="keyfact"><span class="lbl">Core idea</span>
+With <em>n</em> bits, the top bit is the sign (1 = negative). A positive number is just plain binary. To get the negative of any value: <strong>invert all bits, then add 1</strong>. The range of an <em>n</em>-bit value is &minus;2<sup>n&minus;1</sup> &hellip; +2<sup>n&minus;1</sup>&minus;1.
+</div>
+
+<div class="method"><span class="lbl">Method — convert decimal to n-bit 2's complement</span>
+<ol style="margin-bottom:0;">
+<li>Write <strong>+|value|</strong> as a plain binary number padded to <em>n</em> bits.</li>
+<li>If the original number was positive → done.</li>
+<li>If negative → <strong>flip every bit</strong> (0↔1), then <strong>add 1</strong>.</li>
+</ol>
+</div>
+
+<div class="example">
+<div class="ex-head">F2023 Q1a — Given +234 = 0011101010 (10-bit), find &minus;234</div>
+<div class="ex-body">
+<p>The fastest route is to negate the given representation directly (invert + add 1):</p>
+<pre>+234 = 0011101010
+invert  1100010101
+add 1 = 1100010110</pre>
+<p>Answer: <span class="answer">1100010110</span></p>
+</div>
+</div>
+
+<div class="example">
+<div class="ex-head">F2023 Q1b — &minus;127 in 8 bits</div>
+<div class="ex-body">
+<pre>+127 = 0111 1111
+invert  1000 0000
+add 1 = 1000 0001</pre>
+<p>Answer: <span class="answer">1000 0001</span>. (Note: &minus;128 = 1000 0000 is the most-negative 8-bit value.)</p>
+</div>
+</div>
+
+<div class="example">
+<div class="ex-head">F2024 Q1c — &minus;23 in 8 bits</div>
+<div class="ex-body">
+<pre>+23  = 0001 0111
+invert  1110 1000
+add 1 = 1110 1001</pre>
+<p>Answer: <span class="answer">1110 1001</span></p>
+</div>
+</div>
+
+<div class="example">
+<div class="ex-head">E2020 Q1a/b — +86 and &minus;86 in 8 bits</div>
+<div class="ex-body">
+<pre>+86  = 0101 0110            (64+16+4+2)
+-86 : invert 1010 1001
+      add 1  1010 1010</pre>
+<p>+86 = <span class="answer">0101 0110</span> &nbsp;&middot;&nbsp; &minus;86 = <span class="answer">1010 1010</span></p>
+</div>
+</div>
+</div>
+
+<div class="topic">
+<h3>1.2 &nbsp;Binary &harr; Hexadecimal</h3>
+<div class="method"><span class="lbl">Method</span>
+Group the bits into <strong>nibbles of 4</strong> from the right. Each nibble is one hex digit (0000=0 &hellip; 1010=A &hellip; 1111=F). Going the other way, expand each hex digit into 4 bits.
+</div>
+<div class="example">
+<div class="ex-head">F2024 Q1b — 1100000011011110 to hex</div>
+<div class="ex-body">
+<pre>1100  0000  1101  1110
+  C     0     D     E</pre>
+<p>Answer: <span class="answer">xC0DE</span> &nbsp;(a classic "hex word" — useful sanity check that you grouped correctly).</p>
+</div>
+</div>
+<div class="example">
+<div class="ex-head">E2020 Q1c — decimal 86 to 2 hex digits</div>
+<div class="ex-body">
+<p>86 = 0101 0110 → <code>5</code> and <code>6</code>. Answer: <span class="answer">x56</span></p>
+</div>
+</div>
+</div>
+
+<div class="topic">
+<h3>1.3 &nbsp;Opcode Bits &rarr; Number of Instructions</h3>
+<div class="keyfact"><span class="lbl">Rule</span>
+If the opcode field is <em>k</em> bits wide, you can encode <strong>2<sup>k</sup></strong> distinct opcodes (the theoretical max number of instruction types).
+</div>
+<div class="example">
+<div class="ex-head">F2023 Q1c — top 6 bits are the opcode</div>
+<div class="ex-body">
+<p>2<sup>6</sup> = <span class="answer">64</span> possible instructions.</p>
+</div>
+</div>
+</div>
+
+</div>
+
+<!-- ===================== TOPIC 2 ===================== -->
+<div class="section page-break" id="t2">
+<h2>2 &nbsp;LC-3 Instruction Encoding</h2>
+
+<div class="topic">
+<h3>2.1 &nbsp;The Instruction Format Table</h3>
+<p>Every LC-3 instruction is <strong>16 bits</strong>; bits [15:12] are the opcode. Memorise the layout — the appendix table is the single most useful thing to have copied onto your physical notes.</p>
+<table class="mono">
+<tr><th>Instr</th><th>[15:12]</th><th>Layout of remaining bits</th></tr>
+<tr><td>ADD (reg)</td><td>0001</td><td>DR(3) SR1(3) 0 00 SR2(3)</td></tr>
+<tr><td>ADD (imm)</td><td>0001</td><td>DR(3) SR1(3) 1 imm5(5)</td></tr>
+<tr><td>AND (reg)</td><td>0101</td><td>DR(3) SR1(3) 0 00 SR2(3)</td></tr>
+<tr><td>AND (imm)</td><td>0101</td><td>DR(3) SR1(3) 1 imm5(5)</td></tr>
+<tr><td>BR</td><td>0000</td><td>n z p PCoffset9(9)</td></tr>
+<tr><td>JMP</td><td>1100</td><td>000 BaseR(3) 000000</td></tr>
+<tr><td>JSR</td><td>0100</td><td>1 PCoffset11(11)</td></tr>
+<tr><td>JSRR</td><td>0100</td><td>0 00 BaseR(3) 000000</td></tr>
+<tr><td>LD</td><td>0010</td><td>DR(3) PCoffset9(9)</td></tr>
+<tr><td>LDI</td><td>1010</td><td>DR(3) PCoffset9(9)</td></tr>
+<tr><td>LDR</td><td>0110</td><td>DR(3) BaseR(3) offset6(6)</td></tr>
+<tr><td>LEA</td><td>1110</td><td>DR(3) PCoffset9(9)</td></tr>
+<tr><td>NOT</td><td>1001</td><td>DR(3) SR(3) 111111</td></tr>
+<tr><td>RET</td><td>1100</td><td>000 111 000000</td></tr>
+<tr><td>RTI</td><td>1000</td><td>000000000000</td></tr>
+<tr><td>ST</td><td>0011</td><td>SR(3) PCoffset9(9)</td></tr>
+<tr><td>STI</td><td>1011</td><td>SR(3) PCoffset9(9)</td></tr>
+<tr><td>STR</td><td>0111</td><td>SR(3) BaseR(3) offset6(6)</td></tr>
+<tr><td>TRAP</td><td>1111</td><td>0000 trapvect8(8)</td></tr>
+</table>
+<div class="warn"><span class="lbl">Invalid opcode</span>
+<strong>1101</strong> is the one opcode not used by the LC-3 ISA in the textbook. Any 16-bit word beginning <code>1101</code> (e.g. <code>1101101001100100</code>) is therefore not a valid instruction. <span class="pill">F2024 Q1d</span>
+</div>
+</div>
+
+<div class="topic">
+<h3>2.2 &nbsp;Assembly &rarr; Machine Code</h3>
+<div class="method"><span class="lbl">Method</span>
+<ol style="margin-bottom:0;">
+<li>Identify the opcode → write bits [15:12].</li>
+<li>Encode each register as a 3-bit number (R0=000 &hellip; R7=111).</li>
+<li>For immediate forms set bit&nbsp;5 = 1 and write the value as a <strong>signed 2's-complement field</strong> of the right width.</li>
+<li>For branches/loads, the offset is <strong>(target address) &minus; (address of <em>next</em> instruction, i.e. PC after increment)</strong>, stored signed.</li>
+<li>Group the 16 bits into 4 nibbles → hex.</li>
+</ol>
+</div>
+<div class="example">
+<div class="ex-head">F2024 Q1a — assemble the program at x3000</div>
+<div class="ex-body">
+<pre>      .ORIG x3000
+      ADD R7, R2, #12      <span class="cmt">; x3000</span>
+LOOP  BRnzp LOOP           <span class="cmt">; x3001, branches to itself</span>
+      .END</pre>
+<p><strong>ADD R7, R2, #12</strong> — opcode 0001, DR=R7=111, SR1=R2=010, imm bit=1, imm5 = 12 = 01100:</p>
+<pre>0001 111 010 1 01100  =  0001 1110 1010 1100  =  <span style="font-weight:700">x1EAC</span></pre>
+<p><strong>BRnzp LOOP</strong> — opcode 0000, nzp=111. It sits at x3001; PC after fetch = x3002; target = x3001; offset = x3001 &minus; x3002 = &minus;1 = 111111111 (9-bit):</p>
+<pre>0000 111 111111111  =  0000 1111 1111 1111  =  <span style="font-weight:700">x0FFF</span></pre>
+<p>Answers: <span class="answer">x1EAC</span> &nbsp; <span class="answer">x0FFF</span></p>
+</div>
+</div>
+</div>
+
+<div class="topic">
+<h3>2.3 &nbsp;Symbol Tables</h3>
+<div class="method"><span class="lbl">Method</span>
+Start the address counter at the <code>.ORIG</code> value. Each real instruction and each <code>.FILL</code>/<code>.STRINGZ</code> word advances it by 1 (a <code>.STRINGZ</code> consumes one word per character <strong>plus one</strong> for the terminating <code>\0</code>). A label takes the address of the line it is attached to. <code>.ORIG/.END</code> consume nothing.
+</div>
+<div class="example">
+<div class="ex-head">F2024 Q2a — build the symbol table</div>
+<div class="ex-body">
+<p>Counting from x3000, the labelled lines land at:</p>
+<table class="mono" style="width:auto;">
+<tr><th>Label</th><th>Address</th></tr>
+<tr><td>aa</td><td>x3002</td></tr>
+<tr><td>bb</td><td>x3006</td></tr>
+<tr><td>cc</td><td>x300C</td></tr>
+<tr><td>dd</td><td>x300E</td></tr>
+</table>
+<p class="cmt">E2020 Q2a similarly: func=x3000, label1=x3011, label2=x3012.</p>
+</div>
+</div>
+</div>
+
+<div class="topic">
+<h3>2.4 &nbsp;The imm5 Limit (a favourite trap)</h3>
+<div class="warn"><span class="lbl">Constraint</span>
+The immediate in <code>ADD</code>/<code>AND</code> is a <strong>5-bit signed</strong> field, so it only spans <strong>&minus;16 &hellip; +15</strong>. <code>ADD R0, R0, #37</code> is therefore <em>illegal</em>.
+</div>
+<div class="example">
+<div class="ex-head">F2023 Q1d — add 37 to R0 correctly</div>
+<div class="ex-body">
+<p><strong>Option A</strong> — chain several legal adds (15+15+7 = 37):</p>
+<pre>ADD R0, R0, #15
+ADD R0, R0, #15
+ADD R0, R0, #7</pre>
+<p><strong>Option B</strong> — load the constant from memory (works for any size, but uses an extra register):</p>
+<pre>      LD  R1, A
+      ADD R0, R0, R1
+A     .FILL #37</pre>
+<p>Option B is the only practical one for large constants such as 10000.</p>
+</div>
+</div>
+</div>
+
+</div>
+
+<!-- ===================== TOPIC 3 ===================== -->
+<div class="section page-break" id="t3">
+<h2>3 &nbsp;Reading &amp; Reverse-Engineering LC-3</h2>
+
+<div class="method"><span class="lbl">General approach</span>
+<ol style="margin-bottom:0;">
+<li><strong>Decode line-by-line</strong> using the format table; write a plain comment on each line saying what it does to which register/memory cell.</li>
+<li><strong>Name the registers</strong> after the variables they seem to hold (a counter, a pointer, an accumulator).</li>
+<li><strong>Find the loop</strong>: where does a branch jump backwards? What is the loop condition and what changes each pass?</li>
+<li><strong>State the net effect</strong> in one sentence, then verify with the worked example values given in the question.</li>
+</ol>
+</div>
+
+<div class="topic">
+<h3>3.1 &nbsp;Sum 1..N <span class="pill">F2021 Q1</span></h3>
+<pre><span class="cmt">AND R0,R0,#0   ; R0 = 0   (accumulator)</span>
+<span class="cmt">LD  R1, val    ; R1 = 10  (counter, from memory)</span>
+<span class="cmt">loop BRnz done ; stop when R1 <= 0</span>
+<span class="cmt">ADD R0,R0,R1   ; R0 += R1</span>
+<span class="cmt">ADD R1,R1,#-1  ; R1--</span>
+<span class="cmt">BRnzp loop</span>
+<span class="cmt">done TRAP x25  ; HALT</span>
+<span class="cmt">val .FILL x000A ; = 10</span></pre>
+<p><strong>What it does:</strong> R0 accumulates 10+9+&hellip;+1. The program computes in R0 the <strong>sum of all integers from 1 to N</strong>, where N is read from <code>val</code>. With N=10 the result is <span class="answer">55</span>.</p>
+</div>
+
+<div class="topic">
+<h3>3.2 &nbsp;Multiplication Table <span class="pill">F2022 Q1</span></h3>
+<pre><span class="cmt">x3000 LEA R4, xFF   ; R4 <- x3100 (store pointer)</span>
+<span class="cmt">x3001 ADD R2, R0,#0 ; R2 <- R0   (running multiple)</span>
+<span class="cmt">x3002 NOT R3, R1</span>
+<span class="cmt">x3003 ADD R3,R3,#1  ; R3 <- -R1</span>
+<span class="cmt">x3004 L STR R2,R4,#0; M[R4] <- R2</span>
+<span class="cmt">x3005 ADD R4,R4,#1  ; advance pointer</span>
+<span class="cmt">x3006 ADD R2,R2,R0  ; R2 += R0 (next multiple)</span>
+<span class="cmt">x3007 ADD R5,R3,R2  ; R5 = R2 - R1</span>
+<span class="cmt">x3008 BRn L         ; loop while R2 < R1</span>
+<span class="cmt">x3009 HALT</span></pre>
+<p><strong>Inputs:</strong> R0 and R1. <strong>What it does:</strong> stores the multiplication table of R0 in memory from x3100, while each stored value is still less than R1. E.g. R0=4, R1=17 → stores <span class="answer">4, 8, 12, 16</span>.</p>
+<div class="keyfact"><span class="lbl">Trick to remember</span>
+<code>NOT Rx</code> followed by <code>ADD Rx,Rx,#1</code> is the idiom for <strong>negation</strong> (Rx ← &minus;Rx). Adding a negated value is how LC-3 does subtraction.
+</div>
+</div>
+
+<div class="topic">
+<h3>3.3 &nbsp;Assembly &rarr; C Function <span class="pill">E2020 Q2</span></h3>
+<div class="method"><span class="lbl">Method for stack-based functions</span>
+Recognise the prologue/epilogue. <code>ADD R6,R6,#-k</code> then <code>STR R7</code>/<code>STR R5</code> is the standard <strong>prologue</strong> (save return address &amp; old frame pointer, set new frame pointer R5, allocate locals). Then <code>LDR Rx, R5, #4</code>, <code>#5</code>, &hellip; read <strong>arguments</strong> (just above the bookkeeping), while <code>LDR/STR R5,#0</code>, <code>#-1</code> touch <strong>locals</strong>. The epilogue restores R5, R7 and pops everything.
+</div>
+<p>Decoding the body: it loads argument <code>x</code> (R0) and pointer argument <code>y</code> (R2), computes <code>R1 = -(*y)</code>, then <code>t = x - (*y) + 5</code>, stores t, and returns t if t&gt;0 else 0.</p>
+<pre><span class="cmt">// equivalent C function</span>
+int func(int x, int* y){
+    int t;
+    t = x - (*y) + 5;
+    if (t > 0)
+        return t;
+    else
+        return 0;
+}</pre>
+<div class="warn"><span class="lbl">Watch the branch sense</span>
+<code>BRnz label1</code> jumps to the "else" when t &le; 0, so the fall-through path is the t &gt; 0 case. Always translate the condition by asking "which flag values take the branch?"
+</div>
+</div>
+
+</div>
+
+<!-- ===================== TOPIC 4 ===================== -->
+<div class="section page-break" id="t4">
+<h2>4 &nbsp;Writing LC-3 Programs</h2>
+
+<div class="keyfact"><span class="lbl">Standard loop skeleton</span>
+Almost every program here is: <em>set a pointer + counter → at the top of the loop test the stop condition with a BR → do work → advance pointer / decrement counter → BRnzp back to top</em>. Strings are walked until the <code>\0</code> (value 0) is read.
+</div>
+
+<div class="topic">
+<h3>4.1 &nbsp;Caesar Encryption (+5 to each ASCII) <span class="pill">F2023 Q2</span></h3>
+<div class="method"><span class="lbl">Plan</span>
+Point R3 at the string. Loop: <code>LDR</code> a char; if it is 0 (the <code>\0</code>) stop; otherwise add 5, print it with <code>OUT</code>, advance the pointer, repeat.
+</div>
+<pre>      .ORIG x3000
+      LEA R3, S
+L     LDR R0, R3, #0     <span class="cmt">; load current char</span>
+      BRz H              <span class="cmt">; \0 -> done</span>
+      ADD R0, R0, #5     <span class="cmt">; shift ASCII by 5</span>
+      OUT                <span class="cmt">; print char in R0</span>
+      ADD R3, R3, #1     <span class="cmt">; next char</span>
+      BRnzp L
+H     HALT
+S     .STRINGZ "This is my secret message!"
+      .END</pre>
+<p>Output ("This" → "Ymnx", space x20→x25 prints as <code>%</code>):</p>
+<p><span class="answer">Ymnx%nx%r~%xjhwjy%rjxxflj&amp;</span></p>
+</div>
+
+<div class="topic">
+<h3>4.2 &nbsp;Histogram of low nibbles <span class="pill">F2021 Q2</span></h3>
+<div class="method"><span class="lbl">Plan</span>
+Two loops. <strong>Loop 1</strong> zero-fills the 16-entry histogram (index 15 down to 0). <strong>Loop 2</strong> walks the string: mask each char with <code>x000F</code> to get its low nibble, use that as an index, and increment <code>histogram[index]</code>.
+</div>
+<pre>      .ORIG x3000
+      LD  R3, inStr      <span class="cmt">; pointer into string</span>
+      LD  R4, histogram  <span class="cmt">; base of histogram</span>
+      AND R0, R0, #0
+      LD  R5, maxindex   <span class="cmt">; 15</span>
+loop1 BRn loop2          <span class="cmt">; until index < 0</span>
+      ADD R6, R4, R5     <span class="cmt">; &histogram[R5]</span>
+      STR R0, R6, #0     <span class="cmt">; = 0</span>
+      ADD R5, R5, #-1
+      BRnzp loop1
+loop2 LDR R2, R3, #0     <span class="cmt">; current char</span>
+      BRz done
+      AND R1, R2, xF     <span class="cmt">; low 4 bits</span>
+      ADD R1, R1, R4     <span class="cmt">; &histogram[nibble]</span>
+      LDR R0, R1, #0
+      ADD R0, R0, #1     <span class="cmt">; ++</span>
+      STR R0, R1, #0
+      ADD R3, R3, #1
+      BRnzp loop2
+done  HALT
+inStr     .fill x4000
+histogram .fill x5000
+maxindex  .fill #15
+      .end</pre>
+<p class="cmt">For "test": index 4 ('t') = 2, index 3 ('s') = 1, index 5 ('e') = 1, rest 0.</p>
+</div>
+
+<div class="topic">
+<h3>4.3 &nbsp;Count occurrences of 3 and 4, print message <span class="pill">E2020 Q4</span></h3>
+<div class="method"><span class="lbl">Plan</span>
+Walk 10 memory values. For each value test <code>(value&minus;3)==0</code> → bump counter R3; else test <code>(value&minus;4)==0</code> → bump R4. After the loop, convert each count to a printable digit by adding x30 ('0'), then print the three fixed strings interleaved with <code>OUT</code> of the counts.
+</div>
+<pre>      .ORIG x3000
+      LD  R2, AR         <span class="cmt">; R2 -> x4400</span>
+      AND R3, R3, #0     <span class="cmt">; count of 3s</span>
+      AND R4, R4, #0     <span class="cmt">; count of 4s</span>
+      ADD R1, R3, #10    <span class="cmt">; loop counter = 10</span>
+SL    BRnz MSG
+      LDR R0, R2, #0
+      ADD R5, R0, #-3
+      BRnp T3            <span class="cmt">; not a 3</span>
+      ADD R3, R3, #1
+      BRnzp LB
+T3    ADD R5, R0, #-4
+      BRnp LB            <span class="cmt">; not a 4</span>
+      ADD R4, R4, #1
+LB    ADD R1, R1, #-1
+      ADD R2, R2, #1
+      BRnzp SL
+MSG   LD  R0, AO         <span class="cmt">; x30 = '0'</span>
+      ADD R3, R3, R0     <span class="cmt">; count -> ASCII digit</span>
+      ADD R4, R4, R0
+      LEA R0, S1
+      PUTS
+      ADD R0, R3, #0
+      OUT
+      LEA R0, S2
+      PUTS
+      ADD R0, R4, #0
+      OUT
+      LEA R0, S3
+      PUTS
+      HALT
+AR  .FILL x4400
+S1  .STRINGZ "Terningen fik "
+S2  .STRINGZ " gange vaerdien 3 og "
+S3  .STRINGZ " gange vaerdien 4\n"
+AO  .FILL x30
+      .END</pre>
+<div class="keyfact"><span class="lbl">Digit-to-ASCII idiom</span>
+A single digit value <em>d</em> (0–9) is printed by adding <strong>x30</strong> ('0') to turn it into its ASCII code, then <code>OUT</code>. This only works for one digit at a time.
+</div>
+</div>
+
+<div class="topic">
+<h3>4.4 &nbsp;Count decimal digits in a string <span class="pill">F2022 Q2</span></h3>
+<div class="method"><span class="lbl">Plan</span>
+A char is a decimal digit iff its ASCII code is in <code>['0'..'9']</code> = <code>[x30..x39]</code>. Test: it is <em>not</em> a digit if <code>(c &minus; x30) &lt; 0</code> OR <code>(c &minus; x39) &gt; 0</code>. Walk the string, increment R0 on each digit, stop at <code>\0</code>.
+</div>
+<pre>      .ORIG x3000
+      LEA R3, S
+      AND R0, R0, #0
+LOOP  LDR R2, R3, #0
+      BRz DONE
+      ADD R3, R3, #1
+      LD  R4, ToD        <span class="cmt">; -x30</span>
+      ADD R5, R2, R4     <span class="cmt">; c - '0'</span>
+      BRn NOTD           <span class="cmt">; below '0'</span>
+      ADD R5, R5, #-9    <span class="cmt">; (c-'0') - 9</span>
+      BRp NOTD           <span class="cmt">; above '9'</span>
+      ADD R0, R0, #1     <span class="cmt">; it's a digit</span>
+NOTD  BRnzp LOOP
+DONE  HALT
+S   .STRINGZ "The prime numbers between 1 and 10 are: 2, 3, 5 and 7."
+ToD .FILL x-30
+      .END</pre>
+<p>Returns R0 = <span class="answer">7</span> for the example string.</p>
+</div>
+
+</div>
+
+<!-- ===================== TOPIC 5 ===================== -->
+<div class="section page-break" id="t5">
+<h2>5 &nbsp;Flowcharts</h2>
+
+<div class="keyfact"><span class="lbl">Conventions used in the exam</span>
+<ul style="margin-bottom:0;">
+<li><strong>Oval</strong> = Start / Stop.</li>
+<li><strong>Rectangle</strong> = an action / assignment, written with <code>&larr;</code> (e.g. <code>R0 &larr; 0</code>). You may show both the register and its variable meaning.</li>
+<li><strong>Diamond</strong> = a decision; label the two outgoing arrows <strong>True / False</strong>.</li>
+<li>Arrows show control flow; a loop is an arrow going back up to the decision.</li>
+</ul>
+</div>
+
+<div class="method"><span class="lbl">Method — turn code into a flowchart</span>
+<ol style="margin-bottom:0;">
+<li>Start oval → initialisation boxes (set up counters/pointers) in declaration order.</li>
+<li>Each <code>BR</code> that can fall through <em>or</em> jump becomes a diamond. The condition is the negation/sense of the branch.</li>
+<li>The loop body becomes the chain of action boxes between the test and the backward branch.</li>
+<li>The exit branch leads to Stop (or the next block).</li>
+</ol>
+</div>
+
+<div class="topic">
+<h3>Example shape — Sum 1..N (F2021 Q1a)</h3>
+<pre>      ( Start )
+          |
+     [ R0 <- 0 ]
+          |
+     [ R1 <- 10 ]
+          |
+   &lt;----&gt; &lt; R1 &gt; 0 ? &gt; --False--&gt; ( Stop )
+   |          | True
+   |     [ R0 <- R0 + R1 ]
+   |          |
+   |     [ R1 <- R1 - 1 ]
+   |__________|  (back up to the test)</pre>
+</div>
+
+<div class="topic">
+<h3>Example shape — nested loop (F2024 Q2b)</h3>
+<p>The 2024 program is a <code>while(x&gt;0)</code> with an inner <code>do…while</code> guarded by <code>if(x%8==0)</code>. The flowchart has an outer decision <code>x &le; 0?</code> (True → Stop), a branch <code>x%8==0?</code>, and an inner action chain (<code>t&larr;t+z; z&larr;z+1</code>) with its own back-edge tested by <code>x &ge; z?</code>. The corresponding C is in §3-style translation:</p>
+<pre>int x=15, t=0, z;
+while (x > 0){
+    if (x % 8 == 0){
+        z = 0;
+        do { t = t + z; z++; } while (x >= z);
+    }
+    x--;
+}</pre>
+</div>
+
+</div>
+
+<!-- ===================== TOPIC 6 ===================== -->
+<div class="section page-break" id="t6">
+<h2>6 &nbsp;C: Strings, Arrays &amp; Pointers</h2>
+
+<div class="topic">
+<h3>6.1 &nbsp;Debugging a string reader <span class="pill">F2023 Q3a</span></h3>
+<div class="method"><span class="lbl">How to spot the bugs</span>
+Read the comments to see the <em>intended</em> logic, then check four classic mistakes: (1) <strong>uninitialised pointer/index</strong> used before allocation, (2) <strong>assignment <code>=</code> where comparison <code>==</code> was meant</strong> inside a condition, (3) wrong logical operator, (4) returning a value through a parameter that was passed <em>by value</em> instead of by pointer.
+</div>
+<table>
+<tr><th>Bug</th><th>Fix</th></tr>
+<tr><td><code>char* buffer;</code> never allocated, and <code>i</code> uninitialised</td><td><code>char* buffer = malloc(100*sizeof(char));</code> and <code>int i = 0;</code></td></tr>
+<tr><td><code>if ((c=' ') && (c='\t'))</code> — assignments, and <code>&amp;&amp;</code> can never both hold</td><td><code>if ((c==' ') || (c=='\t'))</code></td></tr>
+<tr><td>word counting logic increments on every non-space, not once per word</td><td>only count when entering a word: <code>if(!wordStarted){wordStarted=1;(*nrWords)++;}</code></td></tr>
+<tr><td><code>nrWords</code> passed by value, so caller never sees the count</td><td>change signature to <code>char* readString(int* nrWords)</code> and use <code>*nrWords</code></td></tr>
+</table>
+<pre>char* readString(int* nrWords){
+    char c; int i = 0;
+    char* buffer = malloc(100*sizeof(char));
+    char wordStarted = 0;
+    printf("Write an input string:");
+    *nrWords = 0;
+    while ((c=getchar()) != '\n'){
+        buffer[i++] = c;
+        if (c==' ' || c=='\t'){
+            if (wordStarted) wordStarted = 0;   <span class="cmt">// end of a word</span>
+        } else if (!wordStarted){
+            wordStarted = 1;
+            (*nrWords)++;                        <span class="cmt">// new word started</span>
+        }
+    }
+    buffer[i] = '\0';
+    return buffer;
+}</pre>
+<div class="warn"><span class="lbl">Return-by-pointer rule</span>
+C passes arguments <strong>by value</strong>. To let a function return an extra value through an argument, pass a <strong>pointer</strong> to the caller's variable and write through it (<code>*nrWords = …</code>). The call becomes <code>readString(&amp;nrWords)</code>.
+</div>
+</div>
+
+<div class="topic">
+<h3>6.2 &nbsp;Find first-letter positions <span class="pill">F2023 Q3b</span></h3>
+<div class="method"><span class="lbl">Plan</span>
+Walk the string with index <code>i</code>. Track <code>wordStarted</code>. Each time you transition <em>from</em> whitespace <em>into</em> a non-space character you have found a word start — record <code>i</code> into the next slot of <code>posArray</code> (slot 0 already holds the word count, so start writing at index 1).
+</div>
+<pre>void firstLettersPositions(char* string, int* posArray){
+    int i = 0, wordIndex = 1, c;
+    char wordStarted = 0;
+    while ((c = string[i]) != '\0'){
+        if (c==' ' || c=='\t'){
+            if (wordStarted) wordStarted = 0;
+        } else if (!wordStarted){
+            wordStarted = 1;
+            posArray[wordIndex++] = i;   <span class="cmt">// position of this word's first letter</span>
+        }
+        i++;
+    }
+}</pre>
+<p class="cmt">For " One short example" → posArray = [3, 2, 6, 12] (slot 0 = 3 words; note two leading spaces).</p>
+</div>
+
+<div class="topic">
+<h3>6.3 &nbsp;Print each word with its position <span class="pill">F2023 Q3c</span></h3>
+<div class="method"><span class="lbl">Plan</span>
+<code>posArray[0]</code> is the word count. For each i from 1..count: jump to <code>j = posArray[i]</code> in the string and print characters until a space, tab, or <code>\0</code>; then print the position.
+</div>
+<pre>void showPosArray(char* string, int* posArray){
+    int i = 1, j; char c;
+    printf("First letters in the string have the following positions:\n");
+    while (i &lt;= posArray[0]){
+        printf("The word ");
+        j = posArray[i];
+        while ((c = string[j++]) != ' ' &amp;&amp; c != '\t' &amp;&amp; c != '\0')
+            printf("%c", c);
+        printf(" starts at string position %d\n", posArray[i]);
+        i++;
+    }
+}</pre>
+</div>
+
+<div class="topic">
+<h3>6.4 &nbsp;Allocating a struct &amp; its string <span class="pill">E2020 Q3</span></h3>
+<div class="keyfact"><span class="lbl">Pointer size</span>
+A pointer holds an <em>address</em>. If addresses are 32-bit, <code>sizeof(z)</code> for any pointer <code>z</code> is <strong>4 bytes</strong> — regardless of how big the struct it points to is.
+</div>
+<div class="method"><span class="lbl">Stack vs heap</span>
+To allocate on the <strong>runtime stack</strong>, declare a normal local variable / array and take its address. To allocate on the <strong>heap</strong>, call <code>malloc</code> (and remember the room for the <code>\0</code> of any string).
+</div>
+<pre>int main(){
+    struct S1 { int a; char b; char* c; } *z;
+
+    <span class="cmt">// Missing code 1: build on the stack, point z at it</span>
+    char s[] = "Pikaboo";
+    struct S1 aa = {5, 'z', s};
+    z = &amp;aa;
+
+    <span class="cmt">// Missing code 2: mutate through z, new string on the heap</span>
+    z-&gt;a = 7;
+    z-&gt;b = 'b';
+    z-&gt;c = (char*)malloc(10*sizeof(char));
+    z-&gt;c[0]='O'; z-&gt;c[1]='K'; z-&gt;c[2]='\0';
+    return 0;
+}</pre>
+</div>
+
+<div class="topic">
+<h3>6.5 &nbsp;Arrays of strings (char**) <span class="pill">F2021 Q3a</span></h3>
+<div class="method"><span class="lbl">Key insight</span>
+<code>strings[0][0]='H'</code> dereferences <code>strings</code> twice, so <code>strings</code> must point at an array of <code>char*</code>, and <code>strings[0]</code> must point at writable storage. The fix is to give those pointers real backing storage — without editing Jakob's fixed lines.
+</div>
+<pre>char** strings;
+char string[] = "Hola";
+char* strArray[3];
+
+char str0[3];          <span class="cmt">// L1: writable backing for word 0</span>
+strings = strArray;    <span class="cmt">// L2: strings now points at the array of char*</span>
+strArray[0] = str0;    <span class="cmt">// L3: slot 0 points at writable memory</span>
+
+strings[0][0]='H'; strings[0][1]='i'; strings[0][2]='\0';
+strings[1] = "Hello";  <span class="cmt">// string literal</span>
+
+strArray[2] = string;  <span class="cmt">// L4: slot 2 -> the "Hola" array</span></pre>
+<div class="warn"><span class="lbl">Why the original crashed</span>
+<code>char** strings;</code> was used uninitialised — writing through <code>strings[0][0]</code> dereferences a garbage pointer. Always make a pointer point at real storage before writing through it.
+</div>
+</div>
+
+</div>
+
+<!-- ===================== TOPIC 7 ===================== -->
+<div class="section page-break" id="t7">
+<h2>7 &nbsp;C: Linked Lists</h2>
+
+<div class="keyfact"><span class="lbl">The node and the three motions</span>
+A node is <code>struct Node{ int data; struct Node* next; };</code>. Nearly every list task is built from three moves: <strong>walk</strong> (<code>cur = cur-&gt;next</code> until <code>NULL</code>), <strong>splice out</strong> (<code>prev-&gt;next = cur-&gt;next</code>), and <strong>splice in / re-link</strong> (set a node's <code>next</code> to a new target). Keep a <code>prev</code> pointer whenever you might delete.
+</div>
+
+<div class="topic">
+<h3>7.1 &nbsp;Find the middle — slow/fast pointers <span class="pill">F2024 Q3</span></h3>
+<div class="method"><span class="lbl">Plan</span>
+Advance <code>slow</code> by one and <code>fast</code> by two each step. When <code>fast</code> reaches the end, <code>slow</code> is at the middle. For even length this lands on the <em>second</em> of the two middle nodes, exactly as required.
+</div>
+<pre>struct Node* findMiddle(struct Node* head){
+    struct Node* slow = head;
+    struct Node* fast = head;
+    while (fast != NULL &amp;&amp; fast-&gt;next != NULL){
+        slow = slow-&gt;next;
+        fast = fast-&gt;next-&gt;next;
+    }
+    return slow;
+}</pre>
+<p class="cmt">17→2→9→6→4 returns 9; 17→2→9→6→4→1 returns 6.</p>
+</div>
+
+<div class="topic">
+<h3>7.2 &nbsp;Append to the end <span class="pill">F2021 Q4a</span></h3>
+<div class="method"><span class="lbl">Plan</span>
+Walk to the last node (keeping <code>previousNode</code>). Make the new node, set its <code>next=NULL</code>. If the list was empty, it becomes <code>header</code>; otherwise link it after the old last node.
+</div>
+<pre>void append_node(int val){
+    node* currentNode = header;
+    node* previousNode = NULL;
+    node* newNode = (node*)malloc(sizeof(node));
+    while (currentNode){ previousNode = currentNode; currentNode = currentNode-&gt;next; }
+    newNode-&gt;val = val;
+    newNode-&gt;next = NULL;
+    if (previousNode) previousNode-&gt;next = newNode;
+    else              header = newNode;
+}</pre>
+</div>
+
+<div class="topic">
+<h3>7.3 &nbsp;Remove duplicates <span class="pill">F2021 Q4b/c</span></h3>
+<div class="method"><span class="lbl">Plan (one pass)</span>
+Given a <code>startNode</code>, scan everything after it; whenever a later node has the same <code>val</code>, splice it out via <code>previousNode-&gt;next = currentNode-&gt;next</code> (and do <em>not</em> advance <code>previousNode</code>). To clean the whole list, call this for every node in turn.
+</div>
+<div class="two-col">
+<pre>void remove_duplicates(node* startNode){
+    node *currentNode, *previousNode;
+    if (startNode){
+        currentNode = startNode-&gt;next;
+        previousNode = startNode;
+    } else return;
+    while (currentNode){
+        if (currentNode-&gt;val == startNode-&gt;val)
+            previousNode-&gt;next = currentNode-&gt;next; <span class="cmt">// splice out</span>
+        else
+            previousNode = currentNode;
+        currentNode = currentNode-&gt;next;
+    }
+}</pre>
+<pre>void remove_all_duplicates(){
+    node* currentNode = header;
+    while (currentNode){
+        remove_duplicates(currentNode);
+        currentNode = currentNode-&gt;next;
+    }
+}</pre>
+</div>
+</div>
+
+<div class="topic">
+<h3>7.4 &nbsp;Reverse the list <span class="pill">F2021 Q4d</span></h3>
+<div class="method"><span class="lbl">Plan — three-pointer reversal</span>
+Walk the list, and for each node remember its <code>next</code> before overwriting it; point the node back at the new head; advance the new head to this node. Finally update <code>header</code>.
+</div>
+<pre>void reverse_list(){
+    node* current = header;
+    node* newHeader = NULL;
+    node* next;
+    while (current){
+        next = current-&gt;next;       <span class="cmt">// save the rest</span>
+        current-&gt;next = newHeader;   <span class="cmt">// flip the link</span>
+        newHeader = current;        <span class="cmt">// grow reversed prefix</span>
+        current = next;             <span class="cmt">// move on</span>
+    }
+    header = newHeader;
+}</pre>
+</div>
+
+<div class="topic">
+<h3>7.5 &nbsp;Strings as linked lists of chars <span class="pill">F2022 Q3</span></h3>
+<p>Two node types: <code>charNode{char c; charNode* next;}</code> for one string, and <code>stringNode{charNode* header; stringNode* next;}</code> for a list of strings.</p>
+
+<h4>Read a string from the keyboard (b)</h4>
+<pre>struct charNode* initializeStringAsLinkedList(){
+    char c; struct charNode *n, *current, *header = NULL;
+    printf("Input a string:");
+    current = header;
+    c = getchar();
+    while (c != '\n'){
+        n = malloc(sizeof(struct charNode));
+        n-&gt;c = c; n-&gt;next = NULL;
+        if (!current) header = n;       <span class="cmt">// first char</span>
+        else current-&gt;next = n;         <span class="cmt">// link after previous</span>
+        current = n;
+        c = getchar();
+    }
+    return header;
+}</pre>
+
+<h4>Count words (c)</h4>
+<div class="method"><span class="lbl">Idea</span>Track a <code>beforeAWord</code> flag; count a word only on the first non-space after spaces.</div>
+<pre>int numberOfWords(struct charNode* string){
+    int nr = 0, beforeAWord = 1;
+    struct charNode* current = string;
+    while (current){
+        if (current-&gt;c == ' ') beforeAWord = 1;
+        else if (beforeAWord){ beforeAWord = 0; nr++; }
+        current = current-&gt;next;
+    }
+    return nr;
+}</pre>
+
+<h4>Replace letter at 1-based position (d)</h4>
+<pre>void replaceLetterAtPos(struct charNode* string, unsigned int pos, char letter){
+    struct charNode* current = string; int i = 1;
+    while (current &amp;&amp; (i &lt; pos)){ current = current-&gt;next; i++; }
+    if (current &amp;&amp; pos) current-&gt;c = letter;  <span class="cmt">// pos==0 is invalid -> no change</span>
+}</pre>
+
+<h4>To upper case — build a new list (e)</h4>
+<div class="method"><span class="lbl">Idea</span>Copy each node into a fresh list; if a char is in <code>'a'..'z'</code>, subtract <code>0x20</code> to get its capital.</div>
+<pre>struct charNode* stringToUpperCase(struct charNode* string){
+    struct charNode *current = string, *stringOut = NULL, *prevCharNode = NULL, *newCharNode;
+    char c;
+    while (current){
+        newCharNode = malloc(sizeof(struct charNode));
+        newCharNode-&gt;next = NULL;
+        if (!prevCharNode) stringOut = newCharNode;
+        else prevCharNode-&gt;next = newCharNode;
+        c = current-&gt;c;
+        if (c &gt;= 'a' &amp;&amp; c &lt;= 'z') newCharNode-&gt;c = c - 0x20;
+        else newCharNode-&gt;c = c;
+        prevCharNode = newCharNode;
+        current = current-&gt;next;
+    }
+    return stringOut;
+}</pre>
+
+<h4>Split on a separator into a list of strings (f)</h4>
+<div class="method"><span class="lbl">Idea</span>Walk char by char. On a separator, mark <code>newString=1</code> and terminate the current sub-string by setting the previous node's <code>next=NULL</code>. On the first char of a new word, allocate a <code>stringNode</code> pointing at that char and append it to the list of strings.</div>
+<pre>struct stringNode* split(struct charNode* string, char separator){
+    struct stringNode *header = NULL, *last = NULL, *lnode;
+    struct charNode *current = string, *prev = NULL;
+    int newString = 1;
+    while (current != NULL){
+        if (current-&gt;c == separator){
+            newString = 1;
+            if (prev) prev-&gt;next = NULL;     <span class="cmt">// cut the chain here</span>
+        } else if (newString == 1){
+            lnode = malloc(sizeof(struct stringNode));
+            if (last) last-&gt;next = lnode; else { header = lnode; last = header; }
+            lnode-&gt;header = current; lnode-&gt;next = NULL;
+            last = lnode; newString = 0;
+        }
+        prev = current;
+        current = current-&gt;next;
+    }
+    return header;
+}</pre>
+</div>
+
+</div>
+
+<!-- ===================== TOPIC 8 ===================== -->
+<div class="section page-break" id="t8">
+<h2>8 &nbsp;The Runtime Stack</h2>
+
+<div class="keyfact"><span class="lbl">LC-3 conventions (memorise)</span>
+<ul style="margin-bottom:0;">
+<li>int and pointer = <strong>1 word (16 bit)</strong>; memory is word-addressable.</li>
+<li>The stack <strong>grows downward</strong> (toward lower addresses). R6 = stack pointer, R5 = frame pointer.</li>
+<li>An activation record, from high to low address, holds: <strong>RV</strong> (return value), <strong>RA</strong> (return address), <strong>DL</strong> (dynamic link = caller's frame pointer), then the function's <strong>local variables</strong>.</li>
+<li>Locals are placed in the <strong>same order they are declared</strong> (first declared = highest address).</li>
+<li>Function arguments are pushed by the caller <strong>right-to-left</strong>, so they sit just <em>above</em> the callee's RV/RA/DL.</li>
+</ul>
+</div>
+
+<div class="method"><span class="lbl">Method — draw an activation record</span>
+<ol style="margin-bottom:0;">
+<li>Write the addresses downward from where R6 starts ("stack empty" value) — leave the top 3 words for RV, RA, DL of the first frame.</li>
+<li>Lay out each local in declaration order (arrays occupy consecutive words; a struct's members occupy consecutive words in declaration order).</li>
+<li>Fill <strong>initial values</strong>, then <strong>play the code line by line</strong>, updating only the cells each statement touches. Track what every pointer currently points at (write the target address).</li>
+<li>Use arrows <code>old -&gt; new</code> in a cell to show its history; the last value is the state "just before return".</li>
+</ol>
+</div>
+
+<div class="topic">
+<h3>8.1 &nbsp;Activation-record size <span class="pill">F2022 Q3a · F2024 Q4a</span></h3>
+<p>Count: 3 bookkeeping words (RV, RA, DL) + 1 word per local (each pointer/int = 1, each array/struct = its words).</p>
+<div class="two-col">
+<div>
+<p><strong>showString</strong> has one local (<code>current</code>) and one parameter (<code>string</code>):</p>
+<table class="mono" style="width:auto;"><tr><td>current</td></tr><tr><td>DL</td></tr><tr><td>RA</td></tr><tr><td>RV</td></tr><tr><td>string (arg)</td></tr></table>
+<p>= <span class="answer">5 words</span></p>
+</div>
+<div>
+<p><strong>F2024 main</strong>: 3 bookkeeping + 2 pointers (<code>ps</code>,<code>pps</code>) + 2 for struct <code>s1</code> + 4 for <code>arr</code> + 1 for <code>d</code></p>
+<p>= <span class="answer">12 words</span></p>
+</div>
+</div>
+</div>
+
+<div class="topic">
+<h3>8.2 &nbsp;Worked stack — pointers &amp; arrays <span class="pill">E2020 Q5</span></h3>
+<p>Two frames: <code>main</code> calls <code>f(&amp;t)</code>. Trace each statement in <code>f</code> (note the out-of-bounds writes like <code>*(b+15)</code> and <code>*(b+10)</code> land in other cells — that is the point of the exercise). State just before <code>return a;</code>:</p>
+<table class="stack">
+<tr><td class="addr">FFEC</td><td>b[0]</td><td>5</td></tr>
+<tr><td class="addr">FFED</td><td>b[1]</td><td>4 <span class="note">-&gt; 35</span></td></tr>
+<tr><td class="addr">FFEE</td><td>b[2]</td><td>2 <span class="note">-&gt; 7</span></td></tr>
+<tr><td class="addr">FFEF</td><td>*p</td><td>FFF3 &nbsp;(&amp;s[1].b)</td></tr>
+<tr><td class="addr">FFF0</td><td>s[0].a</td><td>5 <span class="note">-&gt; 0</span></td></tr>
+<tr><td class="addr">FFF1</td><td>s[0].b</td><td>3 <span class="note">-&gt; 21</span></td></tr>
+<tr><td class="addr">FFF2</td><td>s[1].a</td><td>1</td></tr>
+<tr><td class="addr">FFF3</td><td>s[1].b</td><td>6 <span class="note">-&gt; 22 -&gt; (*x)</span></td></tr>
+<tr><td class="addr">FFF4</td><td>s[2].a</td><td>4 <span class="note">-&gt; 6</span></td></tr>
+<tr><td class="addr">FFF5</td><td>s[2].b</td><td>0</td></tr>
+<tr><td class="addr">FFF6</td><td>a&nbsp;(R5)</td><td>5 <span class="note">-&gt; 100</span></td></tr>
+<tr><td class="addr">FFF7</td><td>DL</td><td>frame pointer</td></tr>
+<tr><td class="addr">FFF8</td><td>RA</td><td>return address</td></tr>
+<tr><td class="addr">FFF9</td><td>RV</td><td>return value</td></tr>
+<tr><td class="addr">FFFA</td><td>*x</td><td>FFFB &nbsp;(&amp;t)</td></tr>
+<tr><td class="addr">FFFB</td><td>t</td><td>9</td></tr>
+<tr><td class="addr">FFFC</td><td>DL</td><td>frame pointer</td></tr>
+<tr><td class="addr">FFFD</td><td>RA</td><td>return address</td></tr>
+<tr><td class="addr">FFFE</td><td>RV</td><td>return value</td></tr>
+<tr><td class="addr">FFFF</td><td colspan="2">(empty top)</td></tr>
+</table>
+<div class="warn"><span class="lbl">Why those cells change</span>
+<code>p = &amp;s[1].b</code> = FFF3. Then <code>*(p&minus;6)=35</code> hits FFED (b[1]); <code>*(b+10)=99</code> and <code>*(b+15)=22</code> overshoot the 3-element array and overwrite neighbours; <code>**(&amp;p)=*x</code> writes t's value into s[1].b. Always compute the <em>address</em> a pointer expression refers to before assigning.
+</div>
+</div>
+
+<div class="topic">
+<h3>8.3 &nbsp;Worked stack — structs &amp; double pointers <span class="pill">F2024 Q4</span></h3>
+<p>R6 = FE00 when empty. <code>struct S{char c; int* v;}</code>. Trace <code>pps=&amp;ps; ps=&amp;s1;</code> then the chain of <code>(*pps)-&gt;v</code> updates. State before return:</p>
+<table class="stack">
+<tr><td class="addr">FDF4</td><td>d</td><td>7 <span class="note">-&gt; 5 -&gt; 6</span></td></tr>
+<tr><td class="addr">FDF5</td><td>pps</td><td><span class="note">-&gt; FDF6</span></td></tr>
+<tr><td class="addr">FDF6</td><td>ps</td><td><span class="note">-&gt; FDF7</span></td></tr>
+<tr><td class="addr">FDF7</td><td>s1.c</td><td>? <span class="note">-&gt; 'D' -&gt; 'a'</span></td></tr>
+<tr><td class="addr">FDF8</td><td>s1.v</td><td>? <span class="note">-&gt; FDFB -&gt; FDFC -&gt; FDF4</span></td></tr>
+<tr><td class="addr">FDF9</td><td>arr[0]</td><td>22</td></tr>
+<tr><td class="addr">FDFA</td><td>arr[1]</td><td>33</td></tr>
+<tr><td class="addr">FDFB</td><td>arr[2]</td><td>11 <span class="note">-&gt; 12</span></td></tr>
+<tr><td class="addr">FDFC</td><td>arr[3]</td><td>25 <span class="note">-&gt; 26</span></td></tr>
+<tr><td class="addr">FDFD</td><td>DL</td><td></td></tr>
+<tr><td class="addr">FDFE</td><td>RA</td><td></td></tr>
+<tr><td class="addr">FDFF</td><td>RV</td><td></td></tr>
+<tr><td class="addr">FE00</td><td colspan="2">(empty top)</td></tr>
+</table>
+<p><strong>Output of the program:</strong></p>
+<pre>arr = {22, 33, 12, 26}
+s1.c = a
+*(s1.v) = 6</pre>
+</div>
+
+<div class="topic">
+<h3>8.4 &nbsp;Worked stack — array of strings <span class="pill">F2021 Q3b</span></h3>
+<p>R6 = FFFF when empty. Locals in declaration order: <code>strings</code> (char**), <code>string[5]</code>, <code>strArray[3]</code>, plus the added <code>str0[3]</code>.</p>
+<table class="stack">
+<tr><td class="addr">FFF0</td><td>str0[0]</td><td>'H'</td></tr>
+<tr><td class="addr">FFF1</td><td>str0[1]</td><td>'i'</td></tr>
+<tr><td class="addr">FFF2</td><td>str0[2]</td><td>'\0'</td></tr>
+<tr><td class="addr">FFF3</td><td>strArray[0]</td><td>FFF0 &nbsp;(&amp;str0)</td></tr>
+<tr><td class="addr">FFF4</td><td>strArray[1]</td><td>&amp;"Hello" (literal)</td></tr>
+<tr><td class="addr">FFF5</td><td>strArray[2]</td><td>FFF6 &nbsp;(&amp;string)</td></tr>
+<tr><td class="addr">FFF6</td><td>string[0]</td><td>'H'</td></tr>
+<tr><td class="addr">FFF7</td><td>string[1]</td><td>'o'</td></tr>
+<tr><td class="addr">FFF8</td><td>string[2]</td><td>'l'</td></tr>
+<tr><td class="addr">FFF9</td><td>string[3]</td><td>'a'</td></tr>
+<tr><td class="addr">FFFA</td><td>string[4]</td><td>'\0'</td></tr>
+<tr><td class="addr">FFFB</td><td>strings</td><td>FFF3 &nbsp;(=strArray)</td></tr>
+<tr><td class="addr">FFFC</td><td>DL</td><td></td></tr>
+<tr><td class="addr">FFFD</td><td>RA</td><td></td></tr>
+<tr><td class="addr">FFFE</td><td>RV</td><td></td></tr>
+<tr><td class="addr">FFFF</td><td colspan="2">(empty top)</td></tr>
+</table>
+</div>
+
+<div class="topic">
+<h3>8.5 &nbsp;Worked stack — mixed declarations <span class="pill">F2023 Q4</span></h3>
+<p>R6 = FFFF empty. <code>char myStr[]="Text"</code>, <code>char* pStr</code>, <code>int i,j</code>, <code>int* p</code>, <code>int** t</code>, <code>struct S *st</code>. Note that <code>myStr</code> (declared first) sits at lower addresses than later scalars because of how the cells fill — follow the exam's given layout:</p>
+<table class="stack">
+<tr><td class="addr">FFF1</td><td>st</td><td>? &nbsp;(R6)</td></tr>
+<tr><td class="addr">FFF2</td><td>t</td><td>&amp;p</td></tr>
+<tr><td class="addr">FFF3</td><td>p</td><td>&amp;j <span class="note">-&gt; &amp;i</span></td></tr>
+<tr><td class="addr">FFF4</td><td>j</td><td>7 <span class="note">-&gt; 8</span></td></tr>
+<tr><td class="addr">FFF5</td><td>i</td><td>5 <span class="note">-&gt; 4</span></td></tr>
+<tr><td class="addr">FFF6</td><td>pStr</td><td>? <span class="note">-&gt; &amp;myStr[3]</span></td></tr>
+<tr><td class="addr">FFF7</td><td>myStr[0]</td><td>'T'</td></tr>
+<tr><td class="addr">FFF8</td><td>myStr[1]</td><td>'e'</td></tr>
+<tr><td class="addr">FFF9</td><td>myStr[2]</td><td>'x'</td></tr>
+<tr><td class="addr">FFFA</td><td>myStr[3]</td><td>'t'</td></tr>
+<tr><td class="addr">FFFB</td><td>myStr[4]</td><td>'\0' &nbsp;(R5)</td></tr>
+<tr><td class="addr">FFFC</td><td>DL</td><td></td></tr>
+<tr><td class="addr">FFFD</td><td>RA</td><td></td></tr>
+<tr><td class="addr">FFFE</td><td>RV</td><td></td></tr>
+<tr><td class="addr">FFFF</td><td colspan="2">(empty top)</td></tr>
+</table>
+<div class="keyfact"><span class="lbl">How the values move</span>
+<code>t=&amp;p</code> so <code>**t</code> is whatever <code>p</code> points at. <code>(**t)++</code> increments <code>j</code> (7→8). <code>(*t)++</code> increments the pointer <code>p</code> itself, moving it from <code>&amp;j</code> to <code>&amp;i</code>. <code>(*p)--</code> then decrements <code>i</code> (5→4). Finally <code>pStr=myStr+3</code> points pStr at <code>myStr[3]</code>.
+</div>
+</div>
+
+</div>
+
+<!-- ===================== TOPIC 9 ===================== -->
+<div class="section page-break" id="t9">
+<h2>9 &nbsp;Quick Reference Card</h2>
+
+<div class="two-col">
+
+<div class="topic">
+<h4>ASCII landmarks</h4>
+<table class="mono"><tr><th>Char</th><th>Hex</th><th>Dec</th></tr>
+<tr><td>'0'</td><td>x30</td><td>48</td></tr>
+<tr><td>'9'</td><td>x39</td><td>57</td></tr>
+<tr><td>'A'</td><td>x41</td><td>65</td></tr>
+<tr><td>'a'</td><td>x61</td><td>97</td></tr>
+<tr><td>space</td><td>x20</td><td>32</td></tr>
+<tr><td>'\0'</td><td>x00</td><td>0</td></tr>
+<tr><td>'\n'</td><td>x0A</td><td>10</td></tr>
+</table>
+<p class="cmt">lower→UPPER: subtract 0x20. digit value: char − x30.</p>
+</div>
+
+<div class="topic">
+<h4>Common TRAPs</h4>
+<table class="mono"><tr><th>Name</th><th>Vec</th><th>Effect</th></tr>
+<tr><td>GETC</td><td>x20</td><td>char → R0 (no echo)</td></tr>
+<tr><td>OUT</td><td>x21</td><td>print R0[7:0]</td></tr>
+<tr><td>PUTS</td><td>x22</td><td>print string @R0</td></tr>
+<tr><td>IN</td><td>x23</td><td>prompt + read</td></tr>
+<tr><td>HALT</td><td>x25</td><td>stop</td></tr>
+</table>
+</div>
+
+<div class="topic">
+<h4>Assembly idioms</h4>
+<ul style="margin-bottom:0;">
+<li><code>AND Rx,Rx,#0</code> → clear to 0</li>
+<li><code>NOT Rx,Rx</code> + <code>ADD Rx,Rx,#1</code> → negate</li>
+<li>subtract: negate then add</li>
+<li>compare a,b: <code>NOT/ADD</code> to get b−a then branch on flags</li>
+<li><code>AND Rx,Rx,#-16..#15</code> mask uses imm5</li>
+<li><code>LEA</code> = address, <code>LD</code> = value via PC-offset, <code>LDR</code> = value via base+offset</li>
+</ul>
+</div>
+
+<div class="topic">
+<h4>imm / offset widths</h4>
+<table class="mono"><tr><th>Field</th><th>Bits</th><th>Range</th></tr>
+<tr><td>imm5</td><td>5</td><td>−16…+15</td></tr>
+<tr><td>offset6</td><td>6</td><td>−32…+31</td></tr>
+<tr><td>PCoffset9</td><td>9</td><td>−256…+255</td></tr>
+<tr><td>PCoffset11</td><td>11</td><td>−1024…+1023</td></tr>
+<tr><td>trapvect8</td><td>8</td><td>0…255</td></tr>
+</table>
+</div>
+
+<div class="topic">
+<h4>Branch sense</h4>
+<ul style="margin-bottom:0;">
+<li>flags n/z/p set from the <em>last</em> value written to a register.</li>
+<li><code>BRn</code> taken if &lt;0; <code>BRz</code> if =0; <code>BRp</code> if &gt;0; combine letters to OR them.</li>
+<li><code>BRnzp</code> = unconditional.</li>
+<li>offset is relative to the <strong>incremented</strong> PC (next instruction).</li>
+</ul>
+</div>
+
+<div class="topic">
+<h4>Stack frame (top→bottom)</h4>
+<table class="mono"><tr><td>arguments (R-to-L)</td></tr><tr><td>RV — return value</td></tr><tr><td>RA — return addr (R7)</td></tr><tr><td>DL — caller's R5</td></tr><tr><td>locals (decl. order)</td></tr></table>
+<p class="cmt">R6 = SP (top, low addr). R5 = FP. Stack grows down. int/ptr = 1 word.</p>
+</div>
+
+<div class="topic">
+<h4>C pointer cheats</h4>
+<ul style="margin-bottom:0;">
+<li><code>sizeof(any pointer)</code> = address width, independent of target.</li>
+<li>return extra values by passing <code>&amp;var</code> and writing <code>*ptr=…</code>.</li>
+<li><code>p[i]</code> ≡ <code>*(p+i)</code>; pointer arithmetic steps by element size.</li>
+<li>always allocate (stack var or <code>malloc</code>) before writing through a pointer.</li>
+<li>strings need room for the trailing <code>\0</code>.</li>
+</ul>
+</div>
+
+<div class="topic">
+<h4>Linked-list moves</h4>
+<ul style="margin-bottom:0;">
+<li>walk: <code>cur=cur-&gt;next</code> until <code>NULL</code></li>
+<li>delete: <code>prev-&gt;next=cur-&gt;next</code></li>
+<li>insert after: <code>n-&gt;next=p-&gt;next; p-&gt;next=n;</code></li>
+<li>reverse: save next, flip link, advance head</li>
+<li>middle: slow+1 / fast+2</li>
+</ul>
+</div>
+
+</div>
+
+<hr class="soft">
+<p style="text-align:center; font-family:'JetBrains Mono',monospace; font-size:8pt; color:var(--ink-soft); letter-spacing:0.05em;">
+02322 Maskinnær Programmering — method &amp; answer compendium · built from official solution sets E20/F21/F22/F23/F24
+</p>
+
+</div>
+
+</div><!-- /wrap -->
+</body>
+</html>

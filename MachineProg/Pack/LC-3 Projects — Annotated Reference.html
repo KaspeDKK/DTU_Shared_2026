@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<!-- saved from url=(0060)file:///C:/Users/kaspe/Downloads/lc3_projects_reference.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LC-3 Projects — Annotated Reference</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+:root{--ink:#23262b;--soft:#555a61;--faint:#8b9097;--line:#d7dce2;--line2:#edeff2;--bg:#fff;--panel:#faf9f6;
+--accent:#33567f;--accent2:#9a5b34;--code-bg:#fbfaf7;--gutter:#f0eee9;--gnum:#aab0b6;
+--op:#1f5673;--dir:#7a5a86;--reg:#2f6d54;--num:#9a5b34;--str:#9a5b34;--cmt:#8a9580;--lbl:#b0552c;
+--hl:#fbf3e6;--hlb:#eef3f7;--bad:#fbf0ef;}
+*{box-sizing:border-box}html{font-size:13px}
+body{margin:0;font-family:'Inter Tight',sans-serif;color:var(--ink);background:var(--bg);line-height:1.42;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding:30px 36px 60px}
+header.title{border-bottom:3px double var(--accent);padding-bottom:14px;margin-bottom:6px}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);font-weight:700}
+h1{font-family:'Newsreader',serif;font-weight:600;font-size:2rem;line-height:1.05;margin:.12em 0;color:var(--ink)}
+.sub{color:var(--soft);font-size:.92rem}
+.intro{background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:14px 18px;margin-top:16px;font-size:.9rem}
+.intro h2{font-family:'Newsreader',serif;font-size:1.15rem;color:var(--accent);margin:0 0 6px;border:none}
+.pipeline{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:#fff;border:1px solid var(--line);border-radius:5px;padding:8px 12px;margin:8px 0;color:var(--accent)}
+.toc{margin-top:14px}
+.toc h2{font-family:'Newsreader',serif;font-size:1.15rem;color:var(--accent);margin:0 0 8px}
+.toc ol{list-style:none;margin:0;padding:0;counter-reset:t}
+.toc li{counter-increment:t;border-bottom:1px dotted var(--line2)}
+.toc a{display:flex;align-items:baseline;gap:10px;text-decoration:none;color:var(--soft);padding:4px 2px}
+.toc a:hover{color:var(--accent)}
+.toc a::before{content:counter(t);font-family:'JetBrains Mono',monospace;font-size:.7rem;color:#fff;background:var(--accent);border-radius:3px;padding:1px 6px;min-width:20px;text-align:center}
+.toc .fn{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--ink)}
+.toc .ds{flex:1}
+.toc .badge{font-family:'JetBrains Mono',monospace;font-size:.64rem;text-transform:uppercase;letter-spacing:.05em;border:1px solid var(--line);border-radius:20px;padding:1px 8px;color:var(--faint)}
+.badge.bb{background:var(--hlb);color:#33567f;border-color:#cdddeb}
+.badge.it{background:#eef3ee;color:#3c6b3c;border-color:#cfe0cf}
+.badge.opt{background:var(--hl);color:#9a5b34;border-color:#ecdcbf}
+
+.file{margin:26px 0 8px}
+.file-head{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--accent);padding-bottom:5px;margin-bottom:4px}
+.file-head .idx{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:#fff;background:var(--accent);padding:2px 8px;border-radius:3px}
+.file-head .fn{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.05rem;color:var(--ink)}
+.file-head .ttl{font-family:'Newsreader',serif;font-size:1.2rem;color:var(--accent)}
+.file-head .loc{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--faint)}
+.expl{font-size:.9rem}
+.expl h4{font-size:.85rem;color:var(--accent2);margin:12px 0 3px}
+.expl p{margin:7px 0}
+.expl ul{margin:6px 0;padding-left:20px}
+.expl code,kbd{font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--code-bg);border:1px solid var(--line2);border-radius:3px;padding:1px 5px}
+table.reg{border-collapse:collapse;margin:8px 0;font-size:.8rem;width:auto;min-width:340px}
+table.reg th,table.reg td{border:1px solid var(--line);padding:4px 9px;text-align:left}
+table.reg th{background:var(--hlb);color:var(--accent);font-size:.72rem}
+table.reg td:first-child{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--reg);width:64px}
+.tip{background:var(--hlb);border:1px solid #cfdcec;border-left:4px solid var(--accent);border-radius:5px;padding:8px 12px;margin:9px 0;font-size:.85rem}
+.pitfall{background:var(--bad);border:1px solid #eccac6;border-left:4px solid #9c3a34;border-radius:5px;padding:8px 12px;margin:9px 0;font-size:.85rem}
+.pitfall b{color:#9c3a34}.tip b{color:var(--accent)}
+pre.flow{font-family:'JetBrains Mono',monospace;background:#fff;border:1px solid var(--line);border-radius:5px;padding:8px 12px;font-size:.82rem;color:var(--accent);margin:8px 0}
+
+table.code{border-collapse:collapse;width:100%;background:var(--code-bg);table-layout:fixed;margin:8px 0;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+table.code td{vertical-align:top;padding:0}
+table.code td.ln{width:40px;text-align:right;padding:0 8px 0 0;color:var(--gnum);background:var(--gutter);font-family:'JetBrains Mono',monospace;font-size:.72rem;line-height:1.55;user-select:none;border-right:1px solid var(--line2)}
+table.code td.src{padding:0 0 0 12px}
+table.code pre{margin:0;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.55;white-space:pre-wrap;word-break:break-word;color:#2c3036}
+.s-op{color:var(--op);font-weight:600}.s-dir{color:var(--dir);font-weight:600}.s-reg{color:var(--reg)}
+.s-num{color:var(--num)}.s-str{color:var(--str)}.s-cmt{color:var(--cmt);font-style:italic}.s-lbl{color:var(--lbl);font-weight:700}
+.top{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--faint);text-decoration:none;margin-left:8px}
+.cheat{background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:12px 18px;margin-top:20px}
+.cheat h2{font-family:'Newsreader',serif;font-size:1.15rem;color:var(--accent);margin:0 0 6px}
+.cheat table{border-collapse:collapse;width:100%;font-size:.8rem}
+.cheat th,.cheat td{border:1px solid var(--line);padding:4px 8px;text-align:left}
+.cheat th{background:var(--hlb);color:var(--accent)}
+.cheat td:first-child{font-family:'JetBrains Mono',monospace}
+@media print{@page{margin:12mm 11mm}html{font-size:8.8pt}.wrap{max-width:none;padding:0;margin:0}
+a{color:inherit;text-decoration:none}.file{page-break-before:always}.file:first-of-type{page-break-before:avoid}
+.file-head{page-break-after:avoid}table.code tr{page-break-inside:avoid}.tip,.pitfall,table.reg,pre.flow{page-break-inside:avoid}
+.toc,.intro{page-break-inside:avoid}.top{display:none}
+.s-op,.s-dir,.s-lbl,.badge,.file-head .idx,td.ln,table.reg th{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style></head><body><div class="wrap" id="top">
+<header class="title">
+<div class="kicker">LC-3 Assembly · Course Project</div>
+<h1>LC-3 Projects — Annotated Reference</h1>
+<div class="sub">Seven assignment files building up to an interactive prime-number checker. Each shown with line numbers, register tables, and an explanation of what it does and why.</div>
+</header>
+<div class="intro"><h2>The big picture</h2>
+<p>The assignments build one capability at a time, then assemble them into a complete program and refine it. A1 practises loops and condition codes; A2 reads a number from the keyboard; A3 is the primality algorithm; A4 prints the verdict. <b>A5</b> wires the three useful pieces together; <b>A5_opt1</b> and <b>A5_opt2</b> then improve the input handling.</p>
+<div class="pipeline">A1 loops &nbsp;·&nbsp; A2 read &nbsp;+&nbsp; A3 isPrime &nbsp;+&nbsp; A4 print &nbsp;→&nbsp; A5 combined &nbsp;→&nbsp; opt1 (5 digits) &nbsp;→&nbsp; opt2 (validated)</div>
+</div>
+
+<nav class="toc"><h2>Indholdsfortegnelse</h2><ol>
+<li><a href="file:///C:/Users/kaspe/Downloads/lc3_projects_reference.html#f-A1-asm"><span class="fn">A1.asm</span><span class="ds">Counting toward a target</span><span class="badge bb">building block</span></a></li>
+<li><a href="file:///C:/Users/kaspe/Downloads/lc3_projects_reference.html#f-A2-asm"><span class="fn">A2.asm</span><span class="ds">Read a 2-digit number</span><span class="badge bb">building block</span></a></li>
+<li><a href="file:///C:/Users/kaspe/Downloads/lc3_projects_reference.html#f-A3-asm"><span class="fn">A3.asm</span><span class="ds">Primality test</span><span class="badge bb">building block</span></a></li>
+<li><a href="file:///C:/Users/kaspe/Downloads/lc3_projects_reference.html#f-A4-asm"><span class="fn">A4.asm</span><span class="ds">Print the result</span><span class="badge bb">building block</span></a></li>
+<li><a href="file:///C:/Users/kaspe/Downloads/lc3_projects_reference.html#f-A5-asm"><span class="fn">A5.asm</span><span class="ds">Full program</span><span class="badge it">integration</span></a></li>
+<li><a href="file:///C:/Users/kaspe/Downloads/lc3_projects_reference.html#f-A5_opt1-asm"><span class="fn">A5_opt1.asm</span><span class="ds">Optimised: up to 5 digits</span><span class="badge opt">optimised</span></a></li>
+<li><a href="file:///C:/Users/kaspe/Downloads/lc3_projects_reference.html#f-A5_opt2-asm"><span class="fn">A5_opt2.asm</span><span class="ds">Optimised: with validation</span><span class="badge opt">optimised</span></a></li>
+</ol></nav>
+<section class="file" id="f-A1-asm">
+<div class="file-head"><span class="idx">1</span><span class="fn">A1.asm</span><span class="ttl">— Counting toward a target</span>
+<span class="loc">33 lines<a class="top" href="file:///C:/Users/kaspe/Downloads/lc3_projects_reference.html#top">↑ top</a></span></div>
+<div class="expl">
+<p><b>Goal.</b> A minimal loop exercise. It loads two values <code>A</code> and <code>B</code> (with <code>A&lt;B</code>), then walks <code>R0</code> up from <code>A</code> and <code>R1</code> down from <code>B</code> one step at a time until they meet, storing the meeting value in <code>C</code>.</p>
+<table class="reg"><tbody><tr><th>Reg</th><th>Role</th></tr>
+<tr><td>R0</td><td>counter rising from A</td></tr>
+<tr><td>R1</td><td>counter falling from B</td></tr>
+<tr><td>R2</td><td>scratch: computes <code>B−A</code> to test the loop</td></tr></tbody></table>
+<p><b>How the loop ends.</b> Each pass does <code>R0++</code>, <code>R1−−</code>, then forms <code>R2 = R1 − R0</code> using the negate-and-add trick (<code>NOT</code> then <code>ADD #1</code> makes <code>−R0</code>, then add <code>R1</code>). While that difference is still positive the counters haven't met, so <code>BRnp X</code> repeats; once equal the difference is zero and it falls through to <code>DONE</code>.</p>
+<div class="tip"><b>Key idea:</b> LC-3 has no subtract or compare instruction. You subtract by negating in two's complement (<code>NOT</code> + <code>ADD #1</code>) and compare by subtracting and reading the condition codes with a <code>BR</code>.</div>
+<div class="pitfall"><b>Watch-outs:</b> the result ends in <code>R1</code>. The <code>BRz DONE</code> just before the <code>DONE</code> label is redundant (it falls through anyway). The data words <code>A/B/C</code> sit after <code>TRAP x25</code> (HALT), which is fine because HALT stops the CPU before it could try to execute data.</div>
+</div>
+<table class="code"><tbody><tr>
+<td class="ln"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33</pre></td>
+<td class="src"><pre><span class="s-dir">.ORIG</span> <span class="s-num">x3000</span>
+&nbsp;
+<span class="s-cmt">;Load Values</span>
+<span class="s-cmt">;   First AND it to make it = 0</span>
+<span class="s-cmt">;   Then add the EVEN numbers.</span>
+<span class="s-cmt">;</span>
+        <span class="s-op">AND</span> <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-num">#0</span>
+        <span class="s-op">AND</span> <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-num">#0</span>
+        <span class="s-op">AND</span> <span class="s-reg">R2</span>, <span class="s-reg">R2</span>, <span class="s-num">#0</span>
+&nbsp;
+        <span class="s-op">LD</span> <span class="s-reg">R0</span>, A 
+        <span class="s-op">LD</span> <span class="s-reg">R1</span>, B 
+&nbsp;
+        
+<span class="s-lbl">X</span>       <span class="s-op">ADD</span> <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-num">#1</span>
+        <span class="s-op">ADD</span> <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-num">#-1</span>
+        
+        <span class="s-op">ADD</span> <span class="s-reg">R2</span>, <span class="s-reg">R0</span>, <span class="s-num">#0</span> <span class="s-cmt">; gets -A</span>
+        <span class="s-op">NOT</span> <span class="s-reg">R2</span>, <span class="s-reg">R2</span>
+        <span class="s-op">ADD</span> <span class="s-reg">R2</span>, <span class="s-reg">R2</span>, <span class="s-num">#1</span>
+        
+        <span class="s-op">ADD</span> <span class="s-reg">R2</span>, <span class="s-reg">R1</span>, <span class="s-reg">R2</span> <span class="s-cmt">;B-A</span>
+&nbsp;
+        <span class="s-op">BRnp</span> x
+        <span class="s-op">BRz</span> DONE
+&nbsp;
+<span class="s-lbl">DONE</span>    <span class="s-op">ST</span> <span class="s-reg">R1</span>, C        <span class="s-cmt">;Result-Value is in both R0 and R1</span>
+        <span class="s-op">TRAP</span> <span class="s-num">x25</span>
+<span class="s-lbl">A</span>       <span class="s-dir">.FILL</span> <span class="s-num">#2</span>  <span class="s-cmt">;&lt;- A-value (must be lower than B)</span>
+<span class="s-lbl">B</span>       <span class="s-dir">.FILL</span> <span class="s-num">#18</span> <span class="s-cmt">;R1 &lt;- B-value </span>
+<span class="s-lbl">C</span>       <span class="s-dir">.BLKW</span> 1
+&nbsp;
+<span class="s-dir">.END</span></pre></td></tr></tbody></table>
+</section>
+<section class="file" id="f-A2-asm">
+<div class="file-head"><span class="idx">2</span><span class="fn">A2.asm</span><span class="ttl">— Read a 2-digit number</span>
+<span class="loc">69 lines<a class="top" href="file:///C:/Users/kaspe/Downloads/lc3_projects_reference.html#top">↑ top</a></span></div>
+<div class="expl">
+<p><b>Goal.</b> The first real subroutine: prompt the user, read <b>two</b> ASCII digits, and combine them into one integer in <code>R0</code>. Called with <code>JSR READS</code>.</p>
+<table class="reg"><tbody><tr><th>Reg</th><th>Role</th></tr>
+<tr><td>R0</td><td>I/O register (chars in, result out)</td></tr>
+<tr><td>R1</td><td>loop counter / first digit value</td></tr>
+<tr><td>R2</td><td>loop-max (holds −9 for the ×10 loop)</td></tr>
+<tr><td>R3</td><td>saved digit / holds −48 to strip ASCII</td></tr>
+<tr><td>R4</td><td>loop-condition scratch</td></tr>
+<tr><td>R7</td><td>return address (saved/restored)</td></tr></tbody></table>
+<p><b>Subroutine discipline.</b> It stores every register it will clobber (<code>R0–R4</code>, <code>R7</code>) into named slots up front and restores them before <code>RET</code>. This matters because <code>JSR</code> overwrites <code>R7</code> with the return address — an unsaved <code>R7</code> across a nested call or re-entry would lose the way back. Saving callee state is the convention the later assignments build on.</p>
+<p><b>ASCII to number.</b> Input arrives as ASCII, so <code>'7'</code> is value 55, not 7. Adding <code>−48</code> (the <code>Asci</code> constant) converts a digit character to its numeric value.</p>
+<p><b>Times-ten by repeated addition.</b> With no multiply instruction, <code>loopA</code> adds the tens digit to itself repeatedly, using <code>R2 = −9</code> against counter <code>R1</code> to stop after the right number of adds; then the second digit is read and added on.</p>
+<div class="pitfall"><b>Rough edges (left as written):</b> <code>SaveR0</code> has no <code>.BLKW</code> of its own, so it labels the same word as <code>SaveR1</code> — they share storage. The <code>BRnzp loopA</code> before the <code>loopA</code> label and <code>BRz nextIn</code> before <code>nextIn</code> are redundant fall-throughs. This is the experimental first attempt; A5's <code>readS</code> is the cleaner descendant.</div>
+</div>
+<table class="code"><tbody><tr>
+<td class="ln"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69</pre></td>
+<td class="src"><pre><span class="s-dir">.ORIG</span> <span class="s-num">x3000</span>
+        
+        <span class="s-op">JSR</span> READS
+        <span class="s-op">HALT</span>
+        
+&nbsp;
+<span class="s-cmt">;---</span>
+<span class="s-cmt">;FUNCTION: readS</span>
+<span class="s-cmt">;Læser 2 cifre, og konverterer til et heltal til R0</span>
+<span class="s-cmt">;---</span>
+<span class="s-lbl">READS</span>   <span class="s-cmt">;Gemmer det som er i registrene.</span>
+        <span class="s-op">ST</span> <span class="s-reg">R0</span>, SaveR0   <span class="s-cmt">;input area</span>
+        <span class="s-op">ST</span> <span class="s-reg">R1</span>, SaveR1   <span class="s-cmt">;loop-counter</span>
+        <span class="s-op">ST</span> <span class="s-reg">R2</span>, SaveR2   <span class="s-cmt">;loop-max</span>
+        <span class="s-op">ST</span> <span class="s-reg">R3</span>, SaveR3   <span class="s-cmt">;saved val a</span>
+        <span class="s-op">ST</span> <span class="s-reg">R4</span>, SaveR4   <span class="s-cmt">;loop-condition calculation</span>
+        <span class="s-op">ST</span> <span class="s-reg">R7</span>, SaveR7
+        
+        <span class="s-cmt">;initialize:</span>
+        <span class="s-op">AND</span> <span class="s-reg">R1</span>, <span class="s-reg">R0</span>, <span class="s-num">#0</span>      <span class="s-cmt">;r1 counter = 0</span>
+        <span class="s-op">AND</span> <span class="s-reg">R2</span>, <span class="s-reg">R0</span>, <span class="s-num">#0</span>      <span class="s-cmt">;r2 loop condition</span>
+        <span class="s-op">ADD</span> <span class="s-reg">R2</span>, <span class="s-reg">R2</span>, <span class="s-num">#-9</span>
+        <span class="s-op">LD</span> <span class="s-reg">R3</span> Asci          <span class="s-cmt">;Fjerner ascii </span>
+        
+        <span class="s-cmt">;Output af besked:2</span>
+        <span class="s-op">LEA</span> <span class="s-reg">R0</span>, String 
+        <span class="s-op">PUTS</span>
+        
+        <span class="s-cmt">;Input af første tegn.</span>
+        <span class="s-op">IN</span>
+        
+        <span class="s-op">ADD</span> <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-reg">R3</span>      <span class="s-cmt">;r0 "clean" tal</span>
+        
+        <span class="s-op">AND</span> <span class="s-reg">R3</span>, <span class="s-reg">R3</span>, <span class="s-num">#0</span>      <span class="s-cmt">;</span>
+        <span class="s-op">ADD</span> <span class="s-reg">R3</span>, <span class="s-reg">R0</span>, <span class="s-num">#0</span>      <span class="s-cmt">;gemmer input-tallet i r3</span>
+        <span class="s-op">BRnzp</span> loopA
+&nbsp;
+<span class="s-lbl">loopA</span>   <span class="s-op">ADD</span> <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-reg">R3</span>      
+        <span class="s-op">ADD</span> <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-num">#1</span>
+        <span class="s-op">ADD</span> <span class="s-reg">R4</span>, <span class="s-reg">R2</span>, <span class="s-reg">R1</span> 
+        <span class="s-op">BRnp</span> loopA
+        <span class="s-op">BRz</span> nextIn
+        
+<span class="s-lbl">nextIn</span>  <span class="s-op">ADD</span> <span class="s-reg">R1</span>, <span class="s-reg">R0</span>, <span class="s-num">#0</span>      <span class="s-cmt">;Gemmer tal fra loopA i r1</span>
+        <span class="s-op">In</span>                  <span class="s-cmt">;tal b i r0</span>
+        <span class="s-op">LD</span> <span class="s-reg">R3</span> Asci          <span class="s-cmt">;fjerner aski værdi fra r0</span>
+        <span class="s-op">ADD</span> <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-reg">R3</span>
+        
+        <span class="s-op">ADD</span> <span class="s-reg">R0</span>, <span class="s-reg">R1</span>, <span class="s-reg">R0</span>      <span class="s-cmt">;a+b</span>
+        
+        
+        <span class="s-cmt">;Reloading før return</span>
+        <span class="s-op">LD</span> <span class="s-reg">R1</span>, SaveR1
+        <span class="s-op">LD</span> <span class="s-reg">R2</span>, SaveR2
+        <span class="s-op">LD</span> <span class="s-reg">R3</span>, SaveR3
+        <span class="s-op">LD</span> <span class="s-reg">R4</span>, SaveR4
+        <span class="s-op">LD</span> <span class="s-reg">R7</span>, SaveR7   <span class="s-cmt">; Gør R7 klar til at finde tilbage til HALT</span>
+        <span class="s-op">RET</span>             <span class="s-cmt">; Gå tilbage til JSR-linjen</span>
+&nbsp;
+<span class="s-lbl">Asci</span>        <span class="s-dir">.FILL</span> <span class="s-num">#-48</span>
+<span class="s-lbl">String</span>      <span class="s-dir">.STRINGZ</span> <span class="s-str">"Input a 2 digit decimal number: "</span>
+<span class="s-lbl">SaveR0</span>
+<span class="s-lbl">SaveR1</span>      <span class="s-dir">.BLKW</span> 1
+<span class="s-lbl">SaveR2</span>      <span class="s-dir">.BLKW</span> 1
+<span class="s-lbl">SaveR3</span>      <span class="s-dir">.BLKW</span> 1
+<span class="s-lbl">SaveR4</span>      <span class="s-dir">.BLKW</span> 1
+<span class="s-lbl">SaveR7</span>      <span class="s-dir">.BLKW</span> 1
+&nbsp;
+<span class="s-dir">.END</span></pre></td></tr></tbody></table>
+</section>
+<section class="file" id="f-A3-asm">
+<div class="file-head"><span class="idx">3</span><span class="fn">A3.asm</span><span class="ttl">— Primality test</span>
+<span class="loc">60 lines<a class="top" href="file:///C:/Users/kaspe/Downloads/lc3_projects_reference.html#top">↑ top</a></span></div>
+<div class="expl">
+<p><b>Goal.</b> Decide whether the number in <code>R0</code> is prime, returning <code>R0 = 1</code> (prime) or <code>R0 = 0</code> (not). This is the algorithmic heart of the project.</p>
+<table class="reg"><tbody><tr><th>Reg</th><th>Role</th></tr>
+<tr><td>R0</td><td>input number; also the 0/1 result</td></tr>
+<tr><td>R1</td><td>working remainder (counts down by the divisor)</td></tr>
+<tr><td>R2</td><td>current divisor, stored as a negative number</td></tr></tbody></table>
+<p><b>Strategy: trial division using only subtraction.</b> A number <code>n</code> is prime if nothing from 2 to <code>n−1</code> divides it evenly. With no divide/modulo instruction, divisibility is tested by <i>repeated subtraction</i>: subtract the divisor from <code>n</code> repeatedly; landing exactly on zero means it divides evenly (so <code>n</code> is not prime).</p>
+<ul>
+<li><b>Small cases first.</b> Subtracting 1 then another 1 checks <code>n = 1</code> (not prime) and <code>n = 2</code> (prime) directly.</li>
+<li><b><code>divisorLoop</code></b> resets the remainder to <code>n</code> and makes the divisor one more negative (it starts at −1, so the first real divisor tested is 2). Adding the divisor to <code>n</code> once detects when the divisor has climbed to <code>n</code> itself — if so, nothing smaller divided it, so it's prime.</li>
+<li><b><code>subtractionLoop</code></b> keeps adding the negative divisor: positive → keep subtracting; <b>exactly zero → divides evenly → not prime</b>; negative → this divisor doesn't divide evenly, move to the next divisor.</li>
+</ul>
+<div class="tip"><b>Why the divisor is negative:</b> storing it negative lets every "subtract" be one <code>ADD</code>, and the n/z/p condition codes after each <code>ADD</code> replace the missing compare instruction.</div>
+<div class="pitfall"><b>Standalone version ends in <code>HALT</code></b>, not <code>RET</code> — it was tested alone. In A5 the same routine ends in <code>RET</code> so it can be called.</div>
+</div>
+<table class="code"><tbody><tr>
+<td class="ln"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60</pre></td>
+<td class="src"><pre><span class="s-dir">.ORIG</span>   <span class="s-num">x3000</span>
+&nbsp;
+&nbsp;
+&nbsp;
+<span class="s-cmt">;---------</span>
+<span class="s-cmt">;funktion der tjekker om et tal er et primtal </span>
+<span class="s-cmt">;Returnere 1 - true ||&nbsp;0 - false</span>
+<span class="s-cmt">;---------</span>
+&nbsp;
+<span class="s-lbl">isPrime</span>
+&nbsp;
+    <span class="s-op">AND</span> <span class="s-reg">R1</span>,<span class="s-reg">R1</span>,<span class="s-num">#0</span>    <span class="s-cmt">;nulstiller registre</span>
+    <span class="s-op">AND</span> <span class="s-reg">R2</span>,<span class="s-reg">R2</span>,<span class="s-num">#0</span> 
+    <span class="s-op">AND</span> <span class="s-reg">R3</span>,<span class="s-reg">R3</span>,<span class="s-num">#0</span>
+    
+    <span class="s-op">ADD</span> <span class="s-reg">R2</span>,<span class="s-reg">R2</span>,<span class="s-num">#-1</span>    <span class="s-cmt">;divisor </span>
+    
+    
+    <span class="s-op">ADD</span> <span class="s-reg">R1</span>,<span class="s-reg">R0</span>,<span class="s-reg">R1</span>    <span class="s-cmt">;tilføjer input - R0 til R1 </span>
+    
+    <span class="s-op">ADD</span> <span class="s-reg">R1</span>,<span class="s-reg">R1</span>,<span class="s-num">#-1</span>   <span class="s-cmt">;R0 = 1?</span>
+    <span class="s-op">BRz</span>     isNotPrime
+    
+    <span class="s-op">ADD</span> <span class="s-reg">R1</span>,<span class="s-reg">R1</span>,<span class="s-num">#-1</span>   <span class="s-cmt">;R0 = 2? </span>
+    <span class="s-op">BRz</span>     isPrimeTrue
+    <span class="s-op">BRp</span>     divisorLoop
+&nbsp;
+<span class="s-lbl">divisorLoop</span> 
+    <span class="s-op">AND</span> <span class="s-reg">R1</span>,<span class="s-reg">R1</span>,<span class="s-num">#0</span> <span class="s-cmt">;R1 = R0 (input)</span>
+    <span class="s-op">ADD</span> <span class="s-reg">R1</span>,<span class="s-reg">R0</span>,<span class="s-reg">R1</span>
+    
+    <span class="s-op">ADD</span> <span class="s-reg">R2</span>,<span class="s-reg">R2</span>,<span class="s-num">#-1</span>    <span class="s-cmt">;Increment divisor </span>
+    
+    <span class="s-op">ADD</span> <span class="s-reg">R1</span>,<span class="s-reg">R1</span>,<span class="s-reg">R2</span>
+    <span class="s-op">BRz</span>     isPrimeTrue
+    <span class="s-op">BRp</span>     subtractionLoop
+&nbsp;
+    
+<span class="s-lbl">subtractionLoop</span>
+    
+    <span class="s-op">ADD</span> <span class="s-reg">R1</span>,<span class="s-reg">R1</span>,<span class="s-reg">R2</span>    <span class="s-cmt">;træk divisor fra indtil R1 &lt;= 0 </span>
+    <span class="s-op">BRp</span> subtractionLoop
+    <span class="s-op">BRz</span> isNotPrime
+    <span class="s-op">BRn</span> divisorLoop
+    
+    
+    
+    isPrimeTrue 
+        <span class="s-op">AND</span> <span class="s-reg">R0</span>,<span class="s-reg">R0</span>,<span class="s-num">#0</span>
+        <span class="s-op">ADD</span> <span class="s-reg">R0</span>,<span class="s-reg">R0</span>,<span class="s-num">#1</span>
+        <span class="s-op">HALT</span>    
+&nbsp;
+    isNotPrime
+        <span class="s-op">AND</span> <span class="s-reg">R0</span>,<span class="s-reg">R0</span>,<span class="s-num">#0</span>
+        <span class="s-op">HALT</span>
+&nbsp;
+    <span class="s-dir">.END</span>
+    
+&nbsp;
+    </pre></td></tr></tbody></table>
+</section>
+<section class="file" id="f-A4-asm">
+<div class="file-head"><span class="idx">4</span><span class="fn">A4.asm</span><span class="ttl">— Print the result</span>
+<span class="loc">31 lines<a class="top" href="file:///C:/Users/kaspe/Downloads/lc3_projects_reference.html#top">↑ top</a></span></div>
+<div class="expl">
+<p><b>Goal.</b> Turn the 0/1 from the primality test into a readable line: given <code>R0</code>, print the prime or not-prime message.</p>
+<p><b>How it works.</b> <code>ADD R0, R0, #0</code> re-sets the condition codes from R0's value (the idiom for "test a register"). <code>BRnp prime</code> takes the prime branch when R0 is non-zero; <code>BRz noPrime</code> handles zero. Each branch loads its string address with <code>LEA</code> and falls into the shared <code>end</code>, which calls <code>PUTS</code> to print the string at <code>R0</code>.</p>
+<table class="reg"><tbody><tr><th>Reg</th><th>Role</th></tr>
+<tr><td>R0</td><td>in: 0/1 flag; then reused as the string address for PUTS</td></tr></tbody></table>
+<div class="tip"><b>Remember:</b> <code>PUTS</code> wants <code>R0</code> = <i>address</i> of the string; <code>OUT</code> wants <code>R0</code> = a single <i>character</i>. <code>LEA</code> loads a label's address into a register with no memory access.</div>
+</div>
+<table class="code"><tbody><tr>
+<td class="ln"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31</pre></td>
+<td class="src"><pre><span class="s-dir">.ORIG</span> <span class="s-num">x3000</span>
+&nbsp;
+<span class="s-cmt">;Test eksempel:</span>
+        <span class="s-cmt">;AND R0, R0, #0 ;reset</span>
+        <span class="s-cmt">;ADD R0, R0, #1 ;prime</span>
+        <span class="s-op">JSR</span> resultS
+        <span class="s-op">HALT</span>
+&nbsp;
+<span class="s-cmt">;----</span>
+<span class="s-cmt">;Funktion: resultS</span>
+<span class="s-cmt">;Hvis tallet i R0 ≠ 0 : Output prime besked, hvis det er 0: Output ikke prime besked.</span>
+<span class="s-cmt">;---</span>
+&nbsp;
+<span class="s-lbl">resultS</span> <span class="s-op">ADD</span> <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-num">#0</span>
+        <span class="s-op">BRnp</span> prime
+        <span class="s-op">BRz</span> noPrime
+&nbsp;
+&nbsp;
+<span class="s-lbl">prime</span>   <span class="s-op">LEA</span> <span class="s-reg">R0</span>, stringPrime
+        <span class="s-op">BRnzp</span> end
+&nbsp;
+<span class="s-lbl">noPrime</span> <span class="s-op">LEA</span> <span class="s-reg">R0</span>, stringNotPrime
+        <span class="s-op">BRnzp</span> end
+&nbsp;
+<span class="s-lbl">end</span>     <span class="s-op">PUTS</span>
+        <span class="s-op">RET</span>     <span class="s-cmt">;return </span>
+&nbsp;
+<span class="s-lbl">stringPrime</span>     <span class="s-dir">.STRINGZ</span> <span class="s-str">"The number is prime"</span>
+<span class="s-lbl">stringNotPrime</span>  <span class="s-dir">.STRINGZ</span> <span class="s-str">"The number is not prime"</span>
+&nbsp;
+<span class="s-dir">.END</span></pre></td></tr></tbody></table>
+</section>
+<section class="file" id="f-A5-asm">
+<div class="file-head"><span class="idx">5</span><span class="fn">A5.asm</span><span class="ttl">— Full program</span>
+<span class="loc">127 lines<a class="top" href="file:///C:/Users/kaspe/Downloads/lc3_projects_reference.html#top">↑ top</a></span></div>
+<div class="expl">
+<p><b>Goal.</b> The assembled program. <code>MAIN</code> calls the three subroutines in order and loops forever so the user can test number after number:</p>
+<pre class="flow">MAIN:  readS   →   isPrime   →   resultS   →   (repeat)</pre>
+<p>This is the integration step: the three blocks (A2-style input, A3 primality, A4 output) live in one file, each ending in <code>RET</code> so <code>JSR</code>/<code>RET</code> chains them. All data flows through <code>R0</code> — the input number out of <code>readS</code>, then 0/1 out of <code>isPrime</code>, consumed by <code>resultS</code>.</p>
+<h4>readS here</h4>
+<p>Reads exactly two characters with <code>TRAP x23</code> (IN), strips ASCII by adding <code>−'0'</code>, then forms <code>10×first + second</code>, the ×10 done with a 9-iteration add loop. Result in <code>R0</code>.</p>
+<h4>isPrime here</h4>
+<p>The A3 algorithm verbatim, but ending in <code>RET</code> so control returns to <code>MAIN</code>.</p>
+<h4>resultS here</h4>
+<p>Like A4; uses <code>BRp prime</code> (strictly positive), which is safe because <code>isPrime</code> only returns 0 or 1.</p>
+<div class="pitfall"><b>Design limit:</b> the two-digit reader is rigid — always wants exactly two keys, no validation. That's what the two optimised versions fix.</div>
+</div>
+<table class="code"><tbody><tr>
+<td class="ln"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127</pre></td>
+<td class="src"><pre>&nbsp;
+<span class="s-dir">.ORIG</span> <span class="s-num">x3000</span>
+&nbsp;
+<span class="s-lbl">MAIN</span>
+    <span class="s-op">JSR</span> readS
+    <span class="s-op">JSR</span> isPrime
+    <span class="s-op">JSR</span> resultS
+    <span class="s-op">BRnzp</span> MAIN
+&nbsp;
+<span class="s-cmt">;---------------------------------------</span>
+&nbsp;
+<span class="s-lbl">readS</span>
+&nbsp;
+<span class="s-op">LEA</span>     <span class="s-reg">R0</span>, MSG     <span class="s-cmt">; load address of string into R0</span>
+<span class="s-op">TRAP</span>    <span class="s-num">x22</span>         <span class="s-cmt">; PUTS: print string from R0</span>
+&nbsp;
+<span class="s-op">TRAP</span>    <span class="s-num">x23</span>         <span class="s-cmt">;Tager et argument som ASCII værdi    </span>
+<span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R0</span>, <span class="s-num">#0</span>  <span class="s-cmt">;Kopiere argument</span>
+<span class="s-op">TRAP</span>    <span class="s-num">x23</span>         <span class="s-cmt">;</span>
+<span class="s-op">ADD</span>     <span class="s-reg">R2</span>, <span class="s-reg">R0</span>, <span class="s-num">#0</span>
+&nbsp;
+<span class="s-cmt">; Konvertering af ASCII til numerisk</span>
+<span class="s-op">LD</span>      <span class="s-reg">R3</span>, ASCII_ZERO
+<span class="s-op">NOT</span>     <span class="s-reg">R3</span>, <span class="s-reg">R3</span>
+<span class="s-op">ADD</span>     <span class="s-reg">R3</span>, <span class="s-reg">R3</span>, <span class="s-num">#1</span>      <span class="s-cmt">; R3 = -'0'</span>
+&nbsp;
+<span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-reg">R3</span>      <span class="s-cmt">; R1 = Vi laver om til numerisk værdi</span>
+<span class="s-op">ADD</span>     <span class="s-reg">R2</span>, <span class="s-reg">R2</span>, <span class="s-reg">R3</span>      <span class="s-cmt">; R2 = Vi laver om til numerisk værdi</span>
+&nbsp;
+<span class="s-cmt">; 10*R1 + R2 </span>
+<span class="s-op">ADD</span>     <span class="s-reg">R4</span>, <span class="s-reg">R1</span>, <span class="s-num">#0</span>      <span class="s-cmt">; R4 = første gang (ud af 10)</span>
+<span class="s-op">AND</span>     <span class="s-reg">R5</span>, <span class="s-reg">R5</span>, <span class="s-num">#0</span>
+<span class="s-op">ADD</span>     <span class="s-reg">R5</span>, <span class="s-reg">R5</span>, <span class="s-num">#9</span>      <span class="s-cmt">; counter = 9 (Vi har allerede x1)</span>
+&nbsp;
+<span class="s-lbl">LOOP</span>
+<span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-reg">R4</span>      <span class="s-cmt">; gange 10*R1</span>
+<span class="s-op">ADD</span>     <span class="s-reg">R5</span>, <span class="s-reg">R5</span>, <span class="s-num">#-1</span>     <span class="s-cmt">; en mindre</span>
+<span class="s-op">BRp</span>     LOOP            <span class="s-cmt">; R5 &gt; 0</span>
+&nbsp;
+<span class="s-op">AND</span>     <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-num">#0</span>
+<span class="s-op">ADD</span>     <span class="s-reg">R0</span>, <span class="s-reg">R1</span>, <span class="s-reg">R2</span> 
+<span class="s-op">RET</span>
+&nbsp;
+&nbsp;
+<span class="s-cmt">;MSG .STRUNG</span>
+<span class="s-lbl">MSG</span>     <span class="s-dir">.STRINGZ</span> <span class="s-str">"Input a 2 digit decimal number"</span>
+<span class="s-lbl">ASCII_ZERO</span>  <span class="s-dir">.FILL</span>   <span class="s-num">x0030</span>   <span class="s-cmt">; '0'</span>
+&nbsp;
+        
+&nbsp;
+<span class="s-cmt">;----</span>
+<span class="s-cmt">;Funktion: isPrime</span>
+<span class="s-cmt">;Hvis tallet er et primtal, skal tallet returneres, ellers skal nul returneres. </span>
+<span class="s-cmt">;---</span>
+&nbsp;
+&nbsp;
+<span class="s-lbl">isPrime</span>
+&nbsp;
+    <span class="s-op">AND</span> <span class="s-reg">R1</span>,<span class="s-reg">R1</span>,<span class="s-num">#0</span>    <span class="s-cmt">;nulstiller registre</span>
+    <span class="s-op">AND</span> <span class="s-reg">R2</span>,<span class="s-reg">R2</span>,<span class="s-num">#0</span> 
+    <span class="s-op">AND</span> <span class="s-reg">R3</span>,<span class="s-reg">R3</span>,<span class="s-num">#0</span>
+    
+    <span class="s-op">ADD</span> <span class="s-reg">R2</span>,<span class="s-reg">R2</span>,<span class="s-num">#-1</span>    <span class="s-cmt">;divisor </span>
+    
+    
+    <span class="s-op">ADD</span> <span class="s-reg">R1</span>,<span class="s-reg">R0</span>,<span class="s-reg">R1</span>    <span class="s-cmt">;tilføjer input - R0 til R1 </span>
+    
+    <span class="s-op">ADD</span> <span class="s-reg">R1</span>,<span class="s-reg">R1</span>,<span class="s-num">#-1</span>   <span class="s-cmt">;R0 = 1?</span>
+    <span class="s-op">BRz</span>     isNotPrime
+    
+    <span class="s-op">ADD</span> <span class="s-reg">R1</span>,<span class="s-reg">R1</span>,<span class="s-num">#-1</span>   <span class="s-cmt">;R0 = 2? </span>
+    <span class="s-op">BRz</span>     isPrimeTrue
+    <span class="s-op">BRp</span>     divisorLoop
+&nbsp;
+<span class="s-lbl">divisorLoop</span> 
+    <span class="s-op">AND</span> <span class="s-reg">R1</span>,<span class="s-reg">R1</span>,<span class="s-num">#0</span> <span class="s-cmt">;R1 = R0 (input)</span>
+    <span class="s-op">ADD</span> <span class="s-reg">R1</span>,<span class="s-reg">R0</span>,<span class="s-reg">R1</span>
+    
+    <span class="s-op">ADD</span> <span class="s-reg">R2</span>,<span class="s-reg">R2</span>,<span class="s-num">#-1</span>    <span class="s-cmt">;Increment divisor </span>
+    
+    <span class="s-op">ADD</span> <span class="s-reg">R1</span>,<span class="s-reg">R1</span>,<span class="s-reg">R2</span>    <span class="s-cmt">;Divisor &gt;= n? </span>
+    <span class="s-op">BRz</span>     isPrimeTrue
+    <span class="s-op">BRp</span>     subtractionLoop
+&nbsp;
+    
+<span class="s-lbl">subtractionLoop</span>
+    
+    <span class="s-op">ADD</span> <span class="s-reg">R1</span>,<span class="s-reg">R1</span>,<span class="s-reg">R2</span> <span class="s-cmt">;Input - divisor</span>
+    <span class="s-op">BRp</span> subtractionLoop 
+    <span class="s-op">BRz</span> isNotPrime
+    <span class="s-op">BRn</span> divisorLoop
+    
+    isPrimeTrue <span class="s-cmt">; </span>
+    <span class="s-op">AND</span>     <span class="s-reg">R0</span>,<span class="s-reg">R0</span>,<span class="s-num">#0</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R0</span>,<span class="s-reg">R0</span>,<span class="s-num">#1</span>
+    <span class="s-op">RET</span>
+&nbsp;
+    isNotPrime
+    <span class="s-op">AND</span>     <span class="s-reg">R0</span>,<span class="s-reg">R0</span>,<span class="s-num">#0</span>
+    <span class="s-op">RET</span>
+&nbsp;
+<span class="s-cmt">;----</span>
+<span class="s-cmt">;Funktion: resultS</span>
+<span class="s-cmt">;Hvis tallet i R0 ≠ 0 : Output prime besked, hvis det er 0: Output ikke prime besked.</span>
+<span class="s-cmt">;---</span>
+&nbsp;
+<span class="s-lbl">resultS</span> 
+    <span class="s-op">ADD</span> <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-num">#0</span>
+    <span class="s-op">BRp</span> prime
+    <span class="s-op">BRz</span> noPrime
+&nbsp;
+&nbsp;
+<span class="s-lbl">prime</span>   
+    <span class="s-op">LEA</span> <span class="s-reg">R0</span>, stringPrime
+    <span class="s-op">BRnzp</span> end
+&nbsp;
+<span class="s-lbl">noPrime</span> 
+    <span class="s-op">LEA</span> <span class="s-reg">R0</span>, stringNotPrime
+    <span class="s-op">BRnzp</span> end
+&nbsp;
+<span class="s-lbl">end</span>     <span class="s-op">PUTS</span>
+        <span class="s-op">RET</span>     <span class="s-cmt">;return </span>
+&nbsp;
+<span class="s-lbl">stringPrime</span>     <span class="s-dir">.STRINGZ</span> <span class="s-str">"\nThe number is prime\n"</span>
+<span class="s-lbl">stringNotPrime</span>  <span class="s-dir">.STRINGZ</span> <span class="s-str">"\nThe number is not prime\n"</span>
+&nbsp;
+<span class="s-dir">.END</span></pre></td></tr></tbody></table>
+</section>
+<section class="file" id="f-A5_opt1-asm">
+<div class="file-head"><span class="idx">6</span><span class="fn">A5_opt1.asm</span><span class="ttl">— Optimised: up to 5 digits</span>
+<span class="loc">132 lines<a class="top" href="file:///C:/Users/kaspe/Downloads/lc3_projects_reference.html#top">↑ top</a></span></div>
+<div class="expl">
+<p><b>What changed vs A5.</b> A cleaner program that accepts a number of <b>any length up to 5 digits</b> ending on <kbd>Enter</kbd>, instead of demanding exactly two keypresses.</p>
+<table class="reg"><tbody><tr><th>Reg</th><th>Role in readS</th></tr>
+<tr><td>R0</td><td>char from GETC; final result</td></tr>
+<tr><td>R1</td><td>scratch for the −newline and −'0' constants</td></tr>
+<tr><td>R2</td><td>numeric value of the current digit</td></tr>
+<tr><td>R3,R5</td><td>scratch for the ×10 shift chain</td></tr>
+<tr><td>R4</td><td>running accumulated value</td></tr>
+<tr><td>R6</td><td>remaining digits allowed (starts at 5)</td></tr></tbody></table>
+<h4>Three real improvements</h4>
+<ul>
+<li><b>Character loop with echo.</b> <code>GETC</code> + <code>OUT</code> reads and shows one key at a time and compares against <code>NEWLINE</code> (x0A) to detect <kbd>Enter</kbd>. The standard "read until newline" pattern.</li>
+<li><b>Proper positional math.</b> Each digit does <code>value = value×10 + digit</code>. The ×10 is built from doublings: <code>2v</code>, <code>4v</code>, <code>8v</code>, then <code>2v+8v = 10v</code> — four adds, no inner loop, scales to any length.</li>
+<li><b>Digit budget.</b> <code>R6</code> counts down from 5 so at most five digits are taken.</li>
+</ul>
+<div class="tip"><b>Why doublings:</b> <code>ADD Rx,Rx</code> is a left shift (×2). Composing a few reaches ×10 in constant time — the idiomatic way to multiply by a small constant on LC-3.</div>
+<div class="pitfall"><b>Still permissive:</b> opt1 doesn't check the keys are 0–9, and a bare <kbd>Enter</kbd> isn't rejected. opt2 closes both gaps.</div>
+</div>
+<table class="code"><tbody><tr>
+<td class="ln"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132</pre></td>
+<td class="src"><pre><span class="s-dir">.ORIG</span>   <span class="s-num">x3000</span>
+<span class="s-lbl">MAIN</span>
+    <span class="s-op">JSR</span>     readS          <span class="s-cmt">; R0 = typed decimal number</span>
+    <span class="s-op">JSR</span>     isPrime        <span class="s-cmt">; R0 = 1 if prime, 0 if not</span>
+    <span class="s-op">JSR</span>     resultS        <span class="s-cmt">; print result</span>
+    <span class="s-op">BRnzp</span>   MAIN
+    
+<span class="s-cmt">;---------------------------------------</span>
+<span class="s-cmt">; readS</span>
+<span class="s-cmt">; reads a decimal number with up to 5 digits</span>
+<span class="s-cmt">; user types 1..5 digits and presses Enter</span>
+<span class="s-cmt">; no zero padding needed</span>
+<span class="s-cmt">; returns number in R0</span>
+<span class="s-cmt">;---------------------------------------</span>
+<span class="s-lbl">readS</span>
+    <span class="s-op">LEA</span>     <span class="s-reg">R0</span>, MSG
+    <span class="s-op">PUTS</span>
+&nbsp;
+    <span class="s-op">AND</span>     <span class="s-reg">R4</span>, <span class="s-reg">R4</span>, <span class="s-num">#0</span>     <span class="s-cmt">; R4 = current value = 0</span>
+    <span class="s-op">AND</span>     <span class="s-reg">R6</span>, <span class="s-reg">R6</span>, <span class="s-num">#0</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R6</span>, <span class="s-reg">R6</span>, <span class="s-num">#5</span>     <span class="s-cmt">; R6 = remaining digits allowed</span>
+&nbsp;
+<span class="s-lbl">readLoop</span>
+    <span class="s-op">GETC</span>                   <span class="s-cmt">; read one character</span>
+    <span class="s-op">OUT</span>                    <span class="s-cmt">; echo it</span>
+&nbsp;
+    <span class="s-cmt">; check if Enter was pressed</span>
+    <span class="s-op">LD</span>      <span class="s-reg">R1</span>, NEWLINE
+    <span class="s-op">NOT</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-num">#1</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R0</span>, <span class="s-reg">R1</span>
+    <span class="s-op">BRz</span>     readDone
+&nbsp;
+    <span class="s-cmt">; convert ASCII digit to numeric value</span>
+    <span class="s-op">LD</span>      <span class="s-reg">R1</span>, ASCII_ZERO
+    <span class="s-op">NOT</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-num">#1</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R2</span>, <span class="s-reg">R0</span>, <span class="s-reg">R1</span>     <span class="s-cmt">; R2 = digit</span>
+&nbsp;
+    <span class="s-cmt">; multiply current value by 10</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R3</span>, <span class="s-reg">R4</span>, <span class="s-reg">R4</span>     <span class="s-cmt">; 2*value</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R5</span>, <span class="s-reg">R3</span>, <span class="s-reg">R3</span>     <span class="s-cmt">; 4*value</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R5</span>, <span class="s-reg">R5</span>, <span class="s-reg">R5</span>     <span class="s-cmt">; 8*value</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R4</span>, <span class="s-reg">R3</span>, <span class="s-reg">R5</span>     <span class="s-cmt">; 10*value</span>
+&nbsp;
+    <span class="s-cmt">; add new digit</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R4</span>, <span class="s-reg">R4</span>, <span class="s-reg">R2</span>
+&nbsp;
+    <span class="s-cmt">; one fewer digit remaining</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R6</span>, <span class="s-reg">R6</span>, <span class="s-num">#-1</span>
+    <span class="s-op">BRp</span>     readLoop       <span class="s-cmt">; keep going if still room for more digits</span>
+&nbsp;
+<span class="s-lbl">readDone</span>
+    <span class="s-op">AND</span>     <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-num">#0</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-reg">R4</span>     <span class="s-cmt">; return value in R0</span>
+    <span class="s-op">RET</span>
+&nbsp;
+<span class="s-cmt">;---------------------------------------</span>
+<span class="s-cmt">; isPrime</span>
+<span class="s-cmt">; inputs -&gt; R0 = number</span>
+<span class="s-cmt">; outputs -&gt; R0 = 1 if prime, 0 if not</span>
+<span class="s-cmt">;---------------------------------------</span>
+<span class="s-lbl">isPrime</span>
+    <span class="s-op">AND</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-num">#0</span>
+    <span class="s-op">AND</span>     <span class="s-reg">R2</span>, <span class="s-reg">R2</span>, <span class="s-num">#0</span>
+    <span class="s-op">AND</span>     <span class="s-reg">R3</span>, <span class="s-reg">R3</span>, <span class="s-num">#0</span>
+&nbsp;
+    <span class="s-op">ADD</span>     <span class="s-reg">R2</span>, <span class="s-reg">R2</span>, <span class="s-num">#-1</span>    <span class="s-cmt">; divisor</span>
+&nbsp;
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R0</span>, <span class="s-reg">R1</span>
+&nbsp;
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-num">#-1</span>    <span class="s-cmt">; R0 = 1?</span>
+    <span class="s-op">BRz</span>     isNotPrime
+&nbsp;
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-num">#-1</span>    <span class="s-cmt">; R0 = 2?</span>
+    <span class="s-op">BRz</span>     isPrimeTrue
+    <span class="s-op">BRp</span>     divisorLoop
+&nbsp;
+<span class="s-lbl">divisorLoop</span>
+    <span class="s-op">AND</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-num">#0</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R0</span>, <span class="s-reg">R1</span>
+&nbsp;
+    <span class="s-op">ADD</span>     <span class="s-reg">R2</span>, <span class="s-reg">R2</span>, <span class="s-num">#-1</span>    <span class="s-cmt">; increment divisor</span>
+&nbsp;
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-reg">R2</span>     <span class="s-cmt">; divisor &gt;= n?</span>
+    <span class="s-op">BRz</span>     isPrimeTrue
+    <span class="s-op">BRp</span>     subtractionLoop
+&nbsp;
+<span class="s-lbl">subtractionLoop</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-reg">R2</span>     <span class="s-cmt">; input - divisor</span>
+    <span class="s-op">BRp</span>     subtractionLoop
+    <span class="s-op">BRz</span>     isNotPrime
+    <span class="s-op">BRn</span>     divisorLoop
+&nbsp;
+<span class="s-lbl">isPrimeTrue</span>
+    <span class="s-op">AND</span>     <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-num">#0</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-num">#1</span>
+    <span class="s-op">RET</span>
+&nbsp;
+<span class="s-lbl">isNotPrime</span>
+    <span class="s-op">AND</span>     <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-num">#0</span>
+    <span class="s-op">RET</span>
+&nbsp;
+<span class="s-cmt">;---------------------------------------</span>
+<span class="s-cmt">; resultS</span>
+<span class="s-cmt">; prints whether the number is prime</span>
+<span class="s-cmt">;---------------------------------------</span>
+<span class="s-lbl">resultS</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-num">#0</span>
+    <span class="s-op">BRp</span>     primeMsg
+    <span class="s-op">BRz</span>     notPrimeMsg
+&nbsp;
+<span class="s-lbl">primeMsg</span>
+    <span class="s-op">LEA</span>     <span class="s-reg">R0</span>, stringPrime
+    <span class="s-op">PUTS</span>
+    <span class="s-op">RET</span>
+&nbsp;
+<span class="s-lbl">notPrimeMsg</span>
+    <span class="s-op">LEA</span>     <span class="s-reg">R0</span>, stringNotPrime
+    <span class="s-op">PUTS</span>
+    <span class="s-op">RET</span>
+&nbsp;
+<span class="s-cmt">;---------------------------------------</span>
+<span class="s-cmt">; prints and data</span>
+<span class="s-cmt">;---------------------------------------</span>
+<span class="s-lbl">MSG</span>             <span class="s-dir">.STRINGZ</span> <span class="s-str">"Input a decimal number (up to 5 digits): "</span>
+<span class="s-lbl">stringPrime</span>     <span class="s-dir">.STRINGZ</span> <span class="s-str">"\nThe number is prime"</span>
+<span class="s-lbl">stringNotPrime</span>  <span class="s-dir">.STRINGZ</span> <span class="s-str">"\nThe number is not prime"</span>
+<span class="s-lbl">ASCII_ZERO</span>      <span class="s-dir">.FILL</span>   <span class="s-num">x0030</span>
+<span class="s-lbl">NEWLINE</span>         <span class="s-dir">.FILL</span>   <span class="s-num">x000A</span>
+&nbsp;
+<span class="s-dir">.END</span></pre></td></tr></tbody></table>
+</section>
+<section class="file" id="f-A5_opt2-asm">
+<div class="file-head"><span class="idx">7</span><span class="fn">A5_opt2.asm</span><span class="ttl">— Optimised: with validation</span>
+<span class="loc">159 lines<a class="top" href="file:///C:/Users/kaspe/Downloads/lc3_projects_reference.html#top">↑ top</a></span></div>
+<div class="expl">
+<p><b>What changed vs opt1.</b> Same fast input engine, now <b>validated</b> — the most defensive version and the natural final submission.</p>
+<h4>Validation added in readS</h4>
+<ul>
+<li><b>Too many digits.</b> Before accepting a key it checks <code>R6 − 5</code>; a sixth digit jumps to <code>tooManyDigits</code>, which prints an error and restarts <code>MAIN</code>.</li>
+<li><b>Range check per character.</b> After <code>char − '0'</code> into <code>R2</code>, a negative result means the key was below <code>'0'</code> (→ <code>invalidInput</code>); <code>R2 − 10</code> with <code>BRzp</code> catches keys above <code>'9'</code>. Only true digits pass.</li>
+<li><b>Empty input.</b> At <code>checkDone</code> it confirms the digit count is non-zero, rejecting a bare <kbd>Enter</kbd>.</li>
+</ul>
+<table class="reg"><tbody><tr><th>Reg</th><th>Role in readS</th></tr>
+<tr><td>R0</td><td>char in / result out</td></tr>
+<tr><td>R1</td><td>scratch for comparisons (−newline, −'0', −10, −5)</td></tr>
+<tr><td>R2</td><td>candidate digit value, range-checked</td></tr>
+<tr><td>R3,R5</td><td>×10 shift scratch</td></tr>
+<tr><td>R4</td><td>accumulated value</td></tr>
+<tr><td>R6</td><td>accepted digit count</td></tr></tbody></table>
+<p><b>isPrime / resultS</b> are unchanged from opt1. The <code>errFormat</code> and <code>errTooLong</code> strings give the two messages, and every error path branches back to <code>MAIN</code> to ask again rather than halting.</p>
+<div class="tip"><b>Pattern worth keeping:</b> validate <i>as you read</i> and centralise recovery by jumping back to the main loop. By the time <code>readS</code> returns, <code>R0</code> is guaranteed to hold a clean 1–5 digit number.</div>
+</div>
+<table class="code"><tbody><tr>
+<td class="ln"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159</pre></td>
+<td class="src"><pre><span class="s-dir">.ORIG</span>   <span class="s-num">x3000</span>
+&nbsp;
+<span class="s-lbl">MAIN</span>
+    <span class="s-op">JSR</span>     readS          <span class="s-cmt">; R0 = typed decimal number</span>
+    <span class="s-op">JSR</span>     isPrime        <span class="s-cmt">; R0 = 1 if prime, 0 if not</span>
+    <span class="s-op">JSR</span>     resultS        <span class="s-cmt">; print result</span>
+    <span class="s-op">BRnzp</span>   MAIN
+&nbsp;
+<span class="s-cmt">;---------------------------------------</span>
+<span class="s-cmt">; readS</span>
+<span class="s-cmt">; reads a decimal number with 1 to 5 digits</span>
+<span class="s-cmt">; validates input format</span>
+<span class="s-cmt">; returns number in R0</span>
+<span class="s-cmt">; on invalid input prints error message and halts</span>
+<span class="s-cmt">;---------------------------------------</span>
+<span class="s-lbl">readS</span>
+    <span class="s-op">LEA</span>     <span class="s-reg">R0</span>, MSG
+    <span class="s-op">PUTS</span>
+&nbsp;
+    <span class="s-op">AND</span>     <span class="s-reg">R4</span>, <span class="s-reg">R4</span>, <span class="s-num">#0</span>     <span class="s-cmt">; R4 = current value</span>
+    <span class="s-op">AND</span>     <span class="s-reg">R6</span>, <span class="s-reg">R6</span>, <span class="s-num">#0</span>     <span class="s-cmt">; R6 = digit count</span>
+&nbsp;
+<span class="s-lbl">readLoop</span>
+    <span class="s-op">GETC</span>
+    <span class="s-op">OUT</span>
+&nbsp;
+    <span class="s-cmt">; check for Enter</span>
+    <span class="s-op">LD</span>      <span class="s-reg">R1</span>, NEWLINE
+    <span class="s-op">NOT</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-num">#1</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R0</span>, <span class="s-reg">R1</span>
+    <span class="s-op">BRz</span>     checkDone
+&nbsp;
+    <span class="s-cmt">; if already 5 digits, any extra char is invalid</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R6</span>, <span class="s-num">#-5</span>
+    <span class="s-op">BRzp</span>    tooManyDigits
+&nbsp;
+    <span class="s-cmt">; convert ASCII to numeric candidate: char - '0'</span>
+    <span class="s-op">LD</span>      <span class="s-reg">R1</span>, ASCII_ZERO
+    <span class="s-op">NOT</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-num">#1</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R2</span>, <span class="s-reg">R0</span>, <span class="s-reg">R1</span>     <span class="s-cmt">; R2 = char - '0'</span>
+&nbsp;
+    <span class="s-cmt">; if negative, char was below '0'</span>
+    <span class="s-op">BRn</span>     invalidInput
+&nbsp;
+    <span class="s-cmt">; if R2 &gt;= 10, char was above '9'</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R2</span>, <span class="s-num">#-10</span>
+    <span class="s-op">BRzp</span>    invalidInput
+&nbsp;
+    <span class="s-cmt">; value = value * 10</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R3</span>, <span class="s-reg">R4</span>, <span class="s-reg">R4</span>     <span class="s-cmt">; 2*value</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R5</span>, <span class="s-reg">R3</span>, <span class="s-reg">R3</span>     <span class="s-cmt">; 4*value</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R5</span>, <span class="s-reg">R5</span>, <span class="s-reg">R5</span>     <span class="s-cmt">; 8*value</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R4</span>, <span class="s-reg">R3</span>, <span class="s-reg">R5</span>     <span class="s-cmt">; 10*value</span>
+&nbsp;
+    <span class="s-cmt">; value = value + digit</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R4</span>, <span class="s-reg">R4</span>, <span class="s-reg">R2</span>
+&nbsp;
+    <span class="s-cmt">; count accepted digit</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R6</span>, <span class="s-reg">R6</span>, <span class="s-num">#1</span>
+    <span class="s-op">BRnzp</span>   readLoop
+&nbsp;
+<span class="s-lbl">checkDone</span>
+    <span class="s-cmt">; empty input is invalid</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R6</span>, <span class="s-num">#0</span>
+    <span class="s-op">BRz</span>     invalidInput
+&nbsp;
+    <span class="s-op">AND</span>     <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-num">#0</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-reg">R4</span>
+    <span class="s-op">RET</span>
+&nbsp;
+<span class="s-lbl">tooManyDigits</span>
+    <span class="s-op">LEA</span>     <span class="s-reg">R0</span>, errTooLong
+    <span class="s-op">PUTS</span>
+    <span class="s-op">BRnzp</span>   MAIN <span class="s-cmt">; restart</span>
+&nbsp;
+<span class="s-lbl">invalidInput</span>
+    <span class="s-op">LEA</span>     <span class="s-reg">R0</span>, errFormat
+    <span class="s-op">PUTS</span>
+    <span class="s-op">BRnzp</span>   MAIN <span class="s-cmt">; restart</span>
+&nbsp;
+<span class="s-cmt">;---------------------------------------</span>
+<span class="s-cmt">; isPrime</span>
+<span class="s-cmt">; inputs -&gt; R0 = number</span>
+<span class="s-cmt">; outputs -&gt; R0 = 1 if prime, 0 if not</span>
+<span class="s-cmt">;---------------------------------------</span>
+<span class="s-lbl">isPrime</span>
+    <span class="s-op">AND</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-num">#0</span>
+    <span class="s-op">AND</span>     <span class="s-reg">R2</span>, <span class="s-reg">R2</span>, <span class="s-num">#0</span>
+    <span class="s-op">AND</span>     <span class="s-reg">R3</span>, <span class="s-reg">R3</span>, <span class="s-num">#0</span>
+&nbsp;
+    <span class="s-op">ADD</span>     <span class="s-reg">R2</span>, <span class="s-reg">R2</span>, <span class="s-num">#-1</span>    <span class="s-cmt">; divisor</span>
+&nbsp;
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R0</span>, <span class="s-reg">R1</span>
+&nbsp;
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-num">#-1</span>    <span class="s-cmt">; R0 = 1?</span>
+    <span class="s-op">BRz</span>     isNotPrime
+&nbsp;
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-num">#-1</span>    <span class="s-cmt">; R0 = 2?</span>
+    <span class="s-op">BRz</span>     isPrimeTrue
+    <span class="s-op">BRp</span>     divisorLoop
+&nbsp;
+<span class="s-lbl">divisorLoop</span>
+    <span class="s-op">AND</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-num">#0</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R0</span>, <span class="s-reg">R1</span>
+&nbsp;
+    <span class="s-op">ADD</span>     <span class="s-reg">R2</span>, <span class="s-reg">R2</span>, <span class="s-num">#-1</span>    <span class="s-cmt">; increment divisor</span>
+&nbsp;
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-reg">R2</span>     <span class="s-cmt">; divisor &gt;= n?</span>
+    <span class="s-op">BRz</span>     isPrimeTrue
+    <span class="s-op">BRp</span>     subtractionLoop
+&nbsp;
+<span class="s-lbl">subtractionLoop</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R1</span>, <span class="s-reg">R1</span>, <span class="s-reg">R2</span>     <span class="s-cmt">; input - divisor</span>
+    <span class="s-op">BRp</span>     subtractionLoop
+    <span class="s-op">BRz</span>     isNotPrime
+    <span class="s-op">BRn</span>     divisorLoop
+&nbsp;
+<span class="s-lbl">isPrimeTrue</span>
+    <span class="s-op">AND</span>     <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-num">#0</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-num">#1</span>
+    <span class="s-op">RET</span>
+&nbsp;
+<span class="s-lbl">isNotPrime</span>
+    <span class="s-op">AND</span>     <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-num">#0</span>
+    <span class="s-op">RET</span>
+&nbsp;
+<span class="s-cmt">;---------------------------------------</span>
+<span class="s-cmt">; resultS</span>
+<span class="s-cmt">; prints whether the number is prime</span>
+<span class="s-cmt">;---------------------------------------</span>
+<span class="s-lbl">resultS</span>
+    <span class="s-op">ADD</span>     <span class="s-reg">R0</span>, <span class="s-reg">R0</span>, <span class="s-num">#0</span>
+    <span class="s-op">BRp</span>     primeMsg
+    <span class="s-op">BRz</span>     notPrimeMsg
+&nbsp;
+<span class="s-lbl">primeMsg</span>
+    <span class="s-op">LEA</span>     <span class="s-reg">R0</span>, stringPrime
+    <span class="s-op">PUTS</span>
+    <span class="s-op">RET</span>
+&nbsp;
+<span class="s-lbl">notPrimeMsg</span>
+    <span class="s-op">LEA</span>     <span class="s-reg">R0</span>, stringNotPrime
+    <span class="s-op">PUTS</span>
+    <span class="s-op">RET</span>
+&nbsp;
+<span class="s-cmt">;---------------------------------------</span>
+<span class="s-cmt">; prints and data</span>
+<span class="s-cmt">;---------------------------------------</span>
+<span class="s-lbl">MSG</span>             <span class="s-dir">.STRINGZ</span> <span class="s-str">"Input a decimal number (1 to 5 digits): \n"</span>
+<span class="s-lbl">stringPrime</span>     <span class="s-dir">.STRINGZ</span> <span class="s-str">"\nThe number is prime \n"</span>
+<span class="s-lbl">stringNotPrime</span>  <span class="s-dir">.STRINGZ</span> <span class="s-str">"\nThe number is not prime \n"</span>
+<span class="s-lbl">errFormat</span>       <span class="s-dir">.STRINGZ</span> <span class="s-str">"\nError: input must contain digits only (0-9) \n"</span>
+<span class="s-lbl">errTooLong</span>      <span class="s-dir">.STRINGZ</span> <span class="s-str">"\nError: input can contain at most 5 digits \n"</span>
+<span class="s-lbl">ASCII_ZERO</span>      <span class="s-dir">.FILL</span>   <span class="s-num">x0030</span>
+<span class="s-lbl">NEWLINE</span>         <span class="s-dir">.FILL</span>   <span class="s-num">x000A</span>
+&nbsp;
+<span class="s-dir">.END</span></pre></td></tr></tbody></table>
+</section>
+<div class="cheat"><h2>Mini-cheat: the idioms used across these files</h2>
+<table>
+<tbody><tr><th>Idiom</th><th>How</th><th>Why</th></tr>
+<tr><td>clear a register</td><td>AND Rx, Rx, #0</td><td>no "load 0" instruction</td></tr>
+<tr><td>negate Rx</td><td>NOT Rx,Rx ; ADD Rx,Rx,#1</td><td>two's complement; enables subtract</td></tr>
+<tr><td>subtract</td><td>add the negative</td><td>no SUB instruction</td></tr>
+<tr><td>compare</td><td>subtract then BR on n/z/p</td><td>no CMP instruction</td></tr>
+<tr><td>test a register</td><td>ADD Rx,Rx,#0</td><td>refreshes condition codes</td></tr>
+<tr><td>multiply by 2</td><td>ADD Rx,Rx,Rx</td><td>left shift; build ×10 from these</td></tr>
+<tr><td>ASCII digit → value</td><td>ADD with #-48 ('0')</td><td>keyboard gives ASCII codes</td></tr>
+<tr><td>get a label address</td><td>LEA Rx, LABEL</td><td>for PUTS / pointers, no memory read</td></tr>
+<tr><td>print string / char</td><td>PUTS (R0=addr) / OUT (R0=char)</td><td>TRAP x22 / x21</td></tr>
+<tr><td>read char</td><td>GETC (x20, no echo) / IN (x23, echo)</td><td>keyboard input</td></tr>
+<tr><td>call / return</td><td>JSR LABEL … RET</td><td>RET uses R7 — save it if you nest calls</td></tr>
+</tbody></table></div>
+</div></body></html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<!-- saved from url=(0049)file:///C:/Users/kaspe/Downloads/ascii_table.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASCII Table for LC-3 (02322)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700&family=Newsreader:ital,wght@0,400;0,500;0,600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+  :root{
+    --ink:#2b2b2b; --ink-soft:#4a4a4a; --paper:#fff;
+    --rule:#d9d2c4; --rule-soft:#ece7db;
+    --accent:#5a6f52; --accent-soft:#eef1e9;
+    --blue:#3f5d7a; --blue-soft:#eaf0f5;
+    --amber:#8a6d3b; --amber-soft:#f6f0e2;
+    --code-bg:#f7f6f1; --code-ink:#33352e;
+  }
+  *{ box-sizing:border-box; }
+  html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{ font-family:'Newsreader',Georgia,serif; color:var(--ink); background:var(--paper);
+        line-height:1.45; font-size:10.5pt; margin:0; }
+  .wrap{ max-width:850px; margin:0 auto; padding:30px 36px 50px; }
+  h1,h2,h3{ font-family:'Fraunces',Georgia,serif; line-height:1.15; }
+  h1{ font-size:27pt; font-weight:700; margin:0 0 3px; letter-spacing:-0.01em; }
+  .subtitle{ font-size:11.5pt; color:var(--ink-soft); font-style:italic; margin:0 0 4px; }
+  h2{ font-size:15pt; font-weight:700; margin:0 0 10px; padding-bottom:5px; border-bottom:2px solid var(--accent); color:var(--accent); }
+  h3{ font-size:11.5pt; font-weight:600; margin:13px 0 5px; color:var(--ink); }
+  p{ margin:0 0 7px; }
+  .section{ margin-bottom:22px; }
+
+  table{ border-collapse:collapse; width:100%; margin:6px 0; }
+  th,td{ border:1px solid var(--rule); padding:2.5px 6px; text-align:left; }
+  th{ background:var(--accent-soft); font-family:'Fraunces',serif; font-weight:600; color:var(--accent); font-size:8pt; }
+  td{ font-family:'JetBrains Mono',monospace; font-size:8.4pt; }
+  tr:nth-child(even) td{ background:#faf9f4; }
+  td.dec{ color:var(--ink-soft); text-align:right; width:30px; }
+  td.hex{ color:var(--blue); font-weight:700; width:42px; }
+  td.bin{ color:#7a7460; width:74px; letter-spacing:0.5px; }
+  td.ch{ color:var(--ink); font-weight:700; }
+  td.esc{ color:var(--accent); font-weight:700; }
+  td.note{ font-family:'Newsreader',serif; font-size:8.4pt; color:var(--ink-soft); font-style:italic; }
+
+  .triple{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+  .triple th{ font-size:7.5pt; padding:3px 5px; }
+  .triple td{ font-size:8pt; padding:2px 5px; }
+  .triple td.dec{ width:24px; } .triple td.hex{ width:34px; } .triple td.bin{ width:62px; }
+
+  .keyfact{ background:var(--blue-soft); border-left:4px solid var(--blue); padding:9px 13px; border-radius:0 5px 5px 0; margin:9px 0; }
+  .method{ background:var(--accent-soft); border-left:4px solid var(--accent); padding:9px 13px; border-radius:0 5px 5px 0; margin:9px 0; }
+  .warn{ background:var(--amber-soft); border-left:4px solid var(--amber); padding:9px 13px; border-radius:0 5px 5px 0; margin:9px 0; }
+  .keyfact .lbl,.method .lbl,.warn .lbl{ font-family:'JetBrains Mono',monospace; font-size:8pt; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; display:block; margin-bottom:3px; }
+  .keyfact .lbl{ color:var(--blue); } .method .lbl{ color:var(--accent); } .warn .lbl{ color:var(--amber); }
+
+  code{ font-family:'JetBrains Mono',monospace; font-size:9pt; background:var(--code-bg); padding:1px 5px; border-radius:3px; color:var(--code-ink); }
+  pre{ font-family:'JetBrains Mono',monospace; font-size:8.4pt; background:var(--code-bg); color:var(--code-ink);
+       border:1px solid var(--rule-soft); border-radius:5px; padding:9px 12px; margin:7px 0; line-height:1.4; white-space:pre; overflow-x:auto; }
+  .cmt{ color:#8a8f7e; font-style:italic; }
+  ul,ol{ margin:5px 0 7px; padding-left:20px; } li{ margin-bottom:3px; }
+  .two-col{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+
+  .cover{ text-align:center; padding:40px 0 26px; border-bottom:3px double var(--accent); margin-bottom:22px; }
+  .cover .course{ font-family:'JetBrains Mono',monospace; font-size:11pt; color:var(--accent); font-weight:700; letter-spacing:0.18em; }
+  .cover .meta{ font-family:'JetBrains Mono',monospace; font-size:8.5pt; color:var(--ink-soft); letter-spacing:0.1em; text-transform:uppercase; margin-top:10px; }
+
+  @page{ margin:13mm 11mm; }
+  @media print{
+    .wrap{ padding:0; max-width:none; }
+    body{ font-size:9.6pt; }
+    table, .keyfact, .method, .warn, pre{ break-inside:avoid; }
+    h2,h3{ break-after:avoid; }
+    .page-break{ break-before:page; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="cover">
+  <div class="course">02322 / 02321</div>
+  <h1>ASCII Table for LC-3</h1>
+  <div class="subtitle">Decimal · LC-3 hex (x..) · 8-bit binary — with the conversions the exam asks for</div>
+  <div class="meta">Printable quick reference · OUT · PUTS · GETC · .STRINGZ</div>
+</div>
+
+<div class="section">
+<h2>Must-Know Landmarks</h2>
+<div class="two-col">
+<table>
+<tbody><tr><th>Char</th><th>Dec</th><th>LC-3 hex</th><th>Binary</th></tr>
+<tr><td class="ch">'0'</td><td class="dec">48</td><td class="hex">x30</td><td class="bin">00110000</td></tr>
+<tr><td class="ch">'9'</td><td class="dec">57</td><td class="hex">x39</td><td class="bin">00111001</td></tr>
+<tr><td class="ch">'A'</td><td class="dec">65</td><td class="hex">x41</td><td class="bin">01000001</td></tr>
+<tr><td class="ch">'Z'</td><td class="dec">90</td><td class="hex">x5A</td><td class="bin">01011010</td></tr>
+<tr><td class="ch">'a'</td><td class="dec">97</td><td class="hex">x61</td><td class="bin">01100001</td></tr>
+<tr><td class="ch">'z'</td><td class="dec">122</td><td class="hex">x7A</td><td class="bin">01111010</td></tr>
+<tr><td class="ch">space</td><td class="dec">32</td><td class="hex">x20</td><td class="bin">00100000</td></tr>
+<tr><td class="ch">\0</td><td class="dec">0</td><td class="hex">x00</td><td class="bin">00000000</td></tr>
+<tr><td class="ch">\n</td><td class="dec">10</td><td class="hex">x0A</td><td class="bin">00001010</td></tr>
+<tr><td class="ch">\t</td><td class="dec">9</td><td class="hex">x09</td><td class="bin">00001001</td></tr>
+</tbody></table>
+<div>
+<div class="keyfact"><span class="lbl">The five relationships to memorise</span>
+<ul style="margin-bottom:0;">
+<li><b>digit value</b> = char − <code>x30</code> &nbsp;(e.g. '7' = x37 → 7)</li>
+<li><b>value → digit char</b> = value + <code>x30</code>, then <code>OUT</code></li>
+<li><b>lower → UPPER</b> = char − <code>x20</code> &nbsp;('a'→'A')</li>
+<li><b>UPPER → lower</b> = char + <code>x20</code></li>
+<li><b>'A'..'Z'</b> = x41..x5A, &nbsp;<b>'a'..'z'</b> = x61..x7A, &nbsp;<b>'0'..'9'</b> = x30..x39</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div class="section">
+<h2>Control Characters &amp; C Escapes</h2>
+<table>
+<tbody><tr><th>Dec</th><th>Hex</th><th>Binary</th><th>Name</th><th>C escape</th><th>Why it matters in LC-3 / C</th></tr>
+<tr><td class="dec">0</td><td class="hex">x00</td><td class="bin">00000000</td><td class="ch">NUL</td><td class="esc">\0</td><td class="note">string terminator '\0' — BRz tests for this</td></tr>
+<tr><td class="dec">8</td><td class="hex">x08</td><td class="bin">00001000</td><td class="ch">BS</td><td class="esc">\b</td><td class="note">backspace</td></tr>
+<tr><td class="dec">9</td><td class="hex">x09</td><td class="bin">00001001</td><td class="ch">TAB</td><td class="esc">\t</td><td class="note">horizontal tab — word separator</td></tr>
+<tr><td class="dec">10</td><td class="hex">x0A</td><td class="bin">00001010</td><td class="ch">LF</td><td class="esc">\n</td><td class="note">newline — end of input line (getchar loop stops here)</td></tr>
+<tr><td class="dec">13</td><td class="hex">x0D</td><td class="bin">00001101</td><td class="ch">CR</td><td class="esc">\r</td><td class="note">carriage return</td></tr>
+<tr><td class="dec">27</td><td class="hex">x1B</td><td class="bin">00011011</td><td class="ch">ESC</td><td class="esc">—</td><td class="note">escape</td></tr>
+</tbody></table>
+<div class="warn"><span class="lbl">The two that drive loops</span>
+<code>\0</code> (x00) ends a <code>.STRINGZ</code> string — string walkers test it with <code>BRz done</code> after an <code>LDR</code>. <code>\n</code> (x0A) ends a keyboard line — <code>getchar()</code> reading loops stop on it. <code>\t</code> (x09) and space (x20) are the word separators in the "count words" tasks.
+</div>
+</div>
+
+<div class="section page-break">
+<h2>Full Printable Set (32–126)</h2>
+<p class="cmt">Columns: Dec · LC-3 hex · 8-bit binary · Char. Read left block first, then middle, then right.</p>
+<div class="triple">
+<table>
+<tbody><tr><th>D</th><th>Hex</th><th>Binary</th><th>Ch</th></tr>
+<tr><td class="dec">32</td><td class="hex">x20</td><td class="bin">00100000</td><td class="ch">(space)</td><td class="note"></td></tr>
+<tr><td class="dec">33</td><td class="hex">x21</td><td class="bin">00100001</td><td class="ch">!</td><td class="note"></td></tr>
+<tr><td class="dec">34</td><td class="hex">x22</td><td class="bin">00100010</td><td class="ch">"</td><td class="note"></td></tr>
+<tr><td class="dec">35</td><td class="hex">x23</td><td class="bin">00100011</td><td class="ch">#</td><td class="note"></td></tr>
+<tr><td class="dec">36</td><td class="hex">x24</td><td class="bin">00100100</td><td class="ch">$</td><td class="note"></td></tr>
+<tr><td class="dec">37</td><td class="hex">x25</td><td class="bin">00100101</td><td class="ch">%</td><td class="note"></td></tr>
+<tr><td class="dec">38</td><td class="hex">x26</td><td class="bin">00100110</td><td class="ch">&amp;</td><td class="note"></td></tr>
+<tr><td class="dec">39</td><td class="hex">x27</td><td class="bin">00100111</td><td class="ch">'</td><td class="note"></td></tr>
+<tr><td class="dec">40</td><td class="hex">x28</td><td class="bin">00101000</td><td class="ch">(</td><td class="note"></td></tr>
+<tr><td class="dec">41</td><td class="hex">x29</td><td class="bin">00101001</td><td class="ch">)</td><td class="note"></td></tr>
+<tr><td class="dec">42</td><td class="hex">x2A</td><td class="bin">00101010</td><td class="ch">*</td><td class="note"></td></tr>
+<tr><td class="dec">43</td><td class="hex">x2B</td><td class="bin">00101011</td><td class="ch">+</td><td class="note"></td></tr>
+<tr><td class="dec">44</td><td class="hex">x2C</td><td class="bin">00101100</td><td class="ch">,</td><td class="note"></td></tr>
+<tr><td class="dec">45</td><td class="hex">x2D</td><td class="bin">00101101</td><td class="ch">-</td><td class="note"></td></tr>
+<tr><td class="dec">46</td><td class="hex">x2E</td><td class="bin">00101110</td><td class="ch">.</td><td class="note"></td></tr>
+<tr><td class="dec">47</td><td class="hex">x2F</td><td class="bin">00101111</td><td class="ch">/</td><td class="note"></td></tr>
+<tr><td class="dec">48</td><td class="hex">x30</td><td class="bin">00110000</td><td class="ch">0</td><td class="note"></td></tr>
+<tr><td class="dec">49</td><td class="hex">x31</td><td class="bin">00110001</td><td class="ch">1</td><td class="note"></td></tr>
+<tr><td class="dec">50</td><td class="hex">x32</td><td class="bin">00110010</td><td class="ch">2</td><td class="note"></td></tr>
+<tr><td class="dec">51</td><td class="hex">x33</td><td class="bin">00110011</td><td class="ch">3</td><td class="note"></td></tr>
+<tr><td class="dec">52</td><td class="hex">x34</td><td class="bin">00110100</td><td class="ch">4</td><td class="note"></td></tr>
+<tr><td class="dec">53</td><td class="hex">x35</td><td class="bin">00110101</td><td class="ch">5</td><td class="note"></td></tr>
+<tr><td class="dec">54</td><td class="hex">x36</td><td class="bin">00110110</td><td class="ch">6</td><td class="note"></td></tr>
+<tr><td class="dec">55</td><td class="hex">x37</td><td class="bin">00110111</td><td class="ch">7</td><td class="note"></td></tr>
+<tr><td class="dec">56</td><td class="hex">x38</td><td class="bin">00111000</td><td class="ch">8</td><td class="note"></td></tr>
+<tr><td class="dec">57</td><td class="hex">x39</td><td class="bin">00111001</td><td class="ch">9</td><td class="note"></td></tr>
+<tr><td class="dec">58</td><td class="hex">x3A</td><td class="bin">00111010</td><td class="ch">:</td><td class="note"></td></tr>
+<tr><td class="dec">59</td><td class="hex">x3B</td><td class="bin">00111011</td><td class="ch">;</td><td class="note"></td></tr>
+<tr><td class="dec">60</td><td class="hex">x3C</td><td class="bin">00111100</td><td class="ch">&lt;</td><td class="note"></td></tr>
+<tr><td class="dec">61</td><td class="hex">x3D</td><td class="bin">00111101</td><td class="ch">=</td><td class="note"></td></tr>
+<tr><td class="dec">62</td><td class="hex">x3E</td><td class="bin">00111110</td><td class="ch">&gt;</td><td class="note"></td></tr>
+<tr><td class="dec">63</td><td class="hex">x3F</td><td class="bin">00111111</td><td class="ch">?</td><td class="note"></td></tr>
+</tbody></table>
+<table>
+<tbody><tr><th>D</th><th>Hex</th><th>Binary</th><th>Ch</th></tr>
+<tr><td class="dec">64</td><td class="hex">x40</td><td class="bin">01000000</td><td class="ch">@</td><td class="note"></td></tr>
+<tr><td class="dec">65</td><td class="hex">x41</td><td class="bin">01000001</td><td class="ch">A</td><td class="note"></td></tr>
+<tr><td class="dec">66</td><td class="hex">x42</td><td class="bin">01000010</td><td class="ch">B</td><td class="note"></td></tr>
+<tr><td class="dec">67</td><td class="hex">x43</td><td class="bin">01000011</td><td class="ch">C</td><td class="note"></td></tr>
+<tr><td class="dec">68</td><td class="hex">x44</td><td class="bin">01000100</td><td class="ch">D</td><td class="note"></td></tr>
+<tr><td class="dec">69</td><td class="hex">x45</td><td class="bin">01000101</td><td class="ch">E</td><td class="note"></td></tr>
+<tr><td class="dec">70</td><td class="hex">x46</td><td class="bin">01000110</td><td class="ch">F</td><td class="note"></td></tr>
+<tr><td class="dec">71</td><td class="hex">x47</td><td class="bin">01000111</td><td class="ch">G</td><td class="note"></td></tr>
+<tr><td class="dec">72</td><td class="hex">x48</td><td class="bin">01001000</td><td class="ch">H</td><td class="note"></td></tr>
+<tr><td class="dec">73</td><td class="hex">x49</td><td class="bin">01001001</td><td class="ch">I</td><td class="note"></td></tr>
+<tr><td class="dec">74</td><td class="hex">x4A</td><td class="bin">01001010</td><td class="ch">J</td><td class="note"></td></tr>
+<tr><td class="dec">75</td><td class="hex">x4B</td><td class="bin">01001011</td><td class="ch">K</td><td class="note"></td></tr>
+<tr><td class="dec">76</td><td class="hex">x4C</td><td class="bin">01001100</td><td class="ch">L</td><td class="note"></td></tr>
+<tr><td class="dec">77</td><td class="hex">x4D</td><td class="bin">01001101</td><td class="ch">M</td><td class="note"></td></tr>
+<tr><td class="dec">78</td><td class="hex">x4E</td><td class="bin">01001110</td><td class="ch">N</td><td class="note"></td></tr>
+<tr><td class="dec">79</td><td class="hex">x4F</td><td class="bin">01001111</td><td class="ch">O</td><td class="note"></td></tr>
+<tr><td class="dec">80</td><td class="hex">x50</td><td class="bin">01010000</td><td class="ch">P</td><td class="note"></td></tr>
+<tr><td class="dec">81</td><td class="hex">x51</td><td class="bin">01010001</td><td class="ch">Q</td><td class="note"></td></tr>
+<tr><td class="dec">82</td><td class="hex">x52</td><td class="bin">01010010</td><td class="ch">R</td><td class="note"></td></tr>
+<tr><td class="dec">83</td><td class="hex">x53</td><td class="bin">01010011</td><td class="ch">S</td><td class="note"></td></tr>
+<tr><td class="dec">84</td><td class="hex">x54</td><td class="bin">01010100</td><td class="ch">T</td><td class="note"></td></tr>
+<tr><td class="dec">85</td><td class="hex">x55</td><td class="bin">01010101</td><td class="ch">U</td><td class="note"></td></tr>
+<tr><td class="dec">86</td><td class="hex">x56</td><td class="bin">01010110</td><td class="ch">V</td><td class="note"></td></tr>
+<tr><td class="dec">87</td><td class="hex">x57</td><td class="bin">01010111</td><td class="ch">W</td><td class="note"></td></tr>
+<tr><td class="dec">88</td><td class="hex">x58</td><td class="bin">01011000</td><td class="ch">X</td><td class="note"></td></tr>
+<tr><td class="dec">89</td><td class="hex">x59</td><td class="bin">01011001</td><td class="ch">Y</td><td class="note"></td></tr>
+<tr><td class="dec">90</td><td class="hex">x5A</td><td class="bin">01011010</td><td class="ch">Z</td><td class="note"></td></tr>
+<tr><td class="dec">91</td><td class="hex">x5B</td><td class="bin">01011011</td><td class="ch">[</td><td class="note"></td></tr>
+<tr><td class="dec">92</td><td class="hex">x5C</td><td class="bin">01011100</td><td class="ch">\</td><td class="note"></td></tr>
+<tr><td class="dec">93</td><td class="hex">x5D</td><td class="bin">01011101</td><td class="ch">]</td><td class="note"></td></tr>
+<tr><td class="dec">94</td><td class="hex">x5E</td><td class="bin">01011110</td><td class="ch">^</td><td class="note"></td></tr>
+<tr><td class="dec">95</td><td class="hex">x5F</td><td class="bin">01011111</td><td class="ch">_</td><td class="note"></td></tr>
+</tbody></table>
+<table>
+<tbody><tr><th>D</th><th>Hex</th><th>Binary</th><th>Ch</th></tr>
+<tr><td class="dec">96</td><td class="hex">x60</td><td class="bin">01100000</td><td class="ch">`</td><td class="note"></td></tr>
+<tr><td class="dec">97</td><td class="hex">x61</td><td class="bin">01100001</td><td class="ch">a</td><td class="note"></td></tr>
+<tr><td class="dec">98</td><td class="hex">x62</td><td class="bin">01100010</td><td class="ch">b</td><td class="note"></td></tr>
+<tr><td class="dec">99</td><td class="hex">x63</td><td class="bin">01100011</td><td class="ch">c</td><td class="note"></td></tr>
+<tr><td class="dec">100</td><td class="hex">x64</td><td class="bin">01100100</td><td class="ch">d</td><td class="note"></td></tr>
+<tr><td class="dec">101</td><td class="hex">x65</td><td class="bin">01100101</td><td class="ch">e</td><td class="note"></td></tr>
+<tr><td class="dec">102</td><td class="hex">x66</td><td class="bin">01100110</td><td class="ch">f</td><td class="note"></td></tr>
+<tr><td class="dec">103</td><td class="hex">x67</td><td class="bin">01100111</td><td class="ch">g</td><td class="note"></td></tr>
+<tr><td class="dec">104</td><td class="hex">x68</td><td class="bin">01101000</td><td class="ch">h</td><td class="note"></td></tr>
+<tr><td class="dec">105</td><td class="hex">x69</td><td class="bin">01101001</td><td class="ch">i</td><td class="note"></td></tr>
+<tr><td class="dec">106</td><td class="hex">x6A</td><td class="bin">01101010</td><td class="ch">j</td><td class="note"></td></tr>
+<tr><td class="dec">107</td><td class="hex">x6B</td><td class="bin">01101011</td><td class="ch">k</td><td class="note"></td></tr>
+<tr><td class="dec">108</td><td class="hex">x6C</td><td class="bin">01101100</td><td class="ch">l</td><td class="note"></td></tr>
+<tr><td class="dec">109</td><td class="hex">x6D</td><td class="bin">01101101</td><td class="ch">m</td><td class="note"></td></tr>
+<tr><td class="dec">110</td><td class="hex">x6E</td><td class="bin">01101110</td><td class="ch">n</td><td class="note"></td></tr>
+<tr><td class="dec">111</td><td class="hex">x6F</td><td class="bin">01101111</td><td class="ch">o</td><td class="note"></td></tr>
+<tr><td class="dec">112</td><td class="hex">x70</td><td class="bin">01110000</td><td class="ch">p</td><td class="note"></td></tr>
+<tr><td class="dec">113</td><td class="hex">x71</td><td class="bin">01110001</td><td class="ch">q</td><td class="note"></td></tr>
+<tr><td class="dec">114</td><td class="hex">x72</td><td class="bin">01110010</td><td class="ch">r</td><td class="note"></td></tr>
+<tr><td class="dec">115</td><td class="hex">x73</td><td class="bin">01110011</td><td class="ch">s</td><td class="note"></td></tr>
+<tr><td class="dec">116</td><td class="hex">x74</td><td class="bin">01110100</td><td class="ch">t</td><td class="note"></td></tr>
+<tr><td class="dec">117</td><td class="hex">x75</td><td class="bin">01110101</td><td class="ch">u</td><td class="note"></td></tr>
+<tr><td class="dec">118</td><td class="hex">x76</td><td class="bin">01110110</td><td class="ch">v</td><td class="note"></td></tr>
+<tr><td class="dec">119</td><td class="hex">x77</td><td class="bin">01110111</td><td class="ch">w</td><td class="note"></td></tr>
+<tr><td class="dec">120</td><td class="hex">x78</td><td class="bin">01111000</td><td class="ch">x</td><td class="note"></td></tr>
+<tr><td class="dec">121</td><td class="hex">x79</td><td class="bin">01111001</td><td class="ch">y</td><td class="note"></td></tr>
+<tr><td class="dec">122</td><td class="hex">x7A</td><td class="bin">01111010</td><td class="ch">z</td><td class="note"></td></tr>
+<tr><td class="dec">123</td><td class="hex">x7B</td><td class="bin">01111011</td><td class="ch">{</td><td class="note"></td></tr>
+<tr><td class="dec">124</td><td class="hex">x7C</td><td class="bin">01111100</td><td class="ch">|</td><td class="note"></td></tr>
+<tr><td class="dec">125</td><td class="hex">x7D</td><td class="bin">01111101</td><td class="ch">}</td><td class="note"></td></tr>
+<tr><td class="dec">126</td><td class="hex">x7E</td><td class="bin">01111110</td><td class="ch">~</td><td class="note"></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<div class="section">
+<h2>Conversion Methods &amp; Worked Bits</h2>
+
+<div class="method"><span class="lbl">Method — hex ↔ binary (the LC-3 staple)</span>
+Each hex digit = exactly 4 binary bits. Split a byte into two nibbles. <code>x4F</code> → <code>0100</code> <code>1111</code>. Going back: group bits in fours from the right, name each nibble.
+</div>
+
+<table class="">
+<tbody><tr><th>Hex digit</th><th>Bits</th><th>Hex digit</th><th>Bits</th></tr>
+<tr><td class="hex">0</td><td class="bin">0000</td><td class="hex">8</td><td class="bin">1000</td></tr>
+<tr><td class="hex">1</td><td class="bin">0001</td><td class="hex">9</td><td class="bin">1001</td></tr>
+<tr><td class="hex">2</td><td class="bin">0010</td><td class="hex">A</td><td class="bin">1010</td></tr>
+<tr><td class="hex">3</td><td class="bin">0011</td><td class="hex">B</td><td class="bin">1011</td></tr>
+<tr><td class="hex">4</td><td class="bin">0100</td><td class="hex">C</td><td class="bin">1100</td></tr>
+<tr><td class="hex">5</td><td class="bin">0101</td><td class="hex">D</td><td class="bin">1101</td></tr>
+<tr><td class="hex">6</td><td class="bin">0110</td><td class="hex">E</td><td class="bin">1110</td></tr>
+<tr><td class="hex">7</td><td class="bin">0111</td><td class="hex">F</td><td class="bin">1111</td></tr>
+</tbody></table>
+
+<div class="two-col">
+<div>
+<h3>Is this char a digit?</h3>
+<p>A character <code>c</code> is a decimal digit iff <code>x30 ≤ c ≤ x39</code>. In LC-3: it is <em>not</em> a digit if <code>(c − x30) &lt; 0</code> OR <code>(c − x39) &gt; 0</code>.</p>
+<pre>LD  R4, ToD       <span class="cmt">; R4 = -x30</span>
+ADD R5, R2, R4    <span class="cmt">; c - '0'</span>
+BRn NOTD          <span class="cmt">; below '0'</span>
+ADD R5, R5, #-9   <span class="cmt">; (c-'0') - 9</span>
+BRp NOTD          <span class="cmt">; above '9'</span>
+<span class="cmt">; ... here c is a digit</span>
+ToD .FILL x-30</pre>
+</div>
+<div>
+<h3>Print a single digit</h3>
+<p>A value 0–9 in a register is printed by adding <code>x30</code> to turn it into the ASCII code, then <code>OUT</code>. Works for one digit only.</p>
+<pre>LD  R0, ZERO      <span class="cmt">; x30 = '0'</span>
+ADD R3, R3, R0    <span class="cmt">; count -&gt; ASCII digit</span>
+ADD R0, R3, #0
+OUT               <span class="cmt">; prints the digit</span>
+ZERO .FILL x30</pre>
+</div>
+</div>
+
+<div class="keyfact"><span class="lbl">Caesar / shift cipher (F2023 Q2)</span>
+Encryption that "adds 5 to each ASCII value" is just <code>ADD R0, R0, #5</code> on each loaded character before <code>OUT</code>. Space x20 + 5 = x25 = <code>%</code>; 'T' x54 + 5 = x59 = 'Y'. Any ASCII value is just a number you can do arithmetic on.
+</div>
+
+<div class="warn"><span class="lbl">.STRINGZ stores one word per character + a \0</span>
+<code>S .STRINGZ "Hi"</code> occupies <b>3 words</b>: 'H'=x48, 'i'=x69, '\0'=x00. This is why the terminating zero counts when you build a symbol table or a stack layout.
+</div>
+</div>
+
+<p style="text-align:center; font-family:&#39;JetBrains Mono&#39;,monospace; font-size:8pt; color:var(--ink-soft); letter-spacing:0.05em; margin-top:16px;">
+ASCII reference for LC-3 · companion to the 02322 worked-exam compendium &amp; instruction reference
+</p>
+
+</div><!-- /wrap -->
+
+
+</body></html>

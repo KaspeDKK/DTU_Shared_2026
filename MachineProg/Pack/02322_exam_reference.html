@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>02322 Maskinnær Programmering — Exam Reference</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spline+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  :root{
+    --ink:#23262b;
+    --soft:#54585f;
+    --faint:#8a8f97;
+    --line:#d9dde2;
+    --line2:#eceef1;
+    --bg:#ffffff;
+    --panel:#fbfaf7;
+    --accent:#2f5d62;      /* deep teal */
+    --accent2:#9a5b34;     /* terracotta */
+    --hl:#fdf6e3;          /* warm highlight */
+    --hl-blue:#eef4f4;     /* cool highlight */
+    --code-bg:#f6f5f1;
+    --good:#3a6b3a;
+    --bad:#9c3b35;
+  }
+
+  *{box-sizing:border-box;}
+  html{font-size:14px;}
+  body{
+    margin:0;
+    font-family:'Spline Sans',sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    line-height:1.42;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{max-width:1000px;margin:0 auto;padding:32px 38px 60px;}
+
+  /* ---------- Header ---------- */
+  header.title{
+    border-bottom:3px double var(--accent);
+    padding-bottom:14px;margin-bottom:10px;
+  }
+  .kicker{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--accent2);font-weight:700;
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;font-size:2.15rem;line-height:1.05;
+    margin:.15em 0 .15em;color:var(--ink);
+  }
+  .sub{color:var(--soft);font-size:.92rem;}
+  .legend{
+    display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;
+    font-size:.74rem;color:var(--faint);
+    font-family:'JetBrains Mono',monospace;
+  }
+  .legend b{color:var(--accent);}
+
+  /* ---------- Sections ---------- */
+  section{margin-top:26px;}
+  h2{
+    font-family:'Fraunces',serif;font-weight:600;
+    font-size:1.4rem;color:var(--accent);
+    margin:0 0 4px;display:flex;align-items:baseline;gap:10px;
+    border-bottom:1.5px solid var(--accent);padding-bottom:5px;
+  }
+  h2 .num{
+    font-family:'JetBrains Mono',monospace;font-size:.85rem;
+    color:#fff;background:var(--accent);
+    padding:2px 8px;border-radius:3px;font-weight:700;
+  }
+  h3{
+    font-family:'Spline Sans',sans-serif;font-weight:700;
+    font-size:1rem;margin:16px 0 5px;color:var(--accent2);
+    letter-spacing:.01em;
+  }
+  h4{font-size:.86rem;font-weight:700;margin:11px 0 3px;color:var(--ink);}
+  p{margin:6px 0;}
+  ul,ol{margin:6px 0 6px 0;padding-left:20px;}
+  li{margin:2px 0;}
+
+  code,kbd{
+    font-family:'JetBrains Mono',monospace;font-size:.82em;
+    background:var(--code-bg);padding:1px 5px;border-radius:3px;
+    color:#3a3f45;border:1px solid var(--line2);
+  }
+  pre{
+    font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.5;
+    background:var(--code-bg);border:1px solid var(--line);
+    border-left:3px solid var(--accent);
+    padding:10px 13px;border-radius:5px;margin:7px 0;overflow:auto;
+    white-space:pre;color:#2c3036;
+  }
+  pre code{background:none;border:none;padding:0;font-size:1em;}
+  .cmt{color:#7a8a6f;font-style:italic;}
+  .kw{color:var(--accent);font-weight:600;}
+
+  /* ---------- Tables ---------- */
+  table{
+    border-collapse:collapse;width:100%;margin:8px 0;font-size:.8rem;
+  }
+  th,td{
+    border:1px solid var(--line);padding:5px 8px;text-align:left;
+    vertical-align:top;
+  }
+  th{
+    background:var(--hl-blue);font-weight:700;color:var(--accent);
+    font-size:.74rem;letter-spacing:.02em;
+  }
+  td.mono,th.mono,table.mono td{font-family:'JetBrains Mono',monospace;font-size:.76rem;}
+  tr:nth-child(even) td{background:#fcfcfb;}
+
+  .enc-table td,.enc-table th{text-align:center;padding:4px 5px;font-family:'JetBrains Mono',monospace;font-size:.73rem;}
+  .enc-table td:first-child,.enc-table th:first-child{text-align:left;font-weight:700;font-family:'Spline Sans';}
+
+  /* ---------- Boxes ---------- */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+
+  .card{
+    background:var(--panel);border:1px solid var(--line);
+    border-radius:6px;padding:12px 15px;
+  }
+  .note{
+    background:var(--hl);border:1px solid #ecdfb8;border-left:4px solid var(--accent2);
+    border-radius:5px;padding:9px 13px;margin:9px 0;font-size:.85rem;
+  }
+  .note b{color:var(--accent2);}
+  .tip{
+    background:var(--hl-blue);border:1px solid #cfe0e0;border-left:4px solid var(--accent);
+    border-radius:5px;padding:9px 13px;margin:9px 0;font-size:.85rem;
+  }
+  .pitfall{
+    background:#fbf0ef;border:1px solid #eccac6;border-left:4px solid var(--bad);
+    border-radius:5px;padding:9px 13px;margin:9px 0;font-size:.85rem;
+  }
+  .pitfall b{color:var(--bad);}
+
+  .good{color:var(--good);font-weight:600;}
+  .bad{color:var(--bad);font-weight:600;}
+
+  .dk{color:var(--faint);font-style:italic;font-size:.92em;}
+
+  .pill{
+    display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.7rem;
+    background:#fff;border:1px solid var(--line);border-radius:20px;
+    padding:1px 9px;color:var(--soft);margin:1px 0;
+  }
+
+  .stack{
+    font-family:'JetBrains Mono',monospace;font-size:.74rem;width:auto;
+  }
+  .stack td{padding:3px 9px;}
+  .stack .addr{color:var(--accent2);font-weight:700;}
+  .stack .bk{background:var(--hl);}
+  .stack .fp{background:var(--hl-blue);}
+
+  hr{border:none;border-top:1px solid var(--line2);margin:18px 0;}
+
+  /* ---------- Print ---------- */
+  @media print{
+    @page{margin:13mm 12mm;}
+    html{font-size:9.4pt;}
+    body{line-height:1.34;}
+    .wrap{max-width:none;padding:0;margin:0;}
+    section{margin-top:15px;}
+    h2{font-size:1.18rem;}
+    h1{font-size:1.7rem;}
+    pre,table,.card,.note,.tip,.pitfall,.stack-wrap,.enc-table{page-break-inside:avoid;}
+    section,h2,h3{page-break-after:avoid;}
+    .pagebreak{page-break-before:always;}
+    a{color:var(--ink);text-decoration:none;}
+    tr:nth-child(even) td{background:#fcfcfb !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    th,.bk,.fp,.note,.tip,.pitfall,h2 .num{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  }
+  .toc{
+    columns:3;column-gap:24px;font-size:.82rem;
+    background:var(--panel);border:1px solid var(--line);border-radius:6px;
+    padding:12px 18px;margin-top:14px;
+  }
+  .toc a{color:var(--soft);text-decoration:none;display:block;padding:1px 0;}
+  .toc b{color:var(--accent);display:block;margin:4px 0 2px;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;font-family:'JetBrains Mono',monospace;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="title">
+  <div class="kicker">DTU · 02322 · Maskinnær Programmering</div>
+  <h1>Exam Reference Sheet</h1>
+  <div class="sub">LC-3 architecture · assembly ↔ machine code · assembly ↔ C · pointers, structs &amp; linked lists · the runtime stack</div>
+  <div class="legend">
+    <span><b>R5</b> = frame pointer</span>
+    <span><b>R6</b> = stack pointer</span>
+    <span><b>R7</b> = return address</span>
+    <span><b>1 word = 16 bit</b></span>
+    <span class="dk">Danish terms in grey</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <b>Numbers</b>
+  <a href="#nums">1 · Binary / hex / 2's complement</a>
+  <b>LC-3 ISA</b>
+  <a href="#isa">2 · Instruction encodings</a>
+  <a href="#traps">3 · TRAP &amp; directives</a>
+  <a href="#cc">4 · Condition codes &amp; BR</a>
+  <b>Translation</b>
+  <a href="#asm2mc">5 · Assembly ↔ machine code</a>
+  <a href="#symtab">6 · Symbol tables</a>
+  <a href="#writeasm">7 · Writing LC-3 programs</a>
+  <a href="#asm2c">8 · Assembly ↔ C</a>
+  <b>C language</b>
+  <a href="#cptr">9 · Pointers, arrays, strings</a>
+  <a href="#cstruct">10 · Structs</a>
+  <a href="#clist">11 · Linked lists</a>
+  <a href="#cbugs">12 · Common C bugs</a>
+  <b>Stack</b>
+  <a href="#stack">13 · Runtime stack / activation record</a>
+  <a href="#trace">14 · Pointer-tracing walkthrough</a>
+</nav>
+
+<!-- ============================================================ -->
+<section id="nums">
+<h2><span class="num">1</span> Number representation</h2>
+
+<div class="grid2">
+<div>
+<h3>Hex ↔ binary (4 bits at a time)</h3>
+<table class="mono">
+<tr><th>hex</th><th>bin</th><th>hex</th><th>bin</th></tr>
+<tr><td>0</td><td>0000</td><td>8</td><td>1000</td></tr>
+<tr><td>1</td><td>0001</td><td>9</td><td>1001</td></tr>
+<tr><td>2</td><td>0010</td><td>A</td><td>1010</td></tr>
+<tr><td>3</td><td>0011</td><td>B</td><td>1011</td></tr>
+<tr><td>4</td><td>0100</td><td>C</td><td>1100</td></tr>
+<tr><td>5</td><td>0101</td><td>D</td><td>1101</td></tr>
+<tr><td>6</td><td>0110</td><td>E</td><td>1110</td></tr>
+<tr><td>7</td><td>0111</td><td>F</td><td>1111</td></tr>
+</table>
+<p class="dk">Group bits in 4s from the right. e.g. <code>1100 0000 1101 1110</code> = <code>xC0DE</code>.</p>
+</div>
+
+<div>
+<h3>2's complement — the whole toolkit</h3>
+<ul>
+<li><b>Positive → binary:</b> normal binary, pad with leading 0s.</li>
+<li><b>Negate (±):</b> <span class="good">invert all bits, then +1</span>. Works both directions.</li>
+<li><b>MSB = sign bit.</b> 1 ⇒ negative.</li>
+<li><b>Range of n bits:</b> <code>−2^(n−1) … 2^(n−1)−1</code>. <br>8 bit: −128…127 · 10 bit: −512…511 · 16 bit: −32768…32767.</li>
+<li><b>Sign-extend</b> = copy the MSB left to fill 16 bits.</li>
+</ul>
+<div class="note"><b>−127 (8-bit):</b> +127 = <code>0111 1111</code> → invert <code>1000 0000</code> → +1 = <code>1000 0001</code>.</div>
+</div>
+</div>
+
+<h3>Worked examples from past exams</h3>
+<table>
+<tr><th>Task</th><th>Method</th><th>Answer</th></tr>
+<tr><td>−234 (10-bit), given +234 = <code>0011101010</code></td><td>invert → <code>1100010101</code>, +1</td><td class="mono">1100010110</td></tr>
+<tr><td>−23 (8-bit)</td><td>+23 = <code>00010111</code>, invert+1</td><td class="mono">11101001</td></tr>
+<tr><td>+86 (8-bit) and −86</td><td>86=<code>01010110</code>; negate</td><td class="mono">01010110 / 10101010</td></tr>
+<tr><td>86 in 2 hex digits</td><td>0101 0110</td><td class="mono">x56</td></tr>
+<tr><td>Opcode uses top 6 bits → max #instructions</td><td>2<sup>6</sup></td><td class="mono">64</td></tr>
+</table>
+</section>
+
+<!-- ============================================================ -->
+<section id="isa">
+<h2><span class="num">2</span> LC-3 instruction encodings</h2>
+<p>Bits numbered <b>15…0</b>. <code>setcc()</code> = sets N/Z/P. Instructions marked † set condition codes.</p>
+
+<table class="enc-table">
+<tr><th>Instr</th><th>15-12</th><th>11-9</th><th>8-6</th><th>5</th><th>4-3</th><th>2-0</th><th>Operation</th></tr>
+<tr><td>ADD†</td><td>0001</td><td>DR</td><td>SR1</td><td>0</td><td>00</td><td>SR2</td><td>DR=SR1+SR2</td></tr>
+<tr><td>ADD†</td><td>0001</td><td>DR</td><td>SR1</td><td>1</td><td colspan="2">imm5</td><td>DR=SR1+SEXT(imm5)</td></tr>
+<tr><td>AND†</td><td>0101</td><td>DR</td><td>SR1</td><td>0</td><td>00</td><td>SR2</td><td>DR=SR1 &amp; SR2</td></tr>
+<tr><td>AND†</td><td>0101</td><td>DR</td><td>SR1</td><td>1</td><td colspan="2">imm5</td><td>DR=SR1 &amp; SEXT(imm5)</td></tr>
+<tr><td>NOT†</td><td>1001</td><td>DR</td><td>SR</td><td colspan="3">111111</td><td>DR=NOT(SR)</td></tr>
+<tr><td>BR</td><td>0000</td><td>n z p</td><td colspan="4">PCoffset9</td><td>if(taken) PC=<b>PC</b>+SEXT(off9)</td></tr>
+<tr><td>JMP</td><td>1100</td><td>000</td><td>BaseR</td><td colspan="3">000000</td><td>PC=BaseR</td></tr>
+<tr><td>RET</td><td>1100</td><td>000</td><td>111</td><td colspan="3">000000</td><td>PC=R7</td></tr>
+<tr><td>JSR</td><td>0100</td><td>1</td><td colspan="4">PCoffset11</td><td>R7=<b>PC</b>; PC=<b>PC</b>+SEXT(off11)</td></tr>
+<tr><td>JSRR</td><td>0100</td><td>0&nbsp;00</td><td>BaseR</td><td colspan="3">000000</td><td>R7=<b>PC</b>; PC=BaseR</td></tr>
+<tr><td>LD†</td><td>0010</td><td>DR</td><td colspan="4">PCoffset9</td><td>DR=mem[<b>PC</b>+off9]</td></tr>
+<tr><td>LDI†</td><td>1010</td><td>DR</td><td colspan="4">PCoffset9</td><td>DR=mem[mem[<b>PC</b>+off9]]</td></tr>
+<tr><td>LDR†</td><td>0110</td><td>DR</td><td>BaseR</td><td colspan="3">offset6</td><td>DR=mem[BaseR+off6]</td></tr>
+<tr><td>LEA</td><td>1110</td><td>DR</td><td colspan="4">PCoffset9</td><td>DR=<b>PC</b>+SEXT(off9)</td></tr>
+<tr><td>ST</td><td>0011</td><td>SR</td><td colspan="4">PCoffset9</td><td>mem[<b>PC</b>+off9]=SR</td></tr>
+<tr><td>STI</td><td>1011</td><td>SR</td><td colspan="4">PCoffset9</td><td>mem[mem[<b>PC</b>+off9]]=SR</td></tr>
+<tr><td>STR</td><td>0111</td><td>SR</td><td>BaseR</td><td colspan="3">offset6</td><td>mem[BaseR+off6]=SR</td></tr>
+<tr><td>TRAP</td><td>1111</td><td>0000</td><td colspan="4">trapvect8</td><td>R7=<b>PC</b>; PC=mem[ZEXT(vect8)]</td></tr>
+<tr><td>RTI</td><td>1000</td><td colspan="6">000000000000</td><td>return from interrupt</td></tr>
+<tr><td class="bad">(unused)</td><td class="bad">1101</td><td colspan="6">— illegal opcode —</td><td class="bad">causes exception</td></tr>
+</table>
+
+<div class="grid2">
+<div class="card">
+<h4>Field ranges (all SEXT'd to 16 bit)</h4>
+<ul>
+<li><code>imm5</code> bits[4:0] → <b>−16 … 15</b></li>
+<li><code>offset6</code> bits[5:0] → <b>−32 … 31</b></li>
+<li><code>PCoffset9</code> bits[8:0] → <b>−256 … 255</b></li>
+<li><code>PCoffset11</code> bits[10:0] → <b>−1024 … 1023</b></li>
+<li><code>trapvect8</code> → ZEXT, <b>0 … 255</b></li>
+</ul>
+</div>
+<div class="note"><b>PC is the <i>incremented</i> PC.</b> For PC-relative instructions (LD, ST, LEA, BR, LDI, STI, JSR), the offset is added to <code>address + 1</code> — i.e. the address of the <i>next</i> instruction. <br>
+<span class="dk">offset = target − (address_of_instruction + 1)</span></div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="traps">
+<h2><span class="num">3</span> TRAP service routines &amp; assembler directives</h2>
+<div class="grid2">
+<div>
+<h3>TRAP vectors</h3>
+<table class="mono">
+<tr><th>vect</th><th>name</th><th>does</th></tr>
+<tr><td>x20</td><td>GETC</td><td>read 1 char → R0 (no echo)</td></tr>
+<tr><td>x21</td><td>OUT</td><td>print R0[7:0]</td></tr>
+<tr><td>x22</td><td>PUTS</td><td>print string at addr in R0 (until x0000)</td></tr>
+<tr><td>x23</td><td>IN</td><td>prompt + read char (echo) → R0</td></tr>
+<tr><td>x24</td><td>PUTSP</td><td>print packed string (2 chars/word)</td></tr>
+<tr><td>x25</td><td>HALT</td><td>stop</td></tr>
+</table>
+<p class="dk">PUTS needs R0 = <i>address</i> of the string. OUT needs R0 = the <i>character</i> itself.</p>
+</div>
+<div>
+<h3>Directives</h3>
+<table>
+<tr><td class="mono">.ORIG x3000</td><td>set start address</td></tr>
+<tr><td class="mono">.END</td><td>end of source</td></tr>
+<tr><td class="mono">.FILL x37</td><td>one word with this value</td></tr>
+<tr><td class="mono">.BLKW 5</td><td>reserve 5 empty words</td></tr>
+<tr><td class="mono">.STRINGZ "Hi"</td><td>chars + trailing <code>x0000</code></td></tr>
+</table>
+<div class="tip"><b>Useful ASCII:</b> <code>'0'</code>=x30, <code>'9'</code>=x39, <code>'A'</code>=x41, <code>'a'</code>=x61, space=x20, <code>'\n'</code>=x0A, <code>'\0'</code>=x00. Lower→upper: subtract <code>x20</code> (32).</div>
+</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="cc">
+<h2><span class="num">4</span> Condition codes &amp; branching</h2>
+<div class="grid2">
+<div>
+<p>Every <span class="pill">†</span> instruction sets exactly one of N/Z/P from the value written to DR:</p>
+<ul>
+<li>result &lt; 0 → <b>N</b>=1</li>
+<li>result = 0 → <b>Z</b>=1</li>
+<li>result &gt; 0 → <b>P</b>=1</li>
+</ul>
+<p><code>BRn / BRz / BRp / BRnz / BRzp / BRnp / BRnzp(=BR)</code> branch if the matching flag(s) are set.</p>
+</div>
+<div class="note"><b>To test a value, set the flags first.</b> Common idioms:
+<ul style="margin-bottom:0">
+<li><code>ADD Rx,Rx,#0</code> → re-test Rx</li>
+<li>compare to k: <code>ADD Rt,Rx,#-k</code> then <code>BRz</code> (==k) / <code>BRn</code> (&lt;k) / <code>BRp</code> (&gt;k)</li>
+<li>negate Rx: <code>NOT Rx,Rx</code> + <code>ADD Rx,Rx,#1</code></li>
+<li>clear: <code>AND Rx,Rx,#0</code></li>
+</ul></div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="asm2mc" class="pagebreak">
+<h2><span class="num">5</span> Assembly ↔ machine code</h2>
+
+<h3>Assembly → machine code (step by step)</h3>
+<ol>
+<li>Identify opcode → top 4 bits.</li>
+<li>Fill register fields (3 bits each, R0=000 … R7=111).</li>
+<li>For immediates/offsets: write the 2's-complement value in the right bit width.</li>
+<li>For labels: <code>offset = target_addr − (this_addr + 1)</code>, then 2's-complement in 9 or 11 bits.</li>
+<li>Group the 16 bits in 4s → hex.</li>
+</ol>
+
+<div class="grid2">
+<div>
+<h4>Example: <code>ADD R7, R2, #12</code></h4>
+<pre>opcode ADD          0001
+DR = R7             111
+SR1 = R2            010
+imm bit             1
+imm5 = 12           01100
+-------------------------------
+0001 1110 1010 1100 = <span class="kw">x1EAC</span></pre>
+</div>
+<div>
+<h4>Example: <code>LOOP BRnzp LOOP</code> at x3001</h4>
+<pre>opcode BR            0000
+nzp                  111
+target  = x3001
+PC      = x3002  (this+1)
+offset  = 3001-3002 = -1
+  → 9-bit:           111111111
+-------------------------------
+0000 1111 1111 1111 = <span class="kw">x0FFF</span></pre>
+</div>
+</div>
+
+<h3>Machine code → assembly</h3>
+<ol>
+<li>Split top 4 bits → opcode (use the table). <span class="bad">1101 = illegal.</span></li>
+<li>Decode register fields and the addressing-mode bit (bit 5 for ADD/AND).</li>
+<li>For offsets, sign-extend and add to (addr+1) to recover the target / label.</li>
+</ol>
+<div class="note"><b>Worked (F22):</b> <code>1110 100 011111111</code> → opcode 1110 = <b>LEA</b>, DR=R4, off9 = <code>011111111</code> = +255 = xFF → <code>LEA R4, x... (R4 ← PC+xFF)</code>. Then <code>0001 010 000 1 00000</code> → <code>ADD R2,R0,#0</code> (copy R0→R2), etc.</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="symtab">
+<h2><span class="num">6</span> Symbol tables</h2>
+<p>Addresses start at <code>.ORIG</code> and increase by <b>1 per word</b>. Each instruction = 1 word; <code>.FILL</code> = 1 word; <code>.STRINGZ "abc"</code> = 4 words (incl. terminator); <code>.BLKW n</code> = n words. A label takes the address of the <i>next</i> word it precedes.</p>
+<div class="grid2">
+<div>
+<pre>      .ORIG x3000
+3000   AND R0,R0,#0
+3001   ADD R1,R0,#15
+3002 aa BRnz dd
+3003   AND R2,R1,#7
+3004   BRnp cc
+3005   AND R3,R3,#0
+3006 bb ADD R0,R0,R3
+3007   ADD R3,R3,#1
+3008   NOT R4,R3
+3009   ADD R4,R4,#1
+300A   ADD R4,R1,R4
+300B   BRzp bb
+300C cc ADD R1,R1,#-1
+300D   BRnzp aa
+300E dd HALT</pre>
+</div>
+<div>
+<table class="mono">
+<tr><th>symbol</th><th>address</th></tr>
+<tr><td>aa</td><td>x3002</td></tr>
+<tr><td>bb</td><td>x3006</td></tr>
+<tr><td>cc</td><td>x300C</td></tr>
+<tr><td>dd</td><td>x300E</td></tr>
+</table>
+<p class="dk">Just number every line from .ORIG; the label's address is the line it labels.</p>
+</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="writeasm">
+<h2><span class="num">7</span> Writing LC-3 programs — reusable patterns</h2>
+
+<div class="grid2">
+<div>
+<h4>Loop over a string until <code>\0</code></h4>
+<pre>      LEA R3, S      <span class="cmt">; R3 → string</span>
+L     LDR R0, R3, #0  <span class="cmt">; R0 = current char</span>
+      BRz  DONE       <span class="cmt">; \0 ends it</span>
+      <span class="cmt">; ... use R0 ...</span>
+      ADD R3, R3, #1  <span class="cmt">; next char</span>
+      BRnzp L
+DONE  HALT
+S     .STRINGZ "text"</pre>
+</div>
+<div>
+<h4>Counter / accumulator down-loop</h4>
+<pre>      AND R0, R0, #0  <span class="cmt">; sum = 0</span>
+      LD  R1, N       <span class="cmt">; counter</span>
+L     BRz  DONE       <span class="cmt">; while R1 != 0</span>
+      ADD R0, R0, R1
+      ADD R1, R1, #-1
+      BRnzp L
+DONE  HALT
+N     .FILL #10</pre>
+</div>
+</div>
+
+<div class="pitfall"><b>Immediate limit:</b> <code>ADD R0,R0,#37</code> is <span class="bad">illegal</span> — imm5 max is +15. Fixes:
+<ul style="margin-bottom:0">
+<li><b>Repeat:</b> <code>ADD #15</code> + <code>ADD #15</code> + <code>ADD #7</code></li>
+<li><b>Load from memory</b> (handles any size): <code>LD R1, A</code> / <code>ADD R0,R0,R1</code> / <code>A .FILL #37</code></li>
+</ul></div>
+
+<div class="grid2">
+<div>
+<h4>Print a number 0–9 as a digit</h4>
+<pre>      LD  R1, ASC0   <span class="cmt">; x30</span>
+      ADD R0, R3, R1  <span class="cmt">; digit + '0'</span>
+      OUT
+ASC0  .FILL x30</pre>
+</div>
+<div>
+<h4>Keep low 4 bits / mask</h4>
+<pre>      AND R1, R2, xF  <span class="cmt">; R1 = R2 &amp; 0x000F</span>
+<span class="cmt">; (AND with imm5; xF = 15 fits)</span>
+<span class="cmt">; histogram[idx]++ pattern:</span>
+      ADD R1, R1, R4  <span class="cmt">; addr = base+idx</span>
+      LDR R0, R1, #0
+      ADD R0, R0, #1
+      STR R0, R1, #0</pre>
+</div>
+</div>
+<div class="tip">Typical full program shape: <code>.ORIG x3000</code> → set up pointers (LEA/LD) → main loop → print results (PUTS strings + OUT digits) → <code>HALT</code> → data (<code>.STRINGZ</code>, <code>.FILL</code>) → <code>.END</code>.</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="asm2c" class="pagebreak">
+<h2><span class="num">8</span> Reading assembly as C (and back)</h2>
+<p>Compiler-generated functions follow a fixed shape. Recognise the <b>prologue / epilogue</b> to skip straight to the logic.</p>
+
+<div class="grid2">
+<div>
+<h4>Prologue (function entry)</h4>
+<pre>ADD R6,R6,#-2   <span class="cmt">; space for RV + RA</span>
+STR R7,R6,#0    <span class="cmt">; save return addr</span>
+ADD R6,R6,#-1   <span class="cmt">; push dynamic link</span>
+STR R5,R6,#0    <span class="cmt">; (old frame ptr)</span>
+ADD R5,R6,#-1   <span class="cmt">; R5 → first local</span>
+ADD R6,R6,#-k   <span class="cmt">; room for k locals</span></pre>
+</div>
+<div>
+<h4>Epilogue (function exit)</h4>
+<pre>STR R0,R5,#3    <span class="cmt">; write return value</span>
+ADD R6,R5,#1    <span class="cmt">; pop locals</span>
+LDR R5,R6,#0    <span class="cmt">; restore frame ptr</span>
+ADD R6,R6,#1
+LDR R7,R6,#0    <span class="cmt">; restore return addr</span>
+ADD R6,R6,#1
+RET</pre>
+</div>
+</div>
+
+<div class="note"><b>Accessing args &amp; locals via R5 (frame pointer):</b> with the layout used here, <code>LDR Rx,R5,#0</code> reads the first local; positive offsets <code>#4, #5…</code> reach the bookkeeping then the arguments above the frame. Match each <code>LDR/STR Rx,R5,#n</code> to a named variable, translate the arithmetic, then reconstruct the <code>if/while/return</code>.</div>
+
+<div class="grid2">
+<div>
+<h4>Example body (F20)</h4>
+<pre>LDR R0,R5,#4   <span class="cmt">; x  (1st arg)</span>
+LDR R2,R5,#5   <span class="cmt">; y  (2nd arg, a ptr)</span>
+LDR R1,R2,#0   <span class="cmt">; *y</span>
+NOT R1,R1 / ADD R1,R1,#1  <span class="cmt">; -*y</span>
+ADD R0,R0,R1   <span class="cmt">; x-*y</span>
+ADD R0,R0,#5   <span class="cmt">; x-*y+5</span>
+STR R0,R5,#0   <span class="cmt">; t = ...</span>
+BRnz label1    <span class="cmt">; if (t>0) ...</span></pre>
+</div>
+<div>
+<h4>Reconstructed C</h4>
+<pre><span class="kw">int</span> func(<span class="kw">int</span> x, <span class="kw">int</span>* y){
+   <span class="kw">int</span> t;
+   t = x - (*y) + 5;
+   <span class="kw">if</span> (t &gt; 0)
+       <span class="kw">return</span> t;
+   <span class="kw">else</span>
+       <span class="kw">return</span> 0;
+}</pre>
+<p class="dk">BRnz after computing t means "skip the return t when t≤0" → the <code>if(t&gt;0)</code>.</p>
+</div>
+</div>
+
+<h4>C → assembly control flow cheats</h4>
+<table>
+<tr><th>C</th><th>assembly idea</th></tr>
+<tr><td><code>while(cond)</code></td><td>test at top; <code>BR</code> out when false; <code>BR</code> back at bottom</td></tr>
+<tr><td><code>do{}while(cond)</code></td><td>body first; test at bottom; <code>BR</code> back when true</td></tr>
+<tr><td><code>if(a%8==0)</code></td><td><code>AND Rt,Ra,#7</code> then <code>BRnp</code> (skip if nonzero)</td></tr>
+<tr><td><code>x--</code></td><td><code>ADD Rx,Rx,#-1</code></td></tr>
+</table>
+</section>
+
+<!-- ============================================================ -->
+<section id="cptr">
+<h2><span class="num">9</span> C — pointers, arrays &amp; strings</h2>
+<div class="grid2">
+<div>
+<ul>
+<li><code>&amp;x</code> = address of x. <code>*p</code> = value p points to.</li>
+<li><code>int* p</code> holds an address; <code>int** t</code> holds the address of a pointer.</li>
+<li><b>Array name decays to a pointer</b> to element 0: <code>arr</code> ≡ <code>&amp;arr[0]</code>.</li>
+<li><code>arr[i]</code> ≡ <code>*(arr+i)</code>; <code>arr+2</code> points at <code>arr[2]</code>.</li>
+<li>Pointer arithmetic steps by <b>element size</b> (here 1 word for int/ptr/char).</li>
+<li>A string is a <code>char</code> array terminated by <code>'\0'</code>.</li>
+</ul>
+</div>
+<div class="note"><b>Read declarations right-to-left.</b>
+<ul style="margin-bottom:0">
+<li><code>char* s</code> — pointer to char</li>
+<li><code>char** strings</code> — pointer to (pointer to char) = array of strings</li>
+<li><code>int* posArray</code> — pointer to int (an int array)</li>
+</ul>
+A literal <code>"Hello"</code> lives in read-only memory; <code>p="Hello"</code> just stores its address.</div>
+</div>
+
+<h4>Read a line word-by-word (the canonical fixed version)</h4>
+<pre><span class="kw">char</span>* readString(<span class="kw">int</span>* nrWords){
+    <span class="kw">char</span> c; <span class="kw">int</span> i = 0;
+    <span class="kw">char</span>* buffer = malloc(100*<span class="kw">sizeof</span>(<span class="kw">char</span>));   <span class="cmt">// must allocate!</span>
+    <span class="kw">char</span> wordStarted = 0;
+    *nrWords = 0;
+    <span class="kw">while</span> ((c = getchar()) != '\n'){
+        buffer[i++] = c;
+        <span class="kw">if</span> (c==' ' || c=='\t'){            <span class="cmt">// == not = , || not &amp;&amp;</span>
+            <span class="kw">if</span> (wordStarted) wordStarted = 0;
+        } <span class="kw">else if</span> (!wordStarted){            <span class="cmt">// new word begins</span>
+            wordStarted = 1;
+            (*nrWords)++;
+        }
+    }
+    buffer[i] = '\0';
+    <span class="kw">return</span> buffer;
+}</pre>
+</section>
+
+<!-- ============================================================ -->
+<section id="cstruct">
+<h2><span class="num">10</span> C — structs</h2>
+<div class="grid2">
+<div>
+<pre><span class="kw">struct</span> S { <span class="kw">char</span>* s; <span class="kw">char</span> c; <span class="kw">int</span> k; };
+<span class="kw">struct</span> S  v;     <span class="cmt">// a struct</span>
+<span class="kw">struct</span> S* p;     <span class="cmt">// pointer to struct</span></pre>
+<ul>
+<li><code>v.c</code> — member via value.</li>
+<li><code>p-&gt;c</code> ≡ <code>(*p).c</code> — member via pointer.</li>
+<li>Size = sum of members (each int/ptr = 1 word, char = 1 word on this LC-3 model).</li>
+<li>A pointer is always 1 word (16 bit) regardless of what it points to.</li>
+</ul>
+</div>
+<div class="tip"><b>Allocate &amp; init a struct on the heap:</b>
+<pre><span class="kw">struct</span> S* z = malloc(<span class="kw">sizeof</span>(<span class="kw">struct</span> S));
+z-&gt;a = 7;
+z-&gt;c = malloc(10*<span class="kw">sizeof</span>(<span class="kw">char</span>));
+z-&gt;c[0]='O'; z-&gt;c[1]='K'; z-&gt;c[2]='\0';</pre>
+On the stack instead: declare the struct as a local and take <code>&amp;</code> of it.</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="clist" class="pagebreak">
+<h2><span class="num">11</span> C — singly linked lists (the recurring topic)</h2>
+<pre><span class="kw">struct</span> Node { <span class="kw">int</span> data; <span class="kw">struct</span> Node* next; };</pre>
+
+<div class="grid2">
+<div>
+<h4>Append at end</h4>
+<pre><span class="kw">void</span> append(Node** head, <span class="kw">int</span> v){
+   Node* n = malloc(<span class="kw">sizeof</span>(Node));
+   n-&gt;data = v; n-&gt;next = NULL;
+   <span class="kw">if</span> (*head == NULL){ *head = n; <span class="kw">return</span>; }
+   Node* c = *head;
+   <span class="kw">while</span> (c-&gt;next) c = c-&gt;next;
+   c-&gt;next = n;
+}</pre>
+
+<h4>Push at front</h4>
+<pre><span class="kw">void</span> push(Node** head, <span class="kw">int</span> v){
+   Node* n = malloc(<span class="kw">sizeof</span>(Node));
+   n-&gt;data = v;
+   n-&gt;next = *head;
+   *head = n;
+}</pre>
+
+<h4>Find middle (slow/fast pointers)</h4>
+<pre>Node* findMiddle(Node* head){
+   Node* slow = head; Node* fast = head;
+   <span class="kw">while</span> (fast &amp;&amp; fast-&gt;next){
+       slow = slow-&gt;next;
+       fast = fast-&gt;next-&gt;next;
+   }
+   <span class="kw">return</span> slow;   <span class="cmt">// 2nd middle if even count</span>
+}</pre>
+</div>
+
+<div>
+<h4>Reverse the list</h4>
+<pre><span class="kw">void</span> reverse(){
+   Node* cur = header;
+   Node* newH = NULL;
+   <span class="kw">while</span> (cur){
+       Node* next = cur-&gt;next;
+       cur-&gt;next = newH;
+       newH = cur;
+       cur  = next;
+   }
+   header = newH;
+}</pre>
+
+<h4>Remove duplicates of one node's value</h4>
+<pre><span class="kw">void</span> removeDup(Node* start){
+   <span class="kw">if</span> (!start) <span class="kw">return</span>;
+   Node* prev = start;
+   Node* cur  = start-&gt;next;
+   <span class="kw">while</span> (cur){
+       <span class="kw">if</span> (cur-&gt;data == start-&gt;data)
+           prev-&gt;next = cur-&gt;next;   <span class="cmt">// unlink</span>
+       <span class="kw">else</span>
+           prev = cur;
+       cur = cur-&gt;next;
+   }
+}
+<span class="cmt">// remove ALL dups: call removeDup(c) for each node c</span></pre>
+</div>
+</div>
+<div class="note"><b>Why <code>Node**</code> (pointer-to-pointer)?</b> When a function must change where the caller's <code>head</code> points (e.g. push/append into an empty list), it needs the address of the head pointer. Walking/printing only reads, so <code>Node*</code> is enough.</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="cbugs">
+<h2><span class="num">12</span> Common C bugs to scan for (debugging questions)</h2>
+<table>
+<tr><th>Bug</th><th>Symptom</th><th>Fix</th></tr>
+<tr><td><code>if (c = ' ')</code></td><td>assignment, always "true"</td><td><code>==</code> for comparison</td></tr>
+<tr><td><code>(c==' ') &amp;&amp; (c=='\t')</code></td><td>can never both be true</td><td>use <code>||</code></td></tr>
+<tr><td><code>char* buffer;</code> used unallocated</td><td>writes to garbage address</td><td><code>buffer = malloc(100)</code></td></tr>
+<tr><td><code>int i;</code> used uninitialised</td><td>index starts at random value</td><td><code>int i = 0;</code></td></tr>
+<tr><td>pass-by-value when caller must see change</td><td>count/head not updated</td><td>pass a pointer: <code>int*</code> / <code>Node**</code></td></tr>
+<tr><td>missing <code>'\0'</code> terminator</td><td>string printing runs off</td><td><code>buffer[i]='\0';</code></td></tr>
+<tr><td><code>printf("string[i]=...")</code></td><td>prints literal "i"</td><td>use the loop variable: <code>%d, i</code></td></tr>
+</table>
+</section>
+
+<!-- ============================================================ -->
+<section id="stack" class="pagebreak">
+<h2><span class="num">13</span> Runtime stack / activation record</h2>
+<p>This is the highest-yield topic. The stack <b>grows downward</b> (toward lower addresses). When empty, R6 holds the given top value (e.g. <code>xFFFF</code> or <code>xFE00</code>); <b>the empty value itself is never written to</b> — the first push goes one below it.</p>
+
+<div class="grid2">
+<div>
+<h3>Layout convention (top → bottom)</h3>
+<table class="stack stack-wrap">
+<tr><td class="addr">…+3</td><td class="bk">Return Value (RV)</td></tr>
+<tr><td class="addr">…+2</td><td class="bk">Return Address (RA)</td></tr>
+<tr><td class="addr">…+1</td><td class="bk">Dynamic Link (DL = old R5)</td></tr>
+<tr><td class="addr">R5→</td><td class="fp">first local (highest word)</td></tr>
+<tr><td class="addr">…</td><td>locals, in declaration order, going <b>down</b></td></tr>
+<tr><td class="addr">R6→</td><td>last local (lowest word)</td></tr>
+</table>
+<p class="dk">DL / RA / RV = "bookkeeping" = 3 words per frame (when there's no return value some treat it as still reserved — match the worked solutions: 3 words).</p>
+</div>
+<div>
+<h3>Build-it checklist</h3>
+<ol>
+<li>Start from the empty R6 value at the very top.</li>
+<li>If a function was <b>called with arguments</b>, those sit <i>above</i> the callee's bookkeeping, pushed <b>right-to-left</b> (last arg lowest).</li>
+<li>Write bookkeeping: RV, RA, DL (top→down).</li>
+<li>Place locals <b>in declaration order</b>, each new variable just <b>below</b> the previous.</li>
+<li>For arrays/structs: the block sits below the previous var, with <b>index 0 / first member at the lowest address</b>, last element adjacent to the variable above.</li>
+<li>Each int / pointer / char / struct-member = <b>1 word</b>.</li>
+</ol>
+</div>
+</div>
+
+<h3>Fully worked frame (F24) — R6 empty = xFE00</h3>
+<p>Locals declared: <code>int arr[4]; struct S{char c; int* v;} s1; struct S* ps; struct S** pps; int d;</code></p>
+<div class="grid2">
+<div>
+<table class="stack mono">
+<tr><th>addr</th><th>holds</th><th>value</th></tr>
+<tr><td class="addr">FDF4</td><td>d</td><td>7</td></tr>
+<tr><td class="addr">FDF5</td><td>pps</td><td>→FDF6</td></tr>
+<tr><td class="addr">FDF6</td><td>ps</td><td>→FDF7</td></tr>
+<tr><td class="addr">FDF7</td><td>s1.c</td><td>'D'→'a'</td></tr>
+<tr><td class="addr">FDF8</td><td>s1.v</td><td>(a ptr)</td></tr>
+<tr><td class="addr">FDF9</td><td>arr[0]</td><td>22</td></tr>
+<tr><td class="addr">FDFA</td><td>arr[1]</td><td>33</td></tr>
+<tr><td class="addr">FDFB</td><td>arr[2]</td><td>11→12</td></tr>
+<tr><td class="addr">FDFC</td><td>arr[3]</td><td>25→26</td></tr>
+<tr><td class="addr bk">FDFD</td><td class="bk">DL</td><td class="bk"></td></tr>
+<tr><td class="addr bk">FDFE</td><td class="bk">RA</td><td class="bk"></td></tr>
+<tr><td class="addr bk">FDFF</td><td class="bk">RV</td><td class="bk"></td></tr>
+<tr><td class="addr">FE00</td><td>(empty)</td><td>—</td></tr>
+</table>
+</div>
+<div>
+<h4>Counting the stack size</h4>
+<p>Size in words = bookkeeping + all locals (counting each array slot &amp; struct member):</p>
+<pre>3  bookkeeping (DL,RA,RV)
+4  arr[4]
+2  struct s1 (c + v)
+1  ps
+1  pps
+1  d
+---
+12 words total</pre>
+<div class="note"><b>arr[0] is at the bottom of arr's block</b> (FDF9), arr[3] adjacent to DL — so the array reads "upward". Same rule for <code>s1.c</code> below <code>s1.v</code>.</div>
+</div>
+</div>
+
+<div class="tip"><b>Nested frames (caller + callee, e.g. F20):</b> draw <code>main</code>'s frame at the top, then the <b>argument(s)</b> of the called function, then the called function's RV/RA/DL, then its locals — all continuing downward. The argument <code>*x</code> stored in the callee's frame contains the <i>address</i> passed in (e.g. <code>&amp;t</code> pointing back up into main's frame).</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="trace" class="pagebreak">
+<h2><span class="num">14</span> Pointer-tracing walkthrough</h2>
+<p>For "show the activation record before <code>return</code>" and "what is the output" questions: build the frame first, then execute each statement and update <b>values</b>, keeping a running note of what every pointer currently points at.</p>
+
+<h3>Example (F24 body)</h3>
+<pre><span class="kw">int</span> arr[]={22,33,11,25};  s1; ps; pps; <span class="kw">int</span> d=7;
+pps = &amp;ps;            <span class="cmt">// pps → ps</span>
+ps  = &amp;s1;            <span class="cmt">// ps  → s1   (so *pps == ps)</span>
+(*pps)-&gt;v = arr+2;    <span class="cmt">// s1.v → arr[2]   (addr FDFB)</span>
+(*(ps-&gt;v))++;         <span class="cmt">// arr[2]: 11 → 12</span>
+s1.v = s1.v + 1;      <span class="cmt">// s1.v → arr[3]</span>
+(*(ps-&gt;v))++;         <span class="cmt">// arr[3]: 25 → 26</span>
+(*ps).c = 'D';        <span class="cmt">// s1.c = 'D'</span>
+(*pps)-&gt;v = &amp;d;       <span class="cmt">// s1.v → d</span>
+*((*pps)-&gt;v) = 5;     <span class="cmt">// d: 7 → 5</span>
+(*pps)-&gt;c = 'a';      <span class="cmt">// s1.c = 'a'</span>
+d++;                  <span class="cmt">// d: 5 → 6   (s1.v still → d)</span></pre>
+
+<div class="grid2">
+<div class="note"><b>Resulting output:</b>
+<pre>arr = {22, 33, 12, 26}
+s1.c = a
+*(s1.v) = 6</pre>
+<span class="dk">s1.v points at d, and d is now 6.</span></div>
+<div class="tip"><b>Method that prevents mistakes:</b>
+<ol style="margin-bottom:0">
+<li>Resolve the pointer chain on the <b>left</b> first: <code>(*pps)-&gt;v</code> ⇒ "pps points to ps, ps points to s1, so this is <i>s1.v</i>".</li>
+<li>Resolve the <b>right</b> to a concrete value/address.</li>
+<li>Apply <code>++</code>/<code>--</code> to whatever the dereference finally lands on — a <b>stored value</b>, not the pointer, when it's <code>*(...)++ </code> grouped as <code>(*(...))++</code>.</li>
+<li>Update the table, note which variable each pointer now targets.</li>
+</ol></div>
+</div>
+
+<div class="pitfall"><b>Watch the parentheses.</b> <code>(*(ps-&gt;v))++</code> increments the <i>int that v points at</i>. <code>(ps-&gt;v)++</code> would instead move the pointer. And <code>s1.v = s1.v + 1</code> advances the pointer by one element (one word here). Track "pointer moved" vs "value changed" separately.</div>
+
+<hr>
+<p class="dk" style="text-align:center;font-size:.78rem">02322 Maskinnær Programmering · self-prepared reference · LC-3 conventions follow the course's exam solutions (R6 stack pointer, R5 frame pointer, downward-growing stack, 3-word bookkeeping). Verify the empty-R6 value and any argument layout given in each specific question.</p>
+</section>
+
+</div>
+</body>
+</html>

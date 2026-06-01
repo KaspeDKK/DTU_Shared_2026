@@ -1,0 +1,3983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yukon Solitaire — Project Source</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+  :root{
+    --ink:#23262b; --soft:#565a62; --faint:#8b9097;
+    --line:#d8dde3; --line2:#edeff2; --bg:#ffffff; --panel:#faf9f6;
+    --accent:#2f5d62; --accent2:#9a5b34;
+    --code-bg:#fbfaf7; --gutter:#f0eee9; --gutternum:#a9aeb4;
+    --kw:#1f5673; --cmt:#7c8a70; --str:#9a5b34; --chr:#857327; --num:#3a6b6e; --pre:#7a5a86; --fn:#2c4f7c;
+    --mh:#eef3f3; --vh:#fbf3e6; --ch:#f0eef4; --nh:#f3eeec;
+  }
+  *{box-sizing:border-box;}
+  html{font-size:13px;}
+  body{margin:0;font-family:'Inter Tight',sans-serif;color:var(--ink);background:var(--bg);line-height:1.4;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1040px;margin:0 auto;padding:30px 36px 60px;}
+  header.title{border-bottom:3px double var(--accent);padding-bottom:14px;margin-bottom:6px;}
+  .kicker{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);font-weight:700;}
+  h1{font-family:'Newsreader',serif;font-weight:600;font-size:2rem;line-height:1.05;margin:.12em 0;color:var(--ink);}
+  .sub{color:var(--soft);font-size:.9rem;}
+
+  /* TOC */
+  .toc{background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:14px 20px;margin-top:16px;}
+  .toc h2{font-family:'Newsreader',serif;font-size:1.15rem;color:var(--accent);margin:0 0 8px;border:none;}
+  .toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 30px;}
+  .toc-layer{margin-bottom:6px;}
+  .toc-layer b{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;color:var(--accent2);display:block;margin:6px 0 3px;}
+  .toc a{display:flex;justify-content:space-between;gap:10px;text-decoration:none;color:var(--soft);font-family:'JetBrains Mono',monospace;font-size:.8rem;padding:1px 0;border-bottom:1px dotted var(--line2);}
+  .toc a:hover{color:var(--accent);}
+  .toc a .meta{color:var(--faint);font-size:.72rem;}
+
+  /* layer divider */
+  .layer-head{font-family:'Newsreader',serif;font-weight:600;font-size:1.5rem;color:var(--accent);margin:30px 0 4px;border-bottom:2px solid var(--accent);padding-bottom:4px;}
+  .layer-head .lk{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:#fff;background:var(--accent);padding:2px 9px;border-radius:3px;vertical-align:middle;margin-right:8px;letter-spacing:.04em;}
+
+  /* file block */
+  .file{margin:18px 0 6px;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:#fff;}
+  .file-head{display:flex;align-items:baseline;gap:10px;padding:8px 14px;border-bottom:1px solid var(--line);}
+  .file-head .name{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.95rem;color:var(--ink);}
+  .file-head .tag{font-family:'JetBrains Mono',monospace;font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;padding:1px 7px;border-radius:20px;border:1px solid var(--line);color:var(--soft);}
+  .file-head .tag.src{background:#eef3f3;color:#2f5d62;border-color:#cfe0e0;}
+  .file-head .tag.hdr{background:#fbf3e6;color:#9a5b34;border-color:#ecdcbf;}
+  .file-head .loc{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--faint);}
+
+  /* code table with line numbers */
+  table.code{border-collapse:collapse;width:100%;background:var(--code-bg);table-layout:fixed;}
+  table.code td{vertical-align:top;padding:0;}
+  table.code td.ln{width:42px;text-align:right;padding:0 8px 0 0;color:var(--gutternum);background:var(--gutter);
+       font-family:'JetBrains Mono',monospace;font-size:.72rem;line-height:1.55;user-select:none;border-right:1px solid var(--line2);}
+  table.code td.src{padding:0 0 0 12px;}
+  table.code pre{margin:0;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.55;white-space:pre-wrap;word-break:break-word;color:#2c3036;}
+  .c-kw{color:var(--kw);font-weight:600;}
+  .c-cmt{color:var(--cmt);font-style:italic;}
+  .c-str{color:var(--str);}
+  .c-chr{color:var(--chr);}
+  .c-num{color:var(--num);}
+  .c-pre{color:var(--pre);}
+  .c-fn{color:var(--fn);}
+
+  .top{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--faint);text-decoration:none;margin-left:8px;}
+  .top:hover{color:var(--accent);}
+
+  @media print{
+    @page{margin:12mm 11mm;}
+    html{font-size:8.6pt;}
+    .wrap{max-width:none;padding:0;margin:0;}
+    a{color:inherit;text-decoration:none;}
+    .file{page-break-inside:auto;}
+    .file-head{page-break-after:avoid;}
+    table.code tr{page-break-inside:avoid;}
+    .layer-head{page-break-before:always;}
+    .layer-head:first-of-type{page-break-before:avoid;}
+    .toc{page-break-after:always;}
+    .file-head .tag.src,.file-head .tag.hdr,.layer-head .lk,td.ln{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .top{display:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="title">
+  <div class="kicker">C Project · MVC + TCP Server</div>
+  <h1>Yukon Solitaire — Project Source</h1>
+  <div class="sub">Full source listing for quick reference: Model, View, Controller, and the network server. Line-numbered, grouped by layer.</div>
+</header>
+
+<nav class="toc"><h2>Indholdsfortegnelse</h2><div class="toc-grid">
+<div>
+<div class="toc-layer"><b>Model</b>
+<a href="#f-Types-h"><span>Types.h</span><span class="meta">Header · 26 ln</span></a>
+<a href="#f-deck-h"><span>deck.h</span><span class="meta">Header · 16 ln</span></a>
+<a href="#f-deck-c"><span>deck.c</span><span class="meta">Source · 275 ln</span></a>
+<a href="#f-model-h"><span>model.h</span><span class="meta">Header · 12 ln</span></a>
+<a href="#f-model-c"><span>model.c</span><span class="meta">Source · 47 ln</span></a>
+</div>
+<div class="toc-layer"><b>View</b>
+<a href="#f-view-h"><span>view.h</span><span class="meta">Header · 21 ln</span></a>
+<a href="#f-view-c"><span>view.c</span><span class="meta">Source · 216 ln</span></a>
+</div>
+</div>
+<div>
+<div class="toc-layer"><b>Controller</b>
+<a href="#f-CardServices-h"><span>CardServices.h</span><span class="meta">Header · 35 ln</span></a>
+<a href="#f-CardServices-c"><span>CardServices.c</span><span class="meta">Source · 326 ln</span></a>
+<a href="#f-controller-h"><span>controller.h</span><span class="meta">Header · 15 ln</span></a>
+<a href="#f-controller-c"><span>controller.c</span><span class="meta">Source · 270 ln</span></a>
+</div>
+<div class="toc-layer"><b>Network</b>
+<a href="#f-server-c"><span>server.c</span><span class="meta">Source · 618 ln</span></a>
+</div>
+</div>
+</div></nav>
+<div class="layer-head" id="layer-Model"><span class="lk">Model</span>Data types and core game/deck logic.</div>
+<section class="file" id="f-Types-h">
+  <div class="file-head">
+    <span class="name">Types.h</span>
+    <span class="tag hdr">Header</span>
+    <span class="loc">26 lines<a class="top" href="#top">↑ top</a></span>
+  </div>
+  <table class="code"><tr>
+    <td class="ln"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</pre></td>
+    <td class="src"><pre><span class="c-cmt">//</span>
+<span class="c-cmt">// Created by ttorr on 30-04-2026.</span>
+<span class="c-cmt">//</span>
+
+<span class="c-pre">#ifndef MOP_2_TYPES_H</span>
+<span class="c-pre">#define MOP_2_TYPES_H</span>
+
+<span class="c-kw">typedef</span> <span class="c-kw">struct</span> Card <span class="c-cmt">// uses for linked lists</span>
+{
+    <span class="c-kw">char</span> rank;
+    <span class="c-kw">char</span> suit;
+    <span class="c-kw">int</span> visible; <span class="c-cmt">// (0,1)</span>
+    <span class="c-kw">struct</span> Card* next; <span class="c-cmt">// reference to the next card in the linked list</span>
+} Card;
+
+<span class="c-kw">typedef</span> <span class="c-kw">struct</span> Foundation {
+    Card* ref; <span class="c-cmt">// reference to the first card in the linked list</span>
+    <span class="c-kw">char</span> suit;
+} Foundation;
+
+<span class="c-kw">typedef</span> <span class="c-kw">struct</span> Column
+{
+    Card* ref; <span class="c-cmt">// reference to the first card in the linked list</span>
+} Column;
+
+<span class="c-pre">#endif //MOP_2_TYPES_H</span></pre></td>
+  </tr></table>
+</section>
+<section class="file" id="f-deck-h">
+  <div class="file-head">
+    <span class="name">deck.h</span>
+    <span class="tag hdr">Header</span>
+    <span class="loc">16 lines<a class="top" href="#top">↑ top</a></span>
+  </div>
+  <table class="code"><tr>
+    <td class="ln"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre></td>
+    <td class="src"><pre><span class="c-cmt">//</span>
+<span class="c-cmt">// Created by ttorr on 04-05-2026.</span>
+<span class="c-cmt">//</span>
+
+<span class="c-pre">#ifndef MOP_2_DECK_H</span>
+<span class="c-pre">#define MOP_2_DECK_H</span>
+<span class="c-pre">#include &quot;Types.h&quot;</span>
+
+Card* <span class="c-fn">readDeck</span>(<span class="c-kw">const</span> <span class="c-kw">char</span> *filename, Card *deck); <span class="c-cmt">// function takes a filename and scans it. Generates a linked list from the file contents by using the deck pointer as head.</span>
+<span class="c-kw">int</span> <span class="c-fn">saveDeck</span>(<span class="c-kw">const</span> <span class="c-kw">char</span> *filename, Card *head); <span class="c-cmt">// saves a linked list to a given file</span>
+Card *<span class="c-fn">splitDeck</span> (Card *head, <span class="c-kw">int</span> split); <span class="c-cmt">// split shuffles a deck of cards using the parameter split as the value from which to split at.</span>
+<span class="c-kw">void</span> <span class="c-fn">listToArray</span>(Card *head, Card deck[], <span class="c-kw">int</span> size); <span class="c-cmt">// takes a deck of cards as a linked list and puts them into an array of cards.</span>
+Card *<span class="c-fn">arrayToList</span>(Card deck[], <span class="c-kw">int</span> size); <span class="c-cmt">// takes an array of cards and generates a linked list.</span>
+Card *<span class="c-fn">randomShuffle</span>(Card *head); <span class="c-cmt">// randomly shuffles a deck of cards.</span>
+
+<span class="c-pre">#endif //MOP_2_DECK_H</span></pre></td>
+  </tr></table>
+</section>
+<section class="file" id="f-deck-c">
+  <div class="file-head">
+    <span class="name">deck.c</span>
+    <span class="tag src">Source</span>
+    <span class="loc">275 lines<a class="top" href="#top">↑ top</a></span>
+  </div>
+  <table class="code"><tr>
+    <td class="ln"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275</pre></td>
+    <td class="src"><pre><span class="c-pre">#include &lt;stdio.h&gt;</span>
+<span class="c-pre">#include &lt;stdlib.h&gt;</span>
+<span class="c-pre">#include &lt;time.h&gt;</span>
+<span class="c-pre">#include &quot;deck.h&quot;</span>
+<span class="c-pre">#include &lt;string.h&gt;</span>
+
+<span class="c-pre">#include &quot;../Controller/CardServices.h&quot;</span>
+
+<span class="c-cmt">// Reads a deck from a file and returns it as a linked list</span>
+<span class="c-cmt">/* Returns NULL if</span>
+<span class="c-cmt">the file is not found , contains duplicates, invalid cards or not exactly 52 cards */</span>
+Card* <span class="c-fn">readDeck</span> (<span class="c-kw">const</span> <span class="c-kw">char</span> *filename,Card *deck) {
+    FILE *file = <span class="c-kw">NULL</span>;
+
+    <span class="c-cmt">// if no filename was given, use default deck</span>
+    <span class="c-kw">if</span> (filename == <span class="c-kw">NULL</span> || <span class="c-fn">strcmp</span>(filename, <span class="c-str">&quot;&quot;</span>) == <span class="c-num">0</span>) {
+        file = <span class="c-fn">fopen</span>(<span class="c-str">&quot;../default.txt&quot;</span>, <span class="c-str">&quot;r&quot;</span>);
+    }
+    <span class="c-cmt">// if filename was given</span>
+    <span class="c-kw">else</span> {
+        file = <span class="c-fn">fopen</span>(filename, <span class="c-str">&quot;r&quot;</span>);
+    }
+    <span class="c-kw">if</span> (file == <span class="c-kw">NULL</span>) {
+        <span class="c-kw">return</span> <span class="c-kw">NULL</span>; <span class="c-cmt">// file was not found</span>
+    }
+
+    <span class="c-kw">int</span> i = <span class="c-num">0</span>;
+    <span class="c-kw">char</span> buffer[<span class="c-num">10</span>];
+
+    <span class="c-cmt">// We initialize a seen array that we will store all the cards we go through</span>
+    <span class="c-kw">char</span> seenCard[<span class="c-num">52</span>][<span class="c-num">2</span>] = {<span class="c-num">0</span>};
+    <span class="c-kw">int</span> seenCount = <span class="c-num">0</span>;
+
+
+    <span class="c-kw">while</span> (i &lt; <span class="c-num">52</span> &amp;&amp; <span class="c-fn">fgets</span>(buffer, <span class="c-kw">sizeof</span>(buffer), file) != <span class="c-kw">NULL</span>) {
+        <span class="c-kw">if</span> (buffer[<span class="c-num">0</span>] == <span class="c-chr">&#x27;\n&#x27;</span> || buffer[<span class="c-num">0</span>] == <span class="c-chr">&#x27;\0&#x27;</span>) {
+            <span class="c-kw">continue</span>;
+        }
+
+        <span class="c-cmt">// Before we store each card in a &quot;seen array&quot; we check if it has already appeared and validate its content</span>
+        <span class="c-kw">for</span> (<span class="c-kw">int</span> j = <span class="c-num">0</span>; j &lt; seenCount; j++) {
+            <span class="c-kw">if</span> (seenCard[j][<span class="c-num">0</span>] == buffer[<span class="c-num">0</span>] &amp;&amp; seenCard[j][<span class="c-num">1</span>] == buffer[<span class="c-num">1</span>]) {
+                <span class="c-fn">printf</span>(<span class="c-str">&quot;LAST Command LD&quot;</span>);
+                <span class="c-fn">printf</span>(<span class="c-str">&quot;Message: Duplicate card found in deck file\n&quot;</span>);
+                <span class="c-fn">fclose</span>(file);
+                <span class="c-kw">return</span> <span class="c-kw">NULL</span>;
+            }
+        }
+        Card tempCard;
+        tempCard.rank = buffer[<span class="c-num">0</span>];
+        tempCard.suit = buffer[<span class="c-num">1</span>];
+
+        <span class="c-cmt">// Reject cards with invalid rank</span>
+        <span class="c-kw">if</span> (<span class="c-fn">determineRank</span>(tempCard) == -<span class="c-num">1</span>){
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;LAST Command LD\n&quot;</span>);
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;Message: Invalid card: %c%c\n&quot;</span>, buffer[<span class="c-num">0</span>], buffer[<span class="c-num">1</span>]);
+            <span class="c-fn">fclose</span>(file);
+            <span class="c-kw">return</span> <span class="c-kw">NULL</span>;
+        }
+
+        <span class="c-cmt">// Reject cards with invalid suit</span>
+        <span class="c-kw">if</span> (buffer[<span class="c-num">1</span>] != <span class="c-chr">&#x27;C&#x27;</span> &amp;&amp; buffer[<span class="c-num">1</span>] != <span class="c-chr">&#x27;D&#x27;</span> &amp;&amp;
+            buffer[<span class="c-num">1</span>] != <span class="c-chr">&#x27;H&#x27;</span> &amp;&amp; buffer[<span class="c-num">1</span>] != <span class="c-chr">&#x27;S&#x27;</span>) {
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;LAST Command LD\n&quot;</span>);
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;Message: Invalid card: %c%c\n&quot;</span>, buffer[<span class="c-num">0</span>], buffer[<span class="c-num">1</span>]);
+            <span class="c-fn">fclose</span>(file);
+            <span class="c-kw">return</span> <span class="c-kw">NULL</span>;
+        }
+
+        deck[i].rank = buffer[<span class="c-num">0</span>];
+        deck[i].suit = buffer[<span class="c-num">1</span>];
+        deck[i].visible = <span class="c-num">0</span>;
+
+        <span class="c-cmt">//We store the cards we haven&#x27;t been seen before</span>
+        seenCard[seenCount][<span class="c-num">0</span>] = buffer[<span class="c-num">0</span>];
+        seenCard[seenCount][<span class="c-num">1</span>] = buffer[<span class="c-num">1</span>];
+
+        seenCount++;
+
+        i++;
+    }
+
+    <span class="c-fn">fclose</span>(file);
+    <span class="c-cmt">// checks if there are exactly 52 cards</span>
+    <span class="c-kw">if</span> (i != <span class="c-num">52</span>) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;LAST Command LD\n&quot;</span>);
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;Message: Deck file must contain exactly 52 cards\n&quot;</span>);
+        <span class="c-kw">return</span> <span class="c-kw">NULL</span>;
+    }
+    <span class="c-kw">return</span> <span class="c-fn">arrayToList</span>(deck, i);
+}
+
+
+<span class="c-kw">int</span> <span class="c-fn">saveDeck</span>(<span class="c-kw">const</span> <span class="c-kw">char</span> *filename, Card *head)
+{
+    <span class="c-fn">printf</span>(<span class="c-str">&quot;\nLast command: SD\n&quot;</span>);
+    <span class="c-kw">if</span> (head == <span class="c-kw">NULL</span>) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;Message: no deck loaded\n&quot;</span>);
+        <span class="c-kw">return</span> <span class="c-num">0</span>;
+    }
+
+    FILE *file = <span class="c-fn">fopen</span>(filename, <span class="c-str">&quot;w&quot;</span>);
+
+    <span class="c-kw">if</span> (file == <span class="c-kw">NULL</span>) {
+        <span class="c-fn">perror</span>(<span class="c-str">&quot;Error saving deck&quot;</span>);
+        <span class="c-kw">return</span> <span class="c-num">0</span>;
+    }
+
+    Card *current = head;
+
+    <span class="c-kw">while</span> (current != <span class="c-kw">NULL</span>) {
+        <span class="c-fn">fprintf</span>(file, <span class="c-str">&quot;%c%c\n&quot;</span>, current-&gt;rank, current-&gt;suit); <span class="c-cmt">// putting in the deck</span>
+        current = current-&gt;next;
+    }
+
+    <span class="c-fn">fclose</span>(file);
+    <span class="c-kw">return</span> <span class="c-num">1</span>;
+}
+
+
+Card *<span class="c-fn">splitDeck</span> (Card *head, <span class="c-kw">int</span> split) { <span class="c-cmt">//splits deck</span>
+    <span class="c-kw">if</span> (head == <span class="c-kw">NULL</span>) { <span class="c-cmt">//guard</span>
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;LAST Command SI&quot;</span>);
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;Message: no deck loaded\n&quot;</span>);
+        <span class="c-kw">return</span> <span class="c-kw">NULL</span>;
+    }
+    <span class="c-kw">if</span> (split == <span class="c-num">0</span>) { <span class="c-cmt">//Generate random split, 0 &lt; split &gt; 51</span>
+        split = <span class="c-fn">rand</span>() % <span class="c-num">51</span> + <span class="c-num">1</span>;
+    }
+    <span class="c-kw">if</span> (split &lt; <span class="c-num">1</span> || split &gt; <span class="c-num">51</span>) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;LAST Command SI&quot;</span>);
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;Message: Wrong split Size\n&quot;</span>);
+        <span class="c-kw">return</span> <span class="c-kw">NULL</span>;
+    }
+
+    Card *oldPile = head; <span class="c-cmt">//initiate oldPile</span>
+    Card *current = head;
+
+    <span class="c-cmt">//guard if the pile is big enough</span>
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">1</span>; i &lt; split; i++) {
+        <span class="c-kw">if</span> (current == <span class="c-kw">NULL</span>) { <span class="c-cmt">//if current is null:</span>
+            <span class="c-kw">return</span> head;
+        }
+        current = current-&gt;next; <span class="c-cmt">//else &quot;increment&quot;</span>
+    }
+
+    <span class="c-kw">if</span> (current == <span class="c-kw">NULL</span> || current-&gt;next == <span class="c-kw">NULL</span>) {
+        <span class="c-kw">return</span> head;
+    }
+
+    Card *newPile = current-&gt;next; <span class="c-cmt">//Start newPile from current</span>
+    current-&gt;next = <span class="c-kw">NULL</span>;
+
+    <span class="c-cmt">//initiate placeholders for the next cards</span>
+    Card *nextOldCard = <span class="c-kw">NULL</span>;
+    Card *nextNewCard = <span class="c-kw">NULL</span>;
+
+    <span class="c-cmt">//while neither is null, continue to mix cards between each other</span>
+    <span class="c-kw">while</span> (oldPile != <span class="c-kw">NULL</span> &amp;&amp; newPile != <span class="c-kw">NULL</span>) {
+        nextOldCard = oldPile-&gt;next;
+        nextNewCard = newPile-&gt;next;
+
+        oldPile-&gt;next = newPile;
+
+        <span class="c-kw">if</span> (nextOldCard == <span class="c-kw">NULL</span>) {
+            <span class="c-kw">break</span>;
+        }
+
+        newPile-&gt;next = nextOldCard; <span class="c-cmt">//set the cards back together</span>
+
+        <span class="c-cmt">//increment</span>
+        oldPile = nextOldCard;
+        newPile = nextNewCard;
+    }
+
+    <span class="c-kw">return</span> head; <span class="c-cmt">//return new pile</span>
+}
+
+Card *<span class="c-fn">randomShuffle</span>(Card *head) {
+    <span class="c-fn">srand</span>(<span class="c-fn">time</span>(<span class="c-kw">NULL</span>)); <span class="c-cmt">//generates a seed from the current time, for generating a random number.</span>
+    <span class="c-kw">int</span> sizeNewDeck = <span class="c-num">1</span>;
+    Card *current = <span class="c-kw">NULL</span>;
+    Card *shuffledDeck = head;
+
+    <span class="c-kw">if</span> (head == <span class="c-kw">NULL</span>) <span class="c-kw">return</span> <span class="c-kw">NULL</span>;
+
+    head = head-&gt;next;
+    shuffledDeck-&gt;next = <span class="c-kw">NULL</span>;
+
+    <span class="c-kw">while</span> (head != <span class="c-kw">NULL</span>) {
+        Card *insertCard = head;
+        head = head-&gt;next;
+        insertCard-&gt;next = <span class="c-kw">NULL</span>;
+
+        Card *placeholder = shuffledDeck;
+
+        <span class="c-kw">int</span> randomIndex = <span class="c-fn">rand</span>() % sizeNewDeck +<span class="c-num">1</span>;
+
+        <span class="c-kw">if</span> (randomIndex == <span class="c-num">0</span>) {
+            insertCard-&gt;next = shuffledDeck;
+            shuffledDeck = insertCard;
+        } <span class="c-kw">else</span> {
+            current = placeholder;
+            <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">1</span>; i &lt; randomIndex; i++) {
+                current = current-&gt;next;
+            }
+
+            insertCard-&gt;next = current-&gt;next;
+            current-&gt;next = insertCard;
+        }
+
+        sizeNewDeck = sizeNewDeck + <span class="c-num">1</span>;
+    }
+
+    <span class="c-cmt">//Første kort er ikke random derfor</span>
+    <span class="c-kw">int</span> move = <span class="c-fn">rand</span>() % (sizeNewDeck - <span class="c-num">1</span>) + <span class="c-num">1</span>;   <span class="c-cmt">// Vælg et tilfældigt tal</span>
+
+    Card *first = shuffledDeck; <span class="c-cmt">//Pejer på første kort</span>
+    Card *target = shuffledDeck; <span class="c-cmt">//Pejer på den kort, det første kort skal placeres efter.</span>
+
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">1</span>; i &lt; move; i++) { <span class="c-cmt">//ittere hen til random plads</span>
+        target = target-&gt;next;
+    }
+
+    <span class="c-cmt">//pladsere kort</span>
+    shuffledDeck = first-&gt;next;
+    first-&gt;next = target-&gt;next;
+    target-&gt;next = first;
+
+    <span class="c-cmt">//returnere head til kort</span>
+    <span class="c-kw">return</span> shuffledDeck;
+}
+
+Card *<span class="c-fn">arrayToList</span>(Card deck[], <span class="c-kw">int</span> size)
+{
+    Card *head = <span class="c-kw">NULL</span>;
+    Card *current = <span class="c-kw">NULL</span>;
+
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">0</span>; i &lt; size; i++)
+    {
+        Card *newNode = <span class="c-fn">malloc</span>(<span class="c-kw">sizeof</span>(Card));
+
+        newNode-&gt;rank = deck[i].rank;
+        newNode-&gt;suit = deck[i].suit;
+        newNode-&gt;visible = deck[i].visible;
+        newNode-&gt;next = <span class="c-kw">NULL</span>;
+
+        <span class="c-kw">if</span> (head == <span class="c-kw">NULL</span>)
+        {
+            head = newNode;
+            current = newNode;
+        }
+        <span class="c-kw">else</span>
+        {
+            current-&gt;next = newNode;
+            current = newNode;
+        }
+    }
+
+    <span class="c-kw">return</span> head;
+}
+
+<span class="c-kw">void</span> <span class="c-fn">listToArray</span>(Card *head, Card deck[], <span class="c-kw">int</span> size)
+{
+    Card *current = head;
+
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">0</span>; i &lt; size &amp;&amp; current != <span class="c-kw">NULL</span>; i++)
+    {
+        deck[i].rank = current-&gt;rank;
+        deck[i].suit = current-&gt;suit;
+        deck[i].visible = current-&gt;visible;
+
+        current = current-&gt;next;
+    }
+}</pre></td>
+  </tr></table>
+</section>
+<section class="file" id="f-model-h">
+  <div class="file-head">
+    <span class="name">model.h</span>
+    <span class="tag hdr">Header</span>
+    <span class="loc">12 lines<a class="top" href="#top">↑ top</a></span>
+  </div>
+  <table class="code"><tr>
+    <td class="ln"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12</pre></td>
+    <td class="src"><pre><span class="c-pre">#ifndef MODEL_H</span>
+<span class="c-pre">#define MODEL_H</span>
+
+<span class="c-pre">#include &quot;../Controller/CardServices.h&quot;</span>
+<span class="c-pre">#include &quot;../Model/Types.h&quot;</span>
+
+<span class="c-pre">#define NUM_COLUMNS 7</span>
+<span class="c-pre">#define NUM_FOUNDATIONS 4</span>
+
+<span class="c-kw">void</span> <span class="c-fn">create_game</span>(Card *deckHead, Column cols[]); <span class="c-cmt">// Takes a linked list head for a deck of cards and assigns the cards into the columns in the classic yukon rowwise method. Additionally, sets the card visibilities.</span>
+
+<span class="c-pre">#endif</span></pre></td>
+  </tr></table>
+</section>
+<section class="file" id="f-model-c">
+  <div class="file-head">
+    <span class="name">model.c</span>
+    <span class="tag src">Source</span>
+    <span class="loc">47 lines<a class="top" href="#top">↑ top</a></span>
+  </div>
+  <table class="code"><tr>
+    <td class="ln"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47</pre></td>
+    <td class="src"><pre><span class="c-pre">#include &lt;stdlib.h&gt;</span>
+<span class="c-pre">#include &lt;string.h&gt;</span>
+<span class="c-pre">#include &quot;model.h&quot;</span>
+
+<span class="c-cmt">/*</span>
+<span class="c-cmt"> * create_game</span>
+<span class="c-cmt"> *</span>
+<span class="c-cmt"> * The function takes a deck of 52 cards (linked list) as deckHead and distributes them into 7 columns.</span>
+<span class="c-cmt"> *</span>
+<span class="c-cmt"> * We loop across all 7 cols inserting one card per col then switching to the next one.</span>
+<span class="c-cmt"> * Cards are inserted using placeCard which handles placing the card correctly in the column</span>
+<span class="c-cmt"> * We repeat until all cards from the original deck linked list are gone.</span>
+<span class="c-cmt">*/</span>
+<span class="c-kw">void</span> <span class="c-fn">create_game</span>(Card *deckHead, Column cols[]) {
+    Card *current = deckHead;
+
+    <span class="c-kw">int</span> startColPerRow[<span class="c-num">11</span>] = {
+        <span class="c-num">0</span>, <span class="c-num">1</span>, <span class="c-num">1</span>, <span class="c-num">1</span>, <span class="c-num">1</span>, <span class="c-num">1</span>, <span class="c-num">2</span>, <span class="c-num">3</span>, <span class="c-num">4</span>, <span class="c-num">5</span>, <span class="c-num">6</span> <span class="c-cmt">// these represent the &quot;col start&quot; value for each row. These are always the same.</span>
+    };
+
+    <span class="c-kw">int</span> colInvisibleDepth[<span class="c-num">7</span>] = {
+        <span class="c-cmt">// these represent the depth after which visible cards should be placed in the initial version of the game deck.</span>
+        <span class="c-cmt">// (All cards are invisible when created unless set otherwise)</span>
+        <span class="c-num">0</span>, <span class="c-num">1</span>, <span class="c-num">2</span>, <span class="c-num">3</span>, <span class="c-num">4</span>, <span class="c-num">5</span>, <span class="c-num">6</span>
+    };
+
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> row = <span class="c-num">0</span>; row &lt; <span class="c-num">11</span>; row++) { <span class="c-cmt">// rowwise</span>
+        <span class="c-kw">for</span> (<span class="c-kw">int</span> col = startColPerRow[row]; col &lt; <span class="c-num">7</span>; col++) { <span class="c-cmt">// uses the start col values to know when to stop using a column</span>
+            <span class="c-kw">if</span> (current == <span class="c-kw">NULL</span>) <span class="c-kw">return</span>;
+
+            Card *next = current-&gt;next;
+            current-&gt;next = <span class="c-kw">NULL</span>;
+
+            <span class="c-cmt">// setting visibility before placing</span>
+            <span class="c-kw">if</span> (row &lt; colInvisibleDepth[col]) {
+                current-&gt;visible = <span class="c-num">0</span>;
+            } <span class="c-kw">else</span> {
+                current-&gt;visible = <span class="c-num">1</span>;
+            }
+
+            <span class="c-fn">placeCard</span>(&amp;cols[col], current);
+
+            current = next;
+        }
+    }
+}
+</pre></td>
+  </tr></table>
+</section>
+<div class="layer-head" id="layer-View"><span class="lk">View</span>Console rendering of the board and deck.</div>
+<section class="file" id="f-view-h">
+  <div class="file-head">
+    <span class="name">view.h</span>
+    <span class="tag hdr">Header</span>
+    <span class="loc">21 lines<a class="top" href="#top">↑ top</a></span>
+  </div>
+  <table class="code"><tr>
+    <td class="ln"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></td>
+    <td class="src"><pre><span class="c-pre">#ifndef VIEW_H</span>
+<span class="c-pre">#define VIEW_H</span>
+
+<span class="c-pre">#include &quot;../Model/Types.h&quot;</span>
+<span class="c-pre">#include &quot;../Model/deck.h&quot;</span>
+
+<span class="c-cmt">//Shows the game state in the console in playing phase. Arguments are columns and foundations.</span>
+<span class="c-kw">void</span> <span class="c-fn">showGame</span>(Column cols[], Foundation foundations[]);
+<span class="c-cmt">//Show the initial deck state in the console in startup phase. Argument is head of the deck linked list.</span>
+<span class="c-kw">void</span> <span class="c-fn">showDeck</span>(Card *head);
+<span class="c-cmt">//Shows a card whether it is visible. Argument is *Card</span>
+<span class="c-kw">static</span> <span class="c-kw">void</span> <span class="c-fn">print_card_face_up</span>(<span class="c-kw">const</span> Card *card);
+<span class="c-cmt">//Shows cards for their respective row and column. Arguments are the head of the column and the row number.</span>
+Card *<span class="c-fn">getRowCard</span>(Card *colHead, <span class="c-kw">int</span> row);
+<span class="c-cmt">// returns column length as INT, argument is head of column</span>
+<span class="c-kw">int</span> <span class="c-fn">getColumnLength</span>(Card *head);
+<span class="c-cmt">// Returns max rows, argument is Columns</span>
+<span class="c-kw">int</span> <span class="c-fn">getMaxRows</span>(Column cols[]);
+<span class="c-cmt">// Shows deck with respect to visibility. Argument is head of deck linked list.</span>
+<span class="c-kw">void</span> <span class="c-fn">showDeckWithVisibility</span>(Card *head);
+<span class="c-pre">#endif</span></pre></td>
+  </tr></table>
+</section>
+<section class="file" id="f-view-c">
+  <div class="file-head">
+    <span class="name">view.c</span>
+    <span class="tag src">Source</span>
+    <span class="loc">216 lines<a class="top" href="#top">↑ top</a></span>
+  </div>
+  <table class="code"><tr>
+    <td class="ln"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216</pre></td>
+    <td class="src"><pre><span class="c-pre">#include &lt;stdio.h&gt;</span>
+<span class="c-pre">#include &quot;view.h&quot;</span>
+<span class="c-pre">#include &quot;../Controller/CardServices.h&quot;</span>
+
+<span class="c-kw">static</span> <span class="c-kw">void</span> <span class="c-fn">print_card</span>(<span class="c-kw">const</span> Card* card)
+{
+    <span class="c-kw">if</span> (card == <span class="c-kw">NULL</span>) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;[E]&quot;</span>); <span class="c-cmt">// E for empty slot</span>
+        <span class="c-kw">return</span>;
+    }
+    <span class="c-kw">if</span> (card-&gt;visible == <span class="c-num">1</span>) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;[%c%c]&quot;</span>, card-&gt;rank,card-&gt;suit);
+    } <span class="c-kw">else</span> {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;[  ]&quot;</span>); <span class="c-cmt">// Hidden cards</span>
+    }
+}
+
+<span class="c-kw">static</span> <span class="c-kw">void</span> <span class="c-fn">print_card_face_up</span>(<span class="c-kw">const</span> Card *card)
+{
+    <span class="c-kw">if</span> (card == <span class="c-kw">NULL</span>) <span class="c-kw">return</span>;
+    <span class="c-fn">printf</span>(<span class="c-str">&quot;[%c%c]&quot;</span>, card-&gt;rank, card-&gt;suit);
+}
+
+<span class="c-kw">void</span> <span class="c-fn">showGame</span>(Column cols[], Foundation foundations[])
+{
+    <span class="c-kw">int</span> maxRows = <span class="c-fn">getMaxRows</span>(cols);
+    <span class="c-kw">int</span> f = <span class="c-num">0</span>; <span class="c-cmt">// foundation index, incremented as we place them</span>
+
+    <span class="c-fn">printf</span>(<span class="c-str">&quot;C1    C2    C3    C4    C5    C6    C7\n\n&quot;</span>);
+
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> row = <span class="c-num">0</span>; row &lt; maxRows; row++) {
+        <span class="c-cmt">// Prints columns</span>
+        <span class="c-kw">for</span> (<span class="c-kw">int</span> col = <span class="c-num">0</span>; col &lt; <span class="c-num">7</span>; col++) {
+            Card *card = <span class="c-fn">getRowCard</span>(cols[col].ref, row);
+
+            <span class="c-kw">if</span> (card != <span class="c-kw">NULL</span>) {
+                <span class="c-fn">print_card</span>(card);  <span class="c-cmt">// respects visible property</span>
+            } <span class="c-kw">else</span> {
+                <span class="c-fn">printf</span>(<span class="c-str">&quot;    &quot;</span>);
+            }
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;  &quot;</span>);
+        }
+
+        <span class="c-cmt">// print foundations on odd rows, one per row</span>
+        <span class="c-kw">if</span> (row % <span class="c-num">2</span> == <span class="c-num">1</span> &amp;&amp; f &lt; <span class="c-num">4</span>) {
+            Card *top = <span class="c-fn">getLastCardFoundation</span>(foundations[f]);
+            <span class="c-kw">if</span> (top != <span class="c-kw">NULL</span>) {
+                <span class="c-fn">printf</span>(<span class="c-str">&quot;     &quot;</span>);
+                <span class="c-fn">print_card_face_up</span>(top);  <span class="c-cmt">// foundations always face up</span>
+                <span class="c-fn">printf</span>(<span class="c-str">&quot;   F%d&quot;</span>, f + <span class="c-num">1</span>);
+            } <span class="c-kw">else</span> {
+                <span class="c-fn">printf</span>(<span class="c-str">&quot;     [  ]   F%d&quot;</span>, f + <span class="c-num">1</span>);
+            }
+            f++;
+        }
+
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;\n&quot;</span>);
+    }
+
+    <span class="c-kw">if</span> (maxRows % <span class="c-num">2</span> == <span class="c-num">0</span>) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;\n&quot;</span>);
+    }
+
+    <span class="c-cmt">// Print remaining foundations if columns are too short to display them all</span>
+    <span class="c-kw">while</span> (f &lt; <span class="c-num">4</span>) {
+
+        <span class="c-kw">for</span> (<span class="c-kw">int</span> col = <span class="c-num">0</span>; col &lt; <span class="c-num">7</span>; col++) {
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;      &quot;</span>);
+        }
+        Card *top = <span class="c-fn">getLastCardFoundation</span>(foundations[f]);
+
+        <span class="c-kw">if</span> (top != <span class="c-kw">NULL</span>) {
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;     &quot;</span>);
+            <span class="c-fn">print_card_face_up</span>(top);
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;   F%d&quot;</span>, f+<span class="c-num">1</span>);
+        } <span class="c-kw">else</span> {
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;     [  ]   F%d&quot;</span>, f+<span class="c-num">1</span>);
+        }
+        f++;
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;\n\n&quot;</span>);
+    }
+
+    <span class="c-cmt">// edge case: if all columns are empty, still show foundations</span>
+    <span class="c-kw">if</span> (maxRows == <span class="c-num">0</span>) {
+        <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">0</span>; i &lt; <span class="c-num">4</span>; i++) {
+            Card *top = <span class="c-fn">getLastCardFoundation</span>(foundations[i]);
+            <span class="c-kw">if</span> (top != <span class="c-kw">NULL</span>) {
+                <span class="c-fn">print_card_face_up</span>(top);
+            } <span class="c-kw">else</span> {
+                <span class="c-fn">printf</span>(<span class="c-str">&quot;[  ]&quot;</span>);
+            }
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;   F%d\n&quot;</span>, i + <span class="c-num">1</span>);
+        }
+    }
+}
+
+<span class="c-cmt">// Shows all cards in the deck face-up, ignoring whether they are hidden or not</span>
+<span class="c-kw">void</span> <span class="c-fn">showDeck</span>(Card *head)
+{
+    <span class="c-kw">if</span> (head == <span class="c-kw">NULL</span>) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;C1    C2    C3    C4    C5    C6    C7\n\n&quot;</span>);
+
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;                                             [  ]   F1\n\n&quot;</span>);
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;                                             [  ]   F2\n\n&quot;</span>);
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;                                             [  ]   F3\n\n&quot;</span>);
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;                                             [  ]   F4\n\n&quot;</span>);
+        <span class="c-kw">return</span>;
+    }
+
+    <span class="c-fn">printf</span>(<span class="c-str">&quot;C1    C2    C3    C4    C5    C6    C7\n\n&quot;</span>);
+
+    Card *current = head;
+    <span class="c-kw">int</span> count = <span class="c-num">0</span>;
+    <span class="c-kw">int</span> row = <span class="c-num">0</span>;
+    <span class="c-kw">int</span> f = <span class="c-num">1</span>;
+
+    <span class="c-kw">while</span> (current != <span class="c-kw">NULL</span>) {
+        <span class="c-fn">print_card_face_up</span>(current);
+        count++;
+        row++;
+
+        <span class="c-kw">if</span> (count % <span class="c-num">7</span> == <span class="c-num">0</span>) {
+            <span class="c-kw">if</span> (row % <span class="c-num">2</span> == <span class="c-num">1</span> &amp;&amp; f &lt;= <span class="c-num">4</span>) {
+                <span class="c-fn">printf</span>(<span class="c-str">&quot;     [  ]   F%d&quot;</span>, f);
+                f++;
+            }
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;\n&quot;</span>);
+        } <span class="c-kw">else</span> {
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;  &quot;</span>);
+            }
+
+        current = current-&gt;next;
+        }
+
+        <span class="c-kw">if</span> (count % <span class="c-num">7</span> != <span class="c-num">0</span>) {
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;\n&quot;</span>);
+        }
+
+}
+
+<span class="c-cmt">// Shows the deck where hidden cards appear as blank</span>
+<span class="c-kw">void</span> <span class="c-fn">showDeckWithVisibility</span>(Card *head)
+{
+    <span class="c-kw">if</span> (head == <span class="c-kw">NULL</span>) {
+        <span class="c-kw">return</span>;
+    }
+
+    <span class="c-fn">printf</span>(<span class="c-str">&quot;C1    C2    C3    C4    C5    C6    C7\n\n&quot;</span>);
+
+    Card *current = head;
+    <span class="c-kw">int</span> count = <span class="c-num">0</span>;
+    <span class="c-kw">int</span> row = <span class="c-num">0</span>;
+    <span class="c-kw">int</span> f = <span class="c-num">1</span>;
+
+    <span class="c-kw">while</span> (current != <span class="c-kw">NULL</span>) {
+        <span class="c-fn">print_card</span>(current);
+        count++;
+        row++;
+
+        <span class="c-kw">if</span> (count % <span class="c-num">7</span> == <span class="c-num">0</span>) {
+            <span class="c-kw">if</span> (row % <span class="c-num">2</span> == <span class="c-num">1</span> &amp;&amp; f &lt;= <span class="c-num">4</span>) {
+                <span class="c-fn">printf</span>(<span class="c-str">&quot;     [  ]   F%d&quot;</span>, f);
+                f++;
+            }
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;\n&quot;</span>);
+        } <span class="c-kw">else</span> {
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;  &quot;</span>);
+        }
+
+        current = current-&gt;next;
+    }
+
+    <span class="c-kw">if</span> (count % <span class="c-num">7</span> != <span class="c-num">0</span>) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;\n&quot;</span>);
+    }
+}
+
+Card *<span class="c-fn">getRowCard</span>(Card *colHead, <span class="c-kw">int</span> row) {
+    Card *current = colHead;
+
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">0</span>; i &lt; row; i++) {
+        <span class="c-kw">if</span> (current == <span class="c-kw">NULL</span>) {
+            <span class="c-kw">return</span> <span class="c-kw">NULL</span>;
+        }
+        current = current-&gt;next;
+    }
+
+    <span class="c-kw">return</span> current;
+}
+
+<span class="c-kw">int</span> <span class="c-fn">getColumnLength</span>(Card *head) <span class="c-cmt">// we just traverse the col (linked list) till bottom is found and note down the count</span>
+{
+    <span class="c-kw">int</span> count = <span class="c-num">0</span>;
+
+    <span class="c-kw">while</span> (head != <span class="c-kw">NULL</span>) {
+        count++;
+        head = head-&gt;next;
+    }
+
+    <span class="c-kw">return</span> count;
+}
+
+<span class="c-kw">int</span> <span class="c-fn">getMaxRows</span>(Column cols[]) <span class="c-cmt">// traverse each col in the game with the get col length func</span>
+{
+    <span class="c-kw">int</span> max = <span class="c-num">0</span>;
+
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">0</span>; i &lt; <span class="c-num">7</span>; i++) {
+        <span class="c-kw">int</span> len = <span class="c-fn">getColumnLength</span>(cols[i].ref);
+
+        <span class="c-kw">if</span> (len &gt; max) {
+            max = len;
+        }
+    }
+
+    <span class="c-kw">return</span> max;
+}</pre></td>
+  </tr></table>
+</section>
+<div class="layer-head" id="layer-Controller"><span class="lk">Controller</span>Card services (moves, rules) and the command controller.</div>
+<section class="file" id="f-CardServices-h">
+  <div class="file-head">
+    <span class="name">CardServices.h</span>
+    <span class="tag hdr">Header</span>
+    <span class="loc">35 lines<a class="top" href="#top">↑ top</a></span>
+  </div>
+  <table class="code"><tr>
+    <td class="ln"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre></td>
+    <td class="src"><pre><span class="c-cmt">//</span>
+<span class="c-cmt">// Created by kaspe on 30-04-2026.</span>
+<span class="c-cmt">//</span>
+
+<span class="c-pre">#ifndef MOP_2_CARDSERVICES_H</span>
+<span class="c-pre">#define MOP_2_CARDSERVICES_H</span>
+
+<span class="c-pre">#include &quot;../Model/model.h&quot;</span>
+
+<span class="c-pre">#include &quot;../Model/Types.h&quot;</span>
+
+<span class="c-cmt">// Services for manipulating cards, columns, and foundations. used to setup game. Argument: column or foundation to place card in, and card to place.</span>
+<span class="c-kw">void</span> <span class="c-fn">placeCard</span>(Column *column, Card *card);
+<span class="c-cmt">//gets last card in column. Returns Card* or NULL if column is empty. Argument is column to check.</span>
+Card* <span class="c-fn">getLastCard</span>(Column column);
+<span class="c-cmt">//gets last card in foundation. returns Card* or NULL if foundation is empty. Argument is foundation to check.</span>
+Card* <span class="c-fn">getLastCardFoundation</span>(Foundation foundation);
+<span class="c-cmt">//checks whether or not the move respects rules of the game. Returns 1 if legal, 0 if not. Arguments are the card being moved and the card it is being moved to.</span>
+<span class="c-kw">int</span> <span class="c-fn">isMoveLegal</span>(Card* moveCard, Card* cardTo);
+<span class="c-cmt">//checks whether or not the move respects rules of the game. Returns 1 if legal, 0 if not. Arguments are the card being moved and the card it is being moved to.</span>
+<span class="c-kw">int</span> <span class="c-fn">isMoveLegalFoundation</span>(Card* moveCard, Card* cardTo);
+<span class="c-cmt">//Parse a char string into a card struct. returns a new Card. Argument is a Char</span>
+Card <span class="c-fn">parseCard</span>(<span class="c-kw">const</span> <span class="c-kw">char</span> *cardStr);
+<span class="c-cmt">//Moves a card to a foundation. Returns 1 if move is successful 0 if not. Arguments are the card to move, the column it is moving from, and the foundation it is moving to.</span>
+<span class="c-kw">int</span> <span class="c-fn">moveCardFoundation</span>(Card *moveCard, Column *columnFrom, Foundation *foundation);
+<span class="c-cmt">//Moves a card from a foundation to a column. Returns 1 if move is successful 0 if not. Arguments are the card to move, the column it is moving to, and the foundation it is moving from.</span>
+<span class="c-kw">int</span> <span class="c-fn">moveCardFromFoundation</span>(Card *moveCard, Column *columnTo, Foundation *fromFoundation);
+<span class="c-cmt">//Moves a card from a column to a new column. Returns 1 if move is successful 0 if not. Arguments are the card to move, the column it is moving from, and the column it is moving to.</span>
+<span class="c-kw">int</span> <span class="c-fn">moveCard</span>(Card *moveCard, Column *columnFrom, Column *columnTo);
+<span class="c-cmt">//Determines rank as a number. I.e J == 11. returns int, Argument is card.</span>
+<span class="c-kw">int</span> <span class="c-fn">determineRank</span>(Card card);
+<span class="c-cmt">//A brute force command, that goes through all columns and makes the last card of each visible. Used for edge cases. Argument is columns.</span>
+<span class="c-kw">void</span> <span class="c-fn">showAllLastCards</span>(Column cols[]);
+
+<span class="c-pre">#endif //MOP_2_CARDSERVICES_H</span></pre></td>
+  </tr></table>
+</section>
+<section class="file" id="f-CardServices-c">
+  <div class="file-head">
+    <span class="name">CardServices.c</span>
+    <span class="tag src">Source</span>
+    <span class="loc">326 lines<a class="top" href="#top">↑ top</a></span>
+  </div>
+  <table class="code"><tr>
+    <td class="ln"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326</pre></td>
+    <td class="src"><pre><span class="c-cmt">//</span>
+<span class="c-cmt">// Created by kaspe on 30-04-2026.</span>
+<span class="c-cmt">//</span>
+<span class="c-pre">#include &lt;stdlib.h&gt;</span>
+<span class="c-pre">#include &quot;CardServices.h&quot;</span>
+
+<span class="c-pre">#include &lt;stdio.h&gt;</span>
+
+<span class="c-kw">void</span> <span class="c-fn">placeCard</span>(Column *column, Card *card) {
+    <span class="c-kw">struct</span> Card *newNode = (<span class="c-kw">struct</span> Card *)<span class="c-fn">malloc</span>(<span class="c-kw">sizeof</span>(<span class="c-kw">struct</span> Card));
+    newNode-&gt;rank = card-&gt;rank;
+    newNode-&gt;suit = card-&gt;suit;
+    newNode-&gt;visible = card-&gt;visible;
+    newNode-&gt;next = <span class="c-kw">NULL</span>;
+
+    <span class="c-cmt">// If the column is empty, set it as the head</span>
+    <span class="c-kw">if</span> (column-&gt;ref == <span class="c-kw">NULL</span>) {
+        column-&gt;ref = newNode;
+        <span class="c-kw">return</span>;
+    }
+
+    <span class="c-cmt">// Traverse to the bottom of the column</span>
+    Card *current = column-&gt;ref;
+    <span class="c-kw">while</span> (current-&gt;next != <span class="c-kw">NULL</span>) {
+        current = current-&gt;next;
+    }
+
+    <span class="c-cmt">// Append at the bottom</span>
+    current-&gt;next = newNode;
+
+}
+
+<span class="c-cmt">// Parse a char string into a card struct</span>
+Card <span class="c-fn">parseCard</span>(<span class="c-kw">const</span> <span class="c-kw">char</span> *cardStr) {
+    Card card;
+    card.rank = cardStr[<span class="c-num">0</span>];
+    card.suit = cardStr[<span class="c-num">1</span>];
+    card.visible = <span class="c-num">1</span>;  <span class="c-cmt">// Cards being moved should be visible</span>
+    card.next = <span class="c-kw">NULL</span>;
+    <span class="c-kw">return</span> card;
+}
+
+<span class="c-kw">int</span> <span class="c-fn">moveCard</span>(Card *moveCard, Column *columnFrom, Column *columnTo) {
+    <span class="c-cmt">// Validate that no pointers are NULL</span>
+    <span class="c-kw">if</span> (moveCard == <span class="c-kw">NULL</span> || columnFrom == <span class="c-kw">NULL</span> || columnTo == <span class="c-kw">NULL</span>) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;Illegal move\n&quot;</span>);
+        <span class="c-kw">return</span> <span class="c-num">0</span>;
+    }
+
+    <span class="c-cmt">// Hidden cards cannot be moved</span>
+    <span class="c-kw">if</span> (!moveCard-&gt;visible) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;Cannot move hidden card\n&quot;</span>);
+        <span class="c-kw">return</span> <span class="c-num">0</span>;
+    }
+
+    Card* headCard = columnFrom-&gt;ref;
+    Card* endOfColumn = <span class="c-fn">getLastCard</span>(*columnTo);
+
+    <span class="c-cmt">// if the destination column is empty, we can only place a king (rank 13)</span>
+    <span class="c-kw">if</span> (endOfColumn == <span class="c-kw">NULL</span>) {
+        <span class="c-kw">if</span> (<span class="c-fn">determineRank</span>(*moveCard) != <span class="c-num">13</span>) {
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;Illegal move\n&quot;</span>);
+            <span class="c-kw">return</span> <span class="c-num">0</span>;
+        }
+
+        <span class="c-cmt">// Check if the card is the first in the fromColumn</span>
+        <span class="c-kw">if</span> (headCard-&gt;rank == moveCard-&gt;rank &amp;&amp; headCard-&gt;suit == moveCard-&gt;suit) {
+            columnFrom-&gt;ref = <span class="c-kw">NULL</span>;
+            columnTo-&gt;ref = moveCard;
+            <span class="c-kw">return</span> <span class="c-num">1</span>;
+        }
+
+        <span class="c-cmt">// Find the first card in the fromColumn</span>
+        <span class="c-kw">while</span> (headCard-&gt;next != <span class="c-kw">NULL</span> &amp;&amp;
+               (headCard-&gt;next-&gt;rank != moveCard-&gt;rank ||
+                headCard-&gt;next-&gt;suit != moveCard-&gt;suit)) {
+            headCard = headCard-&gt;next;
+                }
+
+        <span class="c-kw">if</span> (headCard-&gt;next == <span class="c-kw">NULL</span>) {
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;Picked card is not in column\n&quot;</span>);
+            <span class="c-kw">return</span> <span class="c-num">0</span>;
+        }
+
+        <span class="c-cmt">// Move card and make the new top card of the fromColumn visible</span>
+        columnTo-&gt;ref = headCard-&gt;next;
+        headCard-&gt;next = <span class="c-kw">NULL</span>;
+
+        <span class="c-kw">if</span> (columnFrom-&gt;ref != <span class="c-kw">NULL</span>) {
+            <span class="c-fn">getLastCard</span>(*columnFrom)-&gt;visible = <span class="c-num">1</span>;
+        }
+
+        <span class="c-kw">return</span> <span class="c-num">1</span>;
+    }
+
+    <span class="c-cmt">// Dette burde fikse problem med at flytte sidste kort i kolonnen</span>
+    <span class="c-kw">if</span> (headCard-&gt;rank == moveCard-&gt;rank &amp;&amp; headCard-&gt;suit == moveCard-&gt;suit) {
+        <span class="c-cmt">// The card is the first in column -&gt; update pointer from columnFrom to null</span>
+        <span class="c-kw">if</span> (columnFrom-&gt;ref == moveCard) {
+            columnFrom-&gt;ref = <span class="c-kw">NULL</span>;
+            <span class="c-kw">if</span> (<span class="c-fn">isMoveLegal</span>(moveCard, endOfColumn)== <span class="c-num">1</span>) {
+                endOfColumn-&gt;next = moveCard;
+                <span class="c-kw">return</span> <span class="c-num">1</span>;
+            } <span class="c-kw">else</span> {
+                <span class="c-fn">printf</span>(<span class="c-str">&quot;Illegal move\n&quot;</span>);
+                columnFrom-&gt;ref = moveCard; <span class="c-cmt">// Restore on failure</span>
+                <span class="c-kw">return</span> <span class="c-num">0</span>;
+            }
+        }
+        <span class="c-cmt">// if the card is not the first, skip and continue</span>
+        columnFrom-&gt;ref = moveCard-&gt;next;
+        <span class="c-kw">if</span> (<span class="c-fn">isMoveLegal</span>(moveCard, endOfColumn)== <span class="c-num">1</span>) {
+            endOfColumn-&gt;next = moveCard;
+            <span class="c-kw">return</span> <span class="c-num">1</span>;
+        } <span class="c-kw">else</span> {
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;Illegal move\n&quot;</span>);
+            columnFrom-&gt;ref = headCard; <span class="c-cmt">// Restore on failure</span>
+            <span class="c-kw">return</span> <span class="c-num">0</span>;
+        }
+    }
+    <span class="c-cmt">//iterate through the column to find the card to move, and keep track of the card before it (headCard)</span>
+    <span class="c-kw">while</span> (headCard-&gt;next != <span class="c-kw">NULL</span> &amp;&amp; (headCard-&gt;next-&gt;rank != moveCard-&gt;rank || headCard-&gt;next-&gt;suit != moveCard-&gt;suit)) {
+        headCard = headCard-&gt;next;
+    }
+
+
+    <span class="c-kw">if</span> (headCard-&gt;next == <span class="c-kw">NULL</span>) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;Picked card is not in column\n&quot;</span>);
+        <span class="c-kw">return</span> <span class="c-num">0</span>;
+    }
+    <span class="c-fn">printf</span>(<span class="c-str">&quot;MOVE: %c%c -&gt; %c%c\n&quot;</span>,
+       moveCard-&gt;rank, moveCard-&gt;suit,
+       endOfColumn-&gt;rank, endOfColumn-&gt;suit);
+
+    <span class="c-kw">if</span> (<span class="c-fn">isMoveLegal</span>(moveCard, endOfColumn)== <span class="c-num">1</span>) { <span class="c-cmt">//condition check</span>
+        Card* cardToMove = headCard-&gt;next;
+        headCard-&gt;next = <span class="c-kw">NULL</span>;
+        endOfColumn-&gt;next = cardToMove;
+
+        <span class="c-cmt">//If the moved card was the head of the column, set old column pointer to null</span>
+        <span class="c-kw">if</span> (columnFrom-&gt;ref == moveCard) {
+            columnFrom-&gt;ref = <span class="c-kw">NULL</span>;
+        }
+
+        <span class="c-cmt">// last card of each column is always visible</span>
+        <span class="c-kw">if</span> (columnFrom-&gt;ref != <span class="c-kw">NULL</span>) <span class="c-fn">getLastCard</span>(*columnFrom)-&gt;visible = <span class="c-num">1</span>;
+        <span class="c-kw">if</span> (columnTo-&gt;ref != <span class="c-kw">NULL</span>) <span class="c-fn">getLastCard</span>(*columnTo)-&gt;visible = <span class="c-num">1</span>;
+        <span class="c-kw">return</span> <span class="c-num">1</span>;
+    } <span class="c-kw">else</span> {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;Illegal move\n&quot;</span>);
+        <span class="c-kw">return</span> <span class="c-num">0</span>;
+    }
+}
+
+<span class="c-cmt">// Returns a pointer to the last card in a column</span>
+Card* <span class="c-fn">getLastCard</span>(Column column) {
+    <span class="c-kw">if</span> (column.ref == <span class="c-kw">NULL</span>){ <span class="c-kw">return</span> <span class="c-kw">NULL</span>;}
+    <span class="c-kw">while</span> (column.ref-&gt;next != <span class="c-kw">NULL</span>) {
+        column.ref = column.ref-&gt;next;
+    }
+    <span class="c-kw">return</span> column.ref;
+}
+
+<span class="c-cmt">// Returns a pointer to the last card in a foundation</span>
+Card* <span class="c-fn">getLastCardFoundation</span>(Foundation foundation) {
+    <span class="c-kw">if</span> (foundation.ref == <span class="c-kw">NULL</span>){ <span class="c-kw">return</span> <span class="c-kw">NULL</span>;}
+    <span class="c-kw">while</span> (foundation.ref-&gt;next != <span class="c-kw">NULL</span>) {
+        foundation.ref = foundation.ref-&gt;next;
+    }
+    <span class="c-kw">return</span> foundation.ref;
+}
+
+<span class="c-kw">int</span> <span class="c-fn">moveCardFoundation</span>(Card *moveCard, Column *columnFrom, Foundation *foundation) {
+    Card* endOfFoundation = <span class="c-fn">getLastCardFoundation</span>(*foundation);
+    Card* endOfColumn = <span class="c-fn">getLastCard</span>(*columnFrom);
+
+    <span class="c-cmt">// Only the top card in the column can be moved to foundation// Kun sidste kort i kolonnen må rykkes til foundation</span>
+    <span class="c-kw">if</span> (endOfColumn-&gt;rank != moveCard-&gt;rank || endOfColumn-&gt;suit != moveCard-&gt;suit) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;Illegal move\n&quot;</span>);
+        <span class="c-kw">return</span> <span class="c-num">0</span>;
+    }
+
+    Card* headCard = columnFrom-&gt;ref;
+    <span class="c-kw">while</span> (headCard-&gt;next != <span class="c-kw">NULL</span> &amp;&amp; (headCard-&gt;next-&gt;rank != moveCard-&gt;rank || headCard-&gt;next-&gt;suit != moveCard-&gt;suit)) {
+        headCard = headCard-&gt;next;
+    }
+
+    <span class="c-cmt">// The first card placed on a founcation must be an ace (rank 1)</span>
+    <span class="c-kw">if</span> (endOfFoundation == <span class="c-kw">NULL</span>) {
+        <span class="c-kw">if</span> (<span class="c-fn">determineRank</span>(*moveCard) != <span class="c-num">1</span>) {
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;Illegal move\n&quot;</span>);
+            <span class="c-kw">return</span> <span class="c-num">0</span>;
+        }
+        <span class="c-cmt">//Edge case: If the card is the first in the column, set columnFrom to NULL</span>
+        foundation-&gt;ref = moveCard;
+        <span class="c-kw">if</span> (columnFrom-&gt;ref == moveCard) {
+            columnFrom-&gt;ref = <span class="c-kw">NULL</span>;
+        } <span class="c-kw">else</span> {
+            headCard-&gt;next = <span class="c-kw">NULL</span>; <span class="c-cmt">// Remove card from column</span>
+        }
+        moveCard-&gt;next = <span class="c-kw">NULL</span>;
+
+        <span class="c-cmt">// Make the new top card of the column visible</span>
+        Card *newLast = <span class="c-fn">getLastCard</span>(*columnFrom);
+        <span class="c-kw">if</span> (newLast != <span class="c-kw">NULL</span>) {
+            newLast-&gt;visible = <span class="c-num">1</span>;
+        }
+
+        <span class="c-kw">return</span> <span class="c-num">1</span>;
+    }
+
+    <span class="c-kw">if</span> (headCard-&gt;next == <span class="c-kw">NULL</span> &amp;&amp; headCard != moveCard) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;Card not found in column\n&quot;</span>);
+        <span class="c-kw">return</span> <span class="c-num">0</span>;
+    }
+
+    <span class="c-cmt">// Column contains only one card</span>
+    <span class="c-kw">if</span> (columnFrom-&gt;ref-&gt;rank == moveCard-&gt;rank &amp;&amp; columnFrom-&gt;ref-&gt;suit == moveCard-&gt;suit ) {
+        <span class="c-kw">if</span> (<span class="c-fn">isMoveLegalFoundation</span>(moveCard, endOfFoundation) != <span class="c-num">1</span>) {
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;Illegal move\n&quot;</span>);
+            <span class="c-kw">return</span> <span class="c-num">0</span>;
+        }
+        columnFrom-&gt;ref = <span class="c-kw">NULL</span>;
+        moveCard-&gt;next = <span class="c-kw">NULL</span>;
+        endOfFoundation-&gt;next = moveCard;
+
+        Card *newLast = <span class="c-fn">getLastCard</span>(*columnFrom);
+        <span class="c-kw">if</span> (newLast != <span class="c-kw">NULL</span>) {
+            newLast-&gt;visible = <span class="c-num">1</span>;
+        }
+        <span class="c-kw">return</span> <span class="c-num">1</span>;
+
+    }
+
+    <span class="c-cmt">// Move the card from the column to the foundation</span>
+    <span class="c-kw">if</span> (<span class="c-fn">isMoveLegalFoundation</span>(moveCard, endOfFoundation) == <span class="c-num">1</span>) {
+        Card* cardToMove = headCard-&gt;next;
+        headCard-&gt;next = <span class="c-kw">NULL</span>;
+        endOfFoundation-&gt;next = cardToMove;
+        <span class="c-kw">return</span> <span class="c-num">1</span>;
+    } <span class="c-kw">else</span> {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;Illegal move\n&quot;</span>);
+        <span class="c-kw">return</span> <span class="c-num">0</span>;
+    }
+}
+
+<span class="c-kw">int</span> <span class="c-fn">moveCardFromFoundation</span>(Card *moveCard, Column *columnTo, Foundation *fromFoundation) {
+    Card* endOfFoundation = <span class="c-fn">getLastCardFoundation</span>(*fromFoundation);
+    Card* endOFColumn = <span class="c-fn">getLastCard</span>(*columnTo);
+
+    <span class="c-cmt">// Cant move to empty column from foundation</span>
+    <span class="c-kw">if</span> (columnTo-&gt;ref==<span class="c-kw">NULL</span>) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;Illegal move\n&quot;</span>);
+        <span class="c-kw">return</span> <span class="c-num">0</span>;
+    }
+    <span class="c-kw">if</span> (<span class="c-fn">isMoveLegal</span>(endOfFoundation, endOFColumn)) {
+        <span class="c-cmt">// Move card to column</span>
+        Card* cardToMove = endOfFoundation;
+        endOFColumn-&gt;next = cardToMove;
+
+        <span class="c-cmt">// Remove the card from foundation</span>
+        Card* current = fromFoundation-&gt;ref;
+        <span class="c-kw">while</span> (current-&gt;next != endOfFoundation &amp;&amp; current-&gt;next != <span class="c-kw">NULL</span>) {
+            current = current-&gt;next;
+        }
+        <span class="c-cmt">// If foundation contains only one card</span>
+        <span class="c-kw">if</span> (fromFoundation-&gt;ref == moveCard) {
+            fromFoundation-&gt;ref = <span class="c-kw">NULL</span>;
+        }
+
+        current-&gt;next = <span class="c-kw">NULL</span>;
+        <span class="c-kw">return</span> <span class="c-num">1</span>;
+    }
+    <span class="c-kw">return</span> <span class="c-num">0</span>;
+}
+
+<span class="c-cmt">// Converts a card&#x27;s rank character to numeric value</span>
+<span class="c-kw">int</span> <span class="c-fn">determineRank</span>(Card card) {
+    <span class="c-kw">switch</span> (card.rank) {
+        <span class="c-kw">case</span> <span class="c-chr">&#x27;A&#x27;</span>: <span class="c-kw">return</span> <span class="c-num">1</span>;
+        <span class="c-kw">case</span> <span class="c-chr">&#x27;T&#x27;</span>: <span class="c-kw">return</span> <span class="c-num">10</span>;
+        <span class="c-kw">case</span> <span class="c-chr">&#x27;J&#x27;</span>: <span class="c-kw">return</span> <span class="c-num">11</span>;
+        <span class="c-kw">case</span> <span class="c-chr">&#x27;Q&#x27;</span>: <span class="c-kw">return</span> <span class="c-num">12</span>;
+        <span class="c-kw">case</span> <span class="c-chr">&#x27;K&#x27;</span>: <span class="c-kw">return</span> <span class="c-num">13</span>;
+        <span class="c-kw">default</span>:
+            <span class="c-kw">if</span> (card.rank &lt; <span class="c-chr">&#x27;2&#x27;</span> || card.rank &gt; <span class="c-chr">&#x27;9&#x27;</span>) <span class="c-kw">return</span> -<span class="c-num">1</span>;
+            <span class="c-kw">return</span> card.rank - <span class="c-chr">&#x27;0&#x27;</span>;
+    }
+}
+
+<span class="c-cmt">// Checks if a move is legal</span>
+<span class="c-kw">int</span> <span class="c-fn">isMoveLegal</span>(Card* moveCard, Card* cardTo) {
+    <span class="c-kw">int</span> cardRank = <span class="c-fn">determineRank</span>(*moveCard);
+    <span class="c-kw">int</span> cardRank2 = <span class="c-fn">determineRank</span>(*cardTo);
+
+    <span class="c-kw">if</span> (moveCard-&gt;suit == cardTo-&gt;suit) {<span class="c-kw">return</span> <span class="c-num">0</span>;}
+    <span class="c-kw">if</span> (cardRank != cardRank2-<span class="c-num">1</span>) {<span class="c-kw">return</span> <span class="c-num">0</span>;}
+
+    <span class="c-kw">return</span> <span class="c-num">1</span>;
+}
+
+<span class="c-cmt">// Check if a move to the foundation is legal</span>
+<span class="c-kw">int</span> <span class="c-fn">isMoveLegalFoundation</span>(Card* moveCard, Card* cardTo) {
+    <span class="c-kw">int</span> cardRank = <span class="c-fn">determineRank</span>(*moveCard);
+    <span class="c-kw">int</span> cardRank2 = <span class="c-fn">determineRank</span>(*cardTo);
+
+    <span class="c-kw">if</span> (moveCard-&gt;suit != cardTo-&gt;suit) {<span class="c-kw">return</span> <span class="c-num">0</span>;}
+    <span class="c-kw">if</span> (cardRank != cardRank2+<span class="c-num">1</span>) {<span class="c-kw">return</span> <span class="c-num">0</span>;}
+
+    <span class="c-kw">return</span> <span class="c-num">1</span>;
+}
+
+<span class="c-cmt">// Makes sure the top card of every column is always visible</span>
+<span class="c-kw">void</span> <span class="c-fn">showAllLastCards</span>(Column cols[]) {
+    <span class="c-cmt">//Brute force</span>
+    Card* lastCard;
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">0</span>; i &lt; NUM_COLUMNS; i++) {
+        lastCard = <span class="c-fn">getLastCard</span>(cols[i]);
+        <span class="c-kw">if</span> (lastCard == <span class="c-kw">NULL</span>) {
+            <span class="c-kw">continue</span>;
+        }
+            lastCard-&gt;visible = <span class="c-num">1</span>;
+        }
+
+    }
+</pre></td>
+  </tr></table>
+</section>
+<section class="file" id="f-controller-h">
+  <div class="file-head">
+    <span class="name">controller.h</span>
+    <span class="tag hdr">Header</span>
+    <span class="loc">15 lines<a class="top" href="#top">↑ top</a></span>
+  </div>
+  <table class="code"><tr>
+    <td class="ln"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15</pre></td>
+    <td class="src"><pre><span class="c-pre">#ifndef CONTROLLER_H</span>
+<span class="c-pre">#define CONTROLLER_H</span>
+
+<span class="c-pre">#include &quot;../Model/model.h&quot;</span>
+
+<span class="c-cmt">//Starts the startup phase for the game</span>
+<span class="c-kw">void</span> <span class="c-fn">game_startup</span>();
+<span class="c-cmt">//Checks the winning condition of the game. Returns 1 if won, 0 if not. Argument is foundations.</span>
+<span class="c-kw">int</span> <span class="c-fn">gameWon</span> (Foundation foundations[]);
+<span class="c-cmt">//takes input from console, parses input, and if valid, executes move. Arguments are the input string, columns, and foundations.</span>
+<span class="c-kw">void</span> <span class="c-fn">processMove</span>(<span class="c-kw">char</span> *input, Column cols[], Foundation foundations[]);
+<span class="c-cmt">//initiates playing phase. Argument is head of the played deck. </span>
+<span class="c-kw">void</span> <span class="c-fn">run_game</span>(Card *deckHead);
+
+<span class="c-pre">#endif</span></pre></td>
+  </tr></table>
+</section>
+<section class="file" id="f-controller-c">
+  <div class="file-head">
+    <span class="name">controller.c</span>
+    <span class="tag src">Source</span>
+    <span class="loc">270 lines<a class="top" href="#top">↑ top</a></span>
+  </div>
+  <table class="code"><tr>
+    <td class="ln"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270</pre></td>
+    <td class="src"><pre><span class="c-pre">#include &lt;stdio.h&gt;</span>
+<span class="c-pre">#include &lt;string.h&gt;</span>
+<span class="c-pre">#include &lt;ctype.h&gt;</span>
+<span class="c-pre">#include &lt;stdlib.h&gt;</span>
+<span class="c-pre">#include &lt;time.h&gt;</span>
+
+<span class="c-pre">#include &quot;../Controller/controller.h&quot;</span>
+<span class="c-pre">#include &quot;../Model/Types.h&quot;</span>
+<span class="c-pre">#include &quot;../Model/model.h&quot;</span>
+<span class="c-pre">#include &quot;../Model/deck.h&quot;</span>
+<span class="c-pre">#include &quot;../View/view.h&quot;</span>
+
+<span class="c-cmt">// Check if game is won</span>
+<span class="c-kw">int</span> <span class="c-fn">gameWon</span> (Foundation foundations[]) {
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">0</span>; i &lt; NUM_FOUNDATIONS; i++) {
+        <span class="c-kw">if</span> (foundations[i].ref == <span class="c-kw">NULL</span> || <span class="c-cmt">// Null checks required to avoid crash on empty foundation</span>
+            <span class="c-fn">determineRank</span>(*<span class="c-fn">getLastCardFoundation</span>(foundations[i])) != <span class="c-num">13</span>) {
+            <span class="c-kw">return</span> <span class="c-num">0</span>;
+            }
+    }
+    <span class="c-kw">return</span> <span class="c-num">1</span>; <span class="c-cmt">// All 4 foundations end on a King</span>
+}
+
+<span class="c-kw">void</span> <span class="c-fn">processMove</span>(<span class="c-kw">char</span> *input, Column cols[], Foundation foundations[]) {
+    <span class="c-kw">char</span> from[<span class="c-num">20</span>], to[<span class="c-num">20</span>];
+
+    <span class="c-cmt">// Parse the move command: split on &quot;-&gt;&quot;</span>
+    <span class="c-kw">char</span> *arrow = <span class="c-fn">strstr</span>(input, <span class="c-str">&quot;-&gt;&quot;</span>);
+    <span class="c-kw">if</span> (arrow == <span class="c-kw">NULL</span>) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;Invalid command format. Use &lt;from&gt;-&gt;&lt;to&gt;\n&quot;</span>);
+        <span class="c-kw">return</span>;
+    }
+
+    <span class="c-cmt">// Copy from and to parts</span>
+    <span class="c-kw">size_t</span> fromLen = arrow - input;
+    <span class="c-fn">strncpy</span>(from, input, fromLen);
+    from[fromLen] = <span class="c-chr">&#x27;\0&#x27;</span>;
+    <span class="c-fn">strcpy</span>(to, arrow + <span class="c-num">2</span>);  <span class="c-cmt">// Skip &quot;-&gt;&quot;</span>
+
+    <span class="c-fn">printf</span>(<span class="c-str">&quot;From: %s, To: %s\n&quot;</span>, from, to);
+
+    <span class="c-kw">if</span> (to[<span class="c-num">0</span>] == <span class="c-chr">&#x27;C&#x27;</span>) {
+        <span class="c-cmt">// Move to column</span>
+        <span class="c-kw">int</span> toCol = to[<span class="c-num">1</span>] - <span class="c-chr">&#x27;0&#x27;</span> - <span class="c-num">1</span>;  <span class="c-cmt">// &#x27;C4&#x27; -&gt; index 3</span>
+
+        <span class="c-kw">if</span> (<span class="c-fn">strchr</span>(from, <span class="c-chr">&#x27;:&#x27;</span>) != <span class="c-kw">NULL</span>) { <span class="c-cmt">// Check if a specific card is given like &quot;C6:4H&quot;</span>
+            <span class="c-kw">char</span> colStr[<span class="c-num">3</span>], cardStr[<span class="c-num">3</span>];
+            <span class="c-cmt">// Split &quot;C6:4H&quot; into column and card parts</span>
+            <span class="c-fn">sscanf</span>(from, <span class="c-str">&quot;%[^:]:%s&quot;</span>, colStr, cardStr);
+            <span class="c-kw">int</span> fromCol = colStr[<span class="c-num">1</span>] - <span class="c-chr">&#x27;0&#x27;</span> - <span class="c-num">1</span>;
+
+            Card *cardToMove = cols[fromCol].ref;
+            <span class="c-kw">while</span> (cardToMove != <span class="c-kw">NULL</span> &amp;&amp; (cardToMove-&gt;rank != cardStr[<span class="c-num">0</span>] || cardToMove-&gt;suit != cardStr[<span class="c-num">1</span>])) {
+                cardToMove = cardToMove-&gt;next;
+            }
+            <span class="c-kw">if</span> (cols[fromCol].ref != <span class="c-kw">NULL</span>) <span class="c-fn">getLastCard</span>(cols[fromCol])-&gt;visible = <span class="c-num">1</span>;
+            <span class="c-kw">if</span> (cardToMove == <span class="c-kw">NULL</span>) {
+                <span class="c-fn">printf</span>(<span class="c-str">&quot;Card not found in column\n&quot;</span>);
+            } <span class="c-kw">else</span> {
+                <span class="c-fn">moveCard</span>(cardToMove, &amp;cols[fromCol], &amp;cols[toCol]);
+            }
+        } <span class="c-kw">else</span> <span class="c-kw">if</span> (from[<span class="c-num">0</span>] == <span class="c-chr">&#x27;C&#x27;</span>) {
+            <span class="c-cmt">// Top card of from column</span>
+            <span class="c-kw">int</span> fromCol = from[<span class="c-num">1</span>] - <span class="c-chr">&#x27;0&#x27;</span> - <span class="c-num">1</span>;
+            Card *bottomCard = <span class="c-fn">getLastCard</span>(cols[fromCol]);
+            <span class="c-kw">if</span> (bottomCard != <span class="c-kw">NULL</span>) {
+                <span class="c-fn">moveCard</span>(bottomCard, &amp;cols[fromCol], &amp;cols[toCol]);
+            }
+            <span class="c-kw">if</span> (cols[fromCol].ref != <span class="c-kw">NULL</span>) <span class="c-fn">getLastCard</span>(cols[fromCol])-&gt;visible = <span class="c-num">1</span>;
+        } <span class="c-kw">else</span> <span class="c-kw">if</span> (from[<span class="c-num">0</span>] == <span class="c-chr">&#x27;F&#x27;</span>) {
+            <span class="c-cmt">// Top card of foundation</span>
+            <span class="c-kw">int</span> fromFound = from[<span class="c-num">1</span>] - <span class="c-chr">&#x27;0&#x27;</span> - <span class="c-num">1</span>;
+            Card *topCard = <span class="c-fn">getLastCardFoundation</span>(foundations[fromFound]);
+            <span class="c-kw">if</span> (topCard != <span class="c-kw">NULL</span>) {
+                <span class="c-fn">moveCardFromFoundation</span>(topCard, &amp;cols[toCol], &amp;foundations[fromFound]);
+            }
+
+        }
+
+    } <span class="c-kw">else</span> <span class="c-kw">if</span> (to[<span class="c-num">0</span>] == <span class="c-chr">&#x27;F&#x27;</span>) {
+        <span class="c-cmt">// Move to foundation</span>
+        <span class="c-kw">int</span> toFound = to[<span class="c-num">1</span>] - <span class="c-chr">&#x27;0&#x27;</span> - <span class="c-num">1</span>;
+
+        <span class="c-kw">if</span> (from[<span class="c-num">0</span>] == <span class="c-chr">&#x27;C&#x27;</span>) {
+            <span class="c-kw">if</span> (<span class="c-fn">strchr</span>(from, <span class="c-chr">&#x27;:&#x27;</span>) != <span class="c-kw">NULL</span>) {
+                <span class="c-cmt">// Specific card from column to foundation</span>
+                <span class="c-kw">char</span> colStr[<span class="c-num">3</span>], cardStr[<span class="c-num">3</span>];
+                <span class="c-fn">sscanf</span>(from, <span class="c-str">&quot;%[^:]:%s&quot;</span>, colStr, cardStr);
+                <span class="c-kw">int</span> fromCol = colStr[<span class="c-num">1</span>] - <span class="c-chr">&#x27;0&#x27;</span> - <span class="c-num">1</span>;
+
+                Card *cardToMove = cols[fromCol].ref;
+                <span class="c-kw">if</span> (cols[fromCol].ref != <span class="c-kw">NULL</span>) <span class="c-fn">getLastCard</span>(cols[fromCol])-&gt;visible = <span class="c-num">1</span>;
+                <span class="c-kw">while</span> (cardToMove != <span class="c-kw">NULL</span> &amp;&amp; (cardToMove-&gt;rank != cardStr[<span class="c-num">0</span>] || cardToMove-&gt;suit != cardStr[<span class="c-num">1</span>])) {
+                    cardToMove = cardToMove-&gt;next;
+                }
+
+                <span class="c-kw">if</span> (cardToMove == <span class="c-kw">NULL</span>) {
+                    <span class="c-fn">printf</span>(<span class="c-str">&quot;Card not found in column\n&quot;</span>);
+                } <span class="c-kw">else</span> {
+                    <span class="c-fn">moveCardFoundation</span>(cardToMove, &amp;cols[fromCol], &amp;foundations[toFound]);
+                }
+            } <span class="c-kw">else</span> {
+                <span class="c-cmt">// Bottom card of column to foundation</span>
+                <span class="c-kw">int</span> fromCol = from[<span class="c-num">1</span>] - <span class="c-chr">&#x27;0&#x27;</span> - <span class="c-num">1</span>;
+                Card *bottomCard = <span class="c-fn">getLastCard</span>(cols[fromCol]);
+                <span class="c-kw">if</span> (bottomCard != <span class="c-kw">NULL</span>) {
+                    <span class="c-fn">moveCardFoundation</span>(bottomCard, &amp;cols[fromCol], &amp;foundations[toFound]);
+                    <span class="c-kw">if</span> (cols[fromCol].ref != <span class="c-kw">NULL</span>) <span class="c-fn">getLastCard</span>(cols[fromCol])-&gt;visible = <span class="c-num">1</span>;
+                }
+            }
+        }
+    } <span class="c-kw">else</span> {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;Invalid destination\n&quot;</span>);
+    }
+}
+
+<span class="c-kw">void</span> <span class="c-fn">run_game</span>(Card *deckHead) {
+    Column cols[<span class="c-num">7</span>] = {<span class="c-num">0</span>};
+    Foundation foundations[<span class="c-num">4</span>] = {<span class="c-num">0</span>};
+
+    <span class="c-fn">create_game</span>(deckHead, cols); <span class="c-cmt">// model.c</span>
+
+    <span class="c-kw">while</span> (<span class="c-num">1</span>) {
+        <span class="c-kw">char</span> input[<span class="c-num">100</span>] = <span class="c-str">&quot;&quot;</span>;
+
+        <span class="c-fn">showGame</span>(cols, foundations);
+
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;\nINPUT: &quot;</span>);
+        <span class="c-fn">gets</span>(input);
+
+        <span class="c-cmt">// Remove newline from fgets</span>
+        input[<span class="c-fn">strcspn</span>(input, <span class="c-str">&quot;\n&quot;</span>)] = <span class="c-num">0</span>;
+        <span class="c-kw">if</span> (<span class="c-fn">strcmp</span>(input, <span class="c-str">&quot;Q&quot;</span>) == <span class="c-num">0</span>) {
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;Quitting game. Returning to startup phase\n&quot;</span>);
+            <span class="c-kw">return</span>;
+        }
+
+        <span class="c-fn">processMove</span>(input, cols, foundations);
+
+        <span class="c-cmt">// Bruteforce visibility - may be deleted later</span>
+        <span class="c-fn">showAllLastCards</span>(cols);
+
+        <span class="c-cmt">// Game winning condition</span>
+        <span class="c-kw">if</span> (<span class="c-fn">gameWon</span>(foundations)) {
+            <span class="c-fn">showGame</span>(cols, foundations);
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;\nYou have won!\n&quot;</span>);
+            <span class="c-kw">break</span>;
+        }
+    }
+}
+
+<span class="c-kw">void</span> <span class="c-fn">game_startup</span>()
+{
+    Card deck[<span class="c-num">52</span>] = {<span class="c-num">0</span>};
+    Card *deckHead = <span class="c-kw">NULL</span>;
+    <span class="c-fn">showDeck</span>(deckHead);
+
+
+    <span class="c-cmt">// Startup loop</span>
+    <span class="c-kw">while</span> (<span class="c-num">1</span>) {
+
+        <span class="c-kw">char</span> input[<span class="c-num">100</span>] = <span class="c-str">&quot;&quot;</span>;
+        <span class="c-kw">char</span> cmd[<span class="c-num">10</span>] = <span class="c-str">&quot;&quot;</span>;
+        <span class="c-kw">char</span> param[<span class="c-num">20</span>] = <span class="c-str">&quot;&quot;</span>;
+
+        <span class="c-cmt">// scan for input</span>
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;\nPlease enter your command: &quot;</span>);
+
+        <span class="c-fn">gets</span>(input);
+
+        <span class="c-cmt">// Split input into command and parameter</span>
+        <span class="c-fn">sscanf</span>(input, <span class="c-str">&quot;%s %s &quot;</span>, cmd, param);
+
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;Command: %s\n, Param: %s\n&quot;</span>, cmd, param);
+
+        <span class="c-kw">if</span> (<span class="c-fn">strcmp</span>(cmd, <span class="c-str">&quot;LD&quot;</span>) == <span class="c-num">0</span>) {
+            <span class="c-cmt">// Load the file using param</span>
+
+            <span class="c-cmt">// Format the parameter into ../param.txt</span>
+            <span class="c-kw">char</span> filename[<span class="c-num">100</span>];
+            <span class="c-kw">if</span> (param == <span class="c-kw">NULL</span> || <span class="c-fn">strcmp</span>(param, <span class="c-str">&quot;&quot;</span>) == <span class="c-num">0</span>) {
+                filename[<span class="c-num">0</span>] = <span class="c-chr">&#x27;\0&#x27;</span>;
+            } <span class="c-kw">else</span> {
+                <span class="c-fn">snprintf</span>(filename, <span class="c-kw">sizeof</span>(filename), <span class="c-str">&quot;../%s.txt&quot;</span>, param);
+            }
+
+            deckHead = <span class="c-fn">readDeck</span>(filename, deck);
+
+            <span class="c-kw">if</span> (deckHead != <span class="c-kw">NULL</span>) {
+                <span class="c-fn">showDeckWithVisibility</span>(deckHead);
+                <span class="c-fn">printf</span>(<span class="c-str">&quot;\nLast command: %s\n&quot;</span>, cmd);
+                <span class="c-fn">printf</span>(<span class="c-str">&quot;Message: OK\n&quot;</span>);
+            } <span class="c-kw">else</span> {
+                <span class="c-fn">printf</span>(<span class="c-str">&quot;\nLast command: %s\n&quot;</span>, cmd);
+                <span class="c-fn">printf</span>(<span class="c-str">&quot;Message: Error loading deck\n&quot;</span>);
+            }
+
+            <span class="c-kw">continue</span>;
+        }
+
+        <span class="c-kw">if</span> (<span class="c-fn">strcmp</span>(cmd, <span class="c-str">&quot;SW&quot;</span>) == <span class="c-num">0</span>) {
+            <span class="c-fn">showDeck</span>(deckHead);
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;\nLast command: %s\n&quot;</span>, cmd);
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;Message: OK\n&quot;</span>);
+            <span class="c-kw">continue</span>;
+        }
+
+        <span class="c-kw">if</span> (<span class="c-fn">strcmp</span>(cmd, <span class="c-str">&quot;SI&quot;</span>) == <span class="c-num">0</span>) {
+            <span class="c-cmt">// Validate that param contains only digits</span>
+            <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">0</span>; param[i] != <span class="c-chr">&#x27;\0&#x27;</span>; i++) {
+                <span class="c-kw">if</span> (!<span class="c-fn">isdigit</span>((<span class="c-kw">unsigned</span> <span class="c-kw">char</span>)param[i])) {
+                    <span class="c-fn">printf</span>(<span class="c-str">&quot;Error: split parameter must be a valid integer.\n&quot;</span>);
+                    <span class="c-kw">break</span>;
+                }
+            }
+            <span class="c-kw">const</span> <span class="c-kw">int</span> param_int = <span class="c-fn">atoi</span>(param);  <span class="c-cmt">// Convert to int</span>
+
+            <span class="c-fn">splitDeck</span>(deckHead, param_int);
+            <span class="c-fn">showDeckWithVisibility</span>(deckHead);
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;\nLast command: %s\n&quot;</span>, cmd);
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;Message: OK\n&quot;</span>);
+            <span class="c-kw">continue</span>;
+        }
+
+        <span class="c-kw">if</span> (<span class="c-fn">strcmp</span>(cmd, <span class="c-str">&quot;SR&quot;</span>) == <span class="c-num">0</span>) {
+            <span class="c-cmt">// Random shuffle</span>
+            deckHead = <span class="c-fn">randomShuffle</span>(deckHead);
+            <span class="c-fn">showDeckWithVisibility</span>(deckHead);
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;\nLast command: %s\n&quot;</span>, cmd);
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;Message: OK\n&quot;</span>);
+            <span class="c-kw">continue</span>;
+        }
+
+        <span class="c-kw">if</span> (<span class="c-fn">strcmp</span>(cmd, <span class="c-str">&quot;SD&quot;</span>) == <span class="c-num">0</span>) {
+            <span class="c-cmt">// Save current deck to file. Filename is param</span>
+            <span class="c-kw">char</span> filename[<span class="c-num">100</span>];
+
+            <span class="c-kw">if</span> (<span class="c-fn">strlen</span>(param) == <span class="c-num">0</span>) {
+                <span class="c-fn">strcpy</span>(filename, <span class="c-str">&quot;../cards.txt&quot;</span>);
+            } <span class="c-kw">else</span> {
+                <span class="c-fn">snprintf</span>(filename, <span class="c-kw">sizeof</span>(filename), <span class="c-str">&quot;../%s.txt&quot;</span>, param);
+            }
+            <span class="c-fn">saveDeck</span>(filename, deckHead);
+
+
+            <span class="c-kw">continue</span>;
+        }
+
+        <span class="c-kw">if</span> (<span class="c-fn">strcmp</span>(cmd, <span class="c-str">&quot;P&quot;</span>) == <span class="c-num">0</span>) {
+            <span class="c-kw">if</span> (deckHead == <span class="c-kw">NULL</span>) {
+                <span class="c-fn">printf</span>(<span class="c-str">&quot;\nNo deck loaded, please use LD &lt;deck name&gt; before initiating game\n&quot;</span>);
+                <span class="c-kw">continue</span>;
+            }
+            <span class="c-cmt">// Enter play phase outside while loop</span>
+            <span class="c-kw">break</span>;
+        }
+
+        <span class="c-cmt">// This needs to be the last command</span>
+        <span class="c-kw">if</span> (<span class="c-fn">strcmp</span>(cmd, <span class="c-str">&quot;QQ&quot;</span>) == <span class="c-num">0</span>) {
+            <span class="c-fn">exit</span>(<span class="c-num">0</span>);
+        } <span class="c-kw">else</span> {
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;No such command exists!\n&quot;</span>);
+        }
+
+    }
+
+    <span class="c-fn">run_game</span>(deckHead);
+    <span class="c-fn">game_startup</span>();
+
+}</pre></td>
+  </tr></table>
+</section>
+<div class="layer-head" id="layer-Network"><span class="lk">Network</span>TCP/IP socket server bridging the C engine and the GUI.</div>
+<section class="file" id="f-server-c">
+  <div class="file-head">
+    <span class="name">server.c</span>
+    <span class="tag src">Source</span>
+    <span class="loc">618 lines<a class="top" href="#top">↑ top</a></span>
+  </div>
+  <table class="code"><tr>
+    <td class="ln"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618</pre></td>
+    <td class="src"><pre><span class="c-cmt">//</span>
+<span class="c-cmt">// Created by ttorr on 04-05-2026.</span>
+<span class="c-cmt">//</span>
+<span class="c-cmt">// TCP/IP Socket Server for Yukon Solitaire</span>
+<span class="c-cmt">// Listens on localhost:5000 and communicates with Python GUI</span>
+
+<span class="c-pre">#include &lt;stdio.h&gt;</span>
+<span class="c-pre">#include &lt;stdlib.h&gt;</span>
+<span class="c-pre">#include &lt;string.h&gt;</span>
+<span class="c-pre">#include &lt;errno.h&gt;</span>
+<span class="c-pre">#include &quot;../Model/model.h&quot;</span>
+<span class="c-pre">#include &quot;../Model/deck.h&quot;</span>
+<span class="c-pre">#include &quot;../Model/Types.h&quot;</span>
+<span class="c-pre">#include &quot;../Controller/controller.h&quot;</span>
+<span class="c-pre">#include &quot;../View/view.h&quot;</span>
+
+<span class="c-cmt">// Platform-specific socket headers</span>
+<span class="c-pre">#ifdef _WIN32</span>
+    <span class="c-pre">#include &lt;winsock2.h&gt;</span>
+    <span class="c-pre">#include &lt;ws2tcpip.h&gt;</span>
+    <span class="c-pre">#pragma comment(lib, &quot;ws2_32.lib&quot;)</span>
+    <span class="c-pre">#define CLOSE_SOCKET(s) closesocket(s)</span>
+    <span class="c-pre">#define GET_SOCKET_ERROR() WSAGetLastError()</span>
+    <span class="c-pre">#define SOCKET_INIT_ERROR -1</span>
+<span class="c-pre">#else</span>
+    <span class="c-pre">#include &lt;sys/socket.h&gt;</span>
+    <span class="c-pre">#include &lt;netinet/in.h&gt;</span>
+    <span class="c-pre">#include &lt;arpa/inet.h&gt;</span>
+    <span class="c-pre">#include &lt;unistd.h&gt;</span>
+    <span class="c-kw">typedef</span> <span class="c-kw">int</span> SOCKET;
+    <span class="c-pre">#define INVALID_SOCKET (-1)</span>
+    <span class="c-pre">#define SOCKET_ERROR (-1)</span>
+    <span class="c-pre">#define CLOSE_SOCKET(s) close(s)</span>
+    <span class="c-pre">#define GET_SOCKET_ERROR() errno</span>
+    <span class="c-pre">#define SOCKET_INIT_ERROR 0</span>
+<span class="c-pre">#endif</span>
+
+<span class="c-pre">#define PORT 5000</span>
+<span class="c-pre">#define BUFFER_SIZE 4096</span>
+
+<span class="c-cmt">// Global game state</span>
+Column cols[<span class="c-num">7</span>] = {<span class="c-num">0</span>};
+Foundation foundations[<span class="c-num">4</span>] = {<span class="c-num">0</span>};
+Card *deckHead = <span class="c-kw">NULL</span>;
+Card deck_array[<span class="c-num">52</span>] = {<span class="c-num">0</span>};
+<span class="c-kw">int</span> gameStarted = <span class="c-num">0</span>;
+
+<span class="c-cmt">// Helper: check if move was successful and build response</span>
+<span class="c-kw">void</span> <span class="c-fn">handle_move_response</span>(<span class="c-kw">int</span> moveResult, Foundation foundations[], <span class="c-kw">char</span> *response, <span class="c-kw">size_t</span> maxLen, <span class="c-kw">const</span> <span class="c-kw">char</span> *successMsg) {
+    <span class="c-kw">if</span> (moveResult) {
+        <span class="c-kw">if</span> (<span class="c-fn">gameWon</span>(foundations)) {
+            <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;OK|GAME_WON&quot;</span>);
+        } <span class="c-kw">else</span> {
+            <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;OK|%s&quot;</span>, successMsg);
+        }
+    } <span class="c-kw">else</span> {
+        <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Illegal move&quot;</span>);
+    }
+}
+
+<span class="c-cmt">// render board state as string</span>
+<span class="c-kw">void</span> <span class="c-fn">render_board</span>(<span class="c-kw">char</span> *output, <span class="c-kw">size_t</span> maxLen) {
+    <span class="c-kw">if</span> (!gameStarted) {
+        <span class="c-fn">snprintf</span>(output, maxLen, <span class="c-str">&quot;Game not started&quot;</span>);
+        <span class="c-kw">return</span>;
+    }
+
+    <span class="c-kw">char</span> *pos = output;
+    <span class="c-kw">size_t</span> remaining = maxLen;
+
+    <span class="c-cmt">// Column headers</span>
+    <span class="c-kw">int</span> len = <span class="c-fn">snprintf</span>(pos, remaining, <span class="c-str">&quot;C1    C2    C3    C4    C5    C6    C7     FOUNDATIONS\n&quot;</span>);
+    pos += len;
+    remaining -= len;
+
+    <span class="c-cmt">// Find max height</span>
+    <span class="c-kw">int</span> maxHeight = <span class="c-num">0</span>;
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">0</span>; i &lt; <span class="c-num">7</span>; i++) {
+        <span class="c-kw">int</span> h = <span class="c-num">0</span>;
+        Card *c = cols[i].ref;
+        <span class="c-kw">while</span> (c != <span class="c-kw">NULL</span>) {
+            h++;
+            c = c-&gt;next;
+        }
+        <span class="c-kw">if</span> (h &gt; maxHeight) maxHeight = h;
+    }
+
+    <span class="c-kw">int</span> f = <span class="c-num">0</span>;
+
+    <span class="c-cmt">// Print each row (columns on left, foundations on right)</span>
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> row = <span class="c-num">0</span>; row &lt; maxHeight &amp;&amp; remaining &gt; <span class="c-num">0</span>; row++) {
+        Card *current[<span class="c-num">7</span>];
+        <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">0</span>; i &lt; <span class="c-num">7</span>; i++) {
+            current[i] = cols[i].ref;
+            <span class="c-cmt">// Skip to the row we want</span>
+            <span class="c-kw">for</span> (<span class="c-kw">int</span> r = <span class="c-num">0</span>; r &lt; row &amp;&amp; current[i] != <span class="c-kw">NULL</span>; r++) {
+                current[i] = current[i]-&gt;next;
+            }
+        }
+
+        <span class="c-cmt">// Print columns</span>
+        <span class="c-kw">for</span> (<span class="c-kw">int</span> col = <span class="c-num">0</span>; col &lt; <span class="c-num">7</span> &amp;&amp; remaining &gt; <span class="c-num">0</span>; col++) {
+            <span class="c-kw">if</span> (current[col] != <span class="c-kw">NULL</span>) {
+                <span class="c-cmt">// Use * for hidden cards, space for visible</span>
+                <span class="c-kw">char</span> vis = current[col]-&gt;visible ? <span class="c-chr">&#x27; &#x27;</span> : <span class="c-chr">&#x27;*&#x27;</span>;
+                len = <span class="c-fn">snprintf</span>(pos, remaining, <span class="c-str">&quot;%c[%c%c]  &quot;</span>, vis, current[col]-&gt;rank, current[col]-&gt;suit);
+                current[col] = current[col]-&gt;next;
+            } <span class="c-kw">else</span> {
+                len = <span class="c-fn">snprintf</span>(pos, remaining, <span class="c-str">&quot; [  ]  &quot;</span>);
+            }
+            pos += len;
+            remaining -= len;
+        }
+
+        <span class="c-cmt">// Add foundation info on right side (one per row)</span>
+        <span class="c-kw">if</span> (f &lt; <span class="c-num">4</span> &amp;&amp; remaining &gt; <span class="c-num">0</span>) {
+            len = <span class="c-fn">snprintf</span>(pos, remaining, <span class="c-str">&quot;  F%d: &quot;</span>, f + <span class="c-num">1</span>);
+            pos += len;
+            remaining -= len;
+
+            <span class="c-kw">if</span> (foundations[f].ref != <span class="c-kw">NULL</span>) {
+                Card *last = foundations[f].ref;
+                <span class="c-kw">while</span> (last-&gt;next != <span class="c-kw">NULL</span>) last = last-&gt;next;
+                len = <span class="c-fn">snprintf</span>(pos, remaining, <span class="c-str">&quot;[%c%c]&quot;</span>, last-&gt;rank, last-&gt;suit);
+            } <span class="c-kw">else</span> {
+                len = <span class="c-fn">snprintf</span>(pos, remaining, <span class="c-str">&quot;[  ]&quot;</span>);
+            }
+            pos += len;
+            remaining -= len;
+            f++;
+        }
+
+        len = <span class="c-fn">snprintf</span>(pos, remaining, <span class="c-str">&quot;\n&quot;</span>);
+        pos += len;
+        remaining -= len;
+    }
+
+    <span class="c-cmt">// Print any foundations not covered by the main loop (when maxHeight &lt; 4)</span>
+    <span class="c-kw">while</span> (f &lt; <span class="c-num">4</span> &amp;&amp; remaining &gt; <span class="c-num">0</span>) {
+        <span class="c-kw">for</span> (<span class="c-kw">int</span> col = <span class="c-num">0</span>; col &lt; <span class="c-num">7</span> &amp;&amp; remaining &gt; <span class="c-num">0</span>; col++) {
+            len = <span class="c-fn">snprintf</span>(pos, remaining, <span class="c-str">&quot; [  ]  &quot;</span>);
+            pos += len;
+            remaining -= len;
+        }
+
+        len = <span class="c-fn">snprintf</span>(pos, remaining, <span class="c-str">&quot;  F%d: &quot;</span>, f + <span class="c-num">1</span>);
+        pos += len;
+        remaining -= len;
+
+        <span class="c-kw">if</span> (foundations[f].ref != <span class="c-kw">NULL</span>) {
+            Card *last = foundations[f].ref;
+            <span class="c-kw">while</span> (last-&gt;next != <span class="c-kw">NULL</span>) last = last-&gt;next;
+            len = <span class="c-fn">snprintf</span>(pos, remaining, <span class="c-str">&quot;[%c%c]&quot;</span>, last-&gt;rank, last-&gt;suit);
+        } <span class="c-kw">else</span> {
+            len = <span class="c-fn">snprintf</span>(pos, remaining, <span class="c-str">&quot;[  ]&quot;</span>);
+        }
+        pos += len;
+        remaining -= len;
+        f++;
+
+        len = <span class="c-fn">snprintf</span>(pos, remaining, <span class="c-str">&quot;\n&quot;</span>);
+        pos += len;
+        remaining -= len;
+    }
+}
+
+<span class="c-cmt">// Process commands from the client</span>
+<span class="c-kw">void</span> <span class="c-fn">process_command</span>(<span class="c-kw">const</span> <span class="c-kw">char</span> *cmd, <span class="c-kw">char</span> *response, <span class="c-kw">size_t</span> maxLen) {
+    <span class="c-cmt">// LD {filename} - Load Deck</span>
+    <span class="c-kw">if</span> (<span class="c-fn">strncmp</span>(cmd, <span class="c-str">&quot;LD&quot;</span>, <span class="c-num">2</span>) == <span class="c-num">0</span>) {
+        <span class="c-kw">char</span> filename[<span class="c-num">256</span>];
+        <span class="c-fn">memset</span>(filename, <span class="c-num">0</span>, <span class="c-kw">sizeof</span>(filename));
+        <span class="c-fn">sscanf</span>(cmd, <span class="c-str">&quot;LD %255s&quot;</span>, filename);
+
+        <span class="c-kw">if</span> (<span class="c-fn">strlen</span>(filename) == <span class="c-num">0</span>) {
+            <span class="c-fn">strcpy</span>(filename, <span class="c-str">&quot;deckOne.txt&quot;</span>);
+        } <span class="c-kw">else</span> <span class="c-kw">if</span> (<span class="c-fn">strstr</span>(filename, <span class="c-str">&quot;.txt&quot;</span>) == <span class="c-kw">NULL</span>) {
+            <span class="c-fn">strcat</span>(filename, <span class="c-str">&quot;.txt&quot;</span>);
+        }
+
+        gameStarted = <span class="c-num">0</span>;
+        <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">0</span>; i &lt; <span class="c-num">7</span>; i++) cols[i].ref = <span class="c-kw">NULL</span>;
+        <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">0</span>; i &lt; <span class="c-num">4</span>; i++) foundations[i].ref = <span class="c-kw">NULL</span>;
+
+        <span class="c-fn">memset</span>(deck_array, <span class="c-num">0</span>, <span class="c-kw">sizeof</span>(deck_array));
+        deckHead = <span class="c-fn">readDeck</span>(filename, deck_array);
+
+        <span class="c-kw">if</span> (deckHead == <span class="c-kw">NULL</span>) {
+            <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Failed to load deck: %s&quot;</span>, filename);
+        } <span class="c-kw">else</span> {
+            <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;OK|Deck loaded: %s&quot;</span>, filename);
+        }
+        <span class="c-kw">return</span>;
+    }
+
+    <span class="c-cmt">// SW - Show deck (display current deck state)</span>
+    <span class="c-kw">if</span> (<span class="c-fn">strncmp</span>(cmd, <span class="c-str">&quot;SW&quot;</span>, <span class="c-num">2</span>) == <span class="c-num">0</span>) {
+        <span class="c-kw">if</span> (deckHead == <span class="c-kw">NULL</span>) {
+            <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|No deck loaded&quot;</span>);
+            <span class="c-kw">return</span>;
+        }
+
+        <span class="c-kw">char</span> *pos = response;
+        <span class="c-kw">size_t</span> remaining = maxLen;
+        <span class="c-kw">int</span> cardCount = <span class="c-num">0</span>;
+
+        Card *current = deckHead;
+        <span class="c-kw">while</span> (current != <span class="c-kw">NULL</span> &amp;&amp; cardCount &lt; <span class="c-num">52</span> &amp;&amp; remaining &gt; <span class="c-num">10</span>) {
+            <span class="c-kw">int</span> len = <span class="c-fn">snprintf</span>(pos, remaining, <span class="c-str">&quot;[%c%c] &quot;</span>, current-&gt;rank, current-&gt;suit);
+            <span class="c-kw">if</span> (len &gt; <span class="c-num">0</span>) {
+                pos += len;
+                remaining -= len;
+            }
+            current = current-&gt;next;
+            cardCount++;
+
+            <span class="c-kw">if</span> (cardCount % <span class="c-num">13</span> == <span class="c-num">0</span> &amp;&amp; remaining &gt; <span class="c-num">2</span>) {
+                *pos = <span class="c-chr">&#x27;\n&#x27;</span>;
+                pos++;
+                remaining--;
+            }
+        }
+
+        <span class="c-kw">if</span> (remaining &gt; <span class="c-num">20</span>) {
+            <span class="c-fn">snprintf</span>(pos, remaining, <span class="c-str">&quot;\nTotal: %d cards&quot;</span>, cardCount);
+        }
+        <span class="c-kw">return</span>;
+    }
+
+    <span class="c-cmt">// SR - Random Shuffle</span>
+    <span class="c-kw">if</span> (<span class="c-fn">strncmp</span>(cmd, <span class="c-str">&quot;SR&quot;</span>, <span class="c-num">2</span>) == <span class="c-num">0</span>) {
+        <span class="c-kw">if</span> (deckHead == <span class="c-kw">NULL</span>) {
+            <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|No deck loaded&quot;</span>);
+            <span class="c-kw">return</span>;
+        }
+
+        deckHead = <span class="c-fn">randomShuffle</span>(deckHead);
+        <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;OK|Deck shuffled randomly&quot;</span>);
+        <span class="c-kw">return</span>;
+    }
+
+    <span class="c-cmt">// SI {split} - Split deck</span>
+    <span class="c-kw">if</span> (<span class="c-fn">strncmp</span>(cmd, <span class="c-str">&quot;SI&quot;</span>, <span class="c-num">2</span>) == <span class="c-num">0</span>) {
+        <span class="c-kw">if</span> (deckHead == <span class="c-kw">NULL</span>) {
+            <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|No deck loaded&quot;</span>);
+            <span class="c-kw">return</span>;
+        }
+
+        <span class="c-kw">int</span> splitPos = <span class="c-num">0</span>;
+        <span class="c-fn">sscanf</span>(cmd, <span class="c-str">&quot;SI %d&quot;</span>, &amp;splitPos);
+
+        deckHead = <span class="c-fn">splitDeck</span>(deckHead, splitPos);
+        <span class="c-kw">if</span> (deckHead != <span class="c-kw">NULL</span>) {
+            <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;OK|Deck split at position %d&quot;</span>, splitPos);
+        } <span class="c-kw">else</span> {
+            <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Failed to split deck&quot;</span>);
+        }
+        <span class="c-kw">return</span>;
+    }
+
+    <span class="c-cmt">// SD {filename} - Save deck to file</span>
+    <span class="c-kw">if</span> (<span class="c-fn">strncmp</span>(cmd, <span class="c-str">&quot;SD&quot;</span>, <span class="c-num">2</span>) == <span class="c-num">0</span>) {
+        <span class="c-kw">if</span> (deckHead == <span class="c-kw">NULL</span>) {
+            <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|No deck loaded&quot;</span>);
+            <span class="c-kw">return</span>;
+        }
+
+        <span class="c-kw">char</span> filename[<span class="c-num">256</span>];
+        <span class="c-kw">char</span> param[<span class="c-num">256</span>] = {<span class="c-num">0</span>};
+        <span class="c-fn">sscanf</span>(cmd, <span class="c-str">&quot;SD %255s&quot;</span>, param);
+
+        <span class="c-kw">if</span> (<span class="c-fn">strlen</span>(param) == <span class="c-num">0</span>) {
+            <span class="c-fn">snprintf</span>(filename, <span class="c-kw">sizeof</span>(filename), <span class="c-str">&quot;../cards.txt&quot;</span>);
+        } <span class="c-kw">else</span> {
+            <span class="c-fn">snprintf</span>(filename, <span class="c-kw">sizeof</span>(filename), <span class="c-str">&quot;../%s.txt&quot;</span>, param);
+        }
+
+        <span class="c-kw">if</span> (<span class="c-fn">saveDeck</span>(filename, deckHead)) {
+            <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;OK|Deck saved to %s&quot;</span>, filename);
+        } <span class="c-kw">else</span> {
+            <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Failed to save deck to %s&quot;</span>, filename);
+        }
+        <span class="c-kw">return</span>;
+    }
+
+    <span class="c-cmt">// P - Play (start game from loaded/shuffled deck)</span>
+    <span class="c-kw">if</span> (<span class="c-fn">strncmp</span>(cmd, <span class="c-str">&quot;P&quot;</span>, <span class="c-num">1</span>) == <span class="c-num">0</span>) {
+        <span class="c-kw">if</span> (deckHead == <span class="c-kw">NULL</span>) {
+            <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|No deck loaded&quot;</span>);
+            <span class="c-kw">return</span>;
+        }
+
+        gameStarted = <span class="c-num">0</span>;
+
+        <span class="c-cmt">// Reset columns and foundations</span>
+        <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">0</span>; i &lt; <span class="c-num">7</span>; i++) {
+            cols[i].ref = <span class="c-kw">NULL</span>;
+        }
+        <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">0</span>; i &lt; <span class="c-num">4</span>; i++) {
+            foundations[i].ref = <span class="c-kw">NULL</span>;
+        }
+
+        <span class="c-cmt">// Create game from current deck</span>
+        <span class="c-fn">create_game</span>(deckHead, cols);
+        gameStarted = <span class="c-num">1</span>;
+        <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;OK|Game started&quot;</span>);
+        <span class="c-kw">return</span>;
+    }
+
+    <span class="c-kw">if</span> (<span class="c-fn">strncmp</span>(cmd, <span class="c-str">&quot;STATE&quot;</span>, <span class="c-num">5</span>) == <span class="c-num">0</span>) {
+        <span class="c-kw">if</span> (!gameStarted) {
+            <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;STATE|Game not started&quot;</span>);
+            <span class="c-kw">return</span>;
+        }
+        <span class="c-kw">char</span> board[<span class="c-num">2048</span>] = {<span class="c-num">0</span>};
+        <span class="c-fn">render_board</span>(board, <span class="c-kw">sizeof</span>(board));
+        <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;STATE|%s&quot;</span>, board);
+        <span class="c-kw">return</span>;
+    }
+
+    <span class="c-kw">if</span> (<span class="c-fn">strncmp</span>(cmd, <span class="c-str">&quot;MOVE&quot;</span>, <span class="c-num">4</span>) == <span class="c-num">0</span>) {
+        <span class="c-kw">if</span> (!gameStarted) {
+            <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Game not started&quot;</span>);
+            <span class="c-kw">return</span>;
+        }
+        <span class="c-cmt">// Parse move string: &quot;MOVE C1-&gt;C4&quot; or &quot;MOVE C3:7H-&gt;F1&quot;</span>
+        <span class="c-kw">const</span> <span class="c-kw">char</span> *moveStr = cmd + <span class="c-num">5</span>;
+        <span class="c-kw">char</span> from[<span class="c-num">32</span>], to[<span class="c-num">32</span>];
+        <span class="c-fn">sscanf</span>(moveStr, <span class="c-str">&quot;%[^-]-&gt;%s&quot;</span>, from, to);
+
+        <span class="c-kw">if</span> (to[<span class="c-num">0</span>] == <span class="c-chr">&#x27;C&#x27;</span>) {
+            <span class="c-cmt">// Destination is column - can come from column or foundation</span>
+            <span class="c-kw">int</span> toCol = to[<span class="c-num">1</span>] - <span class="c-chr">&#x27;0&#x27;</span> - <span class="c-num">1</span>;
+
+            <span class="c-kw">if</span> (toCol &lt; <span class="c-num">0</span> || toCol &gt; <span class="c-num">6</span>) {
+                <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Invalid column&quot;</span>);
+                <span class="c-kw">return</span>;
+            }
+
+            <span class="c-cmt">// Check if source is column or foundation</span>
+            <span class="c-kw">if</span> (from[<span class="c-num">0</span>] == <span class="c-chr">&#x27;C&#x27;</span>) {
+                <span class="c-cmt">// Column to column</span>
+                <span class="c-kw">int</span> fromCol = from[<span class="c-num">1</span>] - <span class="c-chr">&#x27;0&#x27;</span> - <span class="c-num">1</span>;
+
+                <span class="c-kw">if</span> (fromCol &lt; <span class="c-num">0</span> || fromCol &gt; <span class="c-num">6</span>) {
+                    <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Invalid column&quot;</span>);
+                    <span class="c-kw">return</span>;
+                }
+
+                <span class="c-cmt">// Check if specific card is requested (e.g., &quot;col:card&quot;)</span>
+                Card *cardToMove = <span class="c-kw">NULL</span>;
+                <span class="c-kw">if</span> (<span class="c-fn">strchr</span>(from, <span class="c-chr">&#x27;:&#x27;</span>) != <span class="c-kw">NULL</span>) {
+                    <span class="c-cmt">// Specific card format: &quot;col:card&quot;</span>
+                    <span class="c-kw">char</span> cardStr[<span class="c-num">3</span>];
+                    <span class="c-fn">sscanf</span>(from, <span class="c-str">&quot;%*[^:]:%2s&quot;</span>, cardStr);
+                    cardToMove = cols[fromCol].ref;
+
+                    <span class="c-cmt">// Search for card in the specified column</span>
+                    <span class="c-kw">while</span> (cardToMove != <span class="c-kw">NULL</span> &amp;&amp; (cardToMove-&gt;rank != cardStr[<span class="c-num">0</span>] || cardToMove-&gt;suit != cardStr[<span class="c-num">1</span>])) {
+                        cardToMove = cardToMove-&gt;next;
+                    }
+
+                    <span class="c-cmt">// Validate: card must be found AND must be visible</span>
+                    <span class="c-kw">if</span> (cardToMove == <span class="c-kw">NULL</span>) {
+                        <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Card not found in source column&quot;</span>);
+                        <span class="c-kw">return</span>;
+                    }
+                    <span class="c-kw">if</span> (!cardToMove-&gt;visible) {
+                        <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Cannot move a hidden card&quot;</span>);
+                        <span class="c-kw">return</span>;
+                    }
+                } <span class="c-kw">else</span> {
+                    <span class="c-cmt">// Default to bottom card</span>
+                    cardToMove = <span class="c-fn">getLastCard</span>(cols[fromCol]);
+                }
+
+                <span class="c-kw">if</span> (cardToMove != <span class="c-kw">NULL</span>) {
+                    <span class="c-kw">int</span> moveResult = <span class="c-fn">moveCard</span>(cardToMove, &amp;cols[fromCol], &amp;cols[toCol]);
+                    <span class="c-fn">handle_move_response</span>(moveResult, foundations, response, maxLen, <span class="c-str">&quot;Move successful&quot;</span>);
+                } <span class="c-kw">else</span> {
+                    <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Source card not found&quot;</span>);
+                }
+            } <span class="c-kw">else</span> <span class="c-kw">if</span> (from[<span class="c-num">0</span>] == <span class="c-chr">&#x27;F&#x27;</span>) {
+                <span class="c-cmt">// Foundation to column</span>
+                <span class="c-kw">int</span> fromFound = from[<span class="c-num">1</span>] - <span class="c-chr">&#x27;0&#x27;</span> - <span class="c-num">1</span>;
+
+                <span class="c-kw">if</span> (fromFound &lt; <span class="c-num">0</span> || fromFound &gt; <span class="c-num">3</span>) {
+                    <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Invalid foundation&quot;</span>);
+                    <span class="c-kw">return</span>;
+                }
+
+                Card *cardToMove = <span class="c-fn">getLastCardFoundation</span>(foundations[fromFound]);
+                <span class="c-kw">if</span> (cardToMove != <span class="c-kw">NULL</span>) {
+                    <span class="c-kw">int</span> moveResult = <span class="c-fn">moveCardFromFoundation</span>(cardToMove, &amp;cols[toCol], &amp;foundations[fromFound]);
+                    <span class="c-fn">handle_move_response</span>(moveResult, foundations, response, maxLen, <span class="c-str">&quot;Move from foundation successful&quot;</span>);
+                } <span class="c-kw">else</span> {
+                    <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Foundation is empty&quot;</span>);
+                }
+            } <span class="c-kw">else</span> {
+                <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Invalid source&quot;</span>);
+                <span class="c-kw">return</span>;
+            }
+        } <span class="c-kw">else</span> <span class="c-kw">if</span> (to[<span class="c-num">0</span>] == <span class="c-chr">&#x27;F&#x27;</span>) {
+            <span class="c-cmt">// Column to foundation</span>
+            <span class="c-kw">int</span> toFound = to[<span class="c-num">1</span>] - <span class="c-chr">&#x27;0&#x27;</span> - <span class="c-num">1</span>;
+
+            <span class="c-kw">if</span> (toFound &lt; <span class="c-num">0</span> || toFound &gt; <span class="c-num">3</span>) {
+                <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Invalid foundation&quot;</span>);
+                <span class="c-kw">return</span>;
+            }
+
+            <span class="c-cmt">// Check if specific card is requested (e.g., &quot;C7:QD&quot;)</span>
+            Card *cardToMove = <span class="c-kw">NULL</span>;
+            <span class="c-kw">if</span> (<span class="c-fn">strchr</span>(from, <span class="c-chr">&#x27;:&#x27;</span>) != <span class="c-kw">NULL</span>) {
+                <span class="c-cmt">// Specific card format: &quot;C7:QD&quot;</span>
+                <span class="c-kw">char</span> colStr[<span class="c-num">3</span>], cardStr[<span class="c-num">3</span>];
+                <span class="c-fn">sscanf</span>(from, <span class="c-str">&quot;%[^:]:%2s&quot;</span>, colStr, cardStr);
+                <span class="c-kw">int</span> fromCol = colStr[<span class="c-num">1</span>] - <span class="c-chr">&#x27;0&#x27;</span> - <span class="c-num">1</span>;
+                <span class="c-kw">if</span> (fromCol &lt; <span class="c-num">0</span> || fromCol &gt; <span class="c-num">6</span>) {
+                    <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Invalid column&quot;</span>);
+                    <span class="c-kw">return</span>;
+                }
+                cardToMove = cols[fromCol].ref;
+
+                <span class="c-cmt">// Search for card in the specified column</span>
+                <span class="c-kw">while</span> (cardToMove != <span class="c-kw">NULL</span> &amp;&amp; (cardToMove-&gt;rank != cardStr[<span class="c-num">0</span>] || cardToMove-&gt;suit != cardStr[<span class="c-num">1</span>])) {
+                    cardToMove = cardToMove-&gt;next;
+                }
+
+                <span class="c-cmt">// Validate: card must be found AND must be visible</span>
+                <span class="c-kw">if</span> (cardToMove == <span class="c-kw">NULL</span>) {
+                    <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Card not found in source column&quot;</span>);
+                    <span class="c-kw">return</span>;
+                }
+                <span class="c-kw">if</span> (!cardToMove-&gt;visible) {
+                    <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Cannot move a hidden card&quot;</span>);
+                    <span class="c-kw">return</span>;
+                }
+
+                <span class="c-kw">int</span> moveResult = <span class="c-fn">moveCardFoundation</span>(cardToMove, &amp;cols[fromCol], &amp;foundations[toFound]);
+                <span class="c-kw">if</span> (moveResult) {
+                    Card *newLast = <span class="c-fn">getLastCard</span>(cols[fromCol]);
+                    <span class="c-kw">if</span> (newLast != <span class="c-kw">NULL</span>) {
+                        newLast-&gt;visible = <span class="c-num">1</span>;
+                    }
+                }
+                <span class="c-fn">handle_move_response</span>(moveResult, foundations, response, maxLen, <span class="c-str">&quot;Move to foundation successful&quot;</span>);
+            } <span class="c-kw">else</span> {
+                <span class="c-cmt">// Default to bottom card</span>
+                <span class="c-kw">int</span> fromCol = from[<span class="c-num">1</span>] - <span class="c-chr">&#x27;0&#x27;</span> - <span class="c-num">1</span>;
+                <span class="c-kw">if</span> (fromCol &lt; <span class="c-num">0</span> || fromCol &gt; <span class="c-num">6</span>) {
+                    <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Invalid column&quot;</span>);
+                    <span class="c-kw">return</span>;
+                }
+                cardToMove = <span class="c-fn">getLastCard</span>(cols[fromCol]);
+                <span class="c-kw">if</span> (cardToMove != <span class="c-kw">NULL</span>) {
+                    <span class="c-kw">int</span> moveResult = <span class="c-fn">moveCardFoundation</span>(cardToMove, &amp;cols[fromCol], &amp;foundations[toFound]);
+                    <span class="c-kw">if</span> (moveResult) {
+                        Card *newLast = <span class="c-fn">getLastCard</span>(cols[fromCol]);
+                        <span class="c-kw">if</span> (newLast != <span class="c-kw">NULL</span>) {
+                            newLast-&gt;visible = <span class="c-num">1</span>;
+                        }
+                    }
+                    <span class="c-fn">handle_move_response</span>(moveResult, foundations, response, maxLen, <span class="c-str">&quot;Move to foundation successful&quot;</span>);
+                } <span class="c-kw">else</span> {
+                    <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Source column empty&quot;</span>);
+                }
+            }
+        } <span class="c-kw">else</span> {
+            <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Invalid destination&quot;</span>);
+        }
+        <span class="c-kw">return</span>;
+    }
+
+    <span class="c-kw">if</span> (<span class="c-fn">strncmp</span>(cmd, <span class="c-str">&quot;QUIT&quot;</span>, <span class="c-num">4</span>) == <span class="c-num">0</span>) {
+        <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;OK|Goodbye&quot;</span>);
+        <span class="c-kw">return</span>;
+    }
+
+    <span class="c-fn">snprintf</span>(response, maxLen, <span class="c-str">&quot;ERROR|Unknown command&quot;</span>);
+}
+
+<span class="c-kw">int</span> <span class="c-fn">main</span>(<span class="c-kw">void</span>) {
+    <span class="c-kw">int</span> iResult;
+<span class="c-pre">#ifdef _WIN32</span>
+    WSADATA wsaData;
+     iResult = <span class="c-fn">WSAStartup</span>(<span class="c-fn">MAKEWORD</span>(<span class="c-num">2</span>, <span class="c-num">2</span>), &amp;wsaData);
+    <span class="c-kw">if</span> (iResult != <span class="c-num">0</span>) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;WSAStartup failed: %d\n&quot;</span>, iResult);
+        <span class="c-kw">return</span> <span class="c-num">1</span>;
+    }
+<span class="c-pre">#endif</span>
+
+    SOCKET listenSocket = INVALID_SOCKET;
+    SOCKET clientSocket = INVALID_SOCKET;
+
+    <span class="c-cmt">// Create listening socket</span>
+    listenSocket = <span class="c-fn">socket</span>(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    <span class="c-kw">if</span> (listenSocket == INVALID_SOCKET) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;socket failed: %d\n&quot;</span>, <span class="c-fn">GET_SOCKET_ERROR</span>());
+<span class="c-pre">#ifdef _WIN32</span>
+        <span class="c-fn">WSACleanup</span>();
+<span class="c-pre">#endif</span>
+        <span class="c-kw">return</span> <span class="c-num">1</span>;
+    }
+
+    <span class="c-cmt">// Allow reusing the address to avoid &quot;Address already in use&quot; error</span>
+    <span class="c-kw">int</span> reuseAddr = <span class="c-num">1</span>;
+    <span class="c-kw">if</span> (<span class="c-fn">setsockopt</span>(listenSocket, SOL_SOCKET, SO_REUSEADDR, (<span class="c-kw">const</span> <span class="c-kw">char</span> *)&amp;reuseAddr, <span class="c-kw">sizeof</span>(reuseAddr)) &lt; <span class="c-num">0</span>) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;setsockopt failed: %d\n&quot;</span>, <span class="c-fn">GET_SOCKET_ERROR</span>());
+        <span class="c-fn">CLOSE_SOCKET</span>(listenSocket);
+<span class="c-pre">#ifdef _WIN32</span>
+        <span class="c-fn">WSACleanup</span>();
+<span class="c-pre">#endif</span>
+        <span class="c-kw">return</span> <span class="c-num">1</span>;
+    }
+
+    <span class="c-cmt">// Bind to port</span>
+    <span class="c-kw">struct</span> sockaddr_in serverAddr;
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_addr.s_addr = <span class="c-fn">inet_addr</span>(<span class="c-str">&quot;127.0.0.1&quot;</span>);
+    serverAddr.sin_port = <span class="c-fn">htons</span>(PORT);
+
+    iResult = <span class="c-fn">bind</span>(listenSocket, (<span class="c-kw">struct</span> sockaddr *)&amp;serverAddr, <span class="c-kw">sizeof</span>(serverAddr));
+    <span class="c-kw">if</span> (iResult == SOCKET_ERROR) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;bind failed: %d\n&quot;</span>, <span class="c-fn">GET_SOCKET_ERROR</span>());
+        <span class="c-fn">CLOSE_SOCKET</span>(listenSocket);
+<span class="c-pre">#ifdef _WIN32</span>
+        <span class="c-fn">WSACleanup</span>();
+<span class="c-pre">#endif</span>
+        <span class="c-kw">return</span> <span class="c-num">1</span>;
+    }
+
+    <span class="c-cmt">// Start listening</span>
+    iResult = <span class="c-fn">listen</span>(listenSocket, <span class="c-num">1</span>);
+    <span class="c-kw">if</span> (iResult == SOCKET_ERROR) {
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;listen failed: %d\n&quot;</span>, <span class="c-fn">GET_SOCKET_ERROR</span>());
+        <span class="c-fn">CLOSE_SOCKET</span>(listenSocket);
+<span class="c-pre">#ifdef _WIN32</span>
+        <span class="c-fn">WSACleanup</span>();
+<span class="c-pre">#endif</span>
+        <span class="c-kw">return</span> <span class="c-num">1</span>;
+    }
+
+    <span class="c-fn">printf</span>(<span class="c-str">&quot;Server listening on localhost:%d\n&quot;</span>, PORT);
+
+    <span class="c-cmt">// Accept and handle connections</span>
+    <span class="c-kw">while</span> (<span class="c-num">1</span>) {
+        <span class="c-kw">struct</span> sockaddr_in clientAddr;
+<span class="c-pre">#ifdef _WIN32</span>
+        <span class="c-kw">int</span> clientAddrLen = <span class="c-kw">sizeof</span>(clientAddr);
+<span class="c-pre">#else</span>
+        <span class="c-kw">socklen_t</span> clientAddrLen = <span class="c-kw">sizeof</span>(clientAddr);
+<span class="c-pre">#endif</span>
+
+        clientSocket = <span class="c-fn">accept</span>(listenSocket, (<span class="c-kw">struct</span> sockaddr *)&amp;clientAddr, &amp;clientAddrLen);
+        <span class="c-kw">if</span> (clientSocket == INVALID_SOCKET) {
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;accept failed: %d\n&quot;</span>, <span class="c-fn">GET_SOCKET_ERROR</span>());
+            <span class="c-kw">continue</span>;
+        }
+
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;Client connected\n&quot;</span>);
+
+        <span class="c-cmt">// Handle client commands</span>
+        <span class="c-kw">char</span> recvBuf[BUFFER_SIZE];
+        <span class="c-kw">char</span> sendBuf[BUFFER_SIZE];
+
+        <span class="c-kw">while</span> (<span class="c-num">1</span>) {
+            <span class="c-fn">memset</span>(recvBuf, <span class="c-num">0</span>, BUFFER_SIZE);
+            <span class="c-fn">memset</span>(sendBuf, <span class="c-num">0</span>, BUFFER_SIZE);
+
+            <span class="c-kw">int</span> iRecv = <span class="c-fn">recv</span>(clientSocket, recvBuf, BUFFER_SIZE - <span class="c-num">1</span>, <span class="c-num">0</span>);
+            <span class="c-kw">if</span> (iRecv &lt;= <span class="c-num">0</span>) {
+                <span class="c-kw">break</span>; <span class="c-cmt">// Connection closed</span>
+            }
+
+            <span class="c-cmt">// Null-terminate and trim newline</span>
+            recvBuf[iRecv] = <span class="c-chr">&#x27;\0&#x27;</span>;
+            <span class="c-kw">if</span> (iRecv &gt; <span class="c-num">0</span> &amp;&amp; recvBuf[iRecv - <span class="c-num">1</span>] == <span class="c-chr">&#x27;\n&#x27;</span>) {
+                recvBuf[iRecv - <span class="c-num">1</span>] = <span class="c-chr">&#x27;\0&#x27;</span>;
+            }
+
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;Received: %s\n&quot;</span>, recvBuf);
+
+            <span class="c-cmt">// Process command</span>
+            <span class="c-fn">process_command</span>(recvBuf, sendBuf, BUFFER_SIZE - <span class="c-num">2</span>);
+
+            <span class="c-cmt">// Send response with newline</span>
+            <span class="c-kw">int</span> responseLen = <span class="c-fn">strlen</span>(sendBuf);
+            sendBuf[responseLen] = <span class="c-chr">&#x27;\n&#x27;</span>;
+            sendBuf[responseLen + <span class="c-num">1</span>] = <span class="c-chr">&#x27;\0&#x27;</span>;
+
+            <span class="c-kw">int</span> iSend = <span class="c-fn">send</span>(clientSocket, sendBuf, responseLen + <span class="c-num">1</span>, <span class="c-num">0</span>);
+            <span class="c-kw">if</span> (iSend == SOCKET_ERROR) {
+                <span class="c-fn">printf</span>(<span class="c-str">&quot;send failed: %d\n&quot;</span>, <span class="c-fn">GET_SOCKET_ERROR</span>());
+                <span class="c-kw">break</span>;
+            }
+
+            <span class="c-fn">printf</span>(<span class="c-str">&quot;Sent: %s\n&quot;</span>, sendBuf);
+
+            <span class="c-cmt">// Check for quit</span>
+            <span class="c-kw">if</span> (<span class="c-fn">strncmp</span>(recvBuf, <span class="c-str">&quot;QUIT&quot;</span>, <span class="c-num">4</span>) == <span class="c-num">0</span>) {
+                <span class="c-kw">break</span>;
+            }
+        }
+
+        <span class="c-fn">CLOSE_SOCKET</span>(clientSocket);
+        <span class="c-fn">printf</span>(<span class="c-str">&quot;Client disconnected\n&quot;</span>);
+    }
+
+    <span class="c-fn">CLOSE_SOCKET</span>(listenSocket);
+<span class="c-pre">#ifdef _WIN32</span>
+    <span class="c-fn">WSACleanup</span>();
+<span class="c-pre">#endif</span>
+    <span class="c-kw">return</span> <span class="c-num">0</span>;
+}
+
+</pre></td>
+  </tr></table>
+</section>
+</div></body></html>
